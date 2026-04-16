@@ -32,28 +32,34 @@
     <div class="loja-itens">
 
       <div class="loja-item">
-        <div class="item-cor" style="background: #FF6B6B;"></div>
-        <div class="item-info">
-          <span class="item-nome">Item Vermelho</span>
-          <span class="item-preco">50 cliques</span>
+        <div class="item-topo">
+          <div class="item-cor" style="background: #FF6B6B;"></div>
+          <div class="item-info">
+            <span class="item-nome">Bambu</span>
+            <span class="item-preco">50 cliques</span>
+          </div>
         </div>
         <button class="item-btn" data-id="0">Comprar</button>
       </div>
 
       <div class="loja-item">
-        <div class="item-cor" style="background: #6BCB77;"></div>
-        <div class="item-info">
-          <span class="item-nome">Item Verde</span>
-          <span class="item-preco">120 cliques</span>
+        <div class="item-topo">
+          <div class="item-cor" style="background: #6BCB77;"></div>
+          <div class="item-info">
+            <span class="item-nome">Cor do fundo</span>
+            <span class="item-preco">120 cliques</span>
+          </div>
         </div>
         <button class="item-btn" data-id="1">Comprar</button>
       </div>
 
       <div class="loja-item">
-        <div class="item-cor" style="background: #4D96FF;"></div>
-        <div class="item-info">
-          <span class="item-nome">Item Azul</span>
-          <span class="item-preco">300 cliques</span>
+        <div class="item-topo">
+          <div class="item-cor" style="background: #4D96FF;"></div>
+          <div class="item-info">
+            <span class="item-nome">Item Azul</span>
+            <span class="item-preco">300 cliques</span>
+          </div>
         </div>
         <button class="item-btn" data-id="2">Comprar</button>
       </div>
@@ -63,6 +69,14 @@
 
   <!-- notificacao de compra -->
   <div class="notificacao" id="notificacao"></div>
+
+  <!-- bambu (item 0) -->
+  <img class="bambu" id="bambu" src="bambu.webp" draggable="false">
+
+  <!-- slider de matiz (item 1) -->
+  <div class="slider-fundo" id="sliderFundo">
+    <input type="range" min="0" max="360" value="340" id="sliderMatiz">
+  </div>
 
   <div class="caixa">
     <div class="cachorro-container">
@@ -102,16 +116,35 @@ const btnLoja = document.getElementById("btnLoja");
 const lojaMenu = document.getElementById("lojaMenu");
 let lojaAberta = false;
 
+const bambu = document.getElementById("bambu");
+const sliderFundo = document.getElementById("sliderFundo");
+const sliderMatiz = document.getElementById("sliderMatiz");
+
 let cliques = 0;
 let moedas = 0;
 
 const itens = [
-  { id: 0, nome: "Item Vermelho", preco: 50  },
-  { id: 1, nome: "Item Verde",    preco: 120 },
-  { id: 2, nome: "Item Azul",     preco: 300 },
+  { id: 0, nome: "Bambu",        preco: 50  },
+  { id: 1, nome: "Cor do fundo", preco: 120 },
+  { id: 2, nome: "Item Azul",    preco: 300 },
 ];
 
 const comprados = [false, false, false];
+
+// matiz base do fundo (#FA4E79 = ~346 graus aprox)
+let matizAtual = 346;
+
+
+function aplicarMatiz(h) {
+  // mantém saturação e luminosidade do rosa original, só troca o hue
+  document.body.style.backgroundColor = `hsl(${h}, 95%, 64%)`;
+}
+
+sliderMatiz.addEventListener("click", (e) => e.stopPropagation());
+sliderMatiz.addEventListener("input", (e) => {
+  matizAtual = parseInt(e.target.value);
+  aplicarMatiz(matizAtual);
+});
 
 
 function atualizarUI() {
@@ -161,6 +194,10 @@ document.querySelectorAll(".item-btn").forEach((btn) => {
 
     moedas -= item.preco;
     comprados[id] = true;
+
+    if (id === 0) bambu.classList.add("visivel");
+    if (id === 1) sliderFundo.classList.add("visivel");
+
     atualizarUI();
     mostrarNotificacao(item.nome + " comprado!");
   });

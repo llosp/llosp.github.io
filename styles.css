@@ -290,7 +290,6 @@ body {
     color: #888;
 }
 
-/* botao ocupa toda a largura da caixa */
 .item-btn {
     font-family: 'Fuzzy Bubbles', cursive;
     font-size: 13px;
@@ -351,21 +350,19 @@ body {
 }
 
 
-/* bambu: escondido por padrão, aparece colado no canto inferior esquerdo */
-
 .bambu {
     position: fixed;
-    left: 0;
-    bottom: 0;
+    right: 18%;
+    bottom:  -2px;
 
-    height: 55vh;
+    height: 50%;
     width: auto;
 
     z-index: 5;
     pointer-events: none;
     user-select: none;
     -webkit-user-drag: none;
-
+   
     display: none;
 }
 
@@ -373,8 +370,39 @@ body {
     display: block;
 }
 
+.cama{
+    position: fixed;
+    left: 0;
+    bottom: -5px;
+    height: 22%;
 
-/* slider de matiz: escondido por padrão, aparece colado no centro inferior */
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+   
+    display: none;
+}
+
+.cama.visivel{
+    display: block;
+}
+
+.armario{
+    position: fixed;
+    right: 0;
+    bottom:  -4px;;
+    height: 70%;
+
+    pointer-events: none;
+    user-select: none;
+    -webkit-user-drag: none;
+   
+    display: none;
+}
+
+.armario.visivel{
+    display: block;
+}
 
 .slider-fundo {
     position: fixed;

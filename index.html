@@ -17,15 +17,15 @@
 
   <div class="estrelas"></div>
 
-  <audio id="blinkSound" src="eye-blink.mp3"></audio>
-  <audio id="honkSound" src="clown-honk.mp3"></audio>
+  <audio id="blinkSound" src="som/eye-blink.mp3"></audio>
+  <audio id="honkSound" src="som/clown-honk.mp3"></audio>
 
   <!-- botao loja -->
   <button class="btn-loja" id="btnLoja">
-    <img src="loja-icon.webp" alt="Loja" draggable="false">
+    <img src="img/loja-icon.webp" alt="Loja" draggable="false">
   </button>
 
-  <!-- slide menu da loja -->
+  <!-- menu da loja -->
   <div class="loja-menu" id="lojaMenu">
     <div class="loja-titulo">Loja</div>
     <div class="loja-saldo" id="lojaSaldo">0 cliques</div>
@@ -33,7 +33,7 @@
 
       <div class="loja-item">
         <div class="item-topo">
-          <div class="item-cor" style="background: #FF6B6B;"></div>
+          <div class="item-cor" style="background: #6BCB77;"></div>
           <div class="item-info">
             <span class="item-nome">Bambu</span>
             <span class="item-preco">50 cliques</span>
@@ -44,10 +44,10 @@
 
       <div class="loja-item">
         <div class="item-topo">
-          <div class="item-cor" style="background: #6BCB77;"></div>
+          <div class="item-cor" style="background: #6955c2;"></div>
           <div class="item-info">
-            <span class="item-nome">Cor do fundo</span>
-            <span class="item-preco">120 cliques</span>
+            <span class="item-nome">Cama</span>
+            <span class="item-preco">75 cliques</span>
           </div>
         </div>
         <button class="item-btn" data-id="1">Comprar</button>
@@ -55,15 +55,25 @@
 
       <div class="loja-item">
         <div class="item-topo">
-          <div class="item-cor" style="background: #4D96FF;"></div>
+          <div class="item-cor" style="background: #c04ba1;"></div>
           <div class="item-info">
-            <span class="item-nome">Item Azul</span>
-            <span class="item-preco">300 cliques</span>
+            <span class="item-nome">Armário</span>
+            <span class="item-preco">100 cliques</span>
           </div>
         </div>
         <button class="item-btn" data-id="2">Comprar</button>
       </div>
 
+      <div class="loja-item">
+        <div class="item-topo">
+          <div class="item-cor" style="background: #5a5a5a;"></div>
+          <div class="item-info">
+            <span class="item-nome">Cor do fundo</span>
+            <span class="item-preco">150 cliques</span>
+          </div>
+        </div>
+        <button class="item-btn" data-id="3">Comprar</button>
+      </div>
     </div>
   </div>
 
@@ -71,9 +81,15 @@
   <div class="notificacao" id="notificacao"></div>
 
   <!-- bambu (item 0) -->
-  <img class="bambu" id="bambu" src="bambu.webp" draggable="false">
+  <img class="bambu" id="bambu" src="img/bambu.webp" draggable="false">
 
-  <!-- slider de matiz (item 1) -->
+  <!-- cama (item 1) -->
+  <img class="cama" id="cama" src="img/cama.webp" draggable="false">
+
+  <!-- armario (item 2) -->
+  <img class="armario" id="armario" src="img/armario.webp" draggable="false">
+
+  <!-- slider de matiz (item 3) -->
   <div class="slider-fundo" id="sliderFundo">
     <input type="range" min="0" max="360" value="340" id="sliderMatiz">
   </div>
@@ -81,7 +97,7 @@
   <div class="caixa">
     <div class="cachorro-container">
 
-      <img class="cachorro" src="cachorro.webp" draggable="false">
+      <img class="cachorro" src="img/cachorro.webp" draggable="false">
 
       <div class="hitbox olho-hitbox"></div>
       <div class="hitbox honk-hitbox"></div>
@@ -125,11 +141,12 @@ let moedas = 0;
 
 const itens = [
   { id: 0, nome: "Bambu",        preco: 50  },
-  { id: 1, nome: "Cor do fundo", preco: 120 },
-  { id: 2, nome: "Item Azul",    preco: 300 },
+  { id: 1, nome: "Cama",        preco: 75  },
+  { id: 2, nome: "Armario",        preco: 100  },
+  { id: 3, nome: "Cor do fundo", preco: 150 },
 ];
 
-const comprados = [false, false, false];
+const comprados = [false, false, false, false];
 
 // matiz base do fundo (#FA4E79 = ~346 graus aprox)
 let matizAtual = 346;
@@ -192,11 +209,13 @@ document.querySelectorAll(".item-btn").forEach((btn) => {
 
     if (comprados[id] || moedas < item.preco) return;
 
-    moedas -= item.preco;
     comprados[id] = true;
 
     if (id === 0) bambu.classList.add("visivel");
-    if (id === 1) sliderFundo.classList.add("visivel");
+    if (id === 1) cama.classList.add("visivel");
+    if (id === 2) armario.classList.add("visivel");
+    if (id === 3) sliderFundo.classList.add("visivel");
+ 
 
     atualizarUI();
     mostrarNotificacao(item.nome + " comprado!");
@@ -260,7 +279,7 @@ olhoHitbox.addEventListener("click", (event) => {
   setTimeout(() => olho.classList.remove("fechado"), 500);
 });
 
-// honk
+// honk honk
 honkHitbox.addEventListener("click", (event) => {
   event.stopPropagation();
   addClique();

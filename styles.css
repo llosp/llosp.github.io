@@ -243,21 +243,22 @@ body {
     gap: 12px;
 }
 
-/* cada caixa da loja */
+/* caixa do item: coluna, topo + botao embaixo */
 .loja-item {
     display: flex;
     flex-direction: column;
-    gap: 10px;
 
     background: #f7f7f7;
     border: 2px solid black;
     border-radius: 12px;
     padding: 10px;
+    gap: 10px;
 }
 
-/* linha de cima: quadrado + texto */
+/* linha de cima: quadrado + texto lado a lado */
 .item-topo {
     display: flex;
+    flex-direction: row;
     align-items: center;
     gap: 10px;
 }
@@ -289,7 +290,7 @@ body {
     color: #888;
 }
 
-/* botao em baixo, largura total */
+/* botao ocupa toda a largura da caixa */
 .item-btn {
     font-family: 'Fuzzy Bubbles', cursive;
     font-size: 13px;
@@ -350,11 +351,11 @@ body {
 }
 
 
-/* bambu (item 0) */
+/* bambu: escondido por padrão, aparece colado no canto inferior esquerdo */
 
 .bambu {
     position: fixed;
-    right: 0;
+    left: 0;
     bottom: 0;
 
     height: 55vh;
@@ -365,36 +366,33 @@ body {
     user-select: none;
     -webkit-user-drag: none;
 
-    opacity: 0;
-    transform: translateY(20px);
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    display: none;
 }
 
 .bambu.visivel {
-    opacity: 1;
-    transform: translateY(0);
+    display: block;
 }
 
 
-/* slider de matiz (item 1) */
+/* slider de matiz: escondido por padrão, aparece colado no centro inferior */
 
 .slider-fundo {
     position: fixed;
-    bottom: 24px;
+    bottom: 0;
     left: 50%;
-    transform: translateX(-50%) translateY(20px);
+    transform: translateX(-50%);
+
+    padding-bottom: 16px;
 
     z-index: 200;
     pointer-events: none;
 
-    opacity: 0;
-    transition: opacity 0.4s ease, transform 0.4s ease;
+    display: none;
 }
 
 .slider-fundo.visivel {
-    opacity: 1;
+    display: block;
     pointer-events: auto;
-    transform: translateX(-50%) translateY(0);
 }
 
 #sliderMatiz {

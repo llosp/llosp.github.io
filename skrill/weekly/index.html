@@ -24,15 +24,17 @@
     <div class="modal">
       <div class="modal-title">🎯 New Goal</div>
       <form id="goal-form" onsubmit="handleAddGoal(event)">
-        <div class="form-group">
-          <label class="form-label">Title</label>
-          <input id="goal-title" class="form-input" type="text" placeholder="What will you accomplish?" required maxlength="120"/>
+        <div class="modal-body">
+          <div class="form-group">
+            <label class="form-label">Title</label>
+            <input id="goal-title" class="form-input" type="text" placeholder="What will you accomplish?" required maxlength="120"/>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Description <span class="text-muted">(optional)</span></label>
+            <textarea id="goal-desc" class="form-input" placeholder="Add more context..."></textarea>
+          </div>
+          <div id="goal-error" class="form-error hidden"></div>
         </div>
-        <div class="form-group">
-          <label class="form-label">Description <span class="text-muted">(optional)</span></label>
-          <textarea id="goal-desc" class="form-input" placeholder="Add more context..."></textarea>
-        </div>
-        <div id="goal-error" class="form-error hidden"></div>
         <div class="modal-footer">
           <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancel</button>
           <button type="submit" id="goal-submit" class="btn btn-primary">Declare Goal</button>

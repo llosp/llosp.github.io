@@ -51,9 +51,14 @@ function avatarHTML(profile, extraClass = '') {
 }
 
 function statusBadge(status, points) {
-  const MAP = { active: ['badge-active','Active'], completed: ['badge-completed','Done ✓'], beyond: ['badge-beyond','Beyond!'], failed: ['badge-failed','Missed'] };
+  const MAP = {
+    active:    ['badge-active',    'Active'],
+    completed: ['badge-completed', 'Done ✓'],
+    beyond:    ['badge-beyond',    'Beyond!'],
+    failed:    ['badge-failed',    'Missed'],
+  };
   const [cls, label] = MAP[status] ?? ['badge-active', status];
-  const pts = points > 0 ? `<span class="xp-earned" style="margin-left:6px">+${points}xp</span>` : '';
+  const pts = points > 0 ? `<span class="xp-earned" style="margin-left:4px">+${points}xp</span>` : '';
   return `<span class="badge ${cls}">${label}</span>${pts}`;
 }
 
@@ -70,10 +75,6 @@ async function signOut() {
 }
 
 // ── Shared UI ─────────────────────────────────────────────────────────────────
-function renderOrbs() {
-  return `<div class="orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>`;
-}
-
 function renderSidebar(profile, activePage) {
   const NAV = [
     { href: '/skrill/dashboard/',   label: 'Dashboard',   icon: '⊞', key: 'dashboard' },
@@ -87,7 +88,7 @@ function renderSidebar(profile, activePage) {
     return `<a href="${href}" class="nav-link ${active ? 'active' : ''}">
       <span class="nav-icon">${icon}</span>
       <span>${label}</span>
-      ${active ? '<span class="nav-arrow">›</span>' : ''}
+      ${active ? '<span class="nav-arrow">▶</span>' : ''}
     </a>`;
   }).join('');
 
@@ -113,8 +114,8 @@ function renderSidebar(profile, activePage) {
 
   return `<aside class="sidebar">
     <a href="/skrill/dashboard/" class="sidebar-logo">
-      <div class="sidebar-logo-icon">⚡</div>
-      <span class="sidebar-logo-text gradient-text">SKRILL</span>
+      <div class="skrill-sprite skrill-sprite-sm"></div>
+      <span class="sidebar-logo-text">SKRILL</span>
     </a>
     <nav class="sidebar-nav">${navItems}</nav>
     ${footer}
@@ -123,9 +124,9 @@ function renderSidebar(profile, activePage) {
 
 function renderMobileNav(activeKey) {
   const items = [
-    { href: '/skrill/dashboard/',   label: 'Home',   icon: '⊞', key: 'dashboard' },
-    { href: '/skrill/leaderboard/', label: 'Ranks',  icon: '🏆', key: 'leaderboard' },
-    { href: '/skrill/weekly/',      label: 'Goals',  icon: '🎯', key: 'weekly' },
+    { href: '/skrill/dashboard/',   label: 'Home',    icon: '⊞', key: 'dashboard' },
+    { href: '/skrill/leaderboard/', label: 'Ranks',   icon: '🏆', key: 'leaderboard' },
+    { href: '/skrill/weekly/',      label: 'Goals',   icon: '🎯', key: 'weekly' },
     { href: '/skrill/profile/',     label: 'Profile', icon: '👤', key: 'profile' },
   ];
   return `<nav class="mobile-nav">
@@ -137,50 +138,8 @@ function renderMobileNav(activeKey) {
   </nav>`;
 }
 
-// ── Particles ─────────────────────────────────────────────────────────────────
-function initParticles() {
-  const canvas = document.createElement('canvas');
-  canvas.className = 'particles';
-  document.body.prepend(canvas);
-  const ctx = canvas.getContext('2d');
-  const COLORS = ['rgba(139,92,246,', 'rgba(6,182,212,', 'rgba(99,102,241,'];
-  let particles = [];
-
-  function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
-
-  function spawn() {
-    particles.push({
-      x: Math.random() * window.innerWidth,
-      y: Math.random() * window.innerHeight,
-      vx: (Math.random() - 0.5) * 0.3,
-      vy: (Math.random() - 0.5) * 0.3,
-      r: Math.random() * 1.5 + 0.3,
-      alpha: Math.random() * 0.45 + 0.08,
-      color: COLORS[Math.floor(Math.random() * COLORS.length)],
-    });
-  }
-
-  function draw() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-    for (const p of particles) {
-      p.x += p.vx; p.y += p.vy;
-      if (p.x < 0) p.x = canvas.width;
-      if (p.x > canvas.width) p.x = 0;
-      if (p.y < 0) p.y = canvas.height;
-      if (p.y > canvas.height) p.y = 0;
-      ctx.beginPath();
-      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
-      ctx.fillStyle = p.color + p.alpha + ')';
-      ctx.fill();
-    }
-    requestAnimationFrame(draw);
-  }
-
-  resize();
-  for (let i = 0; i < 80; i++) spawn();
-  draw();
-  window.addEventListener('resize', resize);
-}
+// ── Particles: no-op in retro theme ──────────────────────────────────────────
+function initParticles() {}
 
 // ── Tab helper ────────────────────────────────────────────────────────────────
 function switchTab(tabId) {

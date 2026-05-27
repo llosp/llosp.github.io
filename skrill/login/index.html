@@ -8,40 +8,43 @@
   <link rel="stylesheet" href="/skrill/css/style.css"/>
 </head>
 <body>
-  <div class="orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
-
   <div class="login-wrap">
     <div class="login-box">
-      <div class="glass-strong" style="padding:32px">
-        <div class="login-logo">
-          <div class="login-logo-icon">⚡</div>
-          <span class="login-logo-text gradient-text">SKRILL</span>
+      <div class="window">
+        <div class="window-title">
+          <span>⚡ SKRILL — Accountability Guild</span>
         </div>
-        <p class="login-tagline">Accountability Guild</p>
+        <div class="window-body" style="padding:24px 28px 28px">
 
-        <div class="mode-toggle">
-          <button class="mode-btn active" id="btn-login" onclick="setMode('login')">Entrar</button>
-          <button class="mode-btn" id="btn-signup" onclick="setMode('signup')">Criar conta</button>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:24px">
+            <div class="skrill-sprite skrill-sprite-lg"></div>
+            <div style="font-family:'Jersey 25',monospace;font-size:32px;color:#000;letter-spacing:0.04em">SKRILL</div>
+            <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em">Guild. Build. Grow.</div>
+          </div>
+
+          <div class="mode-toggle">
+            <button class="mode-btn active" id="btn-login" onclick="setMode('login')">Entrar</button>
+            <button class="mode-btn" id="btn-signup" onclick="setMode('signup')">Criar conta</button>
+          </div>
+
+          <form id="auth-form" onsubmit="handleSubmit(event)">
+            <div id="username-field" class="form-group hidden">
+              <label class="form-label">Username</label>
+              <input id="username" class="form-input" type="text" placeholder="yourhandle" autocomplete="username"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Email</label>
+              <input id="email" class="form-input" type="email" placeholder="you@email.com" required autocomplete="email"/>
+            </div>
+            <div class="form-group">
+              <label class="form-label">Senha</label>
+              <input id="password" class="form-input" type="password" placeholder="••••••••" required minlength="6" autocomplete="current-password"/>
+            </div>
+            <div id="error-msg" class="form-error hidden"></div>
+            <button type="submit" id="submit-btn" class="btn btn-primary btn-full">Entrar</button>
+          </form>
+
         </div>
-
-        <form id="auth-form" onsubmit="handleSubmit(event)">
-          <div id="username-field" class="form-group hidden">
-            <label class="form-label">Username</label>
-            <input id="username" class="form-input" type="text" placeholder="yourhandle" autocomplete="username"/>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Email</label>
-            <input id="email" class="form-input" type="email" placeholder="you@email.com" required autocomplete="email"/>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Senha</label>
-            <input id="password" class="form-input" type="password" placeholder="••••••••" required minlength="6" autocomplete="current-password"/>
-          </div>
-          <div id="error-msg" class="form-error hidden"></div>
-          <button type="submit" id="submit-btn" class="btn btn-primary btn-full">Entrar</button>
-        </form>
-
-        <p style="text-align:center;font-size:11px;color:rgba(255,255,255,0.2);margin-top:20px">Guild. Build. Grow.</p>
       </div>
     </div>
   </div>

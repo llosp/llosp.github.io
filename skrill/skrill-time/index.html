@@ -219,7 +219,7 @@
         <div style="font-size:20px;color:var(--text-muted);margin-bottom:14px">
           Clique para encerrar esta semana e abrir a Semana ${nextDisp} · ${nextYear} para todos.
         </div>
-        <button class="btn btn-primary" style="font-size:24px;padding:12px 32px" onclick="advanceWeek()">
+        <button class="btn btn-primary" style="font-size:24px;padding:12px 32px" onclick="openAdvanceWeekModal()">
           Encerrar e iniciar Semana ${nextDisp}
         </button>
       </div>` : '';
@@ -235,24 +235,80 @@
       ${advanceBtn}`;
   }
 
-  async function advanceWeek() {
+  function openAdvanceWeekModal() {
     const nextNum  = currentWeek.week_number + 1;
     const nextYear = nextNum > 52 ? currentWeek.year + 1 : currentWeek.year;
     const nextDisp = nextNum > 52 ? 1 : nextNum;
-    if (!confirm(`Encerrar Semana ${currentWeek.week_number} e iniciar Semana ${nextDisp} · ${nextYear}?\nOs pontos semanais de todos serão zerados.`)) return;
 
-    const btn = document.querySelector('[onclick="advanceWeek()"]');
+    const fmt      = d => d.toISOString().split('T')[0];
+    const today    = new Date();
+    const defEnd   = new Date(today);
+    defEnd.setDate(today.getDate() + 7);
+
+    let overlay = document.getElementById('advance-week-modal');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'advance-week-modal';
+      overlay.className = 'win-overlay hidden';
+      overlay.addEventListener('click', e => { if (e.target === overlay) closeAdvanceWeekModal(); });
+      document.body.appendChild(overlay);
+    }
+
+    overlay.innerHTML = `
+      <div class="win-window" onclick="event.stopPropagation()" style="width:min(480px,92vw)">
+        <div class="win-titlebar">
+          <span class="win-titlebar-icon">[S]</span>
+          <span class="win-titlebar-title">Encerrar Semana ${currentWeek.week_number}</span>
+          <button class="win-btn" onclick="closeAdvanceWeekModal()">X</button>
+        </div>
+        <div class="win-body" style="flex-direction:column;align-items:stretch;gap:16px;padding:20px 20px 16px">
+          <div style="text-align:center;font-family:'Jersey 25',monospace;font-size:28px">
+            Semana ${nextDisp} · ${nextYear}
+          </div>
+          <div style="font-size:22px;color:#404040;text-align:center;border-bottom:1px solid #808080;padding-bottom:14px">
+            Os pontos semanais de todos serao zerados.
+          </div>
+          <div>
+            <label style="display:block;font-size:20px;font-weight:700;margin-bottom:6px;font-family:'Micro 5',monospace;text-transform:uppercase;letter-spacing:.04em">
+              Data final da Semana ${nextDisp}
+            </label>
+            <input id="advance-end-date" type="date" value="${fmt(defEnd)}"
+              style="width:100%;box-sizing:border-box;font-size:22px;padding:8px 10px;border:2px inset #808080;background:#fff;font-family:'Micro 5',monospace"/>
+          </div>
+        </div>
+        <div class="win-statusbar" style="justify-content:flex-end;gap:8px;padding:8px 10px">
+          <button class="btn btn-ghost btn-sm" style="font-size:20px" onclick="closeAdvanceWeekModal()">Cancelar</button>
+          <button id="advance-confirm-btn" class="btn btn-primary btn-sm" style="font-size:20px" onclick="confirmAdvanceWeek(${nextDisp},${nextYear})">Confirmar</button>
+        </div>
+      </div>`;
+
+    overlay.classList.remove('hidden');
+  }
+
+  function closeAdvanceWeekModal() {
+    const overlay = document.getElementById('advance-week-modal');
+    if (overlay) overlay.classList.add('hidden');
+  }
+
+  async function confirmAdvanceWeek(nextDisp, nextYear) {
+    const endDate = document.getElementById('advance-end-date').value || null;
+    const today   = new Date().toISOString().split('T')[0];
+
+    const btn = document.getElementById('advance-confirm-btn');
     if (btn) { btn.disabled = true; btn.textContent = '...'; }
 
     await sb.from('weeks').update({ is_current: false }).eq('id', currentWeek.id);
     await sb.from('weeks').insert({
       week_number:          nextDisp,
       year:                 nextYear,
+      start_date:           today,
+      end_date:             endDate,
       is_current:           true,
       skrill_time_revealed: false,
     });
     await sb.from('profiles').update({ weekly_points: 0 }).not('id', 'is', null);
 
+    closeAdvanceWeekModal();
     window.location.reload();
   }
 

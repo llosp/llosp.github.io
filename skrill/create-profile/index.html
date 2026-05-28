@@ -49,8 +49,17 @@
                   </button>
                 </div>
 
-                <div class="pixel-canvas-wrap">
-                  <canvas id="pixel-canvas"></canvas>
+                <div style="display:flex;align-items:flex-start;gap:10px">
+                  <div class="pixel-canvas-wrap" style="flex:1;min-width:0">
+                    <canvas id="pixel-canvas"></canvas>
+                  </div>
+                  <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:2px">
+                    <span style="font-family:'Micro 5',monospace;font-size:24px;color:var(--text-muted)">15</span>
+                    <input type="range" id="brush-slider" min="1" max="7" value="1" step="1"
+                      style="writing-mode:vertical-lr;direction:rtl;width:24px;height:140px;cursor:pointer;accent-color:#000;">
+                    <span style="font-family:'Micro 5',monospace;font-size:24px;color:var(--text-muted)">3</span>
+                    <div id="brush-label" style="font-family:'Micro 5',monospace;font-size:24px;font-weight:bold;margin-top:6px">3px</div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -81,7 +90,7 @@
   const GRID_SIZE   = 100;
   const CELL_SIZE   = 5;
   const CANVAS_PX   = GRID_SIZE * CELL_SIZE; // 500
-  const BRUSH_RADIUS = 2; // pinta um quadrado de 5×5 pixels lógicos
+  let BRUSH_RADIUS = 1;
 
   const canvas = document.getElementById('pixel-canvas');
   const ctx    = canvas.getContext('2d');
@@ -207,7 +216,14 @@
 
   // Inicializa
   renderCanvas();
-  selectColor(true); // preto ativo por padrão
+  selectColor(true);
+
+  const brushSlider = document.getElementById('brush-slider');
+  const brushLabel  = document.getElementById('brush-label');
+  brushSlider.addEventListener('input', () => {
+    BRUSH_RADIUS = parseInt(brushSlider.value);
+    brushLabel.textContent = (BRUSH_RADIUS * 2 + 1) + 'px';
+  });
 
   // ── Form submission ───────────────────────────────────────────────────────────
   async function handleSubmit(e) {

@@ -45,8 +45,17 @@
                 Limpar
               </button>
             </div>
-            <div class="pixel-canvas-wrap">
-              <canvas id="edit-pixel-canvas" style="display:block;max-width:min(500px,calc(100vw - 64px));width:100%;image-rendering:pixelated;user-select:none;"></canvas>
+            <div style="display:flex;align-items:flex-start;gap:10px;width:100%;max-width:min(500px,calc(100vw - 64px))">
+              <div class="pixel-canvas-wrap" style="flex:1;min-width:0">
+                <canvas id="edit-pixel-canvas" style="display:block;width:100%;image-rendering:pixelated;user-select:none;"></canvas>
+              </div>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:2px">
+                <span style="font-family:'Micro 5',monospace;font-size:24px;color:var(--text-muted)">15</span>
+                <input type="range" id="edit-brush-slider" min="1" max="7" value="1" step="1"
+                  style="writing-mode:vertical-lr;direction:rtl;width:24px;height:140px;cursor:pointer;accent-color:#000;">
+                <span style="font-family:'Micro 5',monospace;font-size:24px;color:var(--text-muted)">3</span>
+                <div id="edit-brush-label" style="font-family:'Micro 5',monospace;font-size:24px;font-weight:bold;margin-top:6px">3px</div>
+              </div>
             </div>
           </div>
         </div>
@@ -184,7 +193,8 @@
   }
 
   // ── Edit Profile Canvas ───────────────────────────────────────────────────────
-  const EDIT_GRID = 100, EDIT_CELL = 5, EDIT_PX = 500, EDIT_BRUSH = 2;
+  const EDIT_GRID = 100, EDIT_CELL = 5, EDIT_PX = 500;
+  let EDIT_BRUSH = 1;
   let editCanvas = null, editCtx = null;
   let editPixels = new Array(EDIT_GRID * EDIT_GRID).fill(false);
   let editPainting = false, editPaintVal = true;
@@ -202,6 +212,12 @@
     editCanvas.addEventListener('touchstart', e => { e.preventDefault(); editPainting = true; editPaintAt(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
     editCanvas.addEventListener('touchmove',  e => { e.preventDefault(); if (editPainting) editPaintAt(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
     editCanvas.addEventListener('touchend',   e => { e.preventDefault(); editPainting = false; }, { passive: false });
+
+    const sl = document.getElementById('edit-brush-slider');
+    sl.addEventListener('input', () => {
+      EDIT_BRUSH = parseInt(sl.value);
+      document.getElementById('edit-brush-label').textContent = (EDIT_BRUSH * 2 + 1) + 'px';
+    });
   }
 
   function editSelectColor(black) {
@@ -305,6 +321,9 @@
     document.getElementById('edit-modal').classList.remove('hidden');
     if (!editCanvas) initEditCanvas();
     editPixels = new Array(EDIT_GRID * EDIT_GRID).fill(false);
+    EDIT_BRUSH = 1;
+    document.getElementById('edit-brush-slider').value = 1;
+    document.getElementById('edit-brush-label').textContent = '3px';
     editSelectColor(true);
     loadAvatarToCanvas(viewedProfile.avatar_data);
     setTimeout(() => document.getElementById('edit-name').focus(), 50);

@@ -86,7 +86,7 @@
           </div>
         </div>
 
-        <div id="participation-card" class="card" style="margin-bottom:16px">
+        <div id="participation-card" style="margin-bottom:16px">
           ${renderParticipationCard()}
         </div>
 
@@ -126,18 +126,23 @@
 
   function renderParticipationCard() {
     if (!currentWeek) return '';
+    const yellow = !isParticipating
+      ? 'background:var(--amber-light);border-color:var(--amber);'
+      : '';
     return `
-      <div class="card-body" style="padding:16px;display:flex;align-items:center;gap:14px">
-        <div style="flex:1;min-width:0">
-          <div style="font-size:26px;font-weight:700">Temporada ${currentWeek.week_number} · ${currentWeek.year}</div>
-          <div style="font-size:20px;color:var(--text-muted);text-transform:uppercase">
-            ${isParticipating ? '[v] Voce esta participando' : '[ ] Voce nao esta participando'}
+      <div class="card" style="${yellow}">
+        <div class="card-body" style="padding:16px;display:flex;align-items:center;gap:14px">
+          <div style="flex:1;min-width:0">
+            <div style="font-size:26px;font-weight:700">Temporada ${currentWeek.week_number} · ${currentWeek.year}</div>
+            <div style="font-size:20px;color:var(--text-muted);text-transform:uppercase">
+              ${isParticipating ? '[v] Voce esta participando' : '[ ] Voce nao esta participando'}
+            </div>
           </div>
+          ${isParticipating
+            ? `<button class="btn btn-ghost btn-sm" style="font-size:20px;opacity:0.6" onclick="leaveSeason()">Sair</button>`
+            : `<button class="btn btn-primary btn-sm" style="font-size:22px;padding:10px 20px" onclick="joinSeason()">Participar</button>`
+          }
         </div>
-        ${isParticipating
-          ? `<button class="btn btn-ghost btn-sm" style="font-size:20px;opacity:0.6" onclick="leaveSeason()">Sair</button>`
-          : `<button class="btn btn-primary btn-sm" style="font-size:22px;padding:10px 20px" onclick="joinSeason()">Participar</button>`
-        }
       </div>`;
   }
 

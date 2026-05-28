@@ -83,14 +83,20 @@
   // ── Auth ───────────────────────────────────────────────────────────────────────
   const ADMIN_SESSION = 'skrill_admin';
 
-  function isAdminAuthed() { return sessionStorage.getItem(ADMIN_SESSION) === '1'; }
+  function isAdminAuthed() {
+    return sessionStorage.getItem(ADMIN_SESSION) === '1' || getStoredProfile()?.is_admin === true;
+  }
+
+  function showAdminUI() {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('admin-ui').style.display = 'block';
+  }
 
   function adminLogin() {
     const pw = document.getElementById('admin-pw').value;
     if (pw === 'admin') {
       sessionStorage.setItem(ADMIN_SESSION, '1');
-      document.getElementById('gate').style.display = 'none';
-      document.getElementById('admin-ui').style.display = 'block';
+      showAdminUI();
       loadAll();
     } else {
       document.getElementById('gate-error').classList.remove('hidden');
@@ -101,15 +107,12 @@
 
   function adminLogout() {
     sessionStorage.removeItem(ADMIN_SESSION);
-    location.reload();
+    window.location.href = '/skrill/dashboard/';
   }
 
   document.getElementById('admin-pw').addEventListener('keydown', e => { if (e.key === 'Enter') adminLogin(); });
 
-  if (isAdminAuthed()) {
-    document.getElementById('gate').style.display = 'none';
-    document.getElementById('admin-ui').style.display = 'block';
-  }
+  if (isAdminAuthed()) showAdminUI();
 
   // ── Data ───────────────────────────────────────────────────────────────────────
   let D = { profiles: [], weeks: [], goals: [], history: [], ready: [] };
@@ -142,6 +145,12 @@
 
   if (isAdminAuthed()) loadAll();
 
+  async function toggleProfileAdmin(id, current) {
+    await sb.from('profiles').update({ is_admin: !current }).eq('id', id);
+    toast(!current ? 'Perfil agora e admin!' : 'Permissao admin removida!');
+    await loadAll();
+  }
+
   // ── Toast ──────────────────────────────────────────────────────────────────────
   function toast(msg, color = '#22c55e') {
     const t = document.createElement('div');
@@ -161,7 +170,10 @@
           <div style="display:flex;align-items:center;gap:10px">
             ${avatarHTML(p)}
             <div style="flex:1">
-              <div style="font-size:26px;font-weight:700">${p.name}</div>
+              <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
+                <span style="font-size:26px;font-weight:700">${p.name}</span>
+                ${p.is_admin ? `<span class="badge badge-beyond">[A] Admin</span>` : ''}
+              </div>
               <div style="font-size:20px;color:var(--text-muted)">
                 Total: <b>${p.total_points??0}</b> &nbsp;·&nbsp;
                 Semana: <b>${p.weekly_points??0}</b> &nbsp;·&nbsp;
@@ -169,7 +181,10 @@
                 Melhor: <b>${p.streak_longest??0}w</b>
               </div>
             </div>
-            <div style="display:flex;gap:6px">
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              <button class="btn btn-sm ${p.is_admin ? 'btn-ghost' : 'btn-ghost'}" style="${p.is_admin ? 'color:#ef4444' : ''}" onclick="toggleProfileAdmin('${p.id}',${!!p.is_admin})">
+                ${p.is_admin ? 'Remover Admin' : 'Tornar Admin'}
+              </button>
               <button class="btn btn-sm btn-primary" onclick="toggleProfileEdit('${p.id}')">Editar</button>
               <button class="btn btn-sm btn-danger" onclick="deleteProfile('${p.id}','${p.name.replace(/'/g,"\\'")}')">Excluir</button>
             </div>

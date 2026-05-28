@@ -143,7 +143,9 @@ function renderMobileNav(activeKey) {
 }
 
 // ── Admin helpers (shared across pages) ──────────────────────────────────────
-function isAdmin() { return sessionStorage.getItem('skrill_admin') === '1'; }
+function isAdmin() {
+  return sessionStorage.getItem('skrill_admin') === '1' || getStoredProfile()?.is_admin === true;
+}
 
 async function startSeason() {
   if (!confirm('Iniciar a Temporada? Isso vai criar a Semana 1 e o app abrirá para todos.')) return;

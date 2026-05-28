@@ -41,15 +41,8 @@
 
     const { data: week } = await sb.from('weeks').select('*').eq('is_current', true).single();
 
-    const byWeekly  = [...(profiles ?? [])].sort((a, b) => (b.weekly_points ?? 0) - (a.weekly_points ?? 0));
-    const byAllTime = [...(profiles ?? [])].sort((a, b) => (b.total_points  ?? 0) - (a.total_points  ?? 0));
-    const myWeekRank = byWeekly.findIndex(p => p.id === stored.id) + 1;
-
-    const weeklyContent = !week
-      ? renderNoWeekBanner()
-      : `${renderPodium(byWeekly, stored.id, 'weekly_points')}
-         ${byWeekly.length > 3 ? renderList(byWeekly.slice(3), stored.id, 'weekly_points', 4) : ''}
-         ${byWeekly.length === 0 ? emptyState('[T]', 'Nenhum membro ainda', 'Complete uma meta para aparecer aqui!') : ''}`;
+    const byAllTime = [...(profiles ?? [])].sort((a, b) => (b.total_points ?? 0) - (a.total_points ?? 0));
+    const myRank    = byAllTime.findIndex(p => p.id === stored.id) + 1;
 
     document.getElementById('app').innerHTML = `
       <div style="width:100%">
@@ -60,23 +53,16 @@
           </div>
           <div style="text-align:right">
             <div class="text-muted text-sm">${profiles?.length ?? 0} membros</div>
-            ${week && myWeekRank ? `<div style="font-size:24px;font-weight:700;color:var(--amber);margin-top:4px">Seu rank: #${myWeekRank}</div>` : ''}
+            ${myRank ? `<div style="font-size:24px;font-weight:700;color:var(--amber);margin-top:4px">Seu rank: #${myRank}</div>` : ''}
           </div>
         </div>
-
-        <div class="tab-list">
-          <button class="tab-btn active" data-tab="tab-weekly"  onclick="switchTab('tab-weekly')">Semanal</button>
-          <button class="tab-btn"        data-tab="tab-alltime" onclick="switchTab('tab-alltime')">[T] Total</button>
-        </div>
-
-        <div id="tab-weekly" class="tab-panel active">${weeklyContent}</div>
-        <div id="tab-alltime" class="tab-panel">
-          ${renderList(byAllTime, stored.id, 'total_points', 1)}
-        </div>
+        ${renderPodium(byAllTime, stored.id)}
+        ${renderList(byAllTime.slice(3), stored.id, 'total_points', 4)}
+        ${byAllTime.length === 0 ? emptyState('[T]', 'Nenhum membro ainda', 'Complete uma meta para aparecer aqui!') : ''}
       </div>`;
   }
 
-  function renderPodium(entries, currentId, field) {
+  function renderPodium(entries, currentId) {
     if (entries.length < 3) return '';
     const [first, second, third] = entries;
     function col(p, cls, medal) {
@@ -84,14 +70,14 @@
         <div class="podium-medal">${medal}</div>
         ${avatarHTML(p, cls === 'p1' ? 'avatar-lg' : 'avatar-md')}
         <div class="podium-name">${p.name}</div>
-        <div class="podium-xp">${(p[field] ?? 0).toLocaleString()}pts</div>
+        <div class="podium-xp">${(p.total_points ?? 0).toLocaleString()}pts</div>
         <div class="podium-block"></div>
       </div>`;
     }
     return `
       <div class="glass" style="margin-bottom:20px">
         <p style="text-align:center;font-size:11px;font-weight:700;color:rgba(251,191,36,0.7);text-transform:uppercase;letter-spacing:.06em;padding-top:16px">
-          Top da Guild Esta Semana
+          Top da Guild
         </p>
         <div class="podium">
           ${col(second, 'p2', '#2')}

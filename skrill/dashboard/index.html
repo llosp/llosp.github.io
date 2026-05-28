@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -23,8 +23,8 @@
   <script src="/skrill/js/client.js"></script>
   <script>
   async function init() {
-    const user = await requireAuth();
-    if (!user) return;
+    const stored = requireAuth();
+    if (!stored) return;
 
     const [
       { data: profile },
@@ -34,60 +34,56 @@
       { data: allProfiles },
       { data: meeting },
     ] = await Promise.all([
-      sb.from('profiles').select('*').eq('id', user.id).single(),
+      sb.from('profiles').select('*').eq('id', stored.id).single(),
       sb.from('weeks').select('*').eq('is_current', true).single(),
       sb.from('goals').select('*, profile:profiles(*)').order('created_at', { ascending: false }).limit(50),
-      sb.from('point_history').select('*').eq('user_id', user.id).order('created_at', { ascending: false }).limit(20),
-      sb.from('profiles').select('*').order('xp', { ascending: false }).limit(6),
+      sb.from('point_history').select('*').eq('profile_id', stored.id).order('created_at', { ascending: false }).limit(20),
+      sb.from('profiles').select('*').order('weekly_points', { ascending: false }).limit(6),
       sb.from('meetings').select('*').order('scheduled_at', { ascending: false }).limit(1).single(),
     ]);
 
+    if (profile) setStoredProfile(profile);
+
     document.getElementById('sidebar-root').innerHTML = renderSidebar(profile, 'dashboard');
     document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('dashboard');
-    initParticles();
 
-    const li = getLevelInfo(profile?.total_xp ?? 0);
-    const myGoals = (goals ?? []).filter(g => g.user_id === user.id);
-    const done = myGoals.filter(g => g.status === 'completed' || g.status === 'beyond');
-    const leaderboard = (allProfiles ?? []);
+    const myGoals = (goals ?? []).filter(g => g.profile_id === stored.id);
+    const done    = myGoals.filter(g => g.status === 'completed' || g.status === 'beyond');
 
     document.getElementById('app').innerHTML = `
       <div style="width:100%">
         <div class="page-header">
           <div>
-            <div class="page-header-label">Welcome back,</div>
-            <h1 class="page-header-title">
-              ${profile?.display_name ?? profile?.username ?? 'Guild Member'}
-              <span class="page-header-sub">Lv.${li.level} ${li.title}</span>
-            </h1>
+            <div class="page-header-label">Bem-vindo de volta,</div>
+            <h1 class="page-header-title">${profile?.name ?? 'Guild Member'}</h1>
           </div>
-          ${week ? `<span class="text-muted text-sm">Week ${week.week_number} · ${week.year}</span>` : ''}
+          ${week ? `<span class="text-muted text-sm">Semana ${week.week_number} · ${week.year}</span>` : ''}
         </div>
 
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-icon amber">⚡</div>
-            <div class="stat-value">${(profile?.total_xp ?? 0).toLocaleString()}</div>
-            <div class="stat-label">Total XP</div>
-            <div class="stat-sub">lifetime earned</div>
+            <div class="stat-icon amber">⭐</div>
+            <div class="stat-value">${(profile?.total_points ?? 0).toLocaleString()}</div>
+            <div class="stat-label">Total Pts</div>
+            <div class="stat-sub">acumulado</div>
           </div>
           <div class="stat-card">
             <div class="stat-icon purple">📈</div>
-            <div class="stat-value">${profile?.xp ?? 0}</div>
-            <div class="stat-label">Weekly XP</div>
-            <div class="stat-sub">this week</div>
+            <div class="stat-value">${profile?.weekly_points ?? 0}</div>
+            <div class="stat-label">Pts Semana</div>
+            <div class="stat-sub">esta semana</div>
           </div>
           <div class="stat-card">
             <div class="stat-icon green">🎯</div>
             <div class="stat-value">${done.length}/${myGoals.length}</div>
-            <div class="stat-label">Goals Done</div>
-            <div class="stat-sub">this week</div>
+            <div class="stat-label">Metas Feitas</div>
+            <div class="stat-sub">esta semana</div>
           </div>
           <div class="stat-card">
             <div class="stat-icon cyan">🔥</div>
             <div class="stat-value">${profile?.streak_current ?? 0}w</div>
             <div class="stat-label">Streak</div>
-            <div class="stat-sub">best: ${profile?.streak_longest ?? 0}w</div>
+            <div class="stat-sub">melhor: ${profile?.streak_longest ?? 0}w</div>
           </div>
         </div>
 
@@ -97,7 +93,7 @@
             ${renderActivityFeed(history ?? [])}
           </div>
           <div class="col-right">
-            ${renderMiniLeaderboard(leaderboard, user.id)}
+            ${renderMiniLeaderboard(allProfiles ?? [], stored.id)}
             ${renderNextMeeting(meeting)}
           </div>
         </div>
@@ -107,9 +103,9 @@
   function renderWeeklyProgress(goals) {
     if (!goals.length) return `
       <div class="card">
-        <div class="card-header"><div class="card-title">⟳ Weekly Progress</div></div>
+        <div class="card-header"><div class="card-title">⟳ Progresso Semanal</div></div>
         <div class="card-body">
-          <div class="empty-state"><div class="empty-icon">🎯</div><p>No goals set yet this week</p></div>
+          <div class="empty-state"><div class="empty-icon">🎯</div><p>Nenhuma meta ainda esta semana</p></div>
         </div>
       </div>`;
     const rows = goals.slice(0, 8).map(g => `
@@ -121,8 +117,8 @@
     return `
       <div class="card">
         <div class="card-header">
-          <div class="card-title">⟳ Weekly Progress</div>
-          <a href="/skrill/weekly/" class="card-link">See all →</a>
+          <div class="card-title">⟳ Progresso Semanal</div>
+          <a href="/skrill/weekly/" class="card-link">Ver tudo →</a>
         </div>
         <div class="card-body"><div class="goal-rows">${rows}</div></div>
       </div>`;
@@ -131,42 +127,42 @@
   function renderActivityFeed(history) {
     if (!history.length) return `
       <div class="card">
-        <div class="card-header"><div class="card-title">⚡ XP Activity</div></div>
-        <div class="card-body"><div class="empty-state"><p>No activity yet</p></div></div>
+        <div class="card-header"><div class="card-title">⚡ Atividade</div></div>
+        <div class="card-body"><div class="empty-state"><p>Nenhuma atividade ainda</p></div></div>
       </div>`;
     const items = history.map(h => `
       <div class="activity-item">
         <div class="activity-dot">⚡</div>
         <div>
-          <div class="activity-text">Earned <strong>+${h.amount} XP</strong> — ${h.reason.replace(/_/g, ' ')}</div>
+          <div class="activity-text">Ganhou <strong>+${h.amount}pts</strong> — ${h.reason.replace(/_/g, ' ')}</div>
           <div class="activity-time">${timeAgo(h.created_at)}</div>
         </div>
       </div>`).join('');
     return `
       <div class="card">
-        <div class="card-header"><div class="card-title">⚡ XP Activity</div></div>
+        <div class="card-header"><div class="card-title">⚡ Atividade</div></div>
         <div class="card-body">${items}</div>
       </div>`;
   }
 
-  function renderMiniLeaderboard(profiles, currentUserId) {
+  function renderMiniLeaderboard(profiles, currentId) {
     if (!profiles.length) return `
       <div class="card">
         <div class="card-header"><div class="card-title">🏆 Top Guild</div></div>
-        <div class="card-body"><div class="empty-state"><p>No members yet</p></div></div>
+        <div class="card-body"><div class="empty-state"><p>Nenhum membro ainda</p></div></div>
       </div>`;
     const items = profiles.slice(0, 5).map((p, i) => `
-      <a href="/skrill/profile/?id=${p.id}" class="lb-entry ${i===0?'r1':i===1?'r2':i===2?'r3':''} ${p.id===currentUserId?'me':''}">
+      <a href="/skrill/profile/?id=${p.id}" class="lb-entry ${i===0?'r1':i===1?'r2':i===2?'r3':''} ${p.id===currentId?'me':''}">
         <div class="rank-num">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1)}</div>
         ${avatarHTML(p)}
-        <div class="entry-info"><div class="entry-name-main">${p.display_name ?? p.username}</div></div>
-        <div class="entry-xp">${p.xp ?? 0} xp</div>
+        <div class="entry-info"><div class="entry-name-main">${p.name}</div></div>
+        <div class="entry-xp">${p.weekly_points ?? 0}pts</div>
       </a>`).join('');
     return `
       <div class="card">
         <div class="card-header">
           <div class="card-title">🏆 Top Guild</div>
-          <a href="/skrill/leaderboard/" class="card-link">See all →</a>
+          <a href="/skrill/leaderboard/" class="card-link">Ver tudo →</a>
         </div>
         <div class="card-body" style="padding:8px 12px">${items}</div>
       </div>`;
@@ -177,10 +173,10 @@
     const d = new Date(meeting.scheduled_at);
     return `
       <div class="meeting-card">
-        <div class="meeting-lbl">📅 Next Meeting</div>
-        <div class="meeting-date">${d.toLocaleDateString('en-US', { weekday: 'short', month: 'short', day: 'numeric' })}</div>
-        <div class="meeting-time">${d.toLocaleTimeString('en-US', { hour: 'numeric', minute: '2-digit' })}</div>
-        ${meeting.discord_link ? `<a href="${meeting.discord_link}" target="_blank" class="btn btn-sm btn-purple-soft" style="margin-top:10px">Join Discord →</a>` : ''}
+        <div class="meeting-lbl">📅 Próxima Reunião</div>
+        <div class="meeting-date">${d.toLocaleDateString('pt-BR', { weekday: 'short', month: 'short', day: 'numeric' })}</div>
+        <div class="meeting-time">${d.toLocaleTimeString('pt-BR', { hour: 'numeric', minute: '2-digit' })}</div>
+        ${meeting.discord_link ? `<a href="${meeting.discord_link}" target="_blank" class="btn btn-sm btn-purple-soft" style="margin-top:10px">Entrar Discord →</a>` : ''}
       </div>`;
   }
 

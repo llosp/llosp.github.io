@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>SKRILL — Profile</title>
+  <title>SKRILL — Perfil</title>
   <link rel="icon" type="image/x-icon" href="/skrill/favicon.ico"/>
   <link rel="stylesheet" href="/skrill/css/style.css"/>
 </head>
@@ -23,123 +23,90 @@
   <script src="/skrill/js/client.js"></script>
   <script>
   async function init() {
-    const user = await requireAuth();
-    if (!user) return;
+    const stored = requireAuth();
+    if (!stored) return;
 
-    const targetId = new URLSearchParams(location.search).get('id') || user.id;
+    const targetId = new URLSearchParams(location.search).get('id') || stored.id;
 
     const [
       { data: me },
       { data: profile },
       { data: goals },
-      { data: achievements },
       { data: history },
     ] = await Promise.all([
-      sb.from('profiles').select('*').eq('id', user.id).single(),
+      sb.from('profiles').select('*').eq('id', stored.id).single(),
       sb.from('profiles').select('*').eq('id', targetId).single(),
-      sb.from('goals').select('*').eq('user_id', targetId).order('created_at', { ascending: false }),
-      sb.from('user_achievements').select('*, achievement:achievements(*)').eq('user_id', targetId),
-      sb.from('point_history').select('*').eq('user_id', targetId).order('created_at', { ascending: false }).limit(50),
+      sb.from('goals').select('*').eq('profile_id', targetId).order('created_at', { ascending: false }),
+      sb.from('point_history').select('*').eq('profile_id', targetId).order('created_at', { ascending: false }).limit(50),
     ]);
+
+    if (me) setStoredProfile(me);
 
     document.getElementById('sidebar-root').innerHTML = renderSidebar(me, 'profile');
     document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('profile');
-    initParticles();
 
     if (!profile) {
-      document.getElementById('app').innerHTML = `<div class="empty-state"><h3>Member not found</h3></div>`;
+      document.getElementById('app').innerHTML = `<div class="empty-state"><h3>Membro não encontrado</h3></div>`;
       return;
     }
 
-    const li = getLevelInfo(profile.total_xp ?? 0);
-    const isMe = profile.id === user.id;
+    const isMe = profile.id === stored.id;
     const completedGoals = (goals ?? []).filter(g => g.status === 'completed' || g.status === 'beyond');
 
     document.getElementById('app').innerHTML = `
       <div style="width:100%">
-        <!-- Profile hero -->
+        <!-- Hero -->
         <div class="profile-hero">
           ${avatarHTML(profile, 'avatar-xl')}
           <div class="profile-hero-info">
-            <div class="profile-display">${profile.display_name ?? profile.username}</div>
-            <div class="profile-handle">@${profile.username}</div>
-            ${profile.bio ? `<div class="profile-bio-text">${profile.bio}</div>` : ''}
+            <div class="profile-display">${profile.name}</div>
             <div class="profile-stats-row">
               <div class="profile-stat">
-                <div class="profile-stat-val">${(profile.total_xp ?? 0).toLocaleString()}</div>
-                <div class="profile-stat-lbl">Total XP</div>
+                <div class="profile-stat-val">${(profile.total_points ?? 0).toLocaleString()}</div>
+                <div class="profile-stat-lbl">Total Pts</div>
+              </div>
+              <div class="profile-stat">
+                <div class="profile-stat-val">${profile.weekly_points ?? 0}</div>
+                <div class="profile-stat-lbl">Pts Semana</div>
               </div>
               <div class="profile-stat">
                 <div class="profile-stat-val">${completedGoals.length}</div>
-                <div class="profile-stat-lbl">Goals Done</div>
+                <div class="profile-stat-lbl">Metas Feitas</div>
               </div>
               <div class="profile-stat">
                 <div class="profile-stat-val">${profile.streak_current ?? 0}w</div>
                 <div class="profile-stat-lbl">Streak</div>
               </div>
+              <div class="profile-stat">
+                <div class="profile-stat-val">${profile.streak_longest ?? 0}w</div>
+                <div class="profile-stat-lbl">Melhor</div>
+              </div>
             </div>
           </div>
-          <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-            <div class="level-pill">Lv.${li.level} ${li.title}</div>
-            ${isMe ? `<button class="btn btn-sm btn-ghost" onclick="signOut()">Sign out</button>` : ''}
-          </div>
-        </div>
-
-        <!-- XP bar -->
-        <div class="card" style="margin-bottom:20px">
-          <div class="card-body">
-            <div class="xp-labels"><span>XP Progress</span><span>${li.currentXP} / ${li.nextLevelXP}</span></div>
-            <div class="xp-bar-bg" style="height:6px">
-              <div class="xp-bar-fill" style="width:${li.progress * 100}%"></div>
-            </div>
-          </div>
+          ${isMe ? `<button class="btn btn-sm btn-ghost" onclick="signOut()">← Trocar perfil</button>` : ''}
         </div>
 
         <!-- Tabs -->
         <div class="tab-list">
-          <button class="tab-btn active" data-tab="tab-achievements" onclick="switchTab('tab-achievements')">
-            🏆 Achievements <span class="tab-count">${(achievements ?? []).length}</span>
+          <button class="tab-btn active" data-tab="tab-goals" onclick="switchTab('tab-goals')">
+            🎯 Metas <span class="tab-count">${(goals ?? []).length}</span>
           </button>
-          <button class="tab-btn" data-tab="tab-goals" onclick="switchTab('tab-goals')">
-            🎯 Goals <span class="tab-count">${(goals ?? []).length}</span>
-          </button>
-          <button class="tab-btn" data-tab="tab-xp" onclick="switchTab('tab-xp')">
-            ⚡ XP Log
+          <button class="tab-btn" data-tab="tab-activity" onclick="switchTab('tab-activity')">
+            ⚡ Atividade
           </button>
         </div>
 
-        <div id="tab-achievements" class="tab-panel active">
-          ${renderAchievements(achievements ?? [])}
+        <div id="tab-goals" class="tab-panel active">
+          ${renderGoalList(goals ?? [])}
         </div>
-        <div id="tab-goals" class="tab-panel">
-          ${renderGoalList(goals ?? [], user.id)}
-        </div>
-        <div id="tab-xp" class="tab-panel">
-          ${renderXPLog(history ?? [])}
+        <div id="tab-activity" class="tab-panel">
+          ${renderActivityLog(history ?? [])}
         </div>
       </div>`;
   }
 
-  function renderAchievements(achievements) {
-    if (!achievements.length) return `<div class="empty-state"><div class="empty-icon">🏆</div><h3>No achievements yet</h3><p>Complete goals to earn badges</p></div>`;
-    const RARITY_COLORS = { common: '#94a3b8', rare: '#60a5fa', epic: '#a78bfa', legendary: '#fbbf24' };
-    return `<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:12px">
-      ${achievements.map(ua => {
-        const a = ua.achievement;
-        if (!a) return '';
-        const color = RARITY_COLORS[a.rarity] ?? '#94a3b8';
-        return `<div class="card" style="padding:16px;border-color:${color}22">
-          <div style="font-size:28px;margin-bottom:8px">${a.icon ?? '🏅'}</div>
-          <div style="font-size:13px;font-weight:700;margin-bottom:3px">${a.name}</div>
-          <div style="font-size:11px;color:rgba(255,255,255,0.45);margin-bottom:6px">${a.description}</div>
-          <span style="font-size:10px;font-weight:700;color:${color};text-transform:uppercase;letter-spacing:.05em">${a.rarity}</span>
-        </div>`;
-      }).join('')}
-    </div>`;
-  }
-
-  function renderGoalList(goals, currentUserId) {
-    if (!goals.length) return `<div class="empty-state"><div class="empty-icon">🎯</div><h3>No goals yet</h3></div>`;
+  function renderGoalList(goals) {
+    if (!goals.length) return `<div class="empty-state"><div class="empty-icon">🎯</div><h3>Nenhuma meta ainda</h3></div>`;
     return goals.map(g => `
       <div class="goal-card ${g.status === 'beyond' ? 'beyond' : g.status === 'completed' ? 'completed' : ''}">
         <div class="goal-card-top">
@@ -153,8 +120,8 @@
       </div>`).join('');
   }
 
-  function renderXPLog(history) {
-    if (!history.length) return `<div class="empty-state"><p>No XP history yet</p></div>`;
+  function renderActivityLog(history) {
+    if (!history.length) return `<div class="empty-state"><p>Nenhuma atividade ainda</p></div>`;
     return `<div class="card"><div class="card-body" style="max-height:400px;overflow-y:auto">
       ${history.map(h => `
         <div class="xp-row">
@@ -162,7 +129,7 @@
             <div class="xp-reason">${h.reason.replace(/_/g, ' ')}</div>
             <div class="xp-date">${formatDate(h.created_at)}</div>
           </div>
-          <div class="xp-amount">+${h.amount}</div>
+          <div class="xp-amount">+${h.amount}pts</div>
         </div>`).join('')}
     </div></div>`;
   }

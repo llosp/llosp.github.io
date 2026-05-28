@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>SKRILL — Criar Perfil</title>
+  <link rel="icon" type="image/x-icon" href="/skrill/favicon.ico"/>
+  <link rel="stylesheet" href="/skrill/css/style.css"/>
+</head>
+<body>
+  <div class="login-wrap" style="padding:32px 16px">
+    <div class="login-box" style="max-width:560px">
+      <div class="window">
+        <div class="window-title">
+          <span>👤 Criar Perfil</span>
+          <a href="/skrill/select-profile/" style="font-size:11px;color:var(--text-muted);text-decoration:none">← Voltar</a>
+        </div>
+        <div class="window-body" style="padding:24px 28px 28px">
+
+          <form id="profile-form" onsubmit="handleSubmit(event)">
+
+            <!-- Nome -->
+            <div class="form-group">
+              <label class="form-label">Nome / Apelido</label>
+              <input id="profile-name" class="form-input" type="text" placeholder="Como te chamam?" required maxlength="30" autocomplete="off"/>
+            </div>
+
+            <!-- Canvas pixel art -->
+            <div class="form-group">
+              <label class="form-label">Foto de Perfil <span class="text-muted" style="font-size:10px">(desenhe abaixo · preto e branco · 100×100px)</span></label>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+                <div class="pixel-canvas-wrap">
+                  <canvas id="pixel-canvas"></canvas>
+                </div>
+                <button type="button" class="btn btn-ghost btn-sm" onclick="clearCanvas()">🗑 Limpar</button>
+              </div>
+            </div>
+
+            <!-- Senha -->
+            <div class="form-group">
+              <label class="form-label">Senha do Perfil</label>
+              <input id="profile-password" class="form-input" type="password" placeholder="••••••••" required autocomplete="new-password"/>
+            </div>
+
+            <div id="error-msg" class="form-error hidden"></div>
+            <button type="submit" id="submit-btn" class="btn btn-primary btn-full">Criar Perfil</button>
+          </form>
+
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/skrill/js/client.js"></script>
+  <script>
+  if (!isAppUnlocked()) {
+    window.location.href = '/skrill/login/';
+  }
+
+  // ── Pixel art canvas ──────────────────────────────────────────────────────────
+  const GRID_SIZE = 100;
+  const CELL_SIZE = 5;
+  const CANVAS_PX = GRID_SIZE * CELL_SIZE; // 500
+
+  const canvas = document.getElementById('pixel-canvas');
+  const ctx    = canvas.getContext('2d');
+  canvas.width  = CANVAS_PX;
+  canvas.height = CANVAS_PX;
+
+  const pixels = new Array(GRID_SIZE * GRID_SIZE).fill(false); // false = white, true = black
+
+  function renderCanvas() {
+    for (let y = 0; y < GRID_SIZE; y++) {
+      for (let x = 0; x < GRID_SIZE; x++) {
+        ctx.fillStyle = pixels[y * GRID_SIZE + x] ? '#000000' : '#FFFFFF';
+        ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+      }
+    }
+    ctx.strokeStyle = 'rgba(180,180,180,0.4)';
+    ctx.lineWidth = 0.5;
+    for (let x = 0; x <= GRID_SIZE; x++) {
+      ctx.beginPath(); ctx.moveTo(x * CELL_SIZE, 0); ctx.lineTo(x * CELL_SIZE, CANVAS_PX); ctx.stroke();
+    }
+    for (let y = 0; y <= GRID_SIZE; y++) {
+      ctx.beginPath(); ctx.moveTo(0, y * CELL_SIZE); ctx.lineTo(CANVAS_PX, y * CELL_SIZE); ctx.stroke();
+    }
+  }
+
+  function getPixelCoords(clientX, clientY) {
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = CANVAS_PX / rect.width;
+    const scaleY = CANVAS_PX / rect.height;
+    return {
+      x: Math.floor((clientX - rect.left) * scaleX / CELL_SIZE),
+      y: Math.floor((clientY - rect.top)  * scaleY / CELL_SIZE),
+    };
+  }
+
+  let isPainting = false;
+  let paintValue = true;
+
+  function paintAt(clientX, clientY) {
+    const { x, y } = getPixelCoords(clientX, clientY);
+    if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) return;
+    pixels[y * GRID_SIZE + x] = paintValue;
+    ctx.fillStyle = paintValue ? '#000000' : '#FFFFFF';
+    ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+  }
+
+  canvas.addEventListener('mousedown', e => {
+    const { x, y } = getPixelCoords(e.clientX, e.clientY);
+    if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) return;
+    isPainting = true;
+    paintValue = !pixels[y * GRID_SIZE + x];
+    paintAt(e.clientX, e.clientY);
+  });
+  canvas.addEventListener('mousemove', e => { if (isPainting) paintAt(e.clientX, e.clientY); });
+  canvas.addEventListener('mouseup',    () => { isPainting = false; });
+  canvas.addEventListener('mouseleave', () => { isPainting = false; });
+
+  canvas.addEventListener('touchstart', e => {
+    e.preventDefault();
+    const t = e.touches[0];
+    const { x, y } = getPixelCoords(t.clientX, t.clientY);
+    if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) return;
+    isPainting = true;
+    paintValue = !pixels[y * GRID_SIZE + x];
+    paintAt(t.clientX, t.clientY);
+  }, { passive: false });
+  canvas.addEventListener('touchmove', e => {
+    e.preventDefault();
+    if (isPainting) paintAt(e.touches[0].clientX, e.touches[0].clientY);
+  }, { passive: false });
+  canvas.addEventListener('touchend', e => { e.preventDefault(); isPainting = false; }, { passive: false });
+
+  function clearCanvas() {
+    pixels.fill(false);
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, CANVAS_PX, CANVAS_PX);
+    renderCanvas();
+  }
+
+  function getAvatarDataURL() {
+    const off  = document.createElement('canvas');
+    off.width  = GRID_SIZE;
+    off.height = GRID_SIZE;
+    const octx = off.getContext('2d');
+    for (let y = 0; y < GRID_SIZE; y++) {
+      for (let x = 0; x < GRID_SIZE; x++) {
+        octx.fillStyle = pixels[y * GRID_SIZE + x] ? '#000000' : '#FFFFFF';
+        octx.fillRect(x, y, 1, 1);
+      }
+    }
+    return off.toDataURL('image/png');
+  }
+
+  // Inicializa canvas em branco
+  renderCanvas();
+
+  // ── Form submission ───────────────────────────────────────────────────────────
+  async function handleSubmit(e) {
+    e.preventDefault();
+    const name     = document.getElementById('profile-name').value.trim();
+    const password = document.getElementById('profile-password').value;
+    const btn      = document.getElementById('submit-btn');
+    const errEl    = document.getElementById('error-msg');
+    errEl.classList.add('hidden');
+
+    if (!name || !password) {
+      errEl.textContent = 'Preencha nome e senha.';
+      errEl.classList.remove('hidden');
+      return;
+    }
+
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    const avatar = getAvatarDataURL();
+
+    const { data, error } = await sb
+      .from('profiles')
+      .insert({ name, password, avatar_data: avatar })
+      .select('*')
+      .single();
+
+    if (error) {
+      errEl.textContent = error.message;
+      errEl.classList.remove('hidden');
+      btn.disabled = false;
+      btn.textContent = 'Criar Perfil';
+      return;
+    }
+
+    setStoredProfile(data);
+    window.location.href = '/skrill/dashboard/';
+  }
+  </script>
+</body>
+</html>

@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>SKRILL — Weekly Goals</title>
+  <title>SKRILL — Metas Semanais</title>
   <link rel="icon" type="image/x-icon" href="/skrill/favicon.ico"/>
   <link rel="stylesheet" href="/skrill/css/style.css"/>
 </head>
@@ -19,25 +19,25 @@
     <div id="mobile-nav-root"></div>
   </div>
 
-  <!-- Add Goal Modal -->
+  <!-- Modal nova meta -->
   <div id="modal" class="modal-overlay hidden">
     <div class="modal">
-      <div class="modal-title">🎯 New Goal</div>
+      <div class="modal-title">🎯 Nova Meta</div>
       <form id="goal-form" onsubmit="handleAddGoal(event)">
         <div class="modal-body">
           <div class="form-group">
-            <label class="form-label">Title</label>
-            <input id="goal-title" class="form-input" type="text" placeholder="What will you accomplish?" required maxlength="120"/>
+            <label class="form-label">Título</label>
+            <input id="goal-title" class="form-input" type="text" placeholder="O que você vai conquistar?" required maxlength="120"/>
           </div>
           <div class="form-group">
-            <label class="form-label">Description <span class="text-muted">(optional)</span></label>
-            <textarea id="goal-desc" class="form-input" placeholder="Add more context..."></textarea>
+            <label class="form-label">Descrição <span class="text-muted">(opcional)</span></label>
+            <textarea id="goal-desc" class="form-input" placeholder="Mais detalhes..."></textarea>
           </div>
           <div id="goal-error" class="form-error hidden"></div>
         </div>
         <div class="modal-footer">
-          <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancel</button>
-          <button type="submit" id="goal-submit" class="btn btn-primary">Declare Goal</button>
+          <button type="button" class="btn btn-ghost" onclick="closeModal()">Cancelar</button>
+          <button type="submit" id="goal-submit" class="btn btn-primary">Declarar Meta</button>
         </div>
       </form>
     </div>
@@ -46,25 +46,25 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
-  let currentUser = null;
-  let currentWeek = null;
-  let allGoals    = [];
+  let currentProfile = null;
+  let currentWeek    = null;
+  let allGoals       = [];
 
   async function init() {
-    const user = await requireAuth();
-    if (!user) return;
+    const stored = requireAuth();
+    if (!stored) return;
 
     const [{ data: profile }, { data: week }] = await Promise.all([
-      sb.from('profiles').select('*').eq('id', user.id).single(),
+      sb.from('profiles').select('*').eq('id', stored.id).single(),
       sb.from('weeks').select('*').eq('is_current', true).single(),
     ]);
 
-    currentUser = profile;
-    currentWeek = week;
+    currentProfile = profile;
+    currentWeek    = week;
+    if (profile) setStoredProfile(profile);
 
     document.getElementById('sidebar-root').innerHTML = renderSidebar(profile, 'weekly');
     document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('weekly');
-    initParticles();
 
     if (week) {
       const { data: goals } = await sb
@@ -79,56 +79,50 @@
   }
 
   function renderPage() {
-    const week = currentWeek;
-    const myGoals    = allGoals.filter(g => g.user_id === currentUser?.id);
-    const otherGoals = allGoals.filter(g => g.user_id !== currentUser?.id);
+    const week      = currentWeek;
+    const myGoals   = allGoals.filter(g => g.profile_id === currentProfile?.id);
+    const otherGoals = allGoals.filter(g => g.profile_id !== currentProfile?.id);
 
-    let weekLabel = 'This Week';
+    let weekLabel = 'Esta Semana';
     let weekSub   = '';
     if (week) {
-      weekLabel = `Week ${week.week_number}`;
+      weekLabel = `Semana ${week.week_number}`;
       const s = new Date(week.start_date);
       const e = new Date(week.end_date);
-      weekSub = ` · ${s.toLocaleDateString('en-US',{month:'short',day:'numeric'})} – ${e.toLocaleDateString('en-US',{month:'short',day:'numeric'})}`;
+      weekSub = ` · ${s.toLocaleDateString('pt-BR',{month:'short',day:'numeric'})} – ${e.toLocaleDateString('pt-BR',{month:'short',day:'numeric'})}`;
     }
 
     document.getElementById('app').innerHTML = `
       <div style="width:100%">
         <div class="page-header">
           <div>
-            <div class="page-header-label">🎯 Weekly Goals</div>
+            <div class="page-header-label">🎯 Metas Semanais</div>
             <h1 class="page-header-title">${weekLabel}<span class="page-header-sub">${weekSub}</span></h1>
           </div>
-          <button class="btn btn-primary" onclick="openModal()">+ Declare Goal</button>
+          <button class="btn btn-primary" onclick="openModal()">+ Declarar Meta</button>
         </div>
 
         <div class="tab-list">
           <button class="tab-btn active" data-tab="tab-all"    onclick="switchTab('tab-all')">
-            All <span class="tab-count">${allGoals.length}</span>
+            Todas <span class="tab-count">${allGoals.length}</span>
           </button>
           <button class="tab-btn" data-tab="tab-mine"   onclick="switchTab('tab-mine')">
-            Mine <span class="tab-count">${myGoals.length}</span>
+            Minhas <span class="tab-count">${myGoals.length}</span>
           </button>
           <button class="tab-btn" data-tab="tab-others" onclick="switchTab('tab-others')">
-            Others <span class="tab-count">${otherGoals.length}</span>
+            Outros <span class="tab-count">${otherGoals.length}</span>
           </button>
         </div>
 
-        <div id="tab-all" class="tab-panel active">
-          ${renderGoals(allGoals)}
-        </div>
-        <div id="tab-mine" class="tab-panel">
-          ${renderGoals(myGoals, true)}
-        </div>
-        <div id="tab-others" class="tab-panel">
-          ${renderGoals(otherGoals, false)}
-        </div>
+        <div id="tab-all"    class="tab-panel active">${renderGoals(allGoals)}</div>
+        <div id="tab-mine"   class="tab-panel">${renderGoals(myGoals, true)}</div>
+        <div id="tab-others" class="tab-panel">${renderGoals(otherGoals, false)}</div>
       </div>`;
   }
 
   function renderGoals(goals, isOwnerAll) {
-    if (!goals.length) return `<div class="empty-state"><div class="empty-icon">🎯</div><h3>No goals yet</h3><p>Be the first to declare one!</p></div>`;
-    return goals.map((g, i) => renderGoalCard(g, isOwnerAll ?? (g.user_id === currentUser?.id))).join('');
+    if (!goals.length) return `<div class="empty-state"><div class="empty-icon">🎯</div><h3>Nenhuma meta ainda</h3><p>Seja o primeiro a declarar uma!</p></div>`;
+    return goals.map(g => renderGoalCard(g, isOwnerAll ?? (g.profile_id === currentProfile?.id))).join('');
   }
 
   function renderGoalCard(g, isOwner) {
@@ -136,7 +130,7 @@
     const isDone  = g.status === 'completed' || g.status === 'beyond';
     const actions = isOwner && g.status === 'active'
       ? `<div class="goal-actions">
-          <button class="btn btn-sm btn-success" onclick="completeGoal('${g.id}', false)">✓ Done</button>
+          <button class="btn btn-sm btn-success" onclick="completeGoal('${g.id}', false)">✓ Feito</button>
           <button class="btn btn-sm btn-purple-soft" onclick="completeGoal('${g.id}', true)">⚡ Beyond</button>
         </div>`
       : '';
@@ -146,7 +140,7 @@
           ${profile ? avatarHTML(profile) : ''}
           <div class="goal-card-meta">
             <div class="goal-user-row">
-              ${profile ? `<span class="goal-username">${profile.display_name ?? profile.username}</span>` : ''}
+              ${profile ? `<span class="goal-username">${profile.name}</span>` : ''}
               <span class="goal-time">${timeAgo(g.created_at)}</span>
             </div>
             <div class="goal-title ${isDone ? 'done' : g.status === 'failed' ? 'failed' : ''}">${g.title}</div>
@@ -170,15 +164,14 @@
     btn.disabled = true; btn.textContent = '...';
 
     try {
-      const { data: { user } } = await sb.auth.getUser();
       const { data: newGoal, error } = await sb
         .from('goals')
         .insert({
-          user_id: user.id,
-          week_id: currentWeek?.id,
+          profile_id:  currentProfile.id,
+          week_id:     currentWeek?.id,
           title,
           description: desc || null,
-          status: 'active',
+          status:      'active',
           points_earned: 0,
         })
         .select('*, profile:profiles(*)')
@@ -186,38 +179,45 @@
 
       if (error) { errEl.textContent = error.message; errEl.classList.remove('hidden'); return; }
 
-      // Award 1xp for declaring
-      await sb.from('point_history').insert({ user_id: user.id, amount: 1, reason: 'declare_goal', goal_id: newGoal.id, week_id: currentWeek?.id });
-      await sb.from('profiles').update({ xp: (currentUser?.xp ?? 0) + 1, total_xp: (currentUser?.total_xp ?? 0) + 1 }).eq('id', user.id);
-
       allGoals.unshift(newGoal);
       closeModal();
       renderPage();
     } finally {
-      btn.disabled = false; btn.textContent = 'Declare Goal';
+      btn.disabled = false; btn.textContent = 'Declarar Meta';
     }
   }
 
   async function completeGoal(goalId, beyond) {
     const pts = beyond ? 8 : 5;
+
     await sb.from('goals').update({
-      status: beyond ? 'beyond' : 'completed',
-      points_earned: pts,
+      status:         beyond ? 'beyond' : 'completed',
+      points_earned:  pts,
       is_beyond_scope: beyond,
-      completed_at: new Date().toISOString(),
+      completed_at:   new Date().toISOString(),
     }).eq('id', goalId);
 
-    await sb.from('point_history').insert([
-      { user_id: currentUser.id, amount: 5, reason: 'complete_goal', goal_id: goalId, week_id: currentWeek?.id },
-      ...(beyond ? [{ user_id: currentUser.id, amount: 3, reason: 'beyond_scope', goal_id: goalId, week_id: currentWeek?.id }] : []),
-    ]);
+    await sb.from('point_history').insert({
+      profile_id: currentProfile.id,
+      amount:     pts,
+      reason:     beyond ? 'beyond_scope' : 'complete_goal',
+      goal_id:    goalId,
+      week_id:    currentWeek?.id,
+    });
 
+    const newWeeklyPts = (currentProfile.weekly_points ?? 0) + pts;
+    const newTotalPts  = (currentProfile.total_points  ?? 0) + pts;
     await sb.from('profiles').update({
-      xp: (currentUser?.xp ?? 0) + pts,
-      total_xp: (currentUser?.total_xp ?? 0) + pts,
-    }).eq('id', currentUser.id);
+      weekly_points: newWeeklyPts,
+      total_points:  newTotalPts,
+    }).eq('id', currentProfile.id);
 
-    allGoals = allGoals.map(g => g.id === goalId ? { ...g, status: beyond ? 'beyond' : 'completed', points_earned: pts } : g);
+    currentProfile = { ...currentProfile, weekly_points: newWeeklyPts, total_points: newTotalPts };
+    setStoredProfile(currentProfile);
+
+    allGoals = allGoals.map(g => g.id === goalId
+      ? { ...g, status: beyond ? 'beyond' : 'completed', points_earned: pts }
+      : g);
     renderPage();
   }
 
@@ -226,6 +226,7 @@
     document.getElementById('goal-desc').value  = '';
     document.getElementById('goal-error').classList.add('hidden');
     document.getElementById('modal').classList.remove('hidden');
+    setTimeout(() => document.getElementById('goal-title').focus(), 50);
   }
   function closeModal() { document.getElementById('modal').classList.add('hidden'); }
   document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });

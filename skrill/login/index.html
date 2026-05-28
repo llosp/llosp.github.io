@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>SKRILL — Login</title>
+  <title>SKRILL — Acesso</title>
   <link rel="icon" type="image/x-icon" href="/skrill/favicon.ico"/>
   <link rel="stylesheet" href="/skrill/css/style.css"/>
 </head>
@@ -12,35 +12,22 @@
     <div class="login-box">
       <div class="window">
         <div class="window-title">
-          <span>⚡ SKRILL — Accountability Guild</span>
+          <span>⚡ SKRILL — Acesso</span>
         </div>
         <div class="window-body" style="padding:24px 28px 28px">
 
-          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:24px">
+          <div style="display:flex;flex-direction:column;align-items:center;gap:10px;margin-bottom:28px">
             <div class="skrill-sprite skrill-sprite-lg"></div>
             <div style="font-family:'Jersey 25',monospace;font-size:32px;color:#000;letter-spacing:0.04em">SKRILL</div>
             <div style="font-size:11px;color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em">Guild. Build. Grow.</div>
           </div>
 
-          <div class="mode-toggle">
-            <button class="mode-btn active" id="btn-login" onclick="setMode('login')">Entrar</button>
-            <button class="mode-btn" id="btn-signup" onclick="setMode('signup')">Criar conta</button>
-          </div>
-
           <form id="auth-form" onsubmit="handleSubmit(event)">
-            <div id="username-field" class="form-group hidden">
-              <label class="form-label">Username</label>
-              <input id="username" class="form-input" type="text" placeholder="yourhandle" autocomplete="username"/>
-            </div>
             <div class="form-group">
-              <label class="form-label">Email</label>
-              <input id="email" class="form-input" type="email" placeholder="you@email.com" required autocomplete="email"/>
+              <label class="form-label">Senha do App</label>
+              <input id="app-password" class="form-input" type="password" placeholder="••••••••" required autocomplete="off"/>
             </div>
-            <div class="form-group">
-              <label class="form-label">Senha</label>
-              <input id="password" class="form-input" type="password" placeholder="••••••••" required minlength="6" autocomplete="current-password"/>
-            </div>
-            <div id="error-msg" class="form-error hidden"></div>
+            <div id="error-msg" class="form-error hidden">Senha incorreta. Tente novamente.</div>
             <button type="submit" id="submit-btn" class="btn btn-primary btn-full">Entrar</button>
           </form>
 
@@ -52,48 +39,27 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
-    let mode = 'login';
-
-    sb.auth.getUser().then(({ data: { user } }) => {
-      if (user) window.location.href = '/skrill/dashboard/';
-    });
-
-    function setMode(m) {
-      mode = m;
-      document.getElementById('btn-login').classList.toggle('active', m === 'login');
-      document.getElementById('btn-signup').classList.toggle('active', m === 'signup');
-      document.getElementById('username-field').classList.toggle('hidden', m === 'login');
-      document.getElementById('submit-btn').textContent = m === 'login' ? 'Entrar' : 'Criar conta';
-      document.getElementById('error-msg').classList.add('hidden');
+    if (isAppUnlocked()) {
+      const p = getStoredProfile();
+      window.location.href = p ? '/skrill/dashboard/' : '/skrill/select-profile/';
     }
 
-    async function handleSubmit(e) {
+    function handleSubmit(e) {
       e.preventDefault();
+      const val  = document.getElementById('app-password').value;
+      const btn  = document.getElementById('submit-btn');
       const errEl = document.getElementById('error-msg');
-      const btn   = document.getElementById('submit-btn');
       errEl.classList.add('hidden');
-      btn.disabled = true;
-      btn.textContent = '...';
 
-      const email    = document.getElementById('email').value;
-      const password = document.getElementById('password').value;
-
-      try {
-        let error;
-        if (mode === 'login') {
-          ({ error } = await sb.auth.signInWithPassword({ email, password }));
-        } else {
-          const username = document.getElementById('username').value;
-          ({ error } = await sb.auth.signUp({
-            email, password,
-            options: { data: { user_name: username, full_name: username } },
-          }));
-        }
-        if (error) { errEl.textContent = error.message; errEl.classList.remove('hidden'); return; }
-        window.location.href = '/skrill/dashboard/';
-      } finally {
-        btn.disabled = false;
-        btn.textContent = mode === 'login' ? 'Entrar' : 'Criar conta';
+      if (val === APP_PASSWORD) {
+        btn.disabled = true;
+        btn.textContent = '...';
+        unlockApp();
+        window.location.href = '/skrill/select-profile/';
+      } else {
+        errEl.classList.remove('hidden');
+        document.getElementById('app-password').value = '';
+        document.getElementById('app-password').focus();
       }
     }
   </script>

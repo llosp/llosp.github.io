@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>SKRILL — Selecionar Perfil</title>
+  <link rel="icon" type="image/x-icon" href="/skrill/favicon.ico"/>
+  <link rel="stylesheet" href="/skrill/css/style.css"/>
+</head>
+<body>
+  <div class="login-wrap" style="padding:40px 16px">
+    <div style="text-align:center;margin-bottom:32px">
+      <div class="skrill-sprite skrill-sprite-lg" style="display:inline-block;margin-bottom:12px"></div>
+      <div style="font-family:'Jersey 25',monospace;font-size:28px;color:#000;letter-spacing:0.04em">SKRILL</div>
+      <div class="profile-picker-title" style="margin-top:16px">Quem está jogando?</div>
+    </div>
+
+    <div id="profile-grid" class="profile-pick-grid">
+      <div class="center-screen" style="min-height:unset"><div class="spinner"></div></div>
+    </div>
+  </div>
+
+  <!-- Overlay de senha -->
+  <div id="overlay" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-title">🔐 <span id="overlay-name"></span></div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Senha</label>
+          <input id="overlay-password" class="form-input" type="password" placeholder="••••••••" autocomplete="off"/>
+        </div>
+        <div id="overlay-error" class="form-error hidden">Senha incorreta. Tente novamente.</div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeOverlay()">Cancelar</button>
+        <button class="btn btn-primary" id="overlay-confirm" onclick="confirmPassword()">Entrar</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/skrill/js/client.js"></script>
+  <script>
+  let pendingProfileId = null;
+
+  if (!isAppUnlocked()) {
+    window.location.href = '/skrill/login/';
+  } else if (getStoredProfile()) {
+    window.location.href = '/skrill/dashboard/';
+  } else {
+    loadProfiles();
+  }
+
+  async function loadProfiles() {
+    const { data: profiles, error } = await sb
+      .from('profiles')
+      .select('id, name, avatar_data')
+      .order('name');
+
+    const grid = document.getElementById('profile-grid');
+
+    if (error || !profiles) {
+      grid.innerHTML = `<div class="form-error">Erro ao carregar perfis.</div>`;
+      return;
+    }
+
+    const cards = profiles.map(p => `
+      <div class="profile-pick-card" onclick="showPasswordOverlay('${p.id}', '${p.name.replace(/'/g, "\\'")}')">
+        <div class="profile-pick-avatar">
+          ${p.avatar_data
+            ? `<img src="${p.avatar_data}" alt="${p.name[0].toUpperCase()}"/>`
+            : `<span>${p.name[0].toUpperCase()}</span>`}
+        </div>
+        <div class="profile-pick-name">${p.name}</div>
+      </div>`).join('');
+
+    grid.innerHTML = cards + `
+      <div class="profile-pick-card add-card" onclick="window.location.href='/skrill/create-profile/'">
+        <div class="profile-pick-avatar" style="font-size:36px;background:var(--bg)">+</div>
+        <div class="profile-pick-name" style="color:var(--text-muted)">Criar Perfil</div>
+      </div>`;
+  }
+
+  function showPasswordOverlay(id, name) {
+    pendingProfileId = id;
+    document.getElementById('overlay-name').textContent = name;
+    document.getElementById('overlay-password').value = '';
+    document.getElementById('overlay-error').classList.add('hidden');
+    document.getElementById('overlay-confirm').disabled = false;
+    document.getElementById('overlay-confirm').textContent = 'Entrar';
+    document.getElementById('overlay').classList.remove('hidden');
+    setTimeout(() => document.getElementById('overlay-password').focus(), 50);
+  }
+
+  function closeOverlay() {
+    document.getElementById('overlay').classList.add('hidden');
+    pendingProfileId = null;
+  }
+
+  async function confirmPassword() {
+    const pw  = document.getElementById('overlay-password').value;
+    const btn = document.getElementById('overlay-confirm');
+    const err = document.getElementById('overlay-error');
+    err.classList.add('hidden');
+    btn.disabled = true;
+    btn.textContent = '...';
+
+    const profile = await verifyProfilePassword(pendingProfileId, pw);
+    if (profile) {
+      setStoredProfile(profile);
+      window.location.href = '/skrill/dashboard/';
+    } else {
+      err.classList.remove('hidden');
+      btn.disabled = false;
+      btn.textContent = 'Entrar';
+      document.getElementById('overlay-password').value = '';
+      document.getElementById('overlay-password').focus();
+    }
+  }
+
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape') closeOverlay();
+    if (e.key === 'Enter' && !document.getElementById('overlay').classList.contains('hidden')) {
+      confirmPassword();
+    }
+  });
+  </script>
+</body>
+</html>

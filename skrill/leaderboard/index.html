@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -23,21 +23,22 @@
   <script src="/skrill/js/client.js"></script>
   <script>
   async function init() {
-    const user = await requireAuth();
-    if (!user) return;
+    const stored = requireAuth();
+    if (!stored) return;
 
     const [{ data: profile }, { data: profiles }] = await Promise.all([
-      sb.from('profiles').select('*').eq('id', user.id).single(),
+      sb.from('profiles').select('*').eq('id', stored.id).single(),
       sb.from('profiles').select('*'),
     ]);
 
+    if (profile) setStoredProfile(profile);
+
     document.getElementById('sidebar-root').innerHTML = renderSidebar(profile, 'leaderboard');
     document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('leaderboard');
-    initParticles();
 
-    const byWeekly  = [...(profiles ?? [])].sort((a, b) => (b.xp ?? 0) - (a.xp ?? 0));
-    const byAllTime = [...(profiles ?? [])].sort((a, b) => (b.total_xp ?? 0) - (a.total_xp ?? 0));
-    const myWeekRank = byWeekly.findIndex(p => p.id === user.id) + 1;
+    const byWeekly  = [...(profiles ?? [])].sort((a, b) => (b.weekly_points ?? 0) - (a.weekly_points ?? 0));
+    const byAllTime = [...(profiles ?? [])].sort((a, b) => (b.total_points  ?? 0) - (a.total_points  ?? 0));
+    const myWeekRank = byWeekly.findIndex(p => p.id === stored.id) + 1;
 
     document.getElementById('app').innerHTML = `
       <div style="width:100%">
@@ -47,68 +48,68 @@
             <h1 class="page-header-title">Leaderboard</h1>
           </div>
           <div style="text-align:right">
-            <div class="text-muted text-sm">👥 ${profiles?.length ?? 0} members</div>
-            ${myWeekRank ? `<div style="font-size:12px;font-weight:700;color:var(--purple-400);margin-top:2px">★ Your rank: #${myWeekRank}</div>` : ''}
+            <div class="text-muted text-sm">👥 ${profiles?.length ?? 0} membros</div>
+            ${myWeekRank ? `<div style="font-size:12px;font-weight:700;color:var(--purple-400);margin-top:2px">★ Seu rank: #${myWeekRank}</div>` : ''}
           </div>
         </div>
 
         <div class="tab-list">
-          <button class="tab-btn active" data-tab="tab-weekly"  onclick="switchTab('tab-weekly')">⚡ Weekly</button>
-          <button class="tab-btn"        data-tab="tab-alltime" onclick="switchTab('tab-alltime')">🏆 All-Time</button>
+          <button class="tab-btn active" data-tab="tab-weekly"  onclick="switchTab('tab-weekly')">⚡ Semanal</button>
+          <button class="tab-btn"        data-tab="tab-alltime" onclick="switchTab('tab-alltime')">🏆 Total</button>
         </div>
 
         <div id="tab-weekly" class="tab-panel active">
-          ${renderPodium(byWeekly, user.id, 'xp')}
-          ${byWeekly.length > 3 ? renderList(byWeekly.slice(3), user.id, 'xp', 4) : ''}
-          ${byWeekly.length === 0 ? emptyState('🏆', 'No members yet', 'Complete a goal to appear here!') : ''}
+          ${renderPodium(byWeekly, stored.id, 'weekly_points')}
+          ${byWeekly.length > 3 ? renderList(byWeekly.slice(3), stored.id, 'weekly_points', 4) : ''}
+          ${byWeekly.length === 0 ? emptyState('🏆', 'Nenhum membro ainda', 'Complete uma meta para aparecer aqui!') : ''}
         </div>
         <div id="tab-alltime" class="tab-panel">
-          ${renderList(byAllTime, user.id, 'total_xp', 1)}
+          ${renderList(byAllTime, stored.id, 'total_points', 1)}
         </div>
       </div>`;
   }
 
-  function renderPodium(entries, currentUserId, xpField) {
+  function renderPodium(entries, currentId, field) {
     if (entries.length < 3) return '';
     const [first, second, third] = entries;
-    function col(p, cls, medal, xpF) {
+    function col(p, cls, medal) {
       return `<div class="podium-col ${cls}">
         <div class="podium-medal">${medal}</div>
         ${avatarHTML(p, cls === 'p1' ? 'avatar-lg' : 'avatar-md')}
-        <div class="podium-name">${p.display_name ?? p.username}</div>
-        <div class="podium-xp">${(p[xpF] ?? 0).toLocaleString()} xp</div>
+        <div class="podium-name">${p.name}</div>
+        <div class="podium-xp">${(p[field] ?? 0).toLocaleString()}pts</div>
         <div class="podium-block"></div>
       </div>`;
     }
     return `
       <div class="glass" style="margin-bottom:20px">
         <p style="text-align:center;font-size:11px;font-weight:700;color:rgba(251,191,36,0.7);text-transform:uppercase;letter-spacing:.06em;padding-top:16px">
-          This Week's Top Guild Members
+          Top da Guild Esta Semana
         </p>
         <div class="podium">
-          ${col(second, 'p2', '🥈', xpField)}
-          ${col(first,  'p1', '🥇', xpField)}
-          ${col(third,  'p3', '🥉', xpField)}
+          ${col(second, 'p2', '🥈')}
+          ${col(first,  'p1', '🥇')}
+          ${col(third,  'p3', '🥉')}
         </div>
       </div>`;
   }
 
-  function renderList(entries, currentUserId, xpField, startRank) {
+  function renderList(entries, currentId, field, startRank) {
     if (!entries.length) return '';
     return `
-      <p style="font-size:11px;color:rgba(255,255,255,0.3);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:8px">
-        Full Standings
+      <p style="font-size:11px;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:8px">
+        Classificação Completa
       </p>
       <div style="display:flex;flex-direction:column;gap:6px">
         ${entries.map((p, i) => `
-          <a href="/skrill/profile/?id=${p.id}" class="lb-entry ${i+startRank===1?'r1':i+startRank===2?'r2':i+startRank===3?'r3':''} ${p.id===currentUserId?'me':''}">
+          <a href="/skrill/profile/?id=${p.id}" class="lb-entry ${i+startRank===1?'r1':i+startRank===2?'r2':i+startRank===3?'r3':''} ${p.id===currentId?'me':''}">
             <div class="rank-num">#${i + startRank}</div>
             ${avatarHTML(p)}
             <div class="entry-info">
-              <div class="entry-name-main">${p.display_name ?? p.username}</div>
-              <div class="entry-name-sub">${p.title ?? ''}</div>
+              <div class="entry-name-main">${p.name}</div>
+              <div class="entry-name-sub">🔥 ${p.streak_current ?? 0}w streak</div>
             </div>
-            <div class="entry-xp">${(p[xpField] ?? 0).toLocaleString()} xp</div>
+            <div class="entry-xp">${(p[field] ?? 0).toLocaleString()}pts</div>
           </a>`).join('')}
       </div>`;
   }

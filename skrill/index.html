@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
@@ -12,9 +12,12 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
-    sb.auth.getUser().then(({ data: { user } }) => {
-      window.location.href = user ? '/skrill/dashboard/' : '/skrill/login/';
-    });
+    if (!isAppUnlocked()) {
+      window.location.href = '/skrill/login/';
+    } else {
+      const p = getStoredProfile();
+      window.location.href = p ? '/skrill/dashboard/' : '/skrill/select-profile/';
+    }
   </script>
 </body>
 </html>

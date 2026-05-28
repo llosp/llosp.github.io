@@ -330,24 +330,23 @@ canvas.particles { display: none; }
 .podium { display: flex; align-items: flex-end; justify-content: center; gap: 10px; }
 .podium-col {
   display: flex; flex-direction: column; align-items: center; gap: 4px;
-  flex: 1; max-width: 140px; min-width: 80px;
+  flex: 1; max-width: 160px; min-width: 90px;
 }
 .podium-col.empty { opacity: .6; }
-.podium-col.me .avatar { outline: 3px solid var(--purple); outline-offset: 2px; }
 .podium-medal {
-  font-family: 'Jersey 25', monospace; font-size: 30px;
+  font-family: 'Jersey 25', monospace; font-size: 32px;
   color: var(--text); margin-bottom: 4px;
 }
 .podium-col .avatar { box-shadow: 3px 3px 0 var(--border-dark); }
-.p1 .avatar { width: 80px; height: 80px; border: 3px solid var(--amber-dark); box-shadow: 3px 3px 0 var(--amber-dark); }
-.p2 .avatar { width: 64px; height: 64px; border: 3px solid #707070; box-shadow: 3px 3px 0 #606060; }
-.p3 .avatar { width: 56px; height: 56px; border: 3px solid #CD7F32; box-shadow: 3px 3px 0 #8B5A2B; }
+.p1 .avatar { width: 90px; height: 90px; border: 3px solid var(--amber-dark); box-shadow: 3px 3px 0 var(--amber-dark); }
+.p2 .avatar { width: 72px; height: 72px; border: 3px solid #707070; box-shadow: 3px 3px 0 #606060; }
+.p3 .avatar { width: 64px; height: 64px; border: 3px solid #CD7F32; box-shadow: 3px 3px 0 #8B5A2B; }
 .podium-name {
   font-size: 24px; font-weight: bold; text-align: center;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%;
   text-transform: uppercase; margin-top: 8px;
 }
-.podium-xp { font-size: 22px; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; }
+.podium-xp { font-size: 24px; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; }
 .p1 .podium-xp { color: var(--amber-dark); }
 .p2 .podium-xp { color: #606060; }
 .p3 .podium-xp { color: #7D4A1A; }
@@ -744,7 +743,7 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 }
 
 .win-titlebar {
-  background: linear-gradient(to right, var(--amber-dark), var(--amber));
+  background: var(--amber);
   color: #000;
   padding: 4px 6px;
   display: flex; align-items: center; justify-content: space-between;

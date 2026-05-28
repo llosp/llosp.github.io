@@ -149,12 +149,26 @@ function isAdmin() {
 
 async function startSeason() {
   if (!confirm('Iniciar a Temporada? Isso vai criar a Semana 1 e o app abrirá para todos.')) return;
-  await sb.from('weeks').insert({
+
+  const today    = new Date();
+  const nextWeek = new Date(today);
+  nextWeek.setDate(today.getDate() + 7);
+  const fmt = d => d.toISOString().split('T')[0];
+
+  const { error } = await sb.from('weeks').insert({
     week_number:          1,
-    year:                 new Date().getFullYear(),
+    year:                 today.getFullYear(),
+    start_date:           fmt(today),
+    end_date:             fmt(nextWeek),
     is_current:           true,
     skrill_time_revealed: false,
   });
+
+  if (error) {
+    alert('Erro ao criar semana: ' + error.message);
+    return;
+  }
+
   window.location.reload();
 }
 

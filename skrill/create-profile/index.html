@@ -6,14 +6,17 @@
   <title>SKRILL — Criar Perfil</title>
   <link rel="icon" type="image/x-icon" href="/skrill/favicon.ico"/>
   <link rel="stylesheet" href="/skrill/css/style.css"/>
+  <style>
+    body { background: #ffffff; background-image: none; }
+  </style>
 </head>
 <body>
   <div class="login-wrap" style="padding:32px 16px">
     <div class="login-box" style="max-width:560px">
       <div class="window">
         <div class="window-title">
-          <span>👤 Criar Perfil</span>
-          <a href="/skrill/select-profile/" style="font-size:11px;color:var(--text-muted);text-decoration:none">← Voltar</a>
+          <span>[P] Criar Perfil</span>
+          <a href="/skrill/select-profile/" style="font-size:16px;color:var(--text-muted);text-decoration:none">← Voltar</a>
         </div>
         <div class="window-body" style="padding:24px 28px 28px">
 
@@ -27,12 +30,28 @@
 
             <!-- Canvas pixel art -->
             <div class="form-group">
-              <label class="form-label">Foto de Perfil <span class="text-muted" style="font-size:10px">(desenhe abaixo · preto e branco · 100×100px)</span></label>
-              <div style="display:flex;flex-direction:column;align-items:center;gap:10px">
+              <label class="form-label">Foto de Perfil <span class="text-muted" style="font-size:14px">(preto e branco · 100×100px)</span></label>
+              <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+
+                <!-- Controles de cor e limpeza -->
+                <div style="display:flex;gap:8px;align-items:center;width:100%;max-width:min(500px, calc(100vw - 64px))">
+                  <button type="button" id="btn-black" onclick="selectColor(true)"
+                    style="display:flex;align-items:center;gap:6px;padding:7px 16px;border:2px solid #000;cursor:pointer;font-family:'Micro 5',monospace;font-size:18px;font-weight:bold;text-transform:uppercase;background:#000;color:#fff;box-shadow:2px 2px 0 #555;">
+                    Preto
+                  </button>
+                  <button type="button" id="btn-white" onclick="selectColor(false)"
+                    style="display:flex;align-items:center;gap:6px;padding:7px 16px;border:2px solid #A0A0A0;cursor:pointer;font-family:'Micro 5',monospace;font-size:18px;font-weight:bold;text-transform:uppercase;background:#fff;color:#555;box-shadow:2px 2px 0 #A0A0A0;">
+                    Branco
+                  </button>
+                  <button type="button" onclick="clearCanvas()"
+                    style="margin-left:auto;padding:7px 14px;border:2px solid var(--border-dark);cursor:pointer;font-family:'Micro 5',monospace;font-size:18px;background:var(--surface);color:var(--text);box-shadow:2px 2px 0 var(--border-dark);text-transform:uppercase;">
+                    Limpar
+                  </button>
+                </div>
+
                 <div class="pixel-canvas-wrap">
                   <canvas id="pixel-canvas"></canvas>
                 </div>
-                <button type="button" class="btn btn-ghost btn-sm" onclick="clearCanvas()">🗑 Limpar</button>
               </div>
             </div>
 
@@ -59,25 +78,58 @@
   }
 
   // ── Pixel art canvas ──────────────────────────────────────────────────────────
-  const GRID_SIZE = 100;
-  const CELL_SIZE = 5;
-  const CANVAS_PX = GRID_SIZE * CELL_SIZE; // 500
+  const GRID_SIZE   = 100;
+  const CELL_SIZE   = 5;
+  const CANVAS_PX   = GRID_SIZE * CELL_SIZE; // 500
+  const BRUSH_RADIUS = 2; // pinta um quadrado de 5×5 pixels lógicos
 
   const canvas = document.getElementById('pixel-canvas');
   const ctx    = canvas.getContext('2d');
   canvas.width  = CANVAS_PX;
   canvas.height = CANVAS_PX;
 
-  const pixels = new Array(GRID_SIZE * GRID_SIZE).fill(false); // false = white, true = black
+  const pixels = new Array(GRID_SIZE * GRID_SIZE).fill(false); // false=branco, true=preto
+
+  let isPainting = false;
+  let paintValue = true; // preto por padrão
+
+  function selectColor(black) {
+    paintValue = black;
+    const btnBlack = document.getElementById('btn-black');
+    const btnWhite = document.getElementById('btn-white');
+    if (black) {
+      btnBlack.style.background = '#000';
+      btnBlack.style.color      = '#fff';
+      btnBlack.style.borderColor = '#000';
+      btnBlack.style.boxShadow  = '2px 2px 0 #555';
+      btnWhite.style.background = '#fff';
+      btnWhite.style.color      = '#888';
+      btnWhite.style.borderColor = '#A0A0A0';
+      btnWhite.style.boxShadow  = '2px 2px 0 #A0A0A0';
+    } else {
+      btnWhite.style.background = '#fff';
+      btnWhite.style.color      = '#000';
+      btnWhite.style.borderColor = '#000';
+      btnWhite.style.boxShadow  = '2px 2px 0 #555';
+      btnBlack.style.background = '#eee';
+      btnBlack.style.color      = '#888';
+      btnBlack.style.borderColor = '#A0A0A0';
+      btnBlack.style.boxShadow  = '2px 2px 0 #A0A0A0';
+    }
+  }
 
   function renderCanvas() {
+    ctx.fillStyle = '#FFFFFF';
+    ctx.fillRect(0, 0, CANVAS_PX, CANVAS_PX);
     for (let y = 0; y < GRID_SIZE; y++) {
       for (let x = 0; x < GRID_SIZE; x++) {
-        ctx.fillStyle = pixels[y * GRID_SIZE + x] ? '#000000' : '#FFFFFF';
-        ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        if (pixels[y * GRID_SIZE + x]) {
+          ctx.fillStyle = '#000000';
+          ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+        }
       }
     }
-    ctx.strokeStyle = 'rgba(180,180,180,0.4)';
+    ctx.strokeStyle = 'rgba(180,180,180,0.35)';
     ctx.lineWidth = 0.5;
     for (let x = 0; x <= GRID_SIZE; x++) {
       ctx.beginPath(); ctx.moveTo(x * CELL_SIZE, 0); ctx.lineTo(x * CELL_SIZE, CANVAS_PX); ctx.stroke();
@@ -97,22 +149,22 @@
     };
   }
 
-  let isPainting = false;
-  let paintValue = true;
-
   function paintAt(clientX, clientY) {
     const { x, y } = getPixelCoords(clientX, clientY);
-    if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) return;
-    pixels[y * GRID_SIZE + x] = paintValue;
-    ctx.fillStyle = paintValue ? '#000000' : '#FFFFFF';
-    ctx.fillRect(x * CELL_SIZE, y * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+    for (let dy = -BRUSH_RADIUS; dy <= BRUSH_RADIUS; dy++) {
+      for (let dx = -BRUSH_RADIUS; dx <= BRUSH_RADIUS; dx++) {
+        const px = x + dx;
+        const py = y + dy;
+        if (px < 0 || px >= GRID_SIZE || py < 0 || py >= GRID_SIZE) continue;
+        pixels[py * GRID_SIZE + px] = paintValue;
+        ctx.fillStyle = paintValue ? '#000000' : '#FFFFFF';
+        ctx.fillRect(px * CELL_SIZE, py * CELL_SIZE, CELL_SIZE, CELL_SIZE);
+      }
+    }
   }
 
   canvas.addEventListener('mousedown', e => {
-    const { x, y } = getPixelCoords(e.clientX, e.clientY);
-    if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) return;
     isPainting = true;
-    paintValue = !pixels[y * GRID_SIZE + x];
     paintAt(e.clientX, e.clientY);
   });
   canvas.addEventListener('mousemove', e => { if (isPainting) paintAt(e.clientX, e.clientY); });
@@ -121,12 +173,8 @@
 
   canvas.addEventListener('touchstart', e => {
     e.preventDefault();
-    const t = e.touches[0];
-    const { x, y } = getPixelCoords(t.clientX, t.clientY);
-    if (x < 0 || x >= GRID_SIZE || y < 0 || y >= GRID_SIZE) return;
     isPainting = true;
-    paintValue = !pixels[y * GRID_SIZE + x];
-    paintAt(t.clientX, t.clientY);
+    paintAt(e.touches[0].clientX, e.touches[0].clientY);
   }, { passive: false });
   canvas.addEventListener('touchmove', e => {
     e.preventDefault();
@@ -136,8 +184,6 @@
 
   function clearCanvas() {
     pixels.fill(false);
-    ctx.fillStyle = '#FFFFFF';
-    ctx.fillRect(0, 0, CANVAS_PX, CANVAS_PX);
     renderCanvas();
   }
 
@@ -146,17 +192,22 @@
     off.width  = GRID_SIZE;
     off.height = GRID_SIZE;
     const octx = off.getContext('2d');
+    octx.fillStyle = '#FFFFFF';
+    octx.fillRect(0, 0, GRID_SIZE, GRID_SIZE);
     for (let y = 0; y < GRID_SIZE; y++) {
       for (let x = 0; x < GRID_SIZE; x++) {
-        octx.fillStyle = pixels[y * GRID_SIZE + x] ? '#000000' : '#FFFFFF';
-        octx.fillRect(x, y, 1, 1);
+        if (pixels[y * GRID_SIZE + x]) {
+          octx.fillStyle = '#000000';
+          octx.fillRect(x, y, 1, 1);
+        }
       }
     }
     return off.toDataURL('image/png');
   }
 
-  // Inicializa canvas em branco
+  // Inicializa
   renderCanvas();
+  selectColor(true); // preto ativo por padrão
 
   // ── Form submission ───────────────────────────────────────────────────────────
   async function handleSubmit(e) {

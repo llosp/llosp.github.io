@@ -22,6 +22,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
+  if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
+  else if (!getStoredProfile()) { window.location.href = '/skrill/select-profile/'; }
+
   async function init() {
     const stored = requireAuth();
     if (!stored) return;
@@ -44,24 +47,24 @@
       <div style="width:100%">
         <div class="page-header">
           <div>
-            <div class="page-header-label">🏆 Rankings</div>
+            <div class="page-header-label">[T] Rankings</div>
             <h1 class="page-header-title">Leaderboard</h1>
           </div>
           <div style="text-align:right">
-            <div class="text-muted text-sm">👥 ${profiles?.length ?? 0} membros</div>
+            <div class="text-muted text-sm">${profiles?.length ?? 0} membros</div>
             ${myWeekRank ? `<div style="font-size:12px;font-weight:700;color:var(--purple-400);margin-top:2px">★ Seu rank: #${myWeekRank}</div>` : ''}
           </div>
         </div>
 
         <div class="tab-list">
-          <button class="tab-btn active" data-tab="tab-weekly"  onclick="switchTab('tab-weekly')">⚡ Semanal</button>
-          <button class="tab-btn"        data-tab="tab-alltime" onclick="switchTab('tab-alltime')">🏆 Total</button>
+          <button class="tab-btn active" data-tab="tab-weekly"  onclick="switchTab('tab-weekly')">Semanal</button>
+          <button class="tab-btn"        data-tab="tab-alltime" onclick="switchTab('tab-alltime')">[T] Total</button>
         </div>
 
         <div id="tab-weekly" class="tab-panel active">
           ${renderPodium(byWeekly, stored.id, 'weekly_points')}
           ${byWeekly.length > 3 ? renderList(byWeekly.slice(3), stored.id, 'weekly_points', 4) : ''}
-          ${byWeekly.length === 0 ? emptyState('🏆', 'Nenhum membro ainda', 'Complete uma meta para aparecer aqui!') : ''}
+          ${byWeekly.length === 0 ? emptyState('[T]', 'Nenhum membro ainda', 'Complete uma meta para aparecer aqui!') : ''}
         </div>
         <div id="tab-alltime" class="tab-panel">
           ${renderList(byAllTime, stored.id, 'total_points', 1)}
@@ -87,9 +90,9 @@
           Top da Guild Esta Semana
         </p>
         <div class="podium">
-          ${col(second, 'p2', '🥈')}
-          ${col(first,  'p1', '🥇')}
-          ${col(third,  'p3', '🥉')}
+          ${col(second, 'p2', '#2')}
+          ${col(first,  'p1', '#1')}
+          ${col(third,  'p3', '#3')}
         </div>
       </div>`;
   }
@@ -107,7 +110,7 @@
             ${avatarHTML(p)}
             <div class="entry-info">
               <div class="entry-name-main">${p.name}</div>
-              <div class="entry-name-sub">🔥 ${p.streak_current ?? 0}w streak</div>
+              <div class="entry-name-sub">${p.streak_current ?? 0}w streak</div>
             </div>
             <div class="entry-xp">${(p[field] ?? 0).toLocaleString()}pts</div>
           </a>`).join('')}

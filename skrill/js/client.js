@@ -82,11 +82,11 @@ function statusBadge(status, points) {
 // ── Shared UI ─────────────────────────────────────────────────────────────────
 function renderSidebar(profile, activePage) {
   const NAV = [
-    { href: '/skrill/dashboard/',   label: 'Dashboard',    icon: '⊞', key: 'dashboard' },
-    { href: '/skrill/leaderboard/', label: 'Leaderboard',  icon: '🏆', key: 'leaderboard' },
-    { href: '/skrill/weekly/',      label: 'Weekly Goals', icon: '🎯', key: 'weekly' },
+    { href: '/skrill/dashboard/',   label: 'Dashboard',    icon: '[+]', key: 'dashboard' },
+    { href: '/skrill/leaderboard/', label: 'Leaderboard',  icon: '[T]', key: 'leaderboard' },
+    { href: '/skrill/weekly/',      label: 'Weekly Goals', icon: '[G]', key: 'weekly' },
   ];
-  if (profile) NAV.push({ href: `/skrill/profile/?id=${profile.id}`, label: 'Profile', icon: '👤', key: 'profile' });
+  if (profile) NAV.push({ href: `/skrill/profile/?id=${profile.id}`, label: 'Profile', icon: '[P]', key: 'profile' });
 
   const navItems = NAV.map(({ href, label, icon, key }) => {
     const active = activePage === key;
@@ -105,7 +105,7 @@ function renderSidebar(profile, activePage) {
           ${avatarHTML(profile)}
           <div style="flex:1;min-width:0">
             <div class="profile-name">${profile.name}</div>
-            <div class="profile-role">🔥 ${profile.streak_current ?? 0}w streak</div>
+            <div class="profile-role">${profile.streak_current ?? 0}w streak</div>
           </div>
           <div class="level-badge-sm">${profile.total_points ?? 0}pts</div>
         </div>
@@ -126,10 +126,10 @@ function renderSidebar(profile, activePage) {
 
 function renderMobileNav(activeKey) {
   const items = [
-    { href: '/skrill/dashboard/',   label: 'Home',    icon: '⊞', key: 'dashboard' },
-    { href: '/skrill/leaderboard/', label: 'Ranks',   icon: '🏆', key: 'leaderboard' },
-    { href: '/skrill/weekly/',      label: 'Goals',   icon: '🎯', key: 'weekly' },
-    { href: '/skrill/profile/',     label: 'Profile', icon: '👤', key: 'profile' },
+    { href: '/skrill/dashboard/',   label: 'Home',    icon: '[+]', key: 'dashboard' },
+    { href: '/skrill/leaderboard/', label: 'Ranks',   icon: '[T]', key: 'leaderboard' },
+    { href: '/skrill/weekly/',      label: 'Goals',   icon: '[G]', key: 'weekly' },
+    { href: '/skrill/profile/',     label: 'Profile', icon: '[P]', key: 'profile' },
   ];
   return `<nav class="mobile-nav">
     ${items.map(({ href, label, icon, key }) =>

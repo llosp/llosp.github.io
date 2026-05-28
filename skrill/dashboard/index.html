@@ -22,6 +22,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
+  if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
+  else if (!getStoredProfile()) { window.location.href = '/skrill/select-profile/'; }
+
   async function init() {
     const stored = requireAuth();
     if (!stored) return;
@@ -62,25 +65,25 @@
 
         <div class="stats-grid">
           <div class="stat-card">
-            <div class="stat-icon amber">⭐</div>
+            <div class="stat-icon amber">PTS</div>
             <div class="stat-value">${(profile?.total_points ?? 0).toLocaleString()}</div>
             <div class="stat-label">Total Pts</div>
             <div class="stat-sub">acumulado</div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon purple">📈</div>
+            <div class="stat-icon purple">WK</div>
             <div class="stat-value">${profile?.weekly_points ?? 0}</div>
             <div class="stat-label">Pts Semana</div>
             <div class="stat-sub">esta semana</div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon green">🎯</div>
+            <div class="stat-icon green">[G]</div>
             <div class="stat-value">${done.length}/${myGoals.length}</div>
             <div class="stat-label">Metas Feitas</div>
             <div class="stat-sub">esta semana</div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon cyan">🔥</div>
+            <div class="stat-icon cyan">STK</div>
             <div class="stat-value">${profile?.streak_current ?? 0}w</div>
             <div class="stat-label">Streak</div>
             <div class="stat-sub">melhor: ${profile?.streak_longest ?? 0}w</div>
@@ -103,21 +106,21 @@
   function renderWeeklyProgress(goals) {
     if (!goals.length) return `
       <div class="card">
-        <div class="card-header"><div class="card-title">⟳ Progresso Semanal</div></div>
+        <div class="card-header"><div class="card-title">>> Progresso Semanal</div></div>
         <div class="card-body">
-          <div class="empty-state"><div class="empty-icon">🎯</div><p>Nenhuma meta ainda esta semana</p></div>
+          <div class="empty-state"><div class="empty-icon">[G]</div><p>Nenhuma meta ainda esta semana</p></div>
         </div>
       </div>`;
     const rows = goals.slice(0, 8).map(g => `
       <div class="goal-row">
-        <span style="font-size:13px">${g.status === 'completed' || g.status === 'beyond' ? '✅' : '⭕'}</span>
+        <span style="font-size:13px">${g.status === 'completed' || g.status === 'beyond' ? '[v]' : '[ ]'}</span>
         <div class="goal-row-title">${g.title}</div>
         ${statusBadge(g.status, g.points_earned)}
       </div>`).join('');
     return `
       <div class="card">
         <div class="card-header">
-          <div class="card-title">⟳ Progresso Semanal</div>
+          <div class="card-title">>> Progresso Semanal</div>
           <a href="/skrill/weekly/" class="card-link">Ver tudo →</a>
         </div>
         <div class="card-body"><div class="goal-rows">${rows}</div></div>
@@ -127,12 +130,12 @@
   function renderActivityFeed(history) {
     if (!history.length) return `
       <div class="card">
-        <div class="card-header"><div class="card-title">⚡ Atividade</div></div>
+        <div class="card-header"><div class="card-title">Atividade</div></div>
         <div class="card-body"><div class="empty-state"><p>Nenhuma atividade ainda</p></div></div>
       </div>`;
     const items = history.map(h => `
       <div class="activity-item">
-        <div class="activity-dot">⚡</div>
+        <div class="activity-dot">&gt;</div>
         <div>
           <div class="activity-text">Ganhou <strong>+${h.amount}pts</strong> — ${h.reason.replace(/_/g, ' ')}</div>
           <div class="activity-time">${timeAgo(h.created_at)}</div>
@@ -140,7 +143,7 @@
       </div>`).join('');
     return `
       <div class="card">
-        <div class="card-header"><div class="card-title">⚡ Atividade</div></div>
+        <div class="card-header"><div class="card-title">Atividade</div></div>
         <div class="card-body">${items}</div>
       </div>`;
   }
@@ -148,12 +151,12 @@
   function renderMiniLeaderboard(profiles, currentId) {
     if (!profiles.length) return `
       <div class="card">
-        <div class="card-header"><div class="card-title">🏆 Top Guild</div></div>
+        <div class="card-header"><div class="card-title">[T] Top Guild</div></div>
         <div class="card-body"><div class="empty-state"><p>Nenhum membro ainda</p></div></div>
       </div>`;
     const items = profiles.slice(0, 5).map((p, i) => `
       <a href="/skrill/profile/?id=${p.id}" class="lb-entry ${i===0?'r1':i===1?'r2':i===2?'r3':''} ${p.id===currentId?'me':''}">
-        <div class="rank-num">${i===0?'🥇':i===1?'🥈':i===2?'🥉':'#'+(i+1)}</div>
+        <div class="rank-num">${i===0?'#1':i===1?'#2':i===2?'#3':'#'+(i+1)}</div>
         ${avatarHTML(p)}
         <div class="entry-info"><div class="entry-name-main">${p.name}</div></div>
         <div class="entry-xp">${p.weekly_points ?? 0}pts</div>
@@ -161,7 +164,7 @@
     return `
       <div class="card">
         <div class="card-header">
-          <div class="card-title">🏆 Top Guild</div>
+          <div class="card-title">[T] Top Guild</div>
           <a href="/skrill/leaderboard/" class="card-link">Ver tudo →</a>
         </div>
         <div class="card-body" style="padding:8px 12px">${items}</div>
@@ -173,7 +176,7 @@
     const d = new Date(meeting.scheduled_at);
     return `
       <div class="meeting-card">
-        <div class="meeting-lbl">📅 Próxima Reunião</div>
+        <div class="meeting-lbl">Próxima Reunião</div>
         <div class="meeting-date">${d.toLocaleDateString('pt-BR', { weekday: 'short', month: 'short', day: 'numeric' })}</div>
         <div class="meeting-time">${d.toLocaleTimeString('pt-BR', { hour: 'numeric', minute: '2-digit' })}</div>
         ${meeting.discord_link ? `<a href="${meeting.discord_link}" target="_blank" class="btn btn-sm btn-purple-soft" style="margin-top:10px">Entrar Discord →</a>` : ''}

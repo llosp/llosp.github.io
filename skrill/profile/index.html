@@ -19,9 +19,54 @@
     <div id="mobile-nav-root"></div>
   </div>
 
+  <!-- Edit Profile Modal -->
+  <div id="edit-modal" class="modal-overlay hidden">
+    <div class="modal" style="max-width:560px;width:90vw">
+      <div class="modal-title">[P] Editar Perfil</div>
+      <div class="modal-body" style="padding:16px 20px 8px">
+        <div class="form-group">
+          <label class="form-label">Nome / Apelido</label>
+          <input id="edit-name" class="form-input" type="text" maxlength="30" autocomplete="off"/>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Foto de Perfil</label>
+          <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+            <div style="display:flex;gap:8px;align-items:center;width:100%;max-width:min(500px,calc(100vw - 64px))">
+              <button type="button" id="edit-btn-black" onclick="editSelectColor(true)"
+                style="padding:6px 14px;border:2px solid #000;cursor:pointer;font-family:'Micro 5',monospace;font-size:24px;font-weight:bold;text-transform:uppercase;background:#000;color:#fff;box-shadow:2px 2px 0 #555;">
+                Preto
+              </button>
+              <button type="button" id="edit-btn-white" onclick="editSelectColor(false)"
+                style="padding:6px 14px;border:2px solid #A0A0A0;cursor:pointer;font-family:'Micro 5',monospace;font-size:24px;font-weight:bold;text-transform:uppercase;background:#fff;color:#555;box-shadow:2px 2px 0 #A0A0A0;">
+                Branco
+              </button>
+              <button type="button" onclick="editClearCanvas()"
+                style="margin-left:auto;padding:6px 12px;border:2px solid var(--border-dark);cursor:pointer;font-family:'Micro 5',monospace;font-size:24px;background:var(--surface);color:var(--text);box-shadow:2px 2px 0 var(--border-dark);text-transform:uppercase;">
+                Limpar
+              </button>
+            </div>
+            <div class="pixel-canvas-wrap">
+              <canvas id="edit-pixel-canvas" style="display:block;max-width:min(500px,calc(100vw - 64px));width:100%;image-rendering:pixelated;user-select:none;"></canvas>
+            </div>
+          </div>
+        </div>
+        <div id="edit-error" class="form-error hidden"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn btn-ghost" onclick="closeEditModal()">Cancelar</button>
+        <button class="btn btn-primary" id="edit-save-btn" onclick="saveProfile()">Salvar</button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
+  if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
+  else if (!getStoredProfile()) { window.location.href = '/skrill/select-profile/'; }
+
+  let viewedProfile = null;
+
   async function init() {
     const stored = requireAuth();
     if (!stored) return;
@@ -50,12 +95,12 @@
       return;
     }
 
+    viewedProfile = profile;
     const isMe = profile.id === stored.id;
     const completedGoals = (goals ?? []).filter(g => g.status === 'completed' || g.status === 'beyond');
 
     document.getElementById('app').innerHTML = `
       <div style="width:100%">
-        <!-- Hero -->
         <div class="profile-hero">
           ${avatarHTML(profile, 'avatar-xl')}
           <div class="profile-hero-info">
@@ -83,16 +128,20 @@
               </div>
             </div>
           </div>
-          ${isMe ? `<button class="btn btn-sm btn-ghost" onclick="signOut()">← Trocar perfil</button>` : ''}
+          ${isMe ? `
+            <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
+              <button class="btn btn-sm btn-primary" onclick="openEditModal()">Editar Perfil</button>
+              <button class="btn btn-sm btn-ghost" onclick="signOut()">← Trocar perfil</button>
+            </div>
+          ` : ''}
         </div>
 
-        <!-- Tabs -->
         <div class="tab-list">
           <button class="tab-btn active" data-tab="tab-goals" onclick="switchTab('tab-goals')">
-            🎯 Metas <span class="tab-count">${(goals ?? []).length}</span>
+            [G] Metas <span class="tab-count">${(goals ?? []).length}</span>
           </button>
           <button class="tab-btn" data-tab="tab-activity" onclick="switchTab('tab-activity')">
-            ⚡ Atividade
+            Atividade
           </button>
         </div>
 
@@ -106,7 +155,7 @@
   }
 
   function renderGoalList(goals) {
-    if (!goals.length) return `<div class="empty-state"><div class="empty-icon">🎯</div><h3>Nenhuma meta ainda</h3></div>`;
+    if (!goals.length) return `<div class="empty-state"><div class="empty-icon">[G]</div><h3>Nenhuma meta ainda</h3></div>`;
     return goals.map(g => `
       <div class="goal-card ${g.status === 'beyond' ? 'beyond' : g.status === 'completed' ? 'completed' : ''}">
         <div class="goal-card-top">
@@ -133,6 +182,170 @@
         </div>`).join('')}
     </div></div>`;
   }
+
+  // ── Edit Profile Canvas ───────────────────────────────────────────────────────
+  const EDIT_GRID = 100, EDIT_CELL = 5, EDIT_PX = 500, EDIT_BRUSH = 2;
+  let editCanvas = null, editCtx = null;
+  let editPixels = new Array(EDIT_GRID * EDIT_GRID).fill(false);
+  let editPainting = false, editPaintVal = true;
+
+  function initEditCanvas() {
+    editCanvas = document.getElementById('edit-pixel-canvas');
+    editCtx    = editCanvas.getContext('2d');
+    editCanvas.width  = EDIT_PX;
+    editCanvas.height = EDIT_PX;
+
+    editCanvas.addEventListener('mousedown', e => { editPainting = true; editPaintAt(e.clientX, e.clientY); });
+    editCanvas.addEventListener('mousemove', e => { if (editPainting) editPaintAt(e.clientX, e.clientY); });
+    editCanvas.addEventListener('mouseup',    () => { editPainting = false; });
+    editCanvas.addEventListener('mouseleave', () => { editPainting = false; });
+    editCanvas.addEventListener('touchstart', e => { e.preventDefault(); editPainting = true; editPaintAt(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
+    editCanvas.addEventListener('touchmove',  e => { e.preventDefault(); if (editPainting) editPaintAt(e.touches[0].clientX, e.touches[0].clientY); }, { passive: false });
+    editCanvas.addEventListener('touchend',   e => { e.preventDefault(); editPainting = false; }, { passive: false });
+  }
+
+  function editSelectColor(black) {
+    editPaintVal = black;
+    const bk = document.getElementById('edit-btn-black');
+    const wh = document.getElementById('edit-btn-white');
+    const base = "padding:6px 14px;border:2px solid;cursor:pointer;font-family:'Micro 5',monospace;font-size:24px;font-weight:bold;text-transform:uppercase;";
+    if (black) {
+      bk.style.cssText = base + 'border-color:#000;background:#000;color:#fff;box-shadow:2px 2px 0 #555;';
+      wh.style.cssText = base + 'border-color:#A0A0A0;background:#fff;color:#888;box-shadow:2px 2px 0 #A0A0A0;';
+    } else {
+      wh.style.cssText = base + 'border-color:#000;background:#fff;color:#000;box-shadow:2px 2px 0 #555;';
+      bk.style.cssText = base + 'border-color:#A0A0A0;background:#eee;color:#888;box-shadow:2px 2px 0 #A0A0A0;';
+    }
+  }
+
+  function editRenderCanvas() {
+    editCtx.fillStyle = '#fff';
+    editCtx.fillRect(0, 0, EDIT_PX, EDIT_PX);
+    for (let y = 0; y < EDIT_GRID; y++) {
+      for (let x = 0; x < EDIT_GRID; x++) {
+        if (editPixels[y * EDIT_GRID + x]) {
+          editCtx.fillStyle = '#000';
+          editCtx.fillRect(x * EDIT_CELL, y * EDIT_CELL, EDIT_CELL, EDIT_CELL);
+        }
+      }
+    }
+    editCtx.strokeStyle = 'rgba(180,180,180,0.35)';
+    editCtx.lineWidth = 0.5;
+    for (let x = 0; x <= EDIT_GRID; x++) {
+      editCtx.beginPath(); editCtx.moveTo(x * EDIT_CELL, 0); editCtx.lineTo(x * EDIT_CELL, EDIT_PX); editCtx.stroke();
+    }
+    for (let y = 0; y <= EDIT_GRID; y++) {
+      editCtx.beginPath(); editCtx.moveTo(0, y * EDIT_CELL); editCtx.lineTo(EDIT_PX, y * EDIT_CELL); editCtx.stroke();
+    }
+  }
+
+  function editPaintAt(clientX, clientY) {
+    const rect = editCanvas.getBoundingClientRect();
+    const sx = EDIT_PX / rect.width, sy = EDIT_PX / rect.height;
+    const cx = Math.floor((clientX - rect.left) * sx / EDIT_CELL);
+    const cy = Math.floor((clientY - rect.top)  * sy / EDIT_CELL);
+    for (let dy = -EDIT_BRUSH; dy <= EDIT_BRUSH; dy++) {
+      for (let dx = -EDIT_BRUSH; dx <= EDIT_BRUSH; dx++) {
+        const px = cx + dx, py = cy + dy;
+        if (px < 0 || px >= EDIT_GRID || py < 0 || py >= EDIT_GRID) continue;
+        editPixels[py * EDIT_GRID + px] = editPaintVal;
+        editCtx.fillStyle = editPaintVal ? '#000' : '#fff';
+        editCtx.fillRect(px * EDIT_CELL, py * EDIT_CELL, EDIT_CELL, EDIT_CELL);
+      }
+    }
+  }
+
+  function editClearCanvas() {
+    editPixels.fill(false);
+    editRenderCanvas();
+  }
+
+  function editGetAvatarDataURL() {
+    const off  = document.createElement('canvas');
+    off.width  = EDIT_GRID;
+    off.height = EDIT_GRID;
+    const octx = off.getContext('2d');
+    octx.fillStyle = '#fff';
+    octx.fillRect(0, 0, EDIT_GRID, EDIT_GRID);
+    for (let y = 0; y < EDIT_GRID; y++) {
+      for (let x = 0; x < EDIT_GRID; x++) {
+        if (editPixels[y * EDIT_GRID + x]) {
+          octx.fillStyle = '#000';
+          octx.fillRect(x, y, 1, 1);
+        }
+      }
+    }
+    return off.toDataURL('image/png');
+  }
+
+  function loadAvatarToCanvas(dataURL) {
+    if (!dataURL) { editRenderCanvas(); return; }
+    const img  = new Image();
+    img.onload = () => {
+      const tmp  = document.createElement('canvas');
+      tmp.width  = EDIT_GRID;
+      tmp.height = EDIT_GRID;
+      const tctx = tmp.getContext('2d');
+      tctx.drawImage(img, 0, 0, EDIT_GRID, EDIT_GRID);
+      const data = tctx.getImageData(0, 0, EDIT_GRID, EDIT_GRID).data;
+      for (let i = 0; i < EDIT_GRID * EDIT_GRID; i++) {
+        editPixels[i] = (data[i * 4] + data[i * 4 + 1] + data[i * 4 + 2]) / 3 < 128;
+      }
+      editRenderCanvas();
+    };
+    img.src = dataURL;
+  }
+
+  function openEditModal() {
+    if (!viewedProfile) return;
+    document.getElementById('edit-name').value = viewedProfile.name;
+    document.getElementById('edit-error').classList.add('hidden');
+    document.getElementById('edit-save-btn').disabled = false;
+    document.getElementById('edit-save-btn').textContent = 'Salvar';
+    document.getElementById('edit-modal').classList.remove('hidden');
+    if (!editCanvas) initEditCanvas();
+    editPixels = new Array(EDIT_GRID * EDIT_GRID).fill(false);
+    editSelectColor(true);
+    loadAvatarToCanvas(viewedProfile.avatar_data);
+    setTimeout(() => document.getElementById('edit-name').focus(), 50);
+  }
+
+  function closeEditModal() {
+    document.getElementById('edit-modal').classList.add('hidden');
+  }
+
+  async function saveProfile() {
+    const name = document.getElementById('edit-name').value.trim();
+    const btn  = document.getElementById('edit-save-btn');
+    const err  = document.getElementById('edit-error');
+    err.classList.add('hidden');
+    if (!name) {
+      err.textContent = 'Nome não pode estar vazio.';
+      err.classList.remove('hidden');
+      return;
+    }
+    btn.disabled = true;
+    btn.textContent = '...';
+    const avatar = editGetAvatarDataURL();
+    const { data, error } = await sb
+      .from('profiles')
+      .update({ name, avatar_data: avatar })
+      .eq('id', viewedProfile.id)
+      .select('*')
+      .single();
+    if (error) {
+      err.textContent = error.message;
+      err.classList.remove('hidden');
+      btn.disabled = false;
+      btn.textContent = 'Salvar';
+      return;
+    }
+    setStoredProfile(data);
+    closeEditModal();
+    window.location.reload();
+  }
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') closeEditModal(); });
 
   init();
   </script>

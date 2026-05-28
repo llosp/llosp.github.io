@@ -22,7 +22,7 @@
   <!-- Modal nova meta -->
   <div id="modal" class="modal-overlay hidden">
     <div class="modal">
-      <div class="modal-title">🎯 Nova Meta</div>
+      <div class="modal-title">[G] Nova Meta</div>
       <form id="goal-form" onsubmit="handleAddGoal(event)">
         <div class="modal-body">
           <div class="form-group">
@@ -46,6 +46,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
+  if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
+  else if (!getStoredProfile()) { window.location.href = '/skrill/select-profile/'; }
+
   let currentProfile = null;
   let currentWeek    = null;
   let allGoals       = [];
@@ -96,7 +99,7 @@
       <div style="width:100%">
         <div class="page-header">
           <div>
-            <div class="page-header-label">🎯 Metas Semanais</div>
+            <div class="page-header-label">[G] Metas Semanais</div>
             <h1 class="page-header-title">${weekLabel}<span class="page-header-sub">${weekSub}</span></h1>
           </div>
           <button class="btn btn-primary" onclick="openModal()">+ Declarar Meta</button>
@@ -121,7 +124,7 @@
   }
 
   function renderGoals(goals, isOwnerAll) {
-    if (!goals.length) return `<div class="empty-state"><div class="empty-icon">🎯</div><h3>Nenhuma meta ainda</h3><p>Seja o primeiro a declarar uma!</p></div>`;
+    if (!goals.length) return `<div class="empty-state"><div class="empty-icon">[G]</div><h3>Nenhuma meta ainda</h3><p>Seja o primeiro a declarar uma!</p></div>`;
     return goals.map(g => renderGoalCard(g, isOwnerAll ?? (g.profile_id === currentProfile?.id))).join('');
   }
 
@@ -131,7 +134,7 @@
     const actions = isOwner && g.status === 'active'
       ? `<div class="goal-actions">
           <button class="btn btn-sm btn-success" onclick="completeGoal('${g.id}', false)">✓ Feito</button>
-          <button class="btn btn-sm btn-purple-soft" onclick="completeGoal('${g.id}', true)">⚡ Beyond</button>
+          <button class="btn btn-sm btn-purple-soft" onclick="completeGoal('${g.id}', true)">Beyond</button>
         </div>`
       : '';
     return `

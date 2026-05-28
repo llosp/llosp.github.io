@@ -83,8 +83,9 @@ function statusBadge(status, points) {
 function renderSidebar(profile, activePage) {
   const NAV = [
     { href: '/skrill/dashboard/',   label: 'Dashboard',    icon: '[+]', key: 'dashboard' },
-    { href: '/skrill/leaderboard/', label: 'Leaderboard',  icon: '[T]', key: 'leaderboard' },
     { href: '/skrill/weekly/',      label: 'Weekly Goals', icon: '[G]', key: 'weekly' },
+    { href: '/skrill/leaderboard/', label: 'Leaderboard',  icon: '[T]', key: 'leaderboard' },
+    { href: '/skrill/skrill-time/', label: 'Skrill Time',  icon: '[S]', key: 'skrill-time' },
   ];
   if (profile) NAV.push({ href: `/skrill/profile/?id=${profile.id}`, label: 'Profile', icon: '[P]', key: 'profile' });
 
@@ -126,10 +127,11 @@ function renderSidebar(profile, activePage) {
 
 function renderMobileNav(activeKey) {
   const items = [
-    { href: '/skrill/dashboard/',   label: 'Home',    icon: '[+]', key: 'dashboard' },
-    { href: '/skrill/leaderboard/', label: 'Ranks',   icon: '[T]', key: 'leaderboard' },
-    { href: '/skrill/weekly/',      label: 'Goals',   icon: '[G]', key: 'weekly' },
-    { href: '/skrill/profile/',     label: 'Profile', icon: '[P]', key: 'profile' },
+    { href: '/skrill/dashboard/',   label: 'Home',   icon: '[+]', key: 'dashboard' },
+    { href: '/skrill/weekly/',      label: 'Goals',  icon: '[G]', key: 'weekly' },
+    { href: '/skrill/leaderboard/', label: 'Ranks',  icon: '[T]', key: 'leaderboard' },
+    { href: '/skrill/skrill-time/', label: 'S.Time', icon: '[S]', key: 'skrill-time' },
+    { href: '/skrill/profile/',     label: 'Perfil', icon: '[P]', key: 'profile' },
   ];
   return `<nav class="mobile-nav">
     ${items.map(({ href, label, icon, key }) =>

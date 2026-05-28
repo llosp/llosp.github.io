@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>SKRILL — Skrill Time</title>
+  <link rel="icon" type="image/x-icon" href="/skrill/favicon.ico"/>
+  <link rel="stylesheet" href="/skrill/css/style.css"/>
+</head>
+<body>
+  <div class="orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+  <div class="app-layout">
+    <div id="sidebar-root"></div>
+    <main class="main-content">
+      <div class="page-inner">
+        <div id="app" class="center-screen"><div class="spinner"></div></div>
+      </div>
+    </main>
+    <div id="mobile-nav-root"></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/skrill/js/client.js"></script>
+  <script>
+  if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
+  else if (!getStoredProfile()) { window.location.href = '/skrill/select-profile/'; }
+
+  let stored      = null;
+  let currentWeek = null;
+  let allProfiles = [];
+  let readyIds    = new Set();
+  let weekGoals   = [];
+  let realtimeCh  = null;
+
+  async function init() {
+    stored = requireAuth();
+    if (!stored) return;
+
+    const [{ data: me }, { data: week }, { data: profiles }] = await Promise.all([
+      sb.from('profiles').select('*').eq('id', stored.id).single(),
+      sb.from('weeks').select('*').eq('is_current', true).single(),
+      sb.from('profiles').select('*').order('name'),
+    ]);
+
+    if (me) setStoredProfile(me);
+    stored = me ?? stored;
+
+    document.getElementById('sidebar-root').innerHTML = renderSidebar(me, 'skrill-time');
+    document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('skrill-time');
+
+    currentWeek = week;
+    allProfiles = profiles ?? [];
+
+    if (week) {
+      const [{ data: ready }, { data: goals }] = await Promise.all([
+        sb.from('week_ready').select('*').eq('week_id', week.id),
+        sb.from('goals').select('*, profile:profiles(*)').eq('week_id', week.id),
+      ]);
+      readyIds  = new Set((ready ?? []).map(r => r.profile_id));
+      weekGoals = goals ?? [];
+    }
+
+    renderPage();
+    subscribeRealtime();
+  }
+
+  function subscribeRealtime() {
+    if (realtimeCh) realtimeCh.unsubscribe();
+    realtimeCh = sb.channel('skrill-time-ch')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'week_ready' }, () => reload())
+      .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'weeks' }, payload => {
+        if (payload.new?.id === currentWeek?.id) {
+          currentWeek = { ...currentWeek, ...payload.new };
+          renderPage();
+        }
+      })
+      .subscribe();
+  }
+
+  async function reload() {
+    if (!currentWeek) return;
+    const [{ data: ready }, { data: goals }] = await Promise.all([
+      sb.from('week_ready').select('*').eq('week_id', currentWeek.id),
+      sb.from('goals').select('*, profile:profiles(*)').eq('week_id', currentWeek.id),
+    ]);
+    const { data: week } = await sb.from('weeks').select('*').eq('id', currentWeek.id).single();
+    if (week) currentWeek = week;
+    readyIds  = new Set((ready ?? []).map(r => r.profile_id));
+    weekGoals = goals ?? [];
+    renderPage();
+  }
+
+  function renderPage() {
+    const week     = currentWeek;
+    const revealed = week?.skrill_time_revealed ?? false;
+    const total    = allProfiles.length;
+    const count    = readyIds.size;
+    const allReady = total > 0 && count >= total;
+    const iReady   = readyIds.has(stored.id);
+
+    const squares = allProfiles.map(p => `
+      <div class="ready-square ${readyIds.has(p.id) ? 'on' : ''}" title="${p.name}"></div>
+    `).join('');
+
+    const readySection = revealed ? '' : `
+      <div class="card" style="margin-bottom:20px">
+        <div class="card-body" style="padding:20px;text-align:center">
+          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px">
+            ${squares}
+          </div>
+          <div style="font-size:28px;font-weight:700;color:var(--text-muted);margin-bottom:20px;text-transform:uppercase">
+            ${count} / ${total} prontos
+          </div>
+          ${!iReady ? `
+            <button class="btn btn-primary" style="font-size:26px;padding:14px 32px" onclick="markReady()">
+              Marcar Pronto
+            </button>
+          ` : `
+            <div style="font-size:24px;color:var(--amber);font-weight:700;text-transform:uppercase">
+              Voce esta pronto! Aguardando os outros...
+            </div>
+          `}
+          ${allReady ? `<div style="font-size:24px;color:#22c55e;margin-top:12px;font-weight:700">Todos prontos! Revelando...</div>` : ''}
+        </div>
+      </div>`;
+
+    const revealSection = revealed
+      ? renderReveal()
+      : `<div style="text-align:center;font-size:24px;color:var(--text-muted);text-transform:uppercase;padding:24px 0;border-top:1px solid var(--border)">
+           Aguardando todos marcarem pronto para revelar os resultados
+         </div>`;
+
+    document.getElementById('app').innerHTML = `
+      <div style="width:100%">
+        <div class="page-header">
+          <div>
+            <div class="page-header-label">[S] Reuniao</div>
+            <h1 class="page-header-title">Skrill Time</h1>
+            ${week ? `<div style="font-size:24px;color:var(--text-muted);margin-top:6px;text-transform:uppercase;">
+              Semana ${week.week_number} · ${week.year}
+            </div>` : ''}
+          </div>
+        </div>
+        ${readySection}
+        ${revealSection}
+      </div>`;
+  }
+
+  function renderReveal() {
+    const completedGoals = weekGoals.filter(g => g.status === 'completed' || g.status === 'beyond');
+
+    const byMember = new Map();
+    for (const p of allProfiles) byMember.set(p.id, { profile: p, goals: [] });
+    for (const g of completedGoals) {
+      if (byMember.has(g.profile_id)) byMember.get(g.profile_id).goals.push(g);
+    }
+
+    const blocks = [...byMember.values()].map(({ profile, goals: mGoals }) => {
+      const pts = mGoals.reduce((s, g) => s + (g.points_earned ?? 0), 0);
+      const goalsHTML = mGoals.map(g => {
+        const imgs = g.image_urls ?? [];
+        return `
+          <div style="margin-bottom:12px">
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
+              <span style="font-size:24px">${g.status === 'beyond' ? '[B]' : '[v]'}</span>
+              <span style="font-size:24px;font-weight:700">${g.title}</span>
+              <span class="badge ${g.status === 'beyond' ? 'badge-beyond' : 'badge-completed'}" style="margin-left:auto">${g.status === 'beyond' ? 'Beyond!' : 'Feito'}</span>
+              ${g.points_earned > 0 ? `<span class="xp-earned">+${g.points_earned}pts</span>` : ''}
+            </div>
+            ${imgs.length ? `<div class="delivery-images">
+              ${imgs.map(u => `<img class="reveal-img" src="${u}" alt="entrega">`).join('')}
+            </div>` : ''}
+          </div>`;
+      }).join('');
+
+      return `
+        <div class="reveal-member-block" style="margin-bottom:16px">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--border)">
+            ${avatarHTML(profile, 'avatar-md')}
+            <div style="flex:1">
+              <div style="font-size:28px;font-weight:700">${profile.name}</div>
+              <div style="font-size:24px;color:var(--text-muted)">${mGoals.length} meta${mGoals.length !== 1 ? 's' : ''} entregue${mGoals.length !== 1 ? 's' : ''}</div>
+            </div>
+            <div style="font-size:32px;font-weight:700;color:var(--amber)">${pts}pts</div>
+          </div>
+          ${mGoals.length ? goalsHTML : `<div style="font-size:24px;color:var(--text-muted);text-align:center;padding:8px">Nenhuma meta entregue esta semana</div>`}
+        </div>`;
+    }).join('');
+
+    const totalPts = completedGoals.reduce((s, g) => s + (g.points_earned ?? 0), 0);
+
+    return `
+      <div class="card">
+        <div class="card-header">
+          <div class="card-title">Resultados da Semana</div>
+          <div style="font-size:24px;font-weight:700;color:var(--amber)">${totalPts}pts total</div>
+        </div>
+        <div class="card-body" style="padding:16px">${blocks}</div>
+      </div>`;
+  }
+
+  async function markReady() {
+    if (!currentWeek) return;
+    const btn = document.querySelector('[onclick="markReady()"]');
+    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+
+    const { error } = await sb.from('week_ready').insert({
+      week_id:    currentWeek.id,
+      profile_id: stored.id,
+    });
+
+    if (error && !error.message.includes('duplicate')) {
+      if (btn) { btn.disabled = false; btn.textContent = 'Marcar Pronto'; }
+      return;
+    }
+
+    readyIds.add(stored.id);
+
+    const { count } = await sb.from('week_ready')
+      .select('*', { count: 'exact', head: true })
+      .eq('week_id', currentWeek.id);
+
+    if (count >= allProfiles.length && allProfiles.length > 0) {
+      await sb.from('weeks').update({ skrill_time_revealed: true }).eq('id', currentWeek.id);
+      currentWeek = { ...currentWeek, skrill_time_revealed: true };
+      await awardPointsForAll();
+    }
+
+    renderPage();
+  }
+
+  async function awardPointsForAll() {
+    const toAward = weekGoals.filter(g =>
+      (g.status === 'completed' || g.status === 'beyond') && !g.points_awarded
+    );
+
+    for (const g of toAward) {
+      const pts = g.points_earned ?? (g.status === 'beyond' ? 8 : 5);
+
+      await sb.from('goals').update({ points_awarded: true }).eq('id', g.id);
+
+      await sb.from('point_history').insert({
+        profile_id: g.profile_id,
+        amount:     pts,
+        reason:     g.status === 'beyond' ? 'beyond_scope' : 'complete_goal',
+        goal_id:    g.id,
+        week_id:    currentWeek.id,
+      });
+
+      const { data: prof } = await sb.from('profiles').select('total_points,weekly_points').eq('id', g.profile_id).single();
+      if (prof) {
+        await sb.from('profiles').update({
+          total_points:  (prof.total_points  ?? 0) + pts,
+          weekly_points: (prof.weekly_points ?? 0) + pts,
+        }).eq('id', g.profile_id);
+      }
+    }
+  }
+
+  init();
+  </script>
+</body>
+</html>

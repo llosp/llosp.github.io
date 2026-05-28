@@ -606,3 +606,54 @@ textarea.form-input { resize: vertical; min-height: 70px; }
   -webkit-user-select: none;
   touch-action: none;
 }
+
+/* ── Delivery posts (dashboard feed) ────────────────────────────────────────── */
+.delivery-post {
+  background: var(--surface); border: 1px solid var(--border);
+  box-shadow: var(--shadow); padding: 14px; margin-bottom: 12px;
+}
+.delivery-post:last-child { margin-bottom: 0; }
+.delivery-post-header { display: flex; align-items: flex-start; gap: 10px; margin-bottom: 8px; }
+.delivery-post-caption { font-size: 24px; line-height: 1.5; }
+.delivery-post-caption strong { text-transform: uppercase; color: var(--text); }
+.delivery-post-time { font-size: 24px; color: var(--text-light); margin-top: 2px; text-transform: uppercase; }
+.delivery-images { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.delivery-img {
+  width: 120px; height: 120px; object-fit: cover;
+  border: 1px solid var(--border); display: block;
+  transition: filter 0.4s;
+}
+.delivery-img.blurred { filter: blur(14px); pointer-events: none; }
+
+/* ── Week section (profile timeline) ────────────────────────────────────────── */
+.week-section { margin-bottom: 24px; }
+.week-section-header {
+  background: var(--amber); border: 1px solid var(--amber-dark);
+  box-shadow: 1px 1px 0 var(--amber-dark); padding: 6px 14px; margin-bottom: 10px;
+  font-family: 'Jersey 25', monospace; font-size: 24px; color: #000;
+  display: flex; align-items: center; justify-content: space-between; text-transform: uppercase;
+}
+.week-section-header .week-pts { font-size: 24px; color: #7D5A00; }
+
+/* ── Skrill Time page ────────────────────────────────────────────────────────── */
+.ready-squares { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 20px 0; }
+.ready-square {
+  width: 36px; height: 36px; border: 2px solid #333; background: #111;
+  transition: background 0.5s, border-color 0.5s, box-shadow 0.5s;
+}
+.ready-square.on { background: #22c55e; border-color: #16a34a; box-shadow: 0 0 10px #22c55e99; }
+.ready-count { text-align: center; font-family: 'Jersey 25', monospace; font-size: 28px; margin-bottom: 16px; }
+.waiting-msg {
+  text-align: center; padding: 36px 20px; margin-top: 20px;
+  font-family: 'Jersey 25', monospace; font-size: 28px; color: var(--text-muted);
+  text-transform: uppercase; border: 2px dashed var(--border-dark);
+}
+.reveal-member-block {
+  background: var(--surface); border: 1px solid var(--border);
+  box-shadow: var(--shadow); padding: 16px; margin-bottom: 14px;
+}
+.reveal-member-header { display: flex; align-items: center; gap: 12px; margin-bottom: 10px; }
+.reveal-member-name { font-family: 'Jersey 25', monospace; font-size: 28px; flex: 1; }
+.reveal-member-pts { font-size: 24px; font-weight: bold; color: var(--amber-dark); }
+.reveal-images { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.reveal-img { width: 150px; height: 150px; object-fit: cover; border: 1px solid var(--border); }

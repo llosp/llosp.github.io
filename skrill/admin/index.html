@@ -1,0 +1,611 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>SKRILL — Admin</title>
+  <link rel="icon" type="image/x-icon" href="/skrill/favicon.ico"/>
+  <link rel="stylesheet" href="/skrill/css/style.css"/>
+  <style>
+    #admin-ui { display:none; width:100%; max-width:1000px; margin:0 auto; padding:24px 16px 60px; }
+    .danger-card { border:1px solid #ef4444 !important; }
+    .btn-danger { background:#ef4444 !important; color:#fff !important; border:none !important; }
+    .btn-danger:hover { background:#dc2626 !important; }
+    .admin-table { width:100%; border-collapse:collapse; font-size:20px; }
+    .admin-table th { text-align:left; font-size:18px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); padding:6px 10px; border-bottom:2px solid var(--border); }
+    .admin-table td { padding:8px 10px; border-bottom:1px solid var(--border); vertical-align:middle; }
+    .admin-table tr:last-child td { border-bottom:none; }
+    .inline-form { display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-top:10px; padding-top:10px; border-top:1px solid var(--border); }
+    @media(max-width:600px) { .inline-form { grid-template-columns:1fr; } }
+    .section-label { font-size:18px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--text-muted); margin-bottom:10px; }
+    .status-dot { display:inline-block; width:10px; height:10px; border-radius:50%; margin-right:6px; }
+    .dot-green { background:#22c55e; }
+    .dot-gray  { background:#6b7280; }
+  </style>
+</head>
+<body>
+  <div class="orbs"><div class="orb orb-1"></div><div class="orb orb-2"></div><div class="orb orb-3"></div></div>
+
+  <!-- Password gate -->
+  <div id="gate" class="login-wrap">
+    <div class="login-box">
+      <div class="window">
+        <div class="window-title"><span>SKRILL — Admin</span></div>
+        <div class="window-body" style="padding:24px 28px 28px">
+          <div style="text-align:center;margin-bottom:24px">
+            <div style="font-family:'Jersey 25',monospace;font-size:36px;color:#000">[A] Admin</div>
+            <div style="font-size:20px;color:var(--text-muted);text-transform:uppercase">Acesso restrito</div>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Senha Admin</label>
+            <input id="admin-pw" class="form-input" type="password" placeholder="••••••••" autocomplete="off"/>
+          </div>
+          <div id="gate-error" class="form-error hidden">Senha incorreta.</div>
+          <button class="btn btn-primary btn-full" style="margin-top:4px" onclick="adminLogin()">Entrar</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Admin UI -->
+  <div id="admin-ui">
+    <div class="page-header" style="margin-bottom:20px">
+      <div>
+        <div class="page-header-label">[A] Debug Panel</div>
+        <h1 class="page-header-title">Admin</h1>
+      </div>
+      <div style="display:flex;gap:8px;align-items:center">
+        <a href="/skrill/dashboard/" class="btn btn-ghost btn-sm">App</a>
+        <button class="btn btn-ghost btn-sm" onclick="adminLogout()">Sair</button>
+      </div>
+    </div>
+
+    <div class="tab-list" style="flex-wrap:wrap">
+      <button class="tab-btn active" data-tab="t-profiles" onclick="switchTab('t-profiles')">Perfis</button>
+      <button class="tab-btn" data-tab="t-weeks"    onclick="switchTab('t-weeks')">Semanas</button>
+      <button class="tab-btn" data-tab="t-goals"    onclick="switchTab('t-goals')">Metas</button>
+      <button class="tab-btn" data-tab="t-points"   onclick="switchTab('t-points')">Pontos</button>
+      <button class="tab-btn" data-tab="t-ready"    onclick="switchTab('t-ready')">Ready</button>
+      <button class="tab-btn" data-tab="t-danger"   onclick="switchTab('t-danger')" style="color:#ef4444">Danger</button>
+    </div>
+
+    <div id="t-profiles" class="tab-panel active"><div class="center-screen"><div class="spinner"></div></div></div>
+    <div id="t-weeks"    class="tab-panel"><div class="center-screen"><div class="spinner"></div></div></div>
+    <div id="t-goals"    class="tab-panel"><div class="center-screen"><div class="spinner"></div></div></div>
+    <div id="t-points"   class="tab-panel"><div class="center-screen"><div class="spinner"></div></div></div>
+    <div id="t-ready"    class="tab-panel"><div class="center-screen"><div class="spinner"></div></div></div>
+    <div id="t-danger"   class="tab-panel"><div class="center-screen"><div class="spinner"></div></div></div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/skrill/js/client.js"></script>
+  <script>
+  // ── Auth ───────────────────────────────────────────────────────────────────────
+  const ADMIN_SESSION = 'skrill_admin';
+
+  function isAdminAuthed() { return sessionStorage.getItem(ADMIN_SESSION) === '1'; }
+
+  function adminLogin() {
+    const pw = document.getElementById('admin-pw').value;
+    if (pw === 'admin') {
+      sessionStorage.setItem(ADMIN_SESSION, '1');
+      document.getElementById('gate').style.display = 'none';
+      document.getElementById('admin-ui').style.display = 'block';
+      loadAll();
+    } else {
+      document.getElementById('gate-error').classList.remove('hidden');
+      document.getElementById('admin-pw').value = '';
+      document.getElementById('admin-pw').focus();
+    }
+  }
+
+  function adminLogout() {
+    sessionStorage.removeItem(ADMIN_SESSION);
+    location.reload();
+  }
+
+  document.getElementById('admin-pw').addEventListener('keydown', e => { if (e.key === 'Enter') adminLogin(); });
+
+  if (isAdminAuthed()) {
+    document.getElementById('gate').style.display = 'none';
+    document.getElementById('admin-ui').style.display = 'block';
+  }
+
+  // ── Data ───────────────────────────────────────────────────────────────────────
+  let D = { profiles: [], weeks: [], goals: [], history: [], ready: [] };
+  let goalsWeekFilter = 'all';
+  let showNewWeekForm = false;
+  let editingProfileId = null;
+
+  async function loadAll() {
+    const [p, w, g, h, r] = await Promise.all([
+      sb.from('profiles').select('*').order('name'),
+      sb.from('weeks').select('*').order('year', { ascending: false }).order('week_number', { ascending: false }),
+      sb.from('goals').select('*, profile:profiles(name,id), week:weeks(week_number,year)').order('created_at', { ascending: false }),
+      sb.from('point_history').select('*, profile:profiles(name)').order('created_at', { ascending: false }).limit(300),
+      sb.from('week_ready').select('*, profile:profiles(name), week:weeks(week_number,year)').order('created_at', { ascending: false }),
+    ]);
+    D = {
+      profiles: p.data ?? [],
+      weeks:    w.data ?? [],
+      goals:    g.data ?? [],
+      history:  h.data ?? [],
+      ready:    r.data ?? [],
+    };
+    renderProfiles();
+    renderWeeks();
+    renderGoals();
+    renderPoints();
+    renderReady();
+    renderDanger();
+  }
+
+  if (isAdminAuthed()) loadAll();
+
+  // ── Toast ──────────────────────────────────────────────────────────────────────
+  function toast(msg, color = '#22c55e') {
+    const t = document.createElement('div');
+    t.textContent = msg;
+    t.style.cssText = `position:fixed;bottom:20px;right:20px;background:${color};color:#fff;padding:10px 18px;font-family:'Micro 5',monospace;font-size:22px;border:2px solid #000;box-shadow:3px 3px 0 #000;z-index:9999;text-transform:uppercase`;
+    document.body.appendChild(t);
+    setTimeout(() => t.remove(), 2500);
+  }
+
+  // ── PROFILES ───────────────────────────────────────────────────────────────────
+  function renderProfiles() {
+    const el = document.getElementById('t-profiles');
+    if (!D.profiles.length) { el.innerHTML = emptyState('Nenhum perfil'); return; }
+    el.innerHTML = D.profiles.map(p => `
+      <div class="card" style="margin-bottom:10px" id="pc-${p.id}">
+        <div class="card-body" style="padding:14px">
+          <div style="display:flex;align-items:center;gap:10px">
+            ${avatarHTML(p)}
+            <div style="flex:1">
+              <div style="font-size:26px;font-weight:700">${p.name}</div>
+              <div style="font-size:20px;color:var(--text-muted)">
+                Total: <b>${p.total_points??0}</b> &nbsp;·&nbsp;
+                Semana: <b>${p.weekly_points??0}</b> &nbsp;·&nbsp;
+                Streak: <b>${p.streak_current??0}w</b> &nbsp;·&nbsp;
+                Melhor: <b>${p.streak_longest??0}w</b>
+              </div>
+            </div>
+            <div style="display:flex;gap:6px">
+              <button class="btn btn-sm btn-primary" onclick="toggleProfileEdit('${p.id}')">Editar</button>
+              <button class="btn btn-sm btn-danger" onclick="deleteProfile('${p.id}','${p.name.replace(/'/g,"\\'")}')">Excluir</button>
+            </div>
+          </div>
+          <div id="pe-${p.id}" style="display:none">
+            <div class="inline-form">
+              <div class="form-group" style="margin:0"><label class="form-label">Nome</label>
+                <input id="pe-name-${p.id}" class="form-input" value="${p.name}"/></div>
+              <div class="form-group" style="margin:0"><label class="form-label">Total Pts</label>
+                <input id="pe-total-${p.id}" class="form-input" type="number" value="${p.total_points??0}"/></div>
+              <div class="form-group" style="margin:0"><label class="form-label">Pts Semana</label>
+                <input id="pe-weekly-${p.id}" class="form-input" type="number" value="${p.weekly_points??0}"/></div>
+              <div class="form-group" style="margin:0"><label class="form-label">Streak Atual</label>
+                <input id="pe-streak-${p.id}" class="form-input" type="number" value="${p.streak_current??0}"/></div>
+              <div class="form-group" style="margin:0"><label class="form-label">Melhor Streak</label>
+                <input id="pe-best-${p.id}" class="form-input" type="number" value="${p.streak_longest??0}"/></div>
+            </div>
+            <div style="display:flex;gap:8px;margin-top:10px">
+              <button class="btn btn-primary btn-sm" onclick="saveProfile('${p.id}')">Salvar</button>
+              <button class="btn btn-ghost btn-sm" onclick="toggleProfileEdit('${p.id}')">Cancelar</button>
+            </div>
+          </div>
+        </div>
+      </div>`).join('');
+  }
+
+  function toggleProfileEdit(id) {
+    const el = document.getElementById(`pe-${id}`);
+    el.style.display = el.style.display === 'none' ? 'block' : 'none';
+  }
+
+  async function saveProfile(id) {
+    const name   = document.getElementById(`pe-name-${id}`).value.trim();
+    const total  = parseInt(document.getElementById(`pe-total-${id}`).value)  || 0;
+    const weekly = parseInt(document.getElementById(`pe-weekly-${id}`).value) || 0;
+    const streak = parseInt(document.getElementById(`pe-streak-${id}`).value) || 0;
+    const best   = parseInt(document.getElementById(`pe-best-${id}`).value)   || 0;
+    if (!name) return toast('Nome vazio!', '#ef4444');
+    const { error } = await sb.from('profiles').update({ name, total_points: total, weekly_points: weekly, streak_current: streak, streak_longest: best }).eq('id', id);
+    if (error) return toast(error.message, '#ef4444');
+    toast('Perfil salvo!');
+    await loadAll();
+  }
+
+  async function deleteProfile(id, name) {
+    if (!confirm(`Excluir perfil "${name}"?\nIsso apaga as metas, pontos e ready deste perfil.`)) return;
+    await Promise.all([
+      sb.from('goals').delete().eq('profile_id', id),
+      sb.from('point_history').delete().eq('profile_id', id),
+      sb.from('week_ready').delete().eq('profile_id', id),
+    ]);
+    await sb.from('profiles').delete().eq('id', id);
+    toast('Perfil excluído!');
+    await loadAll();
+  }
+
+  // ── WEEKS ──────────────────────────────────────────────────────────────────────
+  function renderWeeks() {
+    const el = document.getElementById('t-weeks');
+    const rows = D.weeks.map(w => `
+      <div class="card" style="margin-bottom:10px">
+        <div class="card-body" style="padding:14px">
+          <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+            <div style="flex:1">
+              <div style="display:flex;align-items:center;gap:8px">
+                <span style="font-size:26px;font-weight:700">Semana ${w.week_number} · ${w.year}</span>
+                ${w.is_current ? `<span class="badge badge-completed">Atual</span>` : ''}
+                ${w.skrill_time_revealed ? `<span class="badge badge-beyond">Revelado</span>` : ''}
+              </div>
+              <div style="font-size:20px;color:var(--text-muted)">${w.start_date??'—'} → ${w.end_date??'—'}</div>
+            </div>
+            <div style="display:flex;gap:6px;flex-wrap:wrap">
+              ${!w.is_current ? `<button class="btn btn-sm btn-primary" onclick="setCurrentWeek('${w.id}')">Definir Atual</button>` : ''}
+              <button class="btn btn-sm btn-ghost" onclick="toggleReveal('${w.id}',${w.skrill_time_revealed})">
+                ${w.skrill_time_revealed ? 'Ocultar' : 'Revelar'}
+              </button>
+              <button class="btn btn-sm btn-danger" onclick="deleteWeek('${w.id}',${w.week_number})">Excluir</button>
+            </div>
+          </div>
+        </div>
+      </div>`).join('');
+
+    const newForm = showNewWeekForm ? `
+      <div class="card" style="margin-bottom:12px;border:2px solid var(--amber)">
+        <div class="card-body" style="padding:14px">
+          <div style="font-size:24px;font-weight:700;margin-bottom:12px">Nova Semana</div>
+          <div class="inline-form">
+            <div class="form-group" style="margin:0"><label class="form-label">Número</label>
+              <input id="nw-num" class="form-input" type="number" value="${nextWeekNum()}" min="1" max="52"/></div>
+            <div class="form-group" style="margin:0"><label class="form-label">Ano</label>
+              <input id="nw-year" class="form-input" type="number" value="${new Date().getFullYear()}"/></div>
+            <div class="form-group" style="margin:0"><label class="form-label">Início</label>
+              <input id="nw-start" class="form-input" type="date"/></div>
+            <div class="form-group" style="margin:0"><label class="form-label">Fim</label>
+              <input id="nw-end" class="form-input" type="date"/></div>
+          </div>
+          <label style="display:flex;align-items:center;gap:8px;font-size:22px;margin:10px 0;cursor:pointer">
+            <input type="checkbox" id="nw-current" checked/> Definir como semana atual
+          </label>
+          <label style="display:flex;align-items:center;gap:8px;font-size:22px;margin-bottom:12px;cursor:pointer">
+            <input type="checkbox" id="nw-reset-pts"/> Zerar pontos semanais de todos os perfis
+          </label>
+          <div style="display:flex;gap:8px">
+            <button class="btn btn-primary btn-sm" onclick="createWeek()">Criar Semana</button>
+            <button class="btn btn-ghost btn-sm" onclick="showNewWeekForm=false;renderWeeks()">Cancelar</button>
+          </div>
+        </div>
+      </div>` : '';
+
+    el.innerHTML = `
+      <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
+        <button class="btn btn-primary btn-sm" onclick="showNewWeekForm=true;renderWeeks()">+ Nova Semana</button>
+      </div>
+      ${newForm}
+      ${rows || emptyState('Nenhuma semana')}`;
+  }
+
+  function nextWeekNum() {
+    const cur = D.weeks.find(w => w.is_current);
+    if (cur) return (cur.week_number % 52) + 1;
+    if (D.weeks.length) return D.weeks[0].week_number + 1;
+    return 1;
+  }
+
+  async function setCurrentWeek(id) {
+    await sb.from('weeks').update({ is_current: false }).neq('id', id);
+    await sb.from('weeks').update({ is_current: true  }).eq('id', id);
+    toast('Semana atual atualizada!');
+    await loadAll();
+  }
+
+  async function toggleReveal(id, current) {
+    await sb.from('weeks').update({ skrill_time_revealed: !current }).eq('id', id);
+    toast(!current ? 'Revelado!' : 'Oculto!');
+    await loadAll();
+  }
+
+  async function deleteWeek(id, num) {
+    if (!confirm(`Excluir Semana ${num}?\nIsso apaga todas as metas, ready e pontos desta semana.`)) return;
+    await Promise.all([
+      sb.from('goals').delete().eq('week_id', id),
+      sb.from('week_ready').delete().eq('week_id', id),
+      sb.from('point_history').delete().eq('week_id', id),
+    ]);
+    await sb.from('weeks').delete().eq('id', id);
+    toast('Semana excluída!');
+    await loadAll();
+  }
+
+  async function createWeek() {
+    const num    = parseInt(document.getElementById('nw-num').value);
+    const year   = parseInt(document.getElementById('nw-year').value);
+    const start  = document.getElementById('nw-start').value  || null;
+    const end    = document.getElementById('nw-end').value    || null;
+    const isCur  = document.getElementById('nw-current').checked;
+    const resetP = document.getElementById('nw-reset-pts').checked;
+    if (isCur) await sb.from('weeks').update({ is_current: false }).not('id', 'is', null);
+    await sb.from('weeks').insert({ week_number: num, year, start_date: start, end_date: end, is_current: isCur, skrill_time_revealed: false });
+    if (resetP) await sb.from('profiles').update({ weekly_points: 0 }).not('id', 'is', null);
+    showNewWeekForm = false;
+    toast('Semana criada!');
+    await loadAll();
+  }
+
+  // ── GOALS ──────────────────────────────────────────────────────────────────────
+  function renderGoals() {
+    const el = document.getElementById('t-goals');
+    const weekOpts = D.weeks.map(w =>
+      `<option value="${w.id}" ${goalsWeekFilter===w.id?'selected':''}>${w.is_current?'[atual] ':''}Semana ${w.week_number} · ${w.year}</option>`
+    ).join('');
+    const list = goalsWeekFilter === 'all' ? D.goals : D.goals.filter(g => g.week_id === goalsWeekFilter);
+
+    const rows = list.map(g => {
+      const isDone = g.status === 'completed' || g.status === 'beyond';
+      return `
+        <div class="card" style="margin-bottom:8px">
+          <div class="card-body" style="padding:12px">
+            <div style="display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap">
+              <div style="flex:1;min-width:0">
+                <div style="font-size:22px;font-weight:700">${g.title}</div>
+                <div style="font-size:20px;color:var(--text-muted)">
+                  ${g.profile?.name??'?'} · ${g.week?`Sem. ${g.week.week_number}/${g.week.year}`:'—'}
+                  · <b>${g.points_earned??0}pts</b>
+                  ${g.points_awarded?'<span class="badge badge-completed" style="font-size:18px">premiado</span>':''}
+                  ${g.image_urls?.length?`<span style="color:var(--amber)"> · ${g.image_urls.length} img</span>`:''}
+                </div>
+              </div>
+              <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                <select class="form-input" style="padding:4px 8px;font-size:20px;width:auto" onchange="changeGoalStatus('${g.id}',this.value)">
+                  <option value="active"    ${g.status==='active'   ?'selected':''}>Ativo</option>
+                  <option value="completed" ${g.status==='completed'?'selected':''}>Feito</option>
+                  <option value="beyond"    ${g.status==='beyond'   ?'selected':''}>Beyond</option>
+                  <option value="failed"    ${g.status==='failed'   ?'selected':''}>Falhou</option>
+                </select>
+                <input type="number" class="form-input" id="gpts-${g.id}" value="${g.points_earned??0}"
+                  style="width:70px;padding:4px 8px;font-size:20px" title="Pontos"
+                  onchange="changeGoalPts('${g.id}',this.value)"/>
+                ${g.points_awarded ? `<button class="btn btn-sm btn-ghost" onclick="resetGoalAwarded('${g.id}')">Unprize</button>` : ''}
+                <button class="btn btn-sm btn-danger" onclick="deleteGoal('${g.id}')">Excluir</button>
+              </div>
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+
+    el.innerHTML = `
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
+        <select class="form-input" style="width:auto;font-size:22px" onchange="goalsWeekFilter=this.value;renderGoals()">
+          <option value="all" ${goalsWeekFilter==='all'?'selected':''}>Todas as semanas</option>
+          ${weekOpts}
+        </select>
+        <span style="font-size:22px;color:var(--text-muted)">${list.length} metas</span>
+      </div>
+      ${rows || emptyState('Nenhuma meta')}`;
+  }
+
+  async function changeGoalStatus(id, status) {
+    await sb.from('goals').update({ status }).eq('id', id);
+    await loadAll();
+  }
+
+  async function changeGoalPts(id, val) {
+    await sb.from('goals').update({ points_earned: parseInt(val)||0 }).eq('id', id);
+    await loadAll();
+  }
+
+  async function resetGoalAwarded(id) {
+    await sb.from('goals').update({ points_awarded: false }).eq('id', id);
+    toast('points_awarded resetado!');
+    await loadAll();
+  }
+
+  async function deleteGoal(id) {
+    if (!confirm('Excluir esta meta?')) return;
+    await sb.from('goals').delete().eq('id', id);
+    toast('Meta excluída!');
+    await loadAll();
+  }
+
+  // ── POINT HISTORY ──────────────────────────────────────────────────────────────
+  function renderPoints() {
+    const el = document.getElementById('t-points');
+    if (!D.history.length) { el.innerHTML = emptyState('Nenhum histórico'); return; }
+    el.innerHTML = `
+      <div class="card">
+        <div class="card-body" style="padding:0 14px;max-height:600px;overflow-y:auto">
+          <table class="admin-table">
+            <thead><tr>
+              <th>Perfil</th><th>Pts</th><th>Motivo</th><th>Data</th><th></th>
+            </tr></thead>
+            <tbody>
+              ${D.history.map(h => `
+                <tr>
+                  <td>${h.profile?.name??'?'}</td>
+                  <td><b>+${h.amount}</b></td>
+                  <td style="color:var(--text-muted)">${h.reason}</td>
+                  <td style="color:var(--text-muted)">${formatDate(h.created_at)}</td>
+                  <td><button class="btn btn-sm btn-danger" onclick="deleteHistory('${h.id}')">X</button></td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+  }
+
+  async function deleteHistory(id) {
+    await sb.from('point_history').delete().eq('id', id);
+    toast('Entrada excluída!');
+    await loadAll();
+  }
+
+  // ── WEEK READY ─────────────────────────────────────────────────────────────────
+  function renderReady() {
+    const el = document.getElementById('t-ready');
+    if (!D.ready.length) { el.innerHTML = emptyState('Nenhum registro'); return; }
+    el.innerHTML = `
+      <div class="card">
+        <div class="card-body" style="padding:0 14px">
+          <table class="admin-table">
+            <thead><tr>
+              <th>Perfil</th><th>Semana</th><th>Data</th><th></th>
+            </tr></thead>
+            <tbody>
+              ${D.ready.map(r => `
+                <tr>
+                  <td>${r.profile?.name??'?'}</td>
+                  <td>${r.week?`Sem. ${r.week.week_number}/${r.week.year}`:'—'}</td>
+                  <td style="color:var(--text-muted)">${formatDate(r.created_at)}</td>
+                  <td><button class="btn btn-sm btn-danger" onclick="deleteReady('${r.id}')">X</button></td>
+                </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>`;
+  }
+
+  async function deleteReady(id) {
+    await sb.from('week_ready').delete().eq('id', id);
+    toast('Entrada removida!');
+    await loadAll();
+  }
+
+  // ── DANGER ZONE ────────────────────────────────────────────────────────────────
+  function renderDanger() {
+    const cur = D.weeks.find(w => w.is_current);
+    const label = cur ? `Semana ${cur.week_number} · ${cur.year}` : 'Nenhuma semana atual';
+
+    document.getElementById('t-danger').innerHTML = `
+      <div style="background:#fef2f2;border:2px solid #ef4444;padding:12px 16px;margin-bottom:16px;font-size:22px;font-weight:700;color:#ef4444;text-transform:uppercase">
+        Semana atual: ${label}
+      </div>
+      <div style="display:flex;flex-direction:column;gap:10px">
+        ${dangerCard('Zerar pontos semanais de todos',
+          'Define weekly_points = 0 para todos os perfis.',
+          'Zerar Pts Semana', 'resetWeeklyPoints')}
+        ${dangerCard('Limpar todos week_ready da semana atual',
+          'Remove todos os "Pronto" da semana atual — permite remarcar.',
+          'Limpar Ready', 'clearReady')}
+        ${dangerCard('Ocultar revelação da semana atual',
+          'Define skrill_time_revealed = false — oculta imagens novamente.',
+          'Ocultar Reveal', 'hideReveal')}
+        ${dangerCard('Resetar premiações da semana atual',
+          'Define points_awarded = false em todas as metas da semana — permite re-premiar.',
+          'Resetar Premiações', 'resetPointsAwarded')}
+        ${dangerCard('Zerar streaks de todos os perfis',
+          'Define streak_current = 0 para todos.',
+          'Zerar Streaks', 'resetAllStreaks')}
+        ${dangerCard('Apagar todas as metas da semana atual',
+          'Deleta todas as goals da semana. Irreversível.',
+          'Apagar Metas', 'deleteWeekGoals', true)}
+        ${dangerCard('Reset total da semana atual',
+          'Apaga metas, ready e pontos da semana. Oculta reveal. Zera pts semanais. Dupla confirmação.',
+          'Reset Total', 'fullWeekReset', true)}
+        ${dangerCard('Apagar TODOS os pontos acumulados',
+          'Define total_points = 0 para todos os perfis e limpa todo o point_history.',
+          'Apagar Tudo', 'nukeAllPoints', true)}
+      </div>`;
+  }
+
+  function dangerCard(title, desc, btnLabel, fn, bright = false) {
+    return `
+      <div class="card ${bright ? 'danger-card' : ''}">
+        <div class="card-body" style="padding:14px;display:flex;align-items:center;gap:14px;flex-wrap:wrap">
+          <div style="flex:1">
+            <div style="font-size:24px;font-weight:700">${title}</div>
+            <div style="font-size:20px;color:var(--text-muted)">${desc}</div>
+          </div>
+          <button class="btn btn-sm btn-danger" style="min-width:140px;white-space:nowrap" onclick="${fn}()">
+            ${btnLabel}
+          </button>
+        </div>
+      </div>`;
+  }
+
+  function curWeekId() { return D.weeks.find(w => w.is_current)?.id ?? null; }
+
+  async function resetWeeklyPoints() {
+    if (!confirm('Zerar pontos semanais de TODOS os perfis?')) return;
+    await sb.from('profiles').update({ weekly_points: 0 }).not('id', 'is', null);
+    toast('Pontos semanais zerados!');
+    await loadAll();
+  }
+
+  async function clearReady() {
+    const wid = curWeekId();
+    if (!wid) return toast('Nenhuma semana atual!', '#ef4444');
+    if (!confirm('Limpar todos week_ready da semana atual?')) return;
+    await sb.from('week_ready').delete().eq('week_id', wid);
+    toast('Ready limpo!');
+    await loadAll();
+  }
+
+  async function hideReveal() {
+    const wid = curWeekId();
+    if (!wid) return toast('Nenhuma semana atual!', '#ef4444');
+    await sb.from('weeks').update({ skrill_time_revealed: false }).eq('id', wid);
+    toast('Reveal ocultado!');
+    await loadAll();
+  }
+
+  async function resetPointsAwarded() {
+    const wid = curWeekId();
+    if (!wid) return toast('Nenhuma semana atual!', '#ef4444');
+    if (!confirm('Resetar points_awarded de todas as metas da semana atual?')) return;
+    await sb.from('goals').update({ points_awarded: false }).eq('week_id', wid);
+    toast('Premiações resetadas!');
+    await loadAll();
+  }
+
+  async function resetAllStreaks() {
+    if (!confirm('Zerar streak_current de todos os perfis?')) return;
+    await sb.from('profiles').update({ streak_current: 0 }).not('id', 'is', null);
+    toast('Streaks zerados!');
+    await loadAll();
+  }
+
+  async function deleteWeekGoals() {
+    const wid = curWeekId();
+    if (!wid) return toast('Nenhuma semana atual!', '#ef4444');
+    if (!confirm('APAGAR todas as metas da semana atual? Irreversível.')) return;
+    await sb.from('goals').delete().eq('week_id', wid);
+    toast('Metas apagadas!');
+    await loadAll();
+  }
+
+  async function fullWeekReset() {
+    const wid = curWeekId();
+    if (!wid) return toast('Nenhuma semana atual!', '#ef4444');
+    if (!confirm('Reset TOTAL da semana atual?\nApaga metas, ready, pontos e oculta reveal.')) return;
+    if (!confirm('Tem certeza? Esta ação não pode ser desfeita.')) return;
+    await Promise.all([
+      sb.from('goals').delete().eq('week_id', wid),
+      sb.from('week_ready').delete().eq('week_id', wid),
+      sb.from('point_history').delete().eq('week_id', wid),
+      sb.from('weeks').update({ skrill_time_revealed: false }).eq('id', wid),
+      sb.from('profiles').update({ weekly_points: 0 }).not('id', 'is', null),
+    ]);
+    toast('Reset total concluído!');
+    await loadAll();
+  }
+
+  async function nukeAllPoints() {
+    if (!confirm('Apagar TODOS os pontos acumulados de todos os perfis? Irreversível.')) return;
+    if (!confirm('Última chance. Tem certeza absoluta?')) return;
+    await Promise.all([
+      sb.from('profiles').update({ total_points: 0, weekly_points: 0 }).not('id', 'is', null),
+      sb.from('point_history').delete().not('id', 'is', null),
+    ]);
+    toast('Tudo zerado!');
+    await loadAll();
+  }
+
+  // ── Helpers ────────────────────────────────────────────────────────────────────
+  function emptyState(msg) {
+    return `<div class="empty-state"><h3>${msg}</h3></div>`;
+  }
+  </script>
+</body>
+</html>

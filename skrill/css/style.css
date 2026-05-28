@@ -320,21 +320,82 @@ canvas.particles { display: none; }
 .entry-xp { font-size: 24px; font-weight: bold; color: var(--amber-dark); white-space: nowrap; }
 
 /* ── Podium ─────────────────────────────────────────────────────────────────── */
-.podium { display: flex; align-items: flex-end; justify-content: center; gap: 8px; padding: 16px 12px 0; }
-.podium-col { display: flex; flex-direction: column; align-items: center; gap: 4px; flex: 1; max-width: 120px; }
-.podium-medal { font-size: 28px; font-family: 'Jersey 25', monospace; }
-.podium-name { font-size: 24px; font-weight: bold; text-align: center; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%; text-transform: uppercase; }
-.podium-xp { font-size: 24px; font-weight: bold; margin-bottom: 4px; text-transform: uppercase; }
+.podium-wrap {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  padding: 24px 12px 0;
+  margin-bottom: 16px;
+}
+.podium { display: flex; align-items: flex-end; justify-content: center; gap: 10px; }
+.podium-col {
+  display: flex; flex-direction: column; align-items: center; gap: 4px;
+  flex: 1; max-width: 140px; min-width: 80px;
+}
+.podium-col.empty { opacity: .6; }
+.podium-col.me .avatar { outline: 3px solid var(--purple); outline-offset: 2px; }
+.podium-medal {
+  font-family: 'Jersey 25', monospace; font-size: 30px;
+  color: var(--text); margin-bottom: 4px;
+}
+.podium-col .avatar { box-shadow: 3px 3px 0 var(--border-dark); }
+.p1 .avatar { width: 80px; height: 80px; border: 3px solid var(--amber-dark); box-shadow: 3px 3px 0 var(--amber-dark); }
+.p2 .avatar { width: 64px; height: 64px; border: 3px solid #707070; box-shadow: 3px 3px 0 #606060; }
+.p3 .avatar { width: 56px; height: 56px; border: 3px solid #CD7F32; box-shadow: 3px 3px 0 #8B5A2B; }
+.podium-name {
+  font-size: 24px; font-weight: bold; text-align: center;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%;
+  text-transform: uppercase; margin-top: 8px;
+}
+.podium-xp { font-size: 22px; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; }
 .p1 .podium-xp { color: var(--amber-dark); }
 .p2 .podium-xp { color: #606060; }
 .p3 .podium-xp { color: #7D4A1A; }
-.podium-block { width: 100%; }
-.p1 .podium-block { height: 52px; background: var(--amber-light); border: 2px solid var(--amber); border-bottom: none; }
-.p2 .podium-block { height: 36px; background: #E8E8E8; border: 2px solid #C0C0C0; border-bottom: none; }
-.p3 .podium-block { height: 24px; background: #F5E6D3; border: 2px solid #CD7F32; border-bottom: none; }
-.p1 .avatar { border: 2px solid var(--amber-dark); }
-.p2 .avatar { border: 2px solid #A0A0A0; }
-.p3 .avatar { border: 2px solid #CD7F32; }
+.podium-block {
+  width: 100%; position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+.podium-block-num {
+  font-family: 'Jersey 25', monospace;
+  font-size: 56px; line-height: 1;
+  color: rgba(0,0,0,0.25);
+  text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
+}
+.p1 .podium-block { height: 110px; background: var(--amber-light); border: 2px solid var(--amber-dark); border-bottom: none; }
+.p2 .podium-block { height:  84px; background: #DCDCDC;          border: 2px solid #909090;           border-bottom: none; }
+.p3 .podium-block { height:  60px; background: #F0D9B7;          border: 2px solid #8B5A2B;           border-bottom: none; }
+.p2 .podium-block-num { font-size: 44px; }
+.p3 .podium-block-num { font-size: 36px; }
+
+/* ── Difficulty pills (weekly modal) ────────────────────────────────────────── */
+.difficulty-pills { display: flex; gap: 0; border: 1px solid var(--border-dark); box-shadow: var(--shadow); }
+.diff-pill {
+  flex: 1; padding: 10px 12px; cursor: pointer; text-align: center;
+  font-family: 'Micro 5', monospace; font-size: 24px; font-weight: bold;
+  background: var(--surface); color: var(--text-muted);
+  border-right: 1px solid var(--border-dark);
+  text-transform: uppercase; letter-spacing: 0.04em;
+}
+.diff-pill:last-child { border-right: none; }
+.diff-pill.active { background: var(--amber); color: #000; }
+.diff-pill input { display: none; }
+
+/* ── Peer rating UI ─────────────────────────────────────────────────────────── */
+.rating-card {
+  background: var(--bg); border: 1px solid var(--border);
+  padding: 12px; margin-bottom: 10px;
+}
+.rating-card-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
+.rating-stepper {
+  display: flex; align-items: center; gap: 8px;
+  background: var(--surface); border: 1px solid var(--border);
+  padding: 4px 8px; box-shadow: var(--shadow);
+}
+.rating-stepper .btn { padding: 4px 12px; font-size: 26px; min-width: 36px; }
+.rating-value {
+  font-family: 'Jersey 25', monospace; font-size: 32px;
+  min-width: 36px; text-align: center; color: var(--amber-dark);
+}
 
 /* ── Buttons ────────────────────────────────────────────────────────────────── */
 .btn {

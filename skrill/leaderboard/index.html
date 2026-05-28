@@ -25,13 +25,20 @@
   if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
   else if (!getStoredProfile()) { window.location.href = '/skrill/select-profile/'; }
 
+  let currentId = null;
+  let monthly = [];
+  let allTime = [];
+
   async function init() {
     const stored = requireAuth();
     if (!stored) return;
+    currentId = stored.id;
 
-    const [{ data: profile }, { data: profiles }] = await Promise.all([
+    const cutoff = new Date(Date.now() - 30 * 86400000).toISOString();
+    const [{ data: profile }, { data: profiles }, { data: history }] = await Promise.all([
       sb.from('profiles').select('*').eq('id', stored.id).single(),
       sb.from('profiles').select('*'),
+      sb.from('point_history').select('profile_id,amount,created_at').gte('created_at', cutoff),
     ]);
 
     if (profile) setStoredProfile(profile);
@@ -39,12 +46,21 @@
     document.getElementById('sidebar-root').innerHTML = renderSidebar(profile, 'leaderboard');
     document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('leaderboard');
 
-    const { data: week } = await sb.from('weeks').select('*').eq('is_current', true).single();
+    const monthlyMap = new Map();
+    for (const h of (history ?? [])) {
+      monthlyMap.set(h.profile_id, (monthlyMap.get(h.profile_id) ?? 0) + (h.amount ?? 0));
+    }
+    const profs = profiles ?? [];
+    monthly = profs.map(p => ({ ...p, period_points: monthlyMap.get(p.id) ?? 0 }))
+                   .sort((a, b) => (b.period_points - a.period_points) || a.name.localeCompare(b.name));
+    allTime = [...profs].sort((a, b) => ((b.total_points ?? 0) - (a.total_points ?? 0)) || a.name.localeCompare(b.name));
 
-    const byAllTime = [...(profiles ?? [])].sort((a, b) => (b.total_points ?? 0) - (a.total_points ?? 0));
-    const myRank    = byAllTime.findIndex(p => p.id === stored.id) + 1;
+    const my30 = monthly.findIndex(p => p.id === currentId) + 1;
+    const myAll = allTime.findIndex(p => p.id === currentId) + 1;
 
-    document.getElementById('app').innerHTML = `
+    const app = document.getElementById('app');
+    app.classList.remove('center-screen');
+    app.innerHTML = `
       <div style="width:100%">
         <div class="page-header">
           <div>
@@ -52,33 +68,57 @@
             <h1 class="page-header-title">Leaderboard</h1>
           </div>
           <div style="text-align:right">
-            <div class="text-muted text-sm">${profiles?.length ?? 0} membros</div>
-            ${myRank ? `<div style="font-size:24px;font-weight:700;color:var(--amber);margin-top:4px">Seu rank: #${myRank}</div>` : ''}
+            <div class="text-muted text-sm">${profs.length} membros</div>
+            <div style="font-size:22px;font-weight:700;color:var(--amber);margin-top:4px">
+              30d: #${my30 || '—'} · All-Time: #${myAll || '—'}
+            </div>
           </div>
         </div>
-        ${renderPodium(byAllTime, stored.id)}
-        ${renderList(byAllTime.slice(3), stored.id, 'total_points', 4)}
-        ${byAllTime.length === 0 ? emptyState('[T]', 'Nenhum membro ainda', 'Complete uma meta para aparecer aqui!') : ''}
+
+        <div class="tab-list">
+          <button class="tab-btn active" data-tab="tab-30d" onclick="switchTab('tab-30d')">30 Dias</button>
+          <button class="tab-btn" data-tab="tab-all" onclick="switchTab('tab-all')">All-Time</button>
+        </div>
+
+        <div id="tab-30d" class="tab-panel active">
+          ${renderRanking(monthly, 'period_points')}
+        </div>
+        <div id="tab-all" class="tab-panel">
+          ${renderRanking(allTime, 'total_points')}
+        </div>
       </div>`;
   }
 
-  function renderPodium(entries, currentId) {
-    if (entries.length < 3) return '';
+  function renderRanking(entries, field) {
+    if (!entries.length) {
+      return `<div class="empty-state"><div class="empty-icon">[T]</div><h3>Nenhum membro ainda</h3></div>`;
+    }
+    return renderPodium(entries, field) + renderList(entries.slice(3), field, 4);
+  }
+
+  function renderPodium(entries, field) {
     const [first, second, third] = entries;
     function col(p, cls, medal) {
-      return `<div class="podium-col ${cls}">
+      if (!p) {
+        return `<div class="podium-col ${cls} empty">
+          <div class="podium-medal">${medal}</div>
+          <div class="avatar avatar-md" style="opacity:.3">—</div>
+          <div class="podium-name" style="color:var(--text-light)">vazio</div>
+          <div class="podium-xp">0pts</div>
+          <div class="podium-block"><div class="podium-block-num">${medal}</div></div>
+        </div>`;
+      }
+      const me = p.id === currentId ? 'me' : '';
+      return `<a href="/skrill/profile/?id=${p.id}" class="podium-col ${cls} ${me}" style="text-decoration:none;color:inherit">
         <div class="podium-medal">${medal}</div>
         ${avatarHTML(p, cls === 'p1' ? 'avatar-lg' : 'avatar-md')}
         <div class="podium-name">${p.name}</div>
-        <div class="podium-xp">${(p.total_points ?? 0).toLocaleString()}pts</div>
-        <div class="podium-block"></div>
-      </div>`;
+        <div class="podium-xp">${(p[field] ?? 0).toLocaleString()}pts</div>
+        <div class="podium-block"><div class="podium-block-num">${medal}</div></div>
+      </a>`;
     }
     return `
-      <div class="glass" style="margin-bottom:20px">
-        <p style="text-align:center;font-size:11px;font-weight:700;color:rgba(251,191,36,0.7);text-transform:uppercase;letter-spacing:.06em;padding-top:16px">
-          Top da Guild
-        </p>
+      <div class="podium-wrap">
         <div class="podium">
           ${col(second, 'p2', '#2')}
           ${col(first,  'p1', '#1')}
@@ -87,15 +127,15 @@
       </div>`;
   }
 
-  function renderList(entries, currentId, field, startRank) {
+  function renderList(entries, field, startRank) {
     if (!entries.length) return '';
     return `
-      <p style="font-size:11px;color:rgba(0,0,0,0.3);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin-bottom:8px">
+      <div style="font-size:22px;color:var(--text-muted);text-transform:uppercase;letter-spacing:.06em;font-weight:700;margin:18px 0 8px">
         Classificação Completa
-      </p>
+      </div>
       <div style="display:flex;flex-direction:column;gap:6px">
         ${entries.map((p, i) => `
-          <a href="/skrill/profile/?id=${p.id}" class="lb-entry ${i+startRank===1?'r1':i+startRank===2?'r2':i+startRank===3?'r3':''} ${p.id===currentId?'me':''}">
+          <a href="/skrill/profile/?id=${p.id}" class="lb-entry ${p.id===currentId?'me':''}">
             <div class="rank-num">#${i + startRank}</div>
             ${avatarHTML(p)}
             <div class="entry-info">
@@ -105,10 +145,6 @@
             <div class="entry-xp">${(p[field] ?? 0).toLocaleString()}pts</div>
           </a>`).join('')}
       </div>`;
-  }
-
-  function emptyState(icon, title, sub) {
-    return `<div class="empty-state"><div class="empty-icon">${icon}</div><h3>${title}</h3><p>${sub}</p></div>`;
   }
 
   init();

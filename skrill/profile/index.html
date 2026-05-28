@@ -104,7 +104,7 @@
 
     viewedProfile = profile;
     const isMe = profile.id === stored.id;
-    const completedGoals = (goals ?? []).filter(g => g.status === 'completed' || g.status === 'beyond');
+    const completedGoals = (goals ?? []).filter(g => g.status === 'completed');
 
     document.getElementById('app').innerHTML = `
       <div style="width:100%">
@@ -165,7 +165,7 @@
         ? `Temporada ${week.week_number} · ${week.year}`
         : 'Sem temporada';
       const items = wGoals.map(g => {
-        const isDone = g.status === 'completed' || g.status === 'beyond';
+        const isDone = g.status === 'completed';
         const imgs = g.image_urls ?? [];
         const imagesHTML = isDone && imgs.length
           ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
@@ -173,7 +173,7 @@
             </div>`
           : '';
         return `
-          <div class="goal-card ${g.status === 'beyond' ? 'beyond' : g.status === 'completed' ? 'completed' : ''}">
+          <div class="goal-card ${g.status === 'completed' ? 'completed' : ''}">
             <div class="goal-card-top">
               <div class="goal-card-meta">
                 <div class="goal-user-row"><span class="goal-time">${formatDate(g.created_at)}</span></div>
@@ -182,7 +182,10 @@
               </div>
             </div>
             ${imagesHTML}
-            <div class="goal-footer">${statusBadge(g.status, g.points_earned)}</div>
+            <div class="goal-footer">
+              ${difficultyChip(g.difficulty)}
+              ${statusBadge(g.status, g.points_earned)}
+            </div>
           </div>`;
       }).join('');
       return `

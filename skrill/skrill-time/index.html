@@ -34,6 +34,12 @@
   let weekGoals         = [];
   let realtimeCh        = null;
   let countdownInterval = null;
+  let myRatings         = new Map();   // goal_id -> int (my own allocations)
+  let myUsed            = 0;
+  let mySubmitted       = false;
+  let submissionIds     = new Set();   // profile_ids that have finalized
+  let bonusByGoal       = new Map();   // goal_id -> sum of all bonuses (post-close)
+  let finalizing        = false;
 
   async function init() {
     stored = requireAuth();
@@ -54,20 +60,47 @@
     currentWeek     = week;
     allProfilesFull = profiles ?? [];
 
-    if (week) {
-      const [{ data: ready }, { data: goals }, { data: participants }] = await Promise.all([
-        sb.from('week_ready').select('*').eq('week_id', week.id),
-        sb.from('goals').select('*, profile:profiles(*)').eq('week_id', week.id),
-        sb.from('season_participants').select('profile_id').eq('week_id', week.id),
-      ]);
-      readyIds       = new Set((ready ?? []).map(r => r.profile_id));
-      weekGoals      = goals ?? [];
-      participantIds = new Set((participants ?? []).map(p => p.profile_id));
-      allProfiles    = allProfilesFull.filter(p => participantIds.has(p.id));
-    }
+    if (week) await loadWeekState();
 
     renderPage();
     subscribeRealtime();
+  }
+
+  async function loadWeekState() {
+    const [
+      { data: ready },
+      { data: goals },
+      { data: participants },
+      { data: myR },
+      { data: subs },
+      { data: allR },
+    ] = await Promise.all([
+      sb.from('week_ready').select('*').eq('week_id', currentWeek.id),
+      sb.from('goals').select('*, profile:profiles(*)').eq('week_id', currentWeek.id),
+      sb.from('season_participants').select('profile_id').eq('week_id', currentWeek.id),
+      sb.from('peer_ratings').select('goal_id,amount').eq('week_id', currentWeek.id).eq('rater_id', stored.id),
+      sb.from('peer_rating_submissions').select('rater_id').eq('week_id', currentWeek.id),
+      sb.from('peer_ratings').select('goal_id,amount').eq('week_id', currentWeek.id),
+    ]);
+    readyIds       = new Set((ready ?? []).map(r => r.profile_id));
+    weekGoals      = goals ?? [];
+    participantIds = new Set((participants ?? []).map(p => p.profile_id));
+    allProfiles    = allProfilesFull.filter(p => participantIds.has(p.id));
+
+    myRatings = new Map();
+    myUsed = 0;
+    for (const r of (myR ?? [])) {
+      myRatings.set(r.goal_id, r.amount);
+      myUsed += r.amount;
+    }
+
+    submissionIds = new Set((subs ?? []).map(s => s.rater_id));
+    mySubmitted = submissionIds.has(stored.id);
+
+    bonusByGoal = new Map();
+    for (const r of (allR ?? [])) {
+      bonusByGoal.set(r.goal_id, (bonusByGoal.get(r.goal_id) ?? 0) + r.amount);
+    }
   }
 
   function subscribeRealtime() {
@@ -75,6 +108,8 @@
     realtimeCh = sb.channel('skrill-time-ch')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'week_ready' }, () => reload())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'season_participants' }, () => reload())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'peer_ratings' }, () => reload())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'peer_rating_submissions' }, () => reload())
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'weeks' }, payload => {
         if (payload.new?.id === currentWeek?.id) {
           currentWeek = { ...currentWeek, ...payload.new };
@@ -86,17 +121,9 @@
 
   async function reload() {
     if (!currentWeek) return;
-    const [{ data: ready }, { data: goals }, { data: participants }] = await Promise.all([
-      sb.from('week_ready').select('*').eq('week_id', currentWeek.id),
-      sb.from('goals').select('*, profile:profiles(*)').eq('week_id', currentWeek.id),
-      sb.from('season_participants').select('profile_id').eq('week_id', currentWeek.id),
-    ]);
     const { data: week } = await sb.from('weeks').select('*').eq('id', currentWeek.id).single();
     if (week) currentWeek = week;
-    readyIds       = new Set((ready ?? []).map(r => r.profile_id));
-    weekGoals      = goals ?? [];
-    participantIds = new Set((participants ?? []).map(p => p.profile_id));
-    allProfiles    = allProfilesFull.filter(p => participantIds.has(p.id));
+    await loadWeekState();
     renderPage();
   }
 
@@ -112,10 +139,12 @@
   function renderPage() {
     if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
 
+    const app = document.getElementById('app');
+    app.classList.remove('center-screen');
     const week = currentWeek;
 
     if (!week) {
-      document.getElementById('app').innerHTML = `<div style="width:100%">
+      app.innerHTML = `<div style="width:100%">
         <div class="page-header">
           <div>
             <div class="page-header-label">[S] Reuniao</div>
@@ -127,21 +156,24 @@
       return;
     }
 
+    if (!participantIds.has(stored.id)) {
+      app.innerHTML = renderSeasonLocked(week, stored, '[S] Reuniao', 'Skrill Time');
+      return;
+    }
+
     const revealed = week?.skrill_time_revealed ?? false;
     const total    = allProfiles.length;
     const count    = readyIds.size;
     const allReady = total > 0 && count >= total;
     const iReady   = readyIds.has(stored.id);
     const isSkDay  = isSkrillDay();
+    const allSubmitted = total > 0 && [...participantIds].every(id => submissionIds.has(id));
+    const closed   = revealed && allSubmitted;
 
-    const squares = allProfiles.map(p => `
-      <div class="ready-square ${readyIds.has(p.id) ? 'on' : ''}" title="${p.name}"></div>
-    `).join('');
-
-    let readySection = '';
+    let body = '';
     if (!revealed) {
       if (!isSkDay) {
-        readySection = `
+        body = `
           <div class="card" style="margin-bottom:20px">
             <div class="card-body countdown-wrap">
               <div id="countdown-subtext" class="countdown-dynamic-title"></div>
@@ -150,7 +182,10 @@
             </div>
           </div>`;
       } else {
-        readySection = `
+        const squares = allProfiles.map(p => `
+          <div class="ready-square ${readyIds.has(p.id) ? 'on' : ''}" title="${p.name}"></div>
+        `).join('');
+        body = `
           <div class="card" style="margin-bottom:20px">
             <div class="card-body" style="padding:20px;text-align:center">
               <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px">
@@ -177,15 +212,13 @@
             </div>
           </div>`;
       }
+    } else if (!closed) {
+      body = renderRatingPhase();
+    } else {
+      body = renderReveal();
     }
 
-    const revealSection = revealed
-      ? renderReveal()
-      : `<div style="text-align:center;font-size:24px;color:var(--text-muted);text-transform:uppercase;padding:24px 0;border-top:1px solid var(--border)">
-           Aguardando todos marcarem pronto para revelar os resultados
-         </div>`;
-
-    document.getElementById('app').innerHTML = `
+    app.innerHTML = `
       <div style="width:100%">
         <div class="page-header">
           <div>
@@ -196,8 +229,7 @@
             </div>` : ''}
           </div>
         </div>
-        ${readySection}
-        ${revealSection}
+        ${body}
       </div>`;
 
     if (!revealed && !isSkDay) startCountdown();
@@ -248,11 +280,106 @@
     countdownInterval = setInterval(tick, 1000);
   }
 
-  function renderReveal() {
-    const completedGoals = weekGoals.filter(g =>
-      (g.status === 'completed' || g.status === 'beyond') && participantIds.has(g.profile_id)
-    );
+  function deliveredGoals() {
+    return weekGoals.filter(g => g.status === 'completed' && participantIds.has(g.profile_id));
+  }
 
+  function renderRatingPhase() {
+    const goals = deliveredGoals();
+    const bonusTotal = bonusPoolFor(allProfiles.length);
+    const remaining = bonusTotal - myUsed;
+
+    if (!goals.length) {
+      // Auto-close immediately if nothing to rate
+      const adminBtn = isAdmin() ? `<button class="btn btn-primary btn-sm" style="margin-top:14px" onclick="forceFinalize()">Forçar Encerramento</button>` : '';
+      return `
+        <div class="card" style="padding:36px 20px;text-align:center">
+          <div style="font-size:30px;font-weight:700;margin-bottom:8px">Nenhuma entrega esta temporada</div>
+          <div style="font-size:22px;color:var(--text-muted);text-transform:uppercase">Nada para avaliar.</div>
+          ${adminBtn}
+        </div>`;
+    }
+
+    if (mySubmitted) return renderWaitingForOthers(goals);
+
+    const goalsHTML = goals.map(g => {
+      const profile = g.profile;
+      const cur = myRatings.get(g.id) ?? 0;
+      const imgs = g.image_urls ?? [];
+      const isMine = g.profile_id === stored.id;
+      return `
+        <div class="rating-card">
+          <div class="rating-card-head">
+            ${profile ? avatarHTML(profile) : ''}
+            <div style="flex:1;min-width:0">
+              <div style="font-size:22px;color:var(--text-muted);text-transform:uppercase">
+                ${profile?.name ?? '?'} ${isMine ? '· você' : ''}
+              </div>
+              <div style="font-size:26px;font-weight:700">${g.title}</div>
+              <div style="font-size:20px;color:var(--text-muted);margin-top:2px">
+                ${difficultyChip(g.difficulty)} · base ${g.difficulty === 'complex' ? 5 : 2}pts
+              </div>
+            </div>
+            <div class="rating-stepper">
+              <button class="btn btn-sm btn-ghost" ${cur <= 0 ? 'disabled' : ''} onclick="decRating('${g.id}')">−</button>
+              <div class="rating-value">${cur}</div>
+              <button class="btn btn-sm btn-primary" ${remaining <= 0 ? 'disabled' : ''} onclick="incRating('${g.id}')">+</button>
+            </div>
+          </div>
+          ${imgs.length ? `<div class="delivery-images" style="margin-top:10px">
+            ${imgs.map(u => `<img class="reveal-img" src="${u}" alt="entrega">`).join('')}
+          </div>` : ''}
+        </div>`;
+    }).join('');
+
+    const canSubmit = myUsed === bonusTotal;
+    return `
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-header">
+          <div class="card-title">Avaliação por pares</div>
+          <div style="font-size:22px;font-weight:700">${myUsed} / ${bonusTotal} pts</div>
+        </div>
+        <div class="card-body" style="padding:14px">
+          <div style="font-size:22px;color:var(--text-muted);text-transform:uppercase;margin-bottom:14px">
+            Distribua seus ${bonusTotal} pontos bônus entre as entregas. Você pode dar para si mesmo.
+            Distribuição anônima.
+          </div>
+          ${goalsHTML}
+          <div style="text-align:center;margin-top:18px">
+            <button id="rating-submit" class="btn btn-primary" style="font-size:26px;padding:12px 32px"
+              ${canSubmit ? '' : 'disabled'} onclick="submitRatings()">
+              Enviar avaliação
+            </button>
+            ${!canSubmit ? `<div style="font-size:20px;color:var(--text-muted);margin-top:8px;text-transform:uppercase">Distribua todos os ${bonusTotal} pontos para enviar</div>` : ''}
+          </div>
+        </div>
+      </div>`;
+  }
+
+  function renderWaitingForOthers(goals) {
+    const squares = allProfiles.map(p => `
+      <div class="ready-square ${submissionIds.has(p.id) ? 'on' : ''}" title="${p.name}"></div>
+    `).join('');
+    const adminBtn = isAdmin() ? `
+      <div style="margin-top:18px">
+        <button class="btn btn-ghost btn-sm" onclick="forceFinalize()">Admin: forçar encerramento</button>
+      </div>` : '';
+    return `
+      <div class="card">
+        <div class="card-body" style="padding:24px;text-align:center">
+          <div style="font-size:28px;font-weight:700;margin-bottom:12px;text-transform:uppercase">Avaliação enviada</div>
+          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px">${squares}</div>
+          <div style="font-size:24px;color:var(--text-muted);text-transform:uppercase">
+            ${submissionIds.size} / ${allProfiles.length} avaliações recebidas
+          </div>
+          <div style="font-size:22px;color:var(--text-muted);margin-top:8px;text-transform:uppercase">Aguardando os demais...</div>
+          ${adminBtn}
+        </div>
+      </div>`;
+  }
+
+  function renderReveal() {
+    const completedGoals = deliveredGoals();
     const byMember = new Map();
     for (const p of allProfiles) byMember.set(p.id, { profile: p, goals: [] });
     for (const g of completedGoals) {
@@ -260,16 +387,26 @@
     }
 
     const blocks = [...byMember.values()].map(({ profile, goals: mGoals }) => {
-      const pts = mGoals.reduce((s, g) => s + (g.points_earned ?? 0), 0);
+      const totalPts = mGoals.reduce((s, g) => {
+        const base = g.difficulty === 'complex' ? 5 : 2;
+        const bonus = bonusByGoal.get(g.id) ?? 0;
+        return s + base + bonus;
+      }, 0);
       const goalsHTML = mGoals.map(g => {
         const imgs = g.image_urls ?? [];
+        const base = g.difficulty === 'complex' ? 5 : 2;
+        const bonus = bonusByGoal.get(g.id) ?? 0;
         return `
           <div style="margin-bottom:12px">
-            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px">
-              <span style="font-size:24px">${g.status === 'beyond' ? '[B]' : '[v]'}</span>
+            <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
+              <span style="font-size:24px">[v]</span>
               <span style="font-size:24px;font-weight:700">${g.title}</span>
-              <span class="badge ${g.status === 'beyond' ? 'badge-beyond' : 'badge-completed'}" style="margin-left:auto">${g.status === 'beyond' ? 'Beyond!' : 'Feito'}</span>
-              ${g.points_earned > 0 ? `<span class="xp-earned">+${g.points_earned}pts</span>` : ''}
+              ${difficultyChip(g.difficulty)}
+              <span style="margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
+                <span class="badge" style="background:#D6EAF8;color:var(--blue);border-color:var(--blue)">base +${base}</span>
+                ${bonus > 0 ? `<span class="badge" style="background:#FFD54F;color:#7D5A00;border-color:var(--amber-dark)">bônus +${bonus}</span>` : ''}
+                <span class="xp-earned">= ${base + bonus}pts</span>
+              </span>
             </div>
             ${imgs.length ? `<div class="delivery-images">
               ${imgs.map(u => `<img class="reveal-img" src="${u}" alt="entrega">`).join('')}
@@ -285,13 +422,16 @@
               <div style="font-size:28px;font-weight:700">${profile.name}</div>
               <div style="font-size:24px;color:var(--text-muted)">${mGoals.length} meta${mGoals.length !== 1 ? 's' : ''} entregue${mGoals.length !== 1 ? 's' : ''}</div>
             </div>
-            <div style="font-size:32px;font-weight:700;color:var(--amber)">${pts}pts</div>
+            <div style="font-size:32px;font-weight:700;color:var(--amber)">${totalPts}pts</div>
           </div>
           ${mGoals.length ? goalsHTML : `<div style="font-size:24px;color:var(--text-muted);text-align:center;padding:8px">Nenhuma meta entregue esta temporada</div>`}
         </div>`;
     }).join('');
 
-    const totalPts = completedGoals.reduce((s, g) => s + (g.points_earned ?? 0), 0);
+    const grandTotal = completedGoals.reduce((s, g) => {
+      const base = g.difficulty === 'complex' ? 5 : 2;
+      return s + base + (bonusByGoal.get(g.id) ?? 0);
+    }, 0);
     const nextNum  = currentWeek.week_number + 1;
     const nextYear = nextNum > 52 ? currentWeek.year + 1 : currentWeek.year;
     const nextDisp = nextNum > 52 ? 1 : nextNum;
@@ -313,7 +453,7 @@
       <div class="card">
         <div class="card-header">
           <div class="card-title">Resultados da Temporada</div>
-          <div style="font-size:24px;font-weight:700;color:var(--amber)">${totalPts}pts total</div>
+          <div style="font-size:24px;font-weight:700;color:var(--amber)">${grandTotal}pts total</div>
         </div>
         <div class="card-body" style="padding:16px">${blocks}</div>
       </div>
@@ -421,10 +561,9 @@
     if (count >= allProfiles.length && allProfiles.length > 0) {
       await sb.from('weeks').update({ skrill_time_revealed: true }).eq('id', currentWeek.id);
       currentWeek = { ...currentWeek, skrill_time_revealed: true };
-      await awardPointsForAll();
     }
 
-    renderPage();
+    await reload();
   }
 
   async function unmarkReady() {
@@ -441,30 +580,119 @@
     renderPage();
   }
 
-  async function awardPointsForAll() {
-    const toAward = weekGoals.filter(g =>
-      (g.status === 'completed' || g.status === 'beyond') && !g.points_awarded
-      && participantIds.has(g.profile_id)
+  async function incRating(goalId) {
+    if (mySubmitted) return;
+    const bonusTotal = bonusPoolFor(allProfiles.length);
+    if (myUsed >= bonusTotal) return;
+    const cur = (myRatings.get(goalId) ?? 0) + 1;
+    myRatings.set(goalId, cur);
+    myUsed++;
+    await sb.from('peer_ratings').upsert(
+      { week_id: currentWeek.id, rater_id: stored.id, goal_id: goalId, amount: cur },
+      { onConflict: 'week_id,rater_id,goal_id' }
     );
+    renderPage();
+  }
 
+  async function decRating(goalId) {
+    if (mySubmitted) return;
+    const cur = myRatings.get(goalId) ?? 0;
+    if (cur <= 0) return;
+    const next = cur - 1;
+    myRatings.set(goalId, next);
+    myUsed--;
+    await sb.from('peer_ratings').upsert(
+      { week_id: currentWeek.id, rater_id: stored.id, goal_id: goalId, amount: next },
+      { onConflict: 'week_id,rater_id,goal_id' }
+    );
+    renderPage();
+  }
+
+  async function submitRatings() {
+    if (mySubmitted) return;
+    const bonusTotal = bonusPoolFor(allProfiles.length);
+    if (myUsed !== bonusTotal) return;
+    const btn = document.getElementById('rating-submit');
+    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+    const { error } = await sb.from('peer_rating_submissions').insert({
+      week_id: currentWeek.id, rater_id: stored.id,
+    });
+    if (error && !error.message.includes('duplicate')) {
+      toast(error.message, '#ef4444');
+      if (btn) { btn.disabled = false; btn.textContent = 'Enviar avaliação'; }
+      return;
+    }
+    mySubmitted = true;
+    submissionIds.add(stored.id);
+    await checkAndAutoClose();
+    await reload();
+  }
+
+  async function checkAndAutoClose() {
+    if (!currentWeek || finalizing) return;
+    const { data: subs } = await sb.from('peer_rating_submissions')
+      .select('rater_id').eq('week_id', currentWeek.id);
+    const sIds = new Set((subs ?? []).map(s => s.rater_id));
+    const allDone = allProfiles.length > 0 && allProfiles.every(p => sIds.has(p.id));
+    if (!allDone) return;
+    const { data: anyAwarded } = await sb.from('goals')
+      .select('id').eq('week_id', currentWeek.id).eq('points_awarded', true).limit(1);
+    if (anyAwarded?.length) return;
+    finalizing = true;
+    try { await finalizeSeason(); }
+    finally { finalizing = false; }
+  }
+
+  async function forceFinalize() {
+    if (!confirm('Forçar encerramento agora? Os pontos serão concedidos imediatamente.')) return;
+    finalizing = true;
+    try { await finalizeSeason(); }
+    finally { finalizing = false; }
+    await reload();
+  }
+
+  async function finalizeSeason() {
+    const { data: ratings } = await sb.from('peer_ratings')
+      .select('goal_id,amount').eq('week_id', currentWeek.id);
+    const bonusMap = new Map();
+    for (const r of (ratings ?? [])) {
+      bonusMap.set(r.goal_id, (bonusMap.get(r.goal_id) ?? 0) + r.amount);
+    }
+    const toAward = weekGoals.filter(g =>
+      g.status === 'completed' && !g.points_awarded && participantIds.has(g.profile_id)
+    );
     for (const g of toAward) {
-      const pts = g.points_earned ?? (g.status === 'beyond' ? 8 : 5);
-
-      await sb.from('goals').update({ points_awarded: true }).eq('id', g.id);
-
-      await sb.from('point_history').insert({
-        profile_id: g.profile_id,
-        amount:     pts,
-        reason:     g.status === 'beyond' ? 'beyond_scope' : 'complete_goal',
-        goal_id:    g.id,
-        week_id:    currentWeek.id,
-      });
-
-      const { data: prof } = await sb.from('profiles').select('total_points,weekly_points').eq('id', g.profile_id).single();
+      const base = g.difficulty === 'complex' ? 5 : 2;
+      const bonus = bonusMap.get(g.id) ?? 0;
+      const total = base + bonus;
+      await sb.from('goals').update({
+        points_awarded: true,
+        points_earned: total,
+      }).eq('id', g.id);
+      if (base > 0) {
+        await sb.from('point_history').insert({
+          profile_id: g.profile_id,
+          amount: base,
+          reason: g.difficulty === 'complex' ? 'complete_complex' : 'complete_simple',
+          goal_id: g.id,
+          week_id: currentWeek.id,
+        });
+      }
+      if (bonus > 0) {
+        await sb.from('point_history').insert({
+          profile_id: g.profile_id,
+          amount: bonus,
+          reason: 'peer_bonus',
+          goal_id: g.id,
+          week_id: currentWeek.id,
+        });
+      }
+      const { data: prof } = await sb.from('profiles')
+        .select('total_points,weekly_points').eq('id', g.profile_id).single();
       if (prof) {
         await sb.from('profiles').update({
-          total_points:  (prof.total_points  ?? 0) + pts,
-          weekly_points: (prof.weekly_points ?? 0) + pts,
+          total_points:  (prof.total_points  ?? 0) + total,
+          weekly_points: (prof.weekly_points ?? 0) + total,
         }).eq('id', g.profile_id);
       }
     }

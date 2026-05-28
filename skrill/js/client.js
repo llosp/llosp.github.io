@@ -71,7 +71,6 @@ function statusBadge(status, points) {
   const MAP = {
     active:    ['badge-active',    'Ativo'],
     completed: ['badge-completed', 'Feito ✓'],
-    beyond:    ['badge-beyond',    'Beyond!'],
     failed:    ['badge-failed',    'Perdeu'],
   };
   const [cls, label] = MAP[status] ?? ['badge-active', status];
@@ -79,11 +78,55 @@ function statusBadge(status, points) {
   return `<span class="badge ${cls}">${label}</span>${pts}`;
 }
 
+function difficultyChip(difficulty) {
+  if (difficulty === 'complex') {
+    return `<span class="badge" style="background:#E8D5F5;color:var(--purple);border-color:var(--purple);font-size:20px;padding:1px 6px">Complexa</span>`;
+  }
+  return `<span class="badge" style="background:#D6EAF8;color:var(--blue);border-color:var(--blue);font-size:20px;padding:1px 6px">Simples</span>`;
+}
+
+function bonusPoolFor(n) {
+  return Math.max(1, Math.floor((n ?? 0) / 2));
+}
+
+function renderSeasonLocked(week, profile, pageLabel, pageTitle) {
+  const wSub = week ? ` · Temporada ${week.week_number}` : '';
+  const safeWeekId = week?.id ?? '';
+  const safeProfileId = profile?.id ?? '';
+  return `<div style="width:100%">
+    <div class="page-header">
+      <div>
+        <div class="page-header-label">${pageLabel}</div>
+        <h1 class="page-header-title">${pageTitle}<span class="page-header-sub">${wSub}</span></h1>
+      </div>
+    </div>
+    <div class="card" style="text-align:center;padding:48px 20px;background:var(--amber-light);border-color:var(--amber)">
+      <div style="font-size:36px;font-weight:700;margin-bottom:10px">[!] Voce nao entrou nesta Temporada</div>
+      <div style="font-size:24px;color:var(--text-muted);margin-bottom:24px;text-transform:uppercase">
+        Junte-se a Temporada para declarar metas, participar do Skrill Time<br>
+        e da avaliacao por pares.
+      </div>
+      <button class="btn btn-primary" style="font-size:24px;padding:12px 28px"
+        onclick="(async()=>{const{error}=await sb.from('season_participants').insert({week_id:'${safeWeekId}',profile_id:'${safeProfileId}'});if(error&&!error.message.includes('duplicate'))alert(error.message);else window.location.reload();})()">
+        Junte-se a Temporada
+      </button>
+    </div>
+  </div>`;
+}
+
+function toast(msg, color = '#22c55e') {
+  const t = document.createElement('div');
+  t.textContent = msg;
+  t.style.cssText = `position:fixed;bottom:20px;right:20px;background:${color};color:#fff;padding:10px 18px;font-family:'Micro 5',monospace;font-size:22px;border:2px solid #000;box-shadow:3px 3px 0 #000;z-index:9999;text-transform:uppercase`;
+  document.body.appendChild(t);
+  setTimeout(() => t.remove(), 2500);
+}
+
 // ── Shared UI ─────────────────────────────────────────────────────────────────
 function renderSidebar(profile, activePage) {
   const NAV = [
     { href: '/skrill/dashboard/',   label: 'Dashboard',    icon: '[+]', key: 'dashboard' },
-    { href: '/skrill/weekly/',      label: 'Weekly Goals', icon: '[G]', key: 'weekly' },
+    { href: '/skrill/weekly/',      label: 'Season Goals', icon: '[G]', key: 'weekly' },
     { href: '/skrill/leaderboard/', label: 'Leaderboard',  icon: '[T]', key: 'leaderboard' },
     { href: '/skrill/skrill-time/', label: 'Skrill Time',  icon: '[S]', key: 'skrill-time' },
   ];

@@ -144,6 +144,10 @@
   }
 
   async function joinSeason() {
+    if (currentWeek?.skrill_time_revealed) {
+      toast('Temporada já revelada. Aguarde a próxima para entrar.', '#ef4444');
+      return;
+    }
     const btn = document.querySelector('[onclick="joinSeason()"]');
     if (btn) { btn.disabled = true; btn.textContent = '...'; }
     await sb.from('season_participants').insert({ week_id: currentWeek.id, profile_id: currentProfile.id });

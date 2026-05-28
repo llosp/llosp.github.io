@@ -26,6 +26,19 @@
       <form id="goal-form" onsubmit="handleAddGoal(event)">
         <div class="modal-body">
           <div class="form-group">
+            <label class="form-label">Dificuldade</label>
+            <div class="difficulty-pills">
+              <label class="diff-pill active" id="diff-simple-label">
+                <input type="radio" name="goal-difficulty" value="simple" checked/>
+                <span>Simples · 2pts</span>
+              </label>
+              <label class="diff-pill" id="diff-complex-label">
+                <input type="radio" name="goal-difficulty" value="complex"/>
+                <span>Complexa · 5pts</span>
+              </label>
+            </div>
+          </div>
+          <div class="form-group">
             <label class="form-label">Título</label>
             <input id="goal-title" class="form-input" type="text" placeholder="O que você vai conquistar?" required maxlength="120"/>
           </div>
@@ -72,8 +85,8 @@
   let currentProfile  = null;
   let currentWeek     = null;
   let allGoals        = [];
+  let isParticipating = false;
   let pendingGoalId   = null;
-  let pendingBeyond   = false;
 
   async function init() {
     const stored = requireAuth();
@@ -92,29 +105,34 @@
     document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('weekly');
 
     if (week) {
-      const { data: goals } = await sb
-        .from('goals')
-        .select('*, profile:profiles(*)')
-        .eq('week_id', week.id)
-        .order('created_at', { ascending: false });
+      const [{ data: goals }, { data: part }] = await Promise.all([
+        sb.from('goals').select('*, profile:profiles(*)')
+          .eq('week_id', week.id)
+          .order('created_at', { ascending: false }),
+        sb.from('season_participants').select('id')
+          .eq('week_id', week.id).eq('profile_id', profile.id).maybeSingle(),
+      ]);
       allGoals = goals ?? [];
+      isParticipating = !!part;
     }
 
     renderPage();
   }
 
   function renderPage() {
+    const app = document.getElementById('app');
+    app.classList.remove('center-screen');
     const week       = currentWeek;
     const myGoals    = allGoals.filter(g => g.profile_id === currentProfile?.id);
     const otherGoals = allGoals.filter(g => g.profile_id !== currentProfile?.id);
     const revealed   = currentWeek?.skrill_time_revealed ?? false;
 
     if (!week) {
-      document.getElementById('app').innerHTML = `<div style="width:100%">
+      app.innerHTML = `<div style="width:100%">
         <div class="page-header">
           <div>
             <div class="page-header-label">[G] Metas da Temporada</div>
-            <h1 class="page-header-title">Weekly Goals</h1>
+            <h1 class="page-header-title">Metas da Temporada</h1>
           </div>
         </div>
         ${renderNoWeekBanner()}
@@ -122,23 +140,24 @@
       return;
     }
 
-    let weekLabel = 'Esta Temporada';
-    let weekSub   = '';
-    if (week) {
-      weekLabel = `Temporada ${week.week_number}`;
-      const s = new Date(week.start_date);
-      const e = new Date(week.end_date);
-      weekSub = ` · ${s.toLocaleDateString('pt-BR',{month:'short',day:'numeric'})} – ${e.toLocaleDateString('pt-BR',{month:'short',day:'numeric'})}`;
+    if (!isParticipating) {
+      app.innerHTML = renderSeasonLocked(week, currentProfile, '[G] Metas da Temporada', 'Metas da Temporada');
+      return;
     }
 
-    document.getElementById('app').innerHTML = `
+    let weekLabel = `Temporada ${week.week_number}`;
+    const s = new Date(week.start_date);
+    const e = new Date(week.end_date);
+    const weekSub = ` · ${s.toLocaleDateString('pt-BR',{month:'short',day:'numeric'})} – ${e.toLocaleDateString('pt-BR',{month:'short',day:'numeric'})}`;
+
+    app.innerHTML = `
       <div style="width:100%">
         <div class="page-header">
           <div>
             <div class="page-header-label">[G] Metas da Temporada</div>
             <h1 class="page-header-title">${weekLabel}<span class="page-header-sub">${weekSub}</span></h1>
           </div>
-          <button class="btn btn-primary" onclick="openModal()">+ Declarar Meta</button>
+          ${revealed ? '' : `<button class="btn btn-primary" onclick="openModal()">+ Declarar Meta</button>`}
         </div>
 
         <div class="tab-list">
@@ -166,15 +185,14 @@
 
   function renderGoalCard(g, isOwner, revealed) {
     const profile = g.profile;
-    const isDone  = g.status === 'completed' || g.status === 'beyond';
+    const isDone  = g.status === 'completed';
     const imgs    = g.image_urls ?? [];
     const deleteBtn = isOwner
       ? `<button class="btn btn-sm btn-ghost" style="color:var(--text-muted);margin-left:auto" onclick="deleteGoal('${g.id}')">Excluir</button>`
       : '';
     const actions = isOwner && g.status === 'active'
       ? `<div class="goal-actions">
-          <button class="btn btn-sm btn-success" onclick="openDeliveryModal('${g.id}', false)">Feito</button>
-          <button class="btn btn-sm btn-purple-soft" onclick="openDeliveryModal('${g.id}', true)">Beyond</button>
+          <button class="btn btn-sm btn-success" onclick="openDeliveryModal('${g.id}')">Concluir</button>
           ${deleteBtn}
         </div>`
       : isOwner ? `<div class="goal-actions">${deleteBtn}</div>` : '';
@@ -184,7 +202,7 @@
         </div>`
       : '';
     return `
-      <div class="goal-card ${g.status === 'beyond' ? 'beyond' : g.status === 'completed' ? 'completed' : ''}" id="goal-${g.id}">
+      <div class="goal-card ${g.status === 'completed' ? 'completed' : ''}" id="goal-${g.id}">
         <div class="goal-card-top">
           ${profile ? avatarHTML(profile) : ''}
           <div class="goal-card-meta">
@@ -198,6 +216,7 @@
         </div>
         ${imagesHTML}
         <div class="goal-footer">
+          ${difficultyChip(g.difficulty)}
           ${statusBadge(g.status, g.points_earned)}
           ${actions}
         </div>
@@ -208,6 +227,8 @@
     e.preventDefault();
     const title = document.getElementById('goal-title').value.trim();
     const desc  = document.getElementById('goal-desc').value.trim();
+    const difficulty = document.querySelector('input[name="goal-difficulty"]:checked')?.value || 'simple';
+    const basePts = difficulty === 'complex' ? 5 : 2;
     const btn   = document.getElementById('goal-submit');
     const errEl = document.getElementById('goal-error');
     errEl.classList.add('hidden');
@@ -222,7 +243,8 @@
           title,
           description: desc || null,
           status:      'active',
-          points_earned: 0,
+          difficulty,
+          points_earned: basePts,
         })
         .select('*, profile:profiles(*)')
         .single();
@@ -237,9 +259,8 @@
     }
   }
 
-  function openDeliveryModal(goalId, beyond) {
+  function openDeliveryModal(goalId) {
     pendingGoalId = goalId;
-    pendingBeyond = beyond;
     const goal = allGoals.find(g => g.id === goalId);
     document.getElementById('delivery-goal-title').textContent = goal?.title ?? '';
     document.getElementById('delivery-files').value = '';
@@ -276,21 +297,16 @@
         urls.push(pub.publicUrl);
       }
 
-      const status = pendingBeyond ? 'beyond' : 'completed';
-      const pts    = pendingBeyond ? 8 : 5;
-
       const { error: updErr } = await sb.from('goals').update({
-        status,
-        points_earned: pts,
-        is_beyond_scope: pendingBeyond,
-        completed_at:  new Date().toISOString(),
-        image_urls:    urls,
+        status:       'completed',
+        completed_at: new Date().toISOString(),
+        image_urls:   urls,
       }).eq('id', pendingGoalId);
 
       if (updErr) throw updErr;
 
       allGoals = allGoals.map(g => g.id === pendingGoalId
-        ? { ...g, status, points_earned: pts, image_urls: urls, completed_at: new Date().toISOString() }
+        ? { ...g, status: 'completed', image_urls: urls, completed_at: new Date().toISOString() }
         : g);
 
       closeDeliveryModal();
@@ -314,10 +330,20 @@
     document.getElementById('goal-title').value = '';
     document.getElementById('goal-desc').value  = '';
     document.getElementById('goal-error').classList.add('hidden');
+    document.querySelector('input[name="goal-difficulty"][value="simple"]').checked = true;
+    updateDiffPills();
     document.getElementById('modal').classList.remove('hidden');
     setTimeout(() => document.getElementById('goal-title').focus(), 50);
   }
   function closeModal() { document.getElementById('modal').classList.add('hidden'); }
+  function updateDiffPills() {
+    const v = document.querySelector('input[name="goal-difficulty"]:checked')?.value;
+    document.getElementById('diff-simple-label').classList.toggle('active', v === 'simple');
+    document.getElementById('diff-complex-label').classList.toggle('active', v === 'complex');
+  }
+  document.addEventListener('change', e => {
+    if (e.target?.name === 'goal-difficulty') updateDiffPills();
+  });
   document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeDeliveryModal(); } });
 
   init();

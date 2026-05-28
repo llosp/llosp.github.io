@@ -358,7 +358,6 @@
     const list = goalsWeekFilter === 'all' ? D.goals : D.goals.filter(g => g.week_id === goalsWeekFilter);
 
     const rows = list.map(g => {
-      const isDone = g.status === 'completed' || g.status === 'beyond';
       return `
         <div class="card" style="margin-bottom:8px">
           <div class="card-body" style="padding:12px">
@@ -368,15 +367,19 @@
                 <div style="font-size:20px;color:var(--text-muted)">
                   ${g.profile?.name??'?'} · ${g.week?`Sem. ${g.week.week_number}/${g.week.year}`:'—'}
                   · <b>${g.points_earned??0}pts</b>
+                  · ${g.difficulty ?? '—'}
                   ${g.points_awarded?'<span class="badge badge-completed" style="font-size:18px">premiado</span>':''}
                   ${g.image_urls?.length?`<span style="color:var(--amber)"> · ${g.image_urls.length} img</span>`:''}
                 </div>
               </div>
               <div style="display:flex;gap:6px;flex-wrap:wrap;align-items:center">
+                <select class="form-input" style="padding:4px 8px;font-size:20px;width:auto" onchange="changeGoalDifficulty('${g.id}',this.value)" title="Dificuldade">
+                  <option value="simple"  ${g.difficulty==='simple' ?'selected':''}>Simples</option>
+                  <option value="complex" ${g.difficulty==='complex'?'selected':''}>Complexa</option>
+                </select>
                 <select class="form-input" style="padding:4px 8px;font-size:20px;width:auto" onchange="changeGoalStatus('${g.id}',this.value)">
                   <option value="active"    ${g.status==='active'   ?'selected':''}>Ativo</option>
                   <option value="completed" ${g.status==='completed'?'selected':''}>Feito</option>
-                  <option value="beyond"    ${g.status==='beyond'   ?'selected':''}>Beyond</option>
                   <option value="failed"    ${g.status==='failed'   ?'selected':''}>Falhou</option>
                 </select>
                 <input type="number" class="form-input" id="gpts-${g.id}" value="${g.points_earned??0}"
@@ -403,6 +406,12 @@
 
   async function changeGoalStatus(id, status) {
     await sb.from('goals').update({ status }).eq('id', id);
+    await loadAll();
+  }
+
+  async function changeGoalDifficulty(id, difficulty) {
+    await sb.from('goals').update({ difficulty }).eq('id', id);
+    toast('Dificuldade atualizada!');
     await loadAll();
   }
 
@@ -603,9 +612,12 @@
   async function fullWeekReset() {
     const wid = curWeekId();
     if (!wid) return toast('Nenhuma temporada atual!', '#ef4444');
-    if (!confirm('Reset TOTAL da temporada atual?\nApaga metas, ready, pontos e oculta reveal.')) return;
+    if (!confirm('Reset TOTAL da temporada atual?\nApaga metas, ready, avaliações, pontos e oculta reveal.')) return;
     if (!confirm('Tem certeza? Esta ação não pode ser desfeita.')) return;
     await Promise.all([
+      sb.from('peer_ratings').delete().eq('week_id', wid),
+      sb.from('peer_rating_submissions').delete().eq('week_id', wid),
+      sb.from('season_participants').delete().eq('week_id', wid),
       sb.from('goals').delete().eq('week_id', wid),
       sb.from('week_ready').delete().eq('week_id', wid),
       sb.from('point_history').delete().eq('week_id', wid),
@@ -643,9 +655,11 @@
       await sb.from('profiles').update({ total_points: newTotal, weekly_points: 0 }).eq('id', p.id);
     }
 
-    // 3. Limpar ready, ocultar reveal, resetar points_awarded
+    // 3. Limpar ready, avaliações, ocultar reveal, resetar points_awarded
     await Promise.all([
       sb.from('week_ready').delete().eq('week_id', wid),
+      sb.from('peer_ratings').delete().eq('week_id', wid),
+      sb.from('peer_rating_submissions').delete().eq('week_id', wid),
       sb.from('weeks').update({ skrill_time_revealed: false }).eq('id', wid),
       sb.from('goals').update({ points_awarded: false }).eq('week_id', wid),
     ]);
@@ -660,6 +674,9 @@
     if (!confirm('Última confirmação. Esta ação é irreversível.')) return;
 
     await Promise.all([
+      sb.from('peer_ratings').delete().not('id', 'is', null),
+      sb.from('peer_rating_submissions').delete().not('id', 'is', null),
+      sb.from('season_participants').delete().not('id', 'is', null),
       sb.from('goals').delete().not('id', 'is', null),
       sb.from('week_ready').delete().not('id', 'is', null),
       sb.from('point_history').delete().not('id', 'is', null),

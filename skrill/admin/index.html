@@ -506,6 +506,16 @@
         ${dangerCard('Apagar TODOS os pontos acumulados',
           'Define total_points = 0 para todos os perfis e limpa todo o point_history.',
           'Apagar Tudo', 'nukeAllPoints', true)}
+
+        <div style="border-top:2px dashed #ef4444;margin:8px 0"></div>
+        <div style="font-size:20px;font-weight:700;text-transform:uppercase;color:#ef4444;letter-spacing:.06em;padding:4px 0">Operações Especiais</div>
+
+        ${dangerCard('Desfazer Skrill Time da semana atual',
+          'Apaga pontos concedidos, recalcula totais de cada perfil, limpa ready, oculta reveal e reseta points_awarded. Use após um Skrill Time de teste.',
+          'Desfazer Skrill Time', 'undoSkrillTime', true)}
+        ${dangerCard('Factory Reset — manter perfis',
+          'Apaga TODAS as semanas, metas, pontos e ready. Zera streaks e pts de todos os perfis. Avatares e nomes são mantidos. Use para começar do zero antes do lançamento real.',
+          'Factory Reset', 'factoryReset', true)}
       </div>`;
   }
 
@@ -599,6 +609,55 @@
       sb.from('point_history').delete().not('id', 'is', null),
     ]);
     toast('Tudo zerado!');
+    await loadAll();
+  }
+
+  async function undoSkrillTime() {
+    const wid = curWeekId();
+    if (!wid) return toast('Nenhuma semana atual!', '#ef4444');
+    if (!confirm('Desfazer Skrill Time da semana atual?\nIsso vai apagar todos os pontos concedidos nesta semana e recalcular os totais.')) return;
+    if (!confirm('Tem certeza? Esta ação não pode ser desfeita.')) return;
+
+    // 1. Apagar point_history da semana
+    await sb.from('point_history').delete().eq('week_id', wid);
+
+    // 2. Recalcular total_points de cada perfil com base no histórico restante
+    for (const p of D.profiles) {
+      const { data: hist } = await sb.from('point_history').select('amount').eq('profile_id', p.id);
+      const newTotal = (hist ?? []).reduce((s, h) => s + (h.amount ?? 0), 0);
+      await sb.from('profiles').update({ total_points: newTotal, weekly_points: 0 }).eq('id', p.id);
+    }
+
+    // 3. Limpar ready, ocultar reveal, resetar points_awarded
+    await Promise.all([
+      sb.from('week_ready').delete().eq('week_id', wid),
+      sb.from('weeks').update({ skrill_time_revealed: false }).eq('id', wid),
+      sb.from('goals').update({ points_awarded: false }).eq('week_id', wid),
+    ]);
+
+    toast('Skrill Time desfeito!');
+    await loadAll();
+  }
+
+  async function factoryReset() {
+    if (!confirm('FACTORY RESET — apagar TODAS as semanas, metas, pontos e ready?\nPerfis e avatares serão mantidos, mas todos os dados operacionais serão apagados.')) return;
+    if (!confirm('Isso vai zerar pontos, streaks e toda a história do app. Tem certeza?')) return;
+    if (!confirm('Última confirmação. Esta ação é irreversível.')) return;
+
+    await Promise.all([
+      sb.from('goals').delete().not('id', 'is', null),
+      sb.from('week_ready').delete().not('id', 'is', null),
+      sb.from('point_history').delete().not('id', 'is', null),
+      sb.from('weeks').delete().not('id', 'is', null),
+      sb.from('profiles').update({
+        total_points:   0,
+        weekly_points:  0,
+        streak_current: 0,
+        streak_longest: 0,
+      }).not('id', 'is', null),
+    ]);
+
+    toast('App resetado! Crie a Semana 1 quando estiver pronto.');
     await loadAll();
   }
 

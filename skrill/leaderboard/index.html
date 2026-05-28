@@ -39,9 +39,17 @@
     document.getElementById('sidebar-root').innerHTML = renderSidebar(profile, 'leaderboard');
     document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('leaderboard');
 
+    const { data: week } = await sb.from('weeks').select('*').eq('is_current', true).single();
+
     const byWeekly  = [...(profiles ?? [])].sort((a, b) => (b.weekly_points ?? 0) - (a.weekly_points ?? 0));
     const byAllTime = [...(profiles ?? [])].sort((a, b) => (b.total_points  ?? 0) - (a.total_points  ?? 0));
     const myWeekRank = byWeekly.findIndex(p => p.id === stored.id) + 1;
+
+    const weeklyContent = !week
+      ? renderNoWeekBanner()
+      : `${renderPodium(byWeekly, stored.id, 'weekly_points')}
+         ${byWeekly.length > 3 ? renderList(byWeekly.slice(3), stored.id, 'weekly_points', 4) : ''}
+         ${byWeekly.length === 0 ? emptyState('[T]', 'Nenhum membro ainda', 'Complete uma meta para aparecer aqui!') : ''}`;
 
     document.getElementById('app').innerHTML = `
       <div style="width:100%">
@@ -52,7 +60,7 @@
           </div>
           <div style="text-align:right">
             <div class="text-muted text-sm">${profiles?.length ?? 0} membros</div>
-            ${myWeekRank ? `<div style="font-size:24px;font-weight:700;color:var(--amber);margin-top:4px">Seu rank: #${myWeekRank}</div>` : ''}
+            ${week && myWeekRank ? `<div style="font-size:24px;font-weight:700;color:var(--amber);margin-top:4px">Seu rank: #${myWeekRank}</div>` : ''}
           </div>
         </div>
 
@@ -61,11 +69,7 @@
           <button class="tab-btn"        data-tab="tab-alltime" onclick="switchTab('tab-alltime')">[T] Total</button>
         </div>
 
-        <div id="tab-weekly" class="tab-panel active">
-          ${renderPodium(byWeekly, stored.id, 'weekly_points')}
-          ${byWeekly.length > 3 ? renderList(byWeekly.slice(3), stored.id, 'weekly_points', 4) : ''}
-          ${byWeekly.length === 0 ? emptyState('[T]', 'Nenhum membro ainda', 'Complete uma meta para aparecer aqui!') : ''}
-        </div>
+        <div id="tab-weekly" class="tab-panel active">${weeklyContent}</div>
         <div id="tab-alltime" class="tab-panel">
           ${renderList(byAllTime, stored.id, 'total_points', 1)}
         </div>

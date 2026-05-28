@@ -92,6 +92,20 @@
 
   function renderPage() {
     const week     = currentWeek;
+
+    if (!week) {
+      document.getElementById('app').innerHTML = `<div style="width:100%">
+        <div class="page-header">
+          <div>
+            <div class="page-header-label">[S] Reuniao</div>
+            <h1 class="page-header-title">Skrill Time</h1>
+          </div>
+        </div>
+        ${renderNoWeekBanner()}
+      </div>`;
+      return;
+    }
+
     const revealed = week?.skrill_time_revealed ?? false;
     const total    = allProfiles.length;
     const count    = readyIds.size;
@@ -188,6 +202,22 @@
     }).join('');
 
     const totalPts = completedGoals.reduce((s, g) => s + (g.points_earned ?? 0), 0);
+    const nextNum  = currentWeek.week_number + 1;
+    const nextYear = nextNum > 52 ? currentWeek.year + 1 : currentWeek.year;
+    const nextDisp = nextNum > 52 ? 1 : nextNum;
+
+    const advanceBtn = isAdmin() ? `
+      <div style="margin-top:20px;padding-top:20px;border-top:2px dashed var(--border);text-align:center">
+        <div style="font-size:22px;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase">
+          Admin — Semana ${currentWeek.week_number} concluída
+        </div>
+        <div style="font-size:20px;color:var(--text-muted);margin-bottom:14px">
+          Clique para encerrar esta semana e abrir a Semana ${nextDisp} · ${nextYear} para todos.
+        </div>
+        <button class="btn btn-primary" style="font-size:24px;padding:12px 32px" onclick="advanceWeek()">
+          Encerrar e iniciar Semana ${nextDisp}
+        </button>
+      </div>` : '';
 
     return `
       <div class="card">
@@ -196,7 +226,29 @@
           <div style="font-size:24px;font-weight:700;color:var(--amber)">${totalPts}pts total</div>
         </div>
         <div class="card-body" style="padding:16px">${blocks}</div>
-      </div>`;
+      </div>
+      ${advanceBtn}`;
+  }
+
+  async function advanceWeek() {
+    const nextNum  = currentWeek.week_number + 1;
+    const nextYear = nextNum > 52 ? currentWeek.year + 1 : currentWeek.year;
+    const nextDisp = nextNum > 52 ? 1 : nextNum;
+    if (!confirm(`Encerrar Semana ${currentWeek.week_number} e iniciar Semana ${nextDisp} · ${nextYear}?\nOs pontos semanais de todos serão zerados.`)) return;
+
+    const btn = document.querySelector('[onclick="advanceWeek()"]');
+    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+
+    await sb.from('weeks').update({ is_current: false }).eq('id', currentWeek.id);
+    await sb.from('weeks').insert({
+      week_number:          nextDisp,
+      year:                 nextYear,
+      is_current:           true,
+      skrill_time_revealed: false,
+    });
+    await sb.from('profiles').update({ weekly_points: 0 }).not('id', 'is', null);
+
+    window.location.reload();
   }
 
   async function markReady() {

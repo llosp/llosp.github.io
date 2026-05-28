@@ -109,6 +109,19 @@
     const otherGoals = allGoals.filter(g => g.profile_id !== currentProfile?.id);
     const revealed   = currentWeek?.skrill_time_revealed ?? false;
 
+    if (!week) {
+      document.getElementById('app').innerHTML = `<div style="width:100%">
+        <div class="page-header">
+          <div>
+            <div class="page-header-label">[G] Metas Semanais</div>
+            <h1 class="page-header-title">Weekly Goals</h1>
+          </div>
+        </div>
+        ${renderNoWeekBanner()}
+      </div>`;
+      return;
+    }
+
     let weekLabel = 'Esta Semana';
     let weekSub   = '';
     if (week) {

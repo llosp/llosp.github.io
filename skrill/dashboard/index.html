@@ -43,6 +43,13 @@
 
     if (profile) setStoredProfile(profile);
 
+    if (!week) {
+      document.getElementById('sidebar-root').innerHTML = renderSidebar(profile, 'dashboard');
+      document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('dashboard');
+      document.getElementById('app').innerHTML = renderNoWeekBanner();
+      return;
+    }
+
     // Goals for current week (needs week_id)
     let goals = [];
     if (week) {
@@ -53,7 +60,7 @@
       goals = data ?? [];
     }
 
-    document.getElementById('sidebar-root').innerHTML = renderSidebar(profile, 'dashboard');
+    document.getElementById('sidebar-root').innerHTML  = renderSidebar(profile, 'dashboard');
     document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('dashboard');
 
     const myGoals    = goals.filter(g => g.profile_id === stored.id);
@@ -217,6 +224,7 @@
         <a href="/skrill/skrill-time/" class="btn btn-primary btn-full" style="margin-top:8px">Ir para Skrill Time →</a>
       </div>`;
   }
+
 
   init();
   </script>

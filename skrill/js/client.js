@@ -142,6 +142,39 @@ function renderMobileNav(activeKey) {
   </nav>`;
 }
 
+// ── Admin helpers (shared across pages) ──────────────────────────────────────
+function isAdmin() { return sessionStorage.getItem('skrill_admin') === '1'; }
+
+async function startSeason() {
+  if (!confirm('Iniciar a Temporada? Isso vai criar a Semana 1 e o app abrirá para todos.')) return;
+  await sb.from('weeks').insert({
+    week_number:          1,
+    year:                 new Date().getFullYear(),
+    is_current:           true,
+    skrill_time_revealed: false,
+  });
+  window.location.reload();
+}
+
+function renderNoWeekBanner() {
+  const adminSection = isAdmin() ? `
+    <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">
+      <div style="font-size:22px;color:var(--text-muted);margin-bottom:10px;text-transform:uppercase">Admin</div>
+      <button class="btn btn-primary" style="font-size:24px;padding:12px 28px" onclick="startSeason()">
+        Iniciar Temporada
+      </button>
+    </div>` : '';
+  return `
+    <div class="card" style="text-align:center;padding:48px 20px;margin-top:20px">
+      <div style="font-size:36px;font-weight:700;margin-bottom:10px">[S] Temporada não iniciada</div>
+      <div style="font-size:24px;color:var(--text-muted)">
+        A Semana 1 ainda não foi criada.<br>
+        Fique de olho — o Skrill Time inaugural está chegando.
+      </div>
+      ${adminSection}
+    </div>`;
+}
+
 // ── Tab helper ────────────────────────────────────────────────────────────────
 function switchTab(tabId) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));

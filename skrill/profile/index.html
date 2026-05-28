@@ -51,10 +51,10 @@
               </div>
               <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:2px">
                 <span style="font-family:'Micro 5',monospace;font-size:24px;color:var(--text-muted)">15</span>
-                <input type="range" id="edit-brush-slider" min="1" max="7" value="1" step="1"
+                <input type="range" id="edit-brush-slider" min="2" max="15" value="2" step="1"
                   style="writing-mode:vertical-lr;direction:rtl;width:24px;height:140px;cursor:pointer;accent-color:#000;">
-                <span style="font-family:'Micro 5',monospace;font-size:24px;color:var(--text-muted)">3</span>
-                <div id="edit-brush-label" style="font-family:'Micro 5',monospace;font-size:24px;font-weight:bold;margin-top:6px">3px</div>
+                <span style="font-family:'Micro 5',monospace;font-size:24px;color:var(--text-muted)">2</span>
+                <div id="edit-brush-label" style="font-family:'Micro 5',monospace;font-size:24px;font-weight:bold;margin-top:6px">2px</div>
               </div>
             </div>
           </div>
@@ -194,7 +194,7 @@
 
   // ── Edit Profile Canvas ───────────────────────────────────────────────────────
   const EDIT_GRID = 100, EDIT_CELL = 5, EDIT_PX = 500;
-  let EDIT_BRUSH = 1;
+  let EDIT_BRUSH = 2;
   let editCanvas = null, editCtx = null;
   let editPixels = new Array(EDIT_GRID * EDIT_GRID).fill(false);
   let editPainting = false, editPaintVal = true;
@@ -216,7 +216,7 @@
     const sl = document.getElementById('edit-brush-slider');
     sl.addEventListener('input', () => {
       EDIT_BRUSH = parseInt(sl.value);
-      document.getElementById('edit-brush-label').textContent = (EDIT_BRUSH * 2 + 1) + 'px';
+      document.getElementById('edit-brush-label').textContent = EDIT_BRUSH + 'px';
     });
   }
 
@@ -260,8 +260,9 @@
     const sx = EDIT_PX / rect.width, sy = EDIT_PX / rect.height;
     const cx = Math.floor((clientX - rect.left) * sx / EDIT_CELL);
     const cy = Math.floor((clientY - rect.top)  * sy / EDIT_CELL);
-    for (let dy = -EDIT_BRUSH; dy <= EDIT_BRUSH; dy++) {
-      for (let dx = -EDIT_BRUSH; dx <= EDIT_BRUSH; dx++) {
+    const half = Math.floor(EDIT_BRUSH / 2);
+    for (let dy = -half; dy < EDIT_BRUSH - half; dy++) {
+      for (let dx = -half; dx < EDIT_BRUSH - half; dx++) {
         const px = cx + dx, py = cy + dy;
         if (px < 0 || px >= EDIT_GRID || py < 0 || py >= EDIT_GRID) continue;
         editPixels[py * EDIT_GRID + px] = editPaintVal;
@@ -321,9 +322,9 @@
     document.getElementById('edit-modal').classList.remove('hidden');
     if (!editCanvas) initEditCanvas();
     editPixels = new Array(EDIT_GRID * EDIT_GRID).fill(false);
-    EDIT_BRUSH = 1;
-    document.getElementById('edit-brush-slider').value = 1;
-    document.getElementById('edit-brush-label').textContent = '3px';
+    EDIT_BRUSH = 2;
+    document.getElementById('edit-brush-slider').value = 2;
+    document.getElementById('edit-brush-label').textContent = '2px';
     editSelectColor(true);
     loadAvatarToCanvas(viewedProfile.avatar_data);
     setTimeout(() => document.getElementById('edit-name').focus(), 50);

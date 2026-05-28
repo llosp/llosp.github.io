@@ -55,10 +55,10 @@
                   </div>
                   <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:2px">
                     <span style="font-family:'Micro 5',monospace;font-size:24px;color:var(--text-muted)">15</span>
-                    <input type="range" id="brush-slider" min="1" max="7" value="1" step="1"
+                    <input type="range" id="brush-slider" min="2" max="15" value="2" step="1"
                       style="writing-mode:vertical-lr;direction:rtl;width:24px;height:140px;cursor:pointer;accent-color:#000;">
-                    <span style="font-family:'Micro 5',monospace;font-size:24px;color:var(--text-muted)">3</span>
-                    <div id="brush-label" style="font-family:'Micro 5',monospace;font-size:24px;font-weight:bold;margin-top:6px">3px</div>
+                    <span style="font-family:'Micro 5',monospace;font-size:24px;color:var(--text-muted)">2</span>
+                    <div id="brush-label" style="font-family:'Micro 5',monospace;font-size:24px;font-weight:bold;margin-top:6px">2px</div>
                   </div>
                 </div>
               </div>
@@ -90,7 +90,7 @@
   const GRID_SIZE   = 100;
   const CELL_SIZE   = 5;
   const CANVAS_PX   = GRID_SIZE * CELL_SIZE; // 500
-  let BRUSH_RADIUS = 1;
+  let BRUSH_SIZE = 2;
 
   const canvas = document.getElementById('pixel-canvas');
   const ctx    = canvas.getContext('2d');
@@ -160,8 +160,9 @@
 
   function paintAt(clientX, clientY) {
     const { x, y } = getPixelCoords(clientX, clientY);
-    for (let dy = -BRUSH_RADIUS; dy <= BRUSH_RADIUS; dy++) {
-      for (let dx = -BRUSH_RADIUS; dx <= BRUSH_RADIUS; dx++) {
+    const half = Math.floor(BRUSH_SIZE / 2);
+    for (let dy = -half; dy < BRUSH_SIZE - half; dy++) {
+      for (let dx = -half; dx < BRUSH_SIZE - half; dx++) {
         const px = x + dx;
         const py = y + dy;
         if (px < 0 || px >= GRID_SIZE || py < 0 || py >= GRID_SIZE) continue;
@@ -221,8 +222,8 @@
   const brushSlider = document.getElementById('brush-slider');
   const brushLabel  = document.getElementById('brush-label');
   brushSlider.addEventListener('input', () => {
-    BRUSH_RADIUS = parseInt(brushSlider.value);
-    brushLabel.textContent = (BRUSH_RADIUS * 2 + 1) + 'px';
+    BRUSH_SIZE = parseInt(brushSlider.value);
+    brushLabel.textContent = BRUSH_SIZE + 'px';
   });
 
   // ── Form submission ───────────────────────────────────────────────────────────

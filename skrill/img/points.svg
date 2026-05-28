@@ -1,9 +1,10 @@
-<svg width="59" height="59" viewBox="0 0 59 59" fill="none" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
-<rect width="59" height="59" fill="url(#pattern0_55_110)"/>
+<svg width="52" height="50" viewBox="0 0 52 50" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g clip-path="url(#clip0_55_122)">
+<path d="M44.6666 13.3334H42H39.3333H36.6666H34V10.6667H31.3333V8.00008V5.33341H28.6666V2.66675H26H23.3333V5.33341H20.6666V8.00008V10.6667H18V13.3334H15.3333H12.6666H9.99996H7.33329H4.66663V16.0001V18.6667H7.33329V21.3334H9.99996V24.0001H12.6666V26.6667V29.3334H9.99996V32.0001V34.6667H7.33329V37.3334V40.0001H4.66663V42.6667V45.3334H7.33329H9.99996H12.6666V42.6667H15.3333H18V40.0001H20.6666H23.3333V37.3334H26H28.6666V40.0001H31.3333H34V42.6667H36.6666H39.3333V45.3334H42H44.6666H47.3333V42.6667V40.0001H44.6666V37.3334V34.6667H42V32.0001V29.3334H39.3333V26.6667V24.0001H42V21.3334H44.6666V18.6667H47.3333V16.0001V13.3334H44.6666Z" fill="black"/>
+</g>
 <defs>
-<pattern id="pattern0_55_110" patternContentUnits="objectBoundingBox" width="1" height="1">
-<use xlink:href="#image0_55_110" transform="scale(0.0555556)"/>
-</pattern>
-<image id="image0_55_110" width="18" height="18" preserveAspectRatio="none" xlink:href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABIAAAASCAYAAABWzo5XAAAAAXNSR0IArs4c6QAAAGdJREFUOI2tkUkOwCAMAx3+/+f2QiVoQz0sviBlmZhEYrpcQTkBoSAkB0JuCAhD/0DYjQNNwWN28kjHrhb13XEVLegRBb77vgEAy3ry4AosW/bSvsjV0PfdsnG+kCIT6xIEMnIWknQDrXgSFaNurOQAAAAASUVORK5CYII="/>
+<clipPath id="clip0_55_122">
+<rect width="52" height="50" fill="white"/>
+</clipPath>
 </defs>
 </svg>

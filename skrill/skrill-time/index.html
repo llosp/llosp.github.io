@@ -25,12 +25,15 @@
   if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
   else if (!getStoredProfile()) { window.location.href = '/skrill/select-profile/'; }
 
-  let stored      = null;
-  let currentWeek = null;
-  let allProfiles = [];
-  let readyIds    = new Set();
-  let weekGoals   = [];
-  let realtimeCh  = null;
+  let stored            = null;
+  let currentWeek       = null;
+  let allProfiles       = [];
+  let allProfilesFull   = [];
+  let participantIds    = new Set();
+  let readyIds          = new Set();
+  let weekGoals         = [];
+  let realtimeCh        = null;
+  let countdownInterval = null;
 
   async function init() {
     stored = requireAuth();
@@ -48,16 +51,19 @@
     document.getElementById('sidebar-root').innerHTML = renderSidebar(me, 'skrill-time');
     document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('skrill-time');
 
-    currentWeek = week;
-    allProfiles = profiles ?? [];
+    currentWeek     = week;
+    allProfilesFull = profiles ?? [];
 
     if (week) {
-      const [{ data: ready }, { data: goals }] = await Promise.all([
+      const [{ data: ready }, { data: goals }, { data: participants }] = await Promise.all([
         sb.from('week_ready').select('*').eq('week_id', week.id),
         sb.from('goals').select('*, profile:profiles(*)').eq('week_id', week.id),
+        sb.from('season_participants').select('profile_id').eq('week_id', week.id),
       ]);
-      readyIds  = new Set((ready ?? []).map(r => r.profile_id));
-      weekGoals = goals ?? [];
+      readyIds       = new Set((ready ?? []).map(r => r.profile_id));
+      weekGoals      = goals ?? [];
+      participantIds = new Set((participants ?? []).map(p => p.profile_id));
+      allProfiles    = allProfilesFull.filter(p => participantIds.has(p.id));
     }
 
     renderPage();
@@ -68,6 +74,7 @@
     if (realtimeCh) realtimeCh.unsubscribe();
     realtimeCh = sb.channel('skrill-time-ch')
       .on('postgres_changes', { event: '*', schema: 'public', table: 'week_ready' }, () => reload())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'season_participants' }, () => reload())
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'weeks' }, payload => {
         if (payload.new?.id === currentWeek?.id) {
           currentWeek = { ...currentWeek, ...payload.new };
@@ -79,19 +86,33 @@
 
   async function reload() {
     if (!currentWeek) return;
-    const [{ data: ready }, { data: goals }] = await Promise.all([
+    const [{ data: ready }, { data: goals }, { data: participants }] = await Promise.all([
       sb.from('week_ready').select('*').eq('week_id', currentWeek.id),
       sb.from('goals').select('*, profile:profiles(*)').eq('week_id', currentWeek.id),
+      sb.from('season_participants').select('profile_id').eq('week_id', currentWeek.id),
     ]);
     const { data: week } = await sb.from('weeks').select('*').eq('id', currentWeek.id).single();
     if (week) currentWeek = week;
-    readyIds  = new Set((ready ?? []).map(r => r.profile_id));
-    weekGoals = goals ?? [];
+    readyIds       = new Set((ready ?? []).map(r => r.profile_id));
+    weekGoals      = goals ?? [];
+    participantIds = new Set((participants ?? []).map(p => p.profile_id));
+    allProfiles    = allProfilesFull.filter(p => participantIds.has(p.id));
     renderPage();
   }
 
+  function isSkrillDay() {
+    if (!currentWeek?.end_date) return true;
+    const t = new Date();
+    const todayStr = t.getFullYear() + '-' +
+      String(t.getMonth() + 1).padStart(2, '0') + '-' +
+      String(t.getDate()).padStart(2, '0');
+    return todayStr >= currentWeek.end_date;
+  }
+
   function renderPage() {
-    const week     = currentWeek;
+    if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+
+    const week = currentWeek;
 
     if (!week) {
       document.getElementById('app').innerHTML = `<div style="width:100%">
@@ -111,37 +132,52 @@
     const count    = readyIds.size;
     const allReady = total > 0 && count >= total;
     const iReady   = readyIds.has(stored.id);
+    const isSkDay  = isSkrillDay();
 
     const squares = allProfiles.map(p => `
       <div class="ready-square ${readyIds.has(p.id) ? 'on' : ''}" title="${p.name}"></div>
     `).join('');
 
-    const readySection = revealed ? '' : `
-      <div class="card" style="margin-bottom:20px">
-        <div class="card-body" style="padding:20px;text-align:center">
-          <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px">
-            ${squares}
-          </div>
-          <div style="font-size:28px;font-weight:700;color:var(--text-muted);margin-bottom:20px;text-transform:uppercase">
-            ${count} / ${total} prontos
-          </div>
-          ${!iReady ? `
-            <button class="btn btn-primary" style="font-size:26px;padding:14px 32px" onclick="markReady()">
-              Marcar Pronto
-            </button>
-          ` : `
-            <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
-              <div style="font-size:24px;color:var(--amber);font-weight:700;text-transform:uppercase">
-                Voce esta pronto! Aguardando os outros...
-              </div>
-              <button class="btn btn-ghost" style="font-size:22px;padding:10px 24px;opacity:0.7" onclick="unmarkReady()">
-                Desmarcar Pronto
-              </button>
+    let readySection = '';
+    if (!revealed) {
+      if (!isSkDay) {
+        readySection = `
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-body countdown-wrap">
+              <div class="countdown-title">SKRILL DAY</div>
+              <div class="countdown-sub">Temporada ${week.week_number} · ${week.year}</div>
+              <div class="countdown-row" id="countdown-display"></div>
             </div>
-          `}
-          ${allReady ? `<div style="font-size:24px;color:#22c55e;margin-top:12px;font-weight:700">Todos prontos! Revelando...</div>` : ''}
-        </div>
-      </div>`;
+          </div>`;
+      } else {
+        readySection = `
+          <div class="card" style="margin-bottom:20px">
+            <div class="card-body" style="padding:20px;text-align:center">
+              <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px">
+                ${squares}
+              </div>
+              <div style="font-size:28px;font-weight:700;color:var(--text-muted);margin-bottom:20px;text-transform:uppercase">
+                ${count} / ${total} prontos
+              </div>
+              ${!iReady ? `
+                <button class="btn btn-primary" style="font-size:26px;padding:14px 32px" onclick="markReady()">
+                  Marcar Pronto
+                </button>
+              ` : `
+                <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+                  <div style="font-size:24px;color:var(--amber);font-weight:700;text-transform:uppercase">
+                    Voce esta pronto! Aguardando os outros...
+                  </div>
+                  <button class="btn btn-ghost" style="font-size:22px;padding:10px 24px;opacity:0.7" onclick="unmarkReady()">
+                    Desmarcar Pronto
+                  </button>
+                </div>
+              `}
+              ${allReady ? `<div style="font-size:24px;color:#22c55e;margin-top:12px;font-weight:700">Todos prontos! Revelando...</div>` : ''}
+            </div>
+          </div>`;
+      }
+    }
 
     const revealSection = revealed
       ? renderReveal()
@@ -156,17 +192,51 @@
             <div class="page-header-label">[S] Reuniao</div>
             <h1 class="page-header-title">Skrill Time</h1>
             ${week ? `<div style="font-size:24px;color:var(--text-muted);margin-top:6px;text-transform:uppercase;">
-              Semana ${week.week_number} · ${week.year}
+              Temporada ${week.week_number} · ${week.year}
             </div>` : ''}
           </div>
         </div>
         ${readySection}
         ${revealSection}
       </div>`;
+
+    if (!revealed && !isSkDay) startCountdown();
+  }
+
+  function startCountdown() {
+    const target = new Date(currentWeek.end_date + 'T00:00:00');
+
+    function tick() {
+      const el = document.getElementById('countdown-display');
+      if (!el) { clearInterval(countdownInterval); countdownInterval = null; return; }
+      const diff = target - new Date();
+      if (diff <= 0) {
+        clearInterval(countdownInterval); countdownInterval = null;
+        renderPage();
+        return;
+      }
+      const days    = Math.floor(diff / 86400000);
+      const hours   = Math.floor((diff % 86400000) / 3600000);
+      const minutes = Math.floor((diff % 3600000)  / 60000);
+      const seconds = Math.floor((diff % 60000)    / 1000);
+      const pad     = n => String(n).padStart(2, '0');
+      el.innerHTML = `
+        <div class="cd-unit"><span class="cd-num">${pad(days)}</span><span class="cd-lbl">DIAS</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit"><span class="cd-num">${pad(hours)}</span><span class="cd-lbl">HORAS</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit"><span class="cd-num">${pad(minutes)}</span><span class="cd-lbl">MIN</span></div>
+        <span class="cd-sep">:</span>
+        <div class="cd-unit"><span class="cd-num">${pad(seconds)}</span><span class="cd-lbl">SEG</span></div>`;
+    }
+    tick();
+    countdownInterval = setInterval(tick, 1000);
   }
 
   function renderReveal() {
-    const completedGoals = weekGoals.filter(g => g.status === 'completed' || g.status === 'beyond');
+    const completedGoals = weekGoals.filter(g =>
+      (g.status === 'completed' || g.status === 'beyond') && participantIds.has(g.profile_id)
+    );
 
     const byMember = new Map();
     for (const p of allProfiles) byMember.set(p.id, { profile: p, goals: [] });
@@ -202,7 +272,7 @@
             </div>
             <div style="font-size:32px;font-weight:700;color:var(--amber)">${pts}pts</div>
           </div>
-          ${mGoals.length ? goalsHTML : `<div style="font-size:24px;color:var(--text-muted);text-align:center;padding:8px">Nenhuma meta entregue esta semana</div>`}
+          ${mGoals.length ? goalsHTML : `<div style="font-size:24px;color:var(--text-muted);text-align:center;padding:8px">Nenhuma meta entregue esta temporada</div>`}
         </div>`;
     }).join('');
 
@@ -214,20 +284,20 @@
     const advanceBtn = isAdmin() ? `
       <div style="margin-top:20px;padding-top:20px;border-top:2px dashed var(--border);text-align:center">
         <div style="font-size:22px;color:var(--text-muted);margin-bottom:6px;text-transform:uppercase">
-          Admin — Semana ${currentWeek.week_number} concluída
+          Admin — Temporada ${currentWeek.week_number} concluida
         </div>
         <div style="font-size:20px;color:var(--text-muted);margin-bottom:14px">
-          Clique para encerrar esta semana e abrir a Semana ${nextDisp} · ${nextYear} para todos.
+          Clique para encerrar esta temporada e abrir a Temporada ${nextDisp} · ${nextYear} para todos.
         </div>
         <button class="btn btn-primary" style="font-size:24px;padding:12px 32px" onclick="openAdvanceWeekModal()">
-          Encerrar e iniciar Semana ${nextDisp}
+          Encerrar e iniciar Temporada ${nextDisp}
         </button>
       </div>` : '';
 
     return `
       <div class="card">
         <div class="card-header">
-          <div class="card-title">Resultados da Semana</div>
+          <div class="card-title">Resultados da Temporada</div>
           <div style="font-size:24px;font-weight:700;color:var(--amber)">${totalPts}pts total</div>
         </div>
         <div class="card-body" style="padding:16px">${blocks}</div>
@@ -240,9 +310,9 @@
     const nextYear = nextNum > 52 ? currentWeek.year + 1 : currentWeek.year;
     const nextDisp = nextNum > 52 ? 1 : nextNum;
 
-    const fmt      = d => d.toISOString().split('T')[0];
-    const today    = new Date();
-    const defEnd   = new Date(today);
+    const fmt    = d => d.toISOString().split('T')[0];
+    const today  = new Date();
+    const defEnd = new Date(today);
     defEnd.setDate(today.getDate() + 7);
 
     let overlay = document.getElementById('advance-week-modal');
@@ -258,19 +328,19 @@
       <div class="win-window" onclick="event.stopPropagation()" style="width:min(480px,92vw)">
         <div class="win-titlebar">
           <span class="win-titlebar-icon">[S]</span>
-          <span class="win-titlebar-title">Encerrar Semana ${currentWeek.week_number}</span>
+          <span class="win-titlebar-title">Encerrar Temporada ${currentWeek.week_number}</span>
           <button class="win-btn" onclick="closeAdvanceWeekModal()">X</button>
         </div>
         <div class="win-body" style="flex-direction:column;align-items:stretch;gap:16px;padding:20px 20px 16px">
           <div style="text-align:center;font-family:'Jersey 25',monospace;font-size:28px">
-            Semana ${nextDisp} · ${nextYear}
+            Temporada ${nextDisp} · ${nextYear}
           </div>
           <div style="font-size:22px;color:#404040;text-align:center;border-bottom:1px solid #808080;padding-bottom:14px">
-            Os pontos semanais de todos serao zerados.
+            Os pontos da temporada de todos serao zerados.
           </div>
           <div>
             <label style="display:block;font-size:20px;font-weight:700;margin-bottom:6px;font-family:'Micro 5',monospace;text-transform:uppercase;letter-spacing:.04em">
-              Data final da Semana ${nextDisp}
+              Data final da Temporada ${nextDisp}
             </label>
             <input id="advance-end-date" type="date" value="${fmt(defEnd)}"
               style="width:100%;box-sizing:border-box;font-size:22px;padding:8px 10px;border:2px inset #808080;background:#fff;font-family:'Micro 5',monospace"/>
@@ -359,6 +429,7 @@
   async function awardPointsForAll() {
     const toAward = weekGoals.filter(g =>
       (g.status === 'completed' || g.status === 'beyond') && !g.points_awarded
+      && participantIds.has(g.profile_id)
     );
 
     for (const g of toAward) {

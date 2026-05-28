@@ -25,9 +25,14 @@
   if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
   else if (!getStoredProfile()) { window.location.href = '/skrill/select-profile/'; }
 
+  let currentWeek     = null;
+  let currentProfile  = null;
+  let currentStored   = null;
+  let isParticipating = false;
+
   async function init() {
-    const stored = requireAuth();
-    if (!stored) return;
+    currentStored = requireAuth();
+    if (!currentStored) return;
 
     const [
       { data: profile },
@@ -35,35 +40,35 @@
       { data: allProfiles },
       { data: meeting },
     ] = await Promise.all([
-      sb.from('profiles').select('*').eq('id', stored.id).single(),
+      sb.from('profiles').select('*').eq('id', currentStored.id).single(),
       sb.from('weeks').select('*').eq('is_current', true).single(),
       sb.from('profiles').select('*').order('weekly_points', { ascending: false }).limit(6),
       sb.from('meetings').select('*').order('scheduled_at', { ascending: false }).limit(1).single(),
     ]);
 
     if (profile) setStoredProfile(profile);
-
-    if (!week) {
-      document.getElementById('sidebar-root').innerHTML = renderSidebar(profile, 'dashboard');
-      document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('dashboard');
-      document.getElementById('app').innerHTML = renderNoWeekBanner();
-      return;
-    }
-
-    // Goals for current week (needs week_id)
-    let goals = [];
-    if (week) {
-      const { data } = await sb.from('goals')
-        .select('*, profile:profiles(*)')
-        .eq('week_id', week.id)
-        .order('completed_at', { ascending: false, nullsFirst: false });
-      goals = data ?? [];
-    }
+    currentProfile = profile;
+    currentWeek    = week;
 
     document.getElementById('sidebar-root').innerHTML  = renderSidebar(profile, 'dashboard');
     document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('dashboard');
 
-    const myGoals    = goals.filter(g => g.profile_id === stored.id);
+    if (!week) {
+      document.getElementById('app').innerHTML = renderNoWeekBanner();
+      return;
+    }
+
+    // Participation status + goals for current week
+    const [{ data: participation }, { data: goalsData }] = await Promise.all([
+      sb.from('season_participants').select('id').eq('week_id', week.id).eq('profile_id', currentStored.id).single(),
+      sb.from('goals').select('*, profile:profiles(*)')
+        .eq('week_id', week.id)
+        .order('completed_at', { ascending: false, nullsFirst: false }),
+    ]);
+
+    isParticipating = !!participation;
+    const goals      = goalsData ?? [];
+    const myGoals    = goals.filter(g => g.profile_id === currentStored.id);
     const done       = myGoals.filter(g => g.status === 'completed' || g.status === 'beyond');
     const revealed   = week?.skrill_time_revealed ?? false;
     const deliveries = goals.filter(g => (g.status === 'completed' || g.status === 'beyond') && (g.image_urls?.length > 0));
@@ -75,10 +80,14 @@
             <div class="page-header-label">Bem-vindo de volta,</div>
             <h1 class="page-header-title">${profile?.name ?? 'Guild Member'}</h1>
             ${week ? `<div style="font-size:24px;color:var(--text-muted);margin-top:6px;text-transform:uppercase;">
-              Semana ${week.week_number} · ${week.year}
+              Temporada ${week.week_number} · ${week.year}
               &nbsp;·&nbsp; ${profile?.streak_current ?? 0}w streak
             </div>` : ''}
           </div>
+        </div>
+
+        <div id="participation-card" class="card" style="margin-bottom:16px">
+          ${renderParticipationCard()}
         </div>
 
         <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
@@ -91,14 +100,14 @@
           <div class="stat-card">
             <div class="stat-icon purple">WK</div>
             <div class="stat-value">${profile?.weekly_points ?? 0}</div>
-            <div class="stat-label">Pts Semana</div>
-            <div class="stat-sub">esta semana</div>
+            <div class="stat-label">Pts Temporada</div>
+            <div class="stat-sub">esta temporada</div>
           </div>
           <div class="stat-card">
             <div class="stat-icon green">[G]</div>
             <div class="stat-value">${done.length}/${myGoals.length}</div>
             <div class="stat-label">Metas Feitas</div>
-            <div class="stat-sub">esta semana</div>
+            <div class="stat-sub">esta temporada</div>
           </div>
         </div>
 
@@ -108,19 +117,55 @@
             ${renderDeliveryFeed(deliveries, revealed)}
           </div>
           <div class="col-right">
-            ${renderMiniLeaderboard(allProfiles ?? [], stored.id)}
+            ${renderMiniLeaderboard(allProfiles ?? [], currentStored.id)}
             ${renderNextMeeting(meeting)}
           </div>
         </div>
       </div>`;
   }
 
+  function renderParticipationCard() {
+    if (!currentWeek) return '';
+    return `
+      <div class="card-body" style="padding:16px;display:flex;align-items:center;gap:14px">
+        <div style="flex:1;min-width:0">
+          <div style="font-size:26px;font-weight:700">Temporada ${currentWeek.week_number} · ${currentWeek.year}</div>
+          <div style="font-size:20px;color:var(--text-muted);text-transform:uppercase">
+            ${isParticipating ? '[v] Voce esta participando' : '[ ] Voce nao esta participando'}
+          </div>
+        </div>
+        ${isParticipating
+          ? `<button class="btn btn-ghost btn-sm" style="font-size:20px;opacity:0.6" onclick="leaveSeason()">Sair</button>`
+          : `<button class="btn btn-primary btn-sm" style="font-size:22px;padding:10px 20px" onclick="joinSeason()">Participar</button>`
+        }
+      </div>`;
+  }
+
+  async function joinSeason() {
+    const btn = document.querySelector('[onclick="joinSeason()"]');
+    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+    await sb.from('season_participants').insert({ week_id: currentWeek.id, profile_id: currentProfile.id });
+    isParticipating = true;
+    const card = document.getElementById('participation-card');
+    if (card) card.innerHTML = renderParticipationCard();
+  }
+
+  async function leaveSeason() {
+    if (!confirm('Sair desta temporada?')) return;
+    const btn = document.querySelector('[onclick="leaveSeason()"]');
+    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+    await sb.from('season_participants').delete().eq('week_id', currentWeek.id).eq('profile_id', currentProfile.id);
+    isParticipating = false;
+    const card = document.getElementById('participation-card');
+    if (card) card.innerHTML = renderParticipationCard();
+  }
+
   function renderWeeklyProgress(goals) {
     if (!goals.length) return `
       <div class="card">
-        <div class="card-header"><div class="card-title">>> Progresso Semanal</div></div>
+        <div class="card-header"><div class="card-title">>> Progresso da Temporada</div></div>
         <div class="card-body">
-          <div class="empty-state"><div class="empty-icon">[G]</div><p>Nenhuma meta ainda esta semana</p></div>
+          <div class="empty-state"><div class="empty-icon">[G]</div><p>Nenhuma meta ainda esta temporada</p></div>
         </div>
       </div>`;
     const rows = goals.slice(0, 8).map(g => `
@@ -132,7 +177,7 @@
     return `
       <div class="card">
         <div class="card-header">
-          <div class="card-title">>> Progresso Semanal</div>
+          <div class="card-title">>> Progresso da Temporada</div>
           <a href="/skrill/weekly/" class="card-link">Ver tudo →</a>
         </div>
         <div class="card-body"><div class="goal-rows">${rows}</div></div>
@@ -140,11 +185,11 @@
   }
 
   function renderDeliveryFeed(deliveries, revealed) {
-    const title = 'Entregas da Semana';
+    const title = 'Entregas da Temporada';
     if (!deliveries.length) return `
       <div class="card">
         <div class="card-header"><div class="card-title">${title}</div></div>
-        <div class="card-body"><div class="empty-state"><p>Nenhuma entrega ainda esta semana</p></div></div>
+        <div class="card-body"><div class="empty-state"><p>Nenhuma entrega ainda esta temporada</p></div></div>
       </div>`;
 
     const posts = deliveries.slice(0, 10).map(g => {

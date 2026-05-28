@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>SKRILL — Metas Semanais</title>
+  <title>SKRILL — Metas da Temporada</title>
   <link rel="icon" type="image/x-icon" href="/skrill/favicon.ico"/>
   <link rel="stylesheet" href="/skrill/css/style.css"/>
 </head>
@@ -113,7 +113,7 @@
       document.getElementById('app').innerHTML = `<div style="width:100%">
         <div class="page-header">
           <div>
-            <div class="page-header-label">[G] Metas Semanais</div>
+            <div class="page-header-label">[G] Metas da Temporada</div>
             <h1 class="page-header-title">Weekly Goals</h1>
           </div>
         </div>
@@ -122,10 +122,10 @@
       return;
     }
 
-    let weekLabel = 'Esta Semana';
+    let weekLabel = 'Esta Temporada';
     let weekSub   = '';
     if (week) {
-      weekLabel = `Semana ${week.week_number}`;
+      weekLabel = `Temporada ${week.week_number}`;
       const s = new Date(week.start_date);
       const e = new Date(week.end_date);
       weekSub = ` · ${s.toLocaleDateString('pt-BR',{month:'short',day:'numeric'})} – ${e.toLocaleDateString('pt-BR',{month:'short',day:'numeric'})}`;
@@ -135,7 +135,7 @@
       <div style="width:100%">
         <div class="page-header">
           <div>
-            <div class="page-header-label">[G] Metas Semanais</div>
+            <div class="page-header-label">[G] Metas da Temporada</div>
             <h1 class="page-header-title">${weekLabel}<span class="page-header-sub">${weekSub}</span></h1>
           </div>
           <button class="btn btn-primary" onclick="openModal()">+ Declarar Meta</button>

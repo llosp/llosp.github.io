@@ -148,7 +148,7 @@ function isAdmin() {
 }
 
 async function startSeason() {
-  if (!confirm('Iniciar a Temporada? Isso vai criar a Semana 1 e o app abrirá para todos.')) return;
+  if (!confirm('Iniciar a Temporada? Isso vai criar a Temporada 1 e o app abrirá para todos.')) return;
 
   const today    = new Date();
   const nextWeek = new Date(today);
@@ -165,7 +165,7 @@ async function startSeason() {
   });
 
   if (error) {
-    alert('Erro ao criar semana: ' + error.message);
+    alert('Erro ao criar temporada: ' + error.message);
     return;
   }
 
@@ -184,7 +184,7 @@ function renderNoWeekBanner() {
     <div class="card" style="text-align:center;padding:48px 20px;margin-top:20px">
       <div style="font-size:36px;font-weight:700;margin-bottom:10px">[S] Temporada não iniciada</div>
       <div style="font-size:24px;color:var(--text-muted)">
-        A Semana 1 ainda não foi criada.<br>
+        A Temporada 1 ainda não foi criada.<br>
         Fique de olho — o Skrill Time inaugural está chegando.
       </div>
       ${adminSection}

@@ -746,3 +746,29 @@ textarea.form-input { resize: vertical; min-height: 70px; }
   flex-shrink: 0;
   display: flex; gap: 12px;
 }
+
+/* ── SKRILL DAY Countdown ─────────────────────────────────────────────────── */
+.countdown-wrap { text-align:center; padding:32px 20px; }
+.countdown-title {
+  font-family:'Jersey 25',monospace; font-size:36px; color:var(--amber);
+  text-transform:uppercase; letter-spacing:.1em; margin-bottom:6px;
+}
+.countdown-sub {
+  font-size:22px; color:var(--text-muted); text-transform:uppercase; margin-bottom:28px;
+}
+.countdown-row {
+  display:flex; align-items:flex-start; justify-content:center; gap:0; flex-wrap:wrap;
+}
+.cd-unit { display:flex; flex-direction:column; align-items:center; min-width:72px; }
+.cd-num {
+  font-family:'Jersey 25',monospace; font-size:64px; line-height:1;
+  color:var(--text); letter-spacing:.02em;
+}
+.cd-lbl {
+  font-family:'Micro 5',monospace; font-size:18px; color:var(--text-muted);
+  text-transform:uppercase; letter-spacing:.06em; margin-top:4px;
+}
+.cd-sep {
+  font-family:'Jersey 25',monospace; font-size:56px; color:var(--amber);
+  padding:0 2px; line-height:1; margin-top:2px;
+}

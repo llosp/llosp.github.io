@@ -119,7 +119,7 @@
               </div>
               <div class="profile-stat">
                 <div class="profile-stat-val">${profile.weekly_points ?? 0}</div>
-                <div class="profile-stat-lbl">Pts Semana</div>
+                <div class="profile-stat-lbl">Pts Temporada</div>
               </div>
               <div class="profile-stat">
                 <div class="profile-stat-val">${completedGoals.length}</div>
@@ -162,8 +162,8 @@
     return [...byWeek.values()].map(({ week, goals: wGoals }) => {
       const revealed = week?.skrill_time_revealed ?? false;
       const label = week
-        ? `Semana ${week.week_number} · ${week.year}`
-        : 'Sem semana';
+        ? `Temporada ${week.week_number} · ${week.year}`
+        : 'Sem temporada';
       const items = wGoals.map(g => {
         const isDone = g.status === 'completed' || g.status === 'beyond';
         const imgs = g.image_urls ?? [];

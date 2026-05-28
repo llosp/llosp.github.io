@@ -62,7 +62,7 @@
 
     <div class="tab-list" style="flex-wrap:wrap">
       <button class="tab-btn active" data-tab="t-profiles" onclick="switchTab('t-profiles')">Perfis</button>
-      <button class="tab-btn" data-tab="t-weeks"    onclick="switchTab('t-weeks')">Semanas</button>
+      <button class="tab-btn" data-tab="t-weeks"    onclick="switchTab('t-weeks')">Temporadas</button>
       <button class="tab-btn" data-tab="t-goals"    onclick="switchTab('t-goals')">Metas</button>
       <button class="tab-btn" data-tab="t-points"   onclick="switchTab('t-points')">Pontos</button>
       <button class="tab-btn" data-tab="t-ready"    onclick="switchTab('t-ready')">Ready</button>
@@ -176,7 +176,7 @@
               </div>
               <div style="font-size:20px;color:var(--text-muted)">
                 Total: <b>${p.total_points??0}</b> &nbsp;·&nbsp;
-                Semana: <b>${p.weekly_points??0}</b> &nbsp;·&nbsp;
+                Temporada: <b>${p.weekly_points??0}</b> &nbsp;·&nbsp;
                 Streak: <b>${p.streak_current??0}w</b> &nbsp;·&nbsp;
                 Melhor: <b>${p.streak_longest??0}w</b>
               </div>
@@ -195,7 +195,7 @@
                 <input id="pe-name-${p.id}" class="form-input" value="${p.name}"/></div>
               <div class="form-group" style="margin:0"><label class="form-label">Total Pts</label>
                 <input id="pe-total-${p.id}" class="form-input" type="number" value="${p.total_points??0}"/></div>
-              <div class="form-group" style="margin:0"><label class="form-label">Pts Semana</label>
+              <div class="form-group" style="margin:0"><label class="form-label">Pts Temporada</label>
                 <input id="pe-weekly-${p.id}" class="form-input" type="number" value="${p.weekly_points??0}"/></div>
               <div class="form-group" style="margin:0"><label class="form-label">Streak Atual</label>
                 <input id="pe-streak-${p.id}" class="form-input" type="number" value="${p.streak_current??0}"/></div>
@@ -250,7 +250,7 @@
           <div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap">
             <div style="flex:1">
               <div style="display:flex;align-items:center;gap:8px">
-                <span style="font-size:26px;font-weight:700">Semana ${w.week_number} · ${w.year}</span>
+                <span style="font-size:26px;font-weight:700">Temporada ${w.week_number} · ${w.year}</span>
                 ${w.is_current ? `<span class="badge badge-completed">Atual</span>` : ''}
                 ${w.skrill_time_revealed ? `<span class="badge badge-beyond">Revelado</span>` : ''}
               </div>
@@ -270,7 +270,7 @@
     const newForm = showNewWeekForm ? `
       <div class="card" style="margin-bottom:12px;border:2px solid var(--amber)">
         <div class="card-body" style="padding:14px">
-          <div style="font-size:24px;font-weight:700;margin-bottom:12px">Nova Semana</div>
+          <div style="font-size:24px;font-weight:700;margin-bottom:12px">Nova Temporada</div>
           <div class="inline-form">
             <div class="form-group" style="margin:0"><label class="form-label">Número</label>
               <input id="nw-num" class="form-input" type="number" value="${nextWeekNum()}" min="1" max="52"/></div>
@@ -282,13 +282,13 @@
               <input id="nw-end" class="form-input" type="date"/></div>
           </div>
           <label style="display:flex;align-items:center;gap:8px;font-size:22px;margin:10px 0;cursor:pointer">
-            <input type="checkbox" id="nw-current" checked/> Definir como semana atual
+            <input type="checkbox" id="nw-current" checked/> Definir como temporada atual
           </label>
           <label style="display:flex;align-items:center;gap:8px;font-size:22px;margin-bottom:12px;cursor:pointer">
-            <input type="checkbox" id="nw-reset-pts"/> Zerar pontos semanais de todos os perfis
+            <input type="checkbox" id="nw-reset-pts"/> Zerar pontos da temporada de todos os perfis
           </label>
           <div style="display:flex;gap:8px">
-            <button class="btn btn-primary btn-sm" onclick="createWeek()">Criar Semana</button>
+            <button class="btn btn-primary btn-sm" onclick="createWeek()">Criar Temporada</button>
             <button class="btn btn-ghost btn-sm" onclick="showNewWeekForm=false;renderWeeks()">Cancelar</button>
           </div>
         </div>
@@ -296,10 +296,10 @@
 
     el.innerHTML = `
       <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
-        <button class="btn btn-primary btn-sm" onclick="showNewWeekForm=true;renderWeeks()">+ Nova Semana</button>
+        <button class="btn btn-primary btn-sm" onclick="showNewWeekForm=true;renderWeeks()">+ Nova Temporada</button>
       </div>
       ${newForm}
-      ${rows || emptyState('Nenhuma semana')}`;
+      ${rows || emptyState('Nenhuma temporada')}`;
   }
 
   function nextWeekNum() {
@@ -312,7 +312,7 @@
   async function setCurrentWeek(id) {
     await sb.from('weeks').update({ is_current: false }).neq('id', id);
     await sb.from('weeks').update({ is_current: true  }).eq('id', id);
-    toast('Semana atual atualizada!');
+    toast('Temporada atual atualizada!');
     await loadAll();
   }
 
@@ -323,14 +323,14 @@
   }
 
   async function deleteWeek(id, num) {
-    if (!confirm(`Excluir Semana ${num}?\nIsso apaga todas as metas, ready e pontos desta semana.`)) return;
+    if (!confirm(`Excluir Temporada ${num}?\nIsso apaga todas as metas, ready e pontos desta temporada.`)) return;
     await Promise.all([
       sb.from('goals').delete().eq('week_id', id),
       sb.from('week_ready').delete().eq('week_id', id),
       sb.from('point_history').delete().eq('week_id', id),
     ]);
     await sb.from('weeks').delete().eq('id', id);
-    toast('Semana excluída!');
+    toast('Temporada excluída!');
     await loadAll();
   }
 
@@ -345,7 +345,7 @@
     await sb.from('weeks').insert({ week_number: num, year, start_date: start, end_date: end, is_current: isCur, skrill_time_revealed: false });
     if (resetP) await sb.from('profiles').update({ weekly_points: 0 }).not('id', 'is', null);
     showNewWeekForm = false;
-    toast('Semana criada!');
+    toast('Temporada criada!');
     await loadAll();
   }
 
@@ -353,7 +353,7 @@
   function renderGoals() {
     const el = document.getElementById('t-goals');
     const weekOpts = D.weeks.map(w =>
-      `<option value="${w.id}" ${goalsWeekFilter===w.id?'selected':''}>${w.is_current?'[atual] ':''}Semana ${w.week_number} · ${w.year}</option>`
+      `<option value="${w.id}" ${goalsWeekFilter===w.id?'selected':''}>${w.is_current?'[atual] ':''}Temporada ${w.week_number} · ${w.year}</option>`
     ).join('');
     const list = goalsWeekFilter === 'all' ? D.goals : D.goals.filter(g => g.week_id === goalsWeekFilter);
 
@@ -393,7 +393,7 @@
     el.innerHTML = `
       <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
         <select class="form-input" style="width:auto;font-size:22px" onchange="goalsWeekFilter=this.value;renderGoals()">
-          <option value="all" ${goalsWeekFilter==='all'?'selected':''}>Todas as semanas</option>
+          <option value="all" ${goalsWeekFilter==='all'?'selected':''}>Todas as temporadas</option>
           ${weekOpts}
         </select>
         <span style="font-size:22px;color:var(--text-muted)">${list.length} metas</span>
@@ -465,7 +465,7 @@
         <div class="card-body" style="padding:0 14px">
           <table class="admin-table">
             <thead><tr>
-              <th>Perfil</th><th>Semana</th><th>Data</th><th></th>
+              <th>Perfil</th><th>Temporada</th><th>Data</th><th></th>
             </tr></thead>
             <tbody>
               ${D.ready.map(r => `
@@ -490,33 +490,33 @@
   // ── DANGER ZONE ────────────────────────────────────────────────────────────────
   function renderDanger() {
     const cur = D.weeks.find(w => w.is_current);
-    const label = cur ? `Semana ${cur.week_number} · ${cur.year}` : 'Nenhuma semana atual';
+    const label = cur ? `Temporada ${cur.week_number} · ${cur.year}` : 'Nenhuma temporada atual';
 
     document.getElementById('t-danger').innerHTML = `
       <div style="background:#fef2f2;border:2px solid #ef4444;padding:12px 16px;margin-bottom:16px;font-size:22px;font-weight:700;color:#ef4444;text-transform:uppercase">
-        Semana atual: ${label}
+        Temporada atual: ${label}
       </div>
       <div style="display:flex;flex-direction:column;gap:10px">
-        ${dangerCard('Zerar pontos semanais de todos',
+        ${dangerCard('Zerar pontos da temporada de todos',
           'Define weekly_points = 0 para todos os perfis.',
-          'Zerar Pts Semana', 'resetWeeklyPoints')}
-        ${dangerCard('Limpar todos week_ready da semana atual',
-          'Remove todos os "Pronto" da semana atual — permite remarcar.',
+          'Zerar Pts Temporada', 'resetWeeklyPoints')}
+        ${dangerCard('Limpar todos week_ready da temporada atual',
+          'Remove todos os "Pronto" da temporada atual — permite remarcar.',
           'Limpar Ready', 'clearReady')}
-        ${dangerCard('Ocultar revelação da semana atual',
+        ${dangerCard('Ocultar revelação da temporada atual',
           'Define skrill_time_revealed = false — oculta imagens novamente.',
           'Ocultar Reveal', 'hideReveal')}
-        ${dangerCard('Resetar premiações da semana atual',
-          'Define points_awarded = false em todas as metas da semana — permite re-premiar.',
+        ${dangerCard('Resetar premiações da temporada atual',
+          'Define points_awarded = false em todas as metas da temporada — permite re-premiar.',
           'Resetar Premiações', 'resetPointsAwarded')}
         ${dangerCard('Zerar streaks de todos os perfis',
           'Define streak_current = 0 para todos.',
           'Zerar Streaks', 'resetAllStreaks')}
-        ${dangerCard('Apagar todas as metas da semana atual',
-          'Deleta todas as goals da semana. Irreversível.',
+        ${dangerCard('Apagar todas as metas da temporada atual',
+          'Deleta todas as goals da temporada. Irreversível.',
           'Apagar Metas', 'deleteWeekGoals', true)}
-        ${dangerCard('Reset total da semana atual',
-          'Apaga metas, ready e pontos da semana. Oculta reveal. Zera pts semanais. Dupla confirmação.',
+        ${dangerCard('Reset total da temporada atual',
+          'Apaga metas, ready e pontos da temporada. Oculta reveal. Zera pts da temporada. Dupla confirmação.',
           'Reset Total', 'fullWeekReset', true)}
         ${dangerCard('Apagar TODOS os pontos acumulados',
           'Define total_points = 0 para todos os perfis e limpa todo o point_history.',
@@ -525,11 +525,11 @@
         <div style="border-top:2px dashed #ef4444;margin:8px 0"></div>
         <div style="font-size:20px;font-weight:700;text-transform:uppercase;color:#ef4444;letter-spacing:.06em;padding:4px 0">Operações Especiais</div>
 
-        ${dangerCard('Desfazer Skrill Time da semana atual',
+        ${dangerCard('Desfazer Skrill Time da temporada atual',
           'Apaga pontos concedidos, recalcula totais de cada perfil, limpa ready, oculta reveal e reseta points_awarded. Use após um Skrill Time de teste.',
           'Desfazer Skrill Time', 'undoSkrillTime', true)}
         ${dangerCard('Factory Reset — manter perfis',
-          'Apaga TODAS as semanas, metas, pontos e ready. Zera streaks e pts de todos os perfis. Avatares e nomes são mantidos. Use para começar do zero antes do lançamento real.',
+          'Apaga TODAS as temporadas, metas, pontos e ready. Zera streaks e pts de todos os perfis. Avatares e nomes são mantidos. Use para começar do zero antes do lançamento real.',
           'Factory Reset', 'factoryReset', true)}
       </div>`;
   }
@@ -552,16 +552,16 @@
   function curWeekId() { return D.weeks.find(w => w.is_current)?.id ?? null; }
 
   async function resetWeeklyPoints() {
-    if (!confirm('Zerar pontos semanais de TODOS os perfis?')) return;
+    if (!confirm('Zerar pontos da temporada de TODOS os perfis?')) return;
     await sb.from('profiles').update({ weekly_points: 0 }).not('id', 'is', null);
-    toast('Pontos semanais zerados!');
+    toast('Pontos da temporada zerados!');
     await loadAll();
   }
 
   async function clearReady() {
     const wid = curWeekId();
-    if (!wid) return toast('Nenhuma semana atual!', '#ef4444');
-    if (!confirm('Limpar todos week_ready da semana atual?')) return;
+    if (!wid) return toast('Nenhuma temporada atual!', '#ef4444');
+    if (!confirm('Limpar todos week_ready da temporada atual?')) return;
     await sb.from('week_ready').delete().eq('week_id', wid);
     toast('Ready limpo!');
     await loadAll();
@@ -569,7 +569,7 @@
 
   async function hideReveal() {
     const wid = curWeekId();
-    if (!wid) return toast('Nenhuma semana atual!', '#ef4444');
+    if (!wid) return toast('Nenhuma temporada atual!', '#ef4444');
     await sb.from('weeks').update({ skrill_time_revealed: false }).eq('id', wid);
     toast('Reveal ocultado!');
     await loadAll();
@@ -577,8 +577,8 @@
 
   async function resetPointsAwarded() {
     const wid = curWeekId();
-    if (!wid) return toast('Nenhuma semana atual!', '#ef4444');
-    if (!confirm('Resetar points_awarded de todas as metas da semana atual?')) return;
+    if (!wid) return toast('Nenhuma temporada atual!', '#ef4444');
+    if (!confirm('Resetar points_awarded de todas as metas da temporada atual?')) return;
     await sb.from('goals').update({ points_awarded: false }).eq('week_id', wid);
     toast('Premiações resetadas!');
     await loadAll();
@@ -593,8 +593,8 @@
 
   async function deleteWeekGoals() {
     const wid = curWeekId();
-    if (!wid) return toast('Nenhuma semana atual!', '#ef4444');
-    if (!confirm('APAGAR todas as metas da semana atual? Irreversível.')) return;
+    if (!wid) return toast('Nenhuma temporada atual!', '#ef4444');
+    if (!confirm('APAGAR todas as metas da temporada atual? Irreversível.')) return;
     await sb.from('goals').delete().eq('week_id', wid);
     toast('Metas apagadas!');
     await loadAll();
@@ -602,8 +602,8 @@
 
   async function fullWeekReset() {
     const wid = curWeekId();
-    if (!wid) return toast('Nenhuma semana atual!', '#ef4444');
-    if (!confirm('Reset TOTAL da semana atual?\nApaga metas, ready, pontos e oculta reveal.')) return;
+    if (!wid) return toast('Nenhuma temporada atual!', '#ef4444');
+    if (!confirm('Reset TOTAL da temporada atual?\nApaga metas, ready, pontos e oculta reveal.')) return;
     if (!confirm('Tem certeza? Esta ação não pode ser desfeita.')) return;
     await Promise.all([
       sb.from('goals').delete().eq('week_id', wid),
@@ -629,11 +629,11 @@
 
   async function undoSkrillTime() {
     const wid = curWeekId();
-    if (!wid) return toast('Nenhuma semana atual!', '#ef4444');
-    if (!confirm('Desfazer Skrill Time da semana atual?\nIsso vai apagar todos os pontos concedidos nesta semana e recalcular os totais.')) return;
+    if (!wid) return toast('Nenhuma temporada atual!', '#ef4444');
+    if (!confirm('Desfazer Skrill Time da temporada atual?\nIsso vai apagar todos os pontos concedidos nesta temporada e recalcular os totais.')) return;
     if (!confirm('Tem certeza? Esta ação não pode ser desfeita.')) return;
 
-    // 1. Apagar point_history da semana
+    // 1. Apagar point_history da temporada
     await sb.from('point_history').delete().eq('week_id', wid);
 
     // 2. Recalcular total_points de cada perfil com base no histórico restante
@@ -655,7 +655,7 @@
   }
 
   async function factoryReset() {
-    if (!confirm('FACTORY RESET — apagar TODAS as semanas, metas, pontos e ready?\nPerfis e avatares serão mantidos, mas todos os dados operacionais serão apagados.')) return;
+    if (!confirm('FACTORY RESET — apagar TODAS as temporadas, metas, pontos e ready?\nPerfis e avatares serão mantidos, mas todos os dados operacionais serão apagados.')) return;
     if (!confirm('Isso vai zerar pontos, streaks e toda a história do app. Tem certeza?')) return;
     if (!confirm('Última confirmação. Esta ação é irreversível.')) return;
 
@@ -672,7 +672,7 @@
       }).not('id', 'is', null),
     ]);
 
-    toast('App resetado! Crie a Semana 1 quando estiver pronto.');
+    toast('App resetado! Crie a Temporada 1 quando estiver pronto.');
     await loadAll();
   }
 

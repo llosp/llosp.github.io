@@ -22,7 +22,7 @@
   <!-- Edit Profile Modal -->
   <div id="edit-modal" class="modal-overlay hidden">
     <div class="modal" style="max-width:560px;width:90vw">
-      <div class="modal-title">[P] Editar Perfil</div>
+      <div class="modal-title" style="gap:8px"><img src="/skrill/img/Profile.svg" alt="profile" style="width:24px;height:24px"> Editar Perfil</div>
       <div class="modal-body" style="padding:16px 20px 8px">
         <div class="form-group">
           <label class="form-label">Nome / Apelido</label>
@@ -150,7 +150,7 @@
   }
 
   function renderWeekTimeline(goals) {
-    if (!goals.length) return `<div class="empty-state"><div class="empty-icon">[G]</div><h3>Nenhuma meta ainda</h3></div>`;
+    if (!goals.length) return `<div class="empty-state"><div class="empty-icon"><img src="/skrill/img/goals.svg" alt="goals" style="width:48px;height:48px"></div><h3>Nenhuma meta ainda</h3></div>`;
 
     const byWeek = new Map();
     for (const g of goals) {

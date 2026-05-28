@@ -64,7 +64,7 @@
       <div style="width:100%">
         <div class="page-header">
           <div>
-            <div class="page-header-label">[T] Rankings</div>
+            <div class="page-header-label" style="display:flex;align-items:center;gap:8px"><img src="/skrill/img/leaderboard.svg" alt="leaderboard" style="width:24px;height:24px"> Rankings</div>
             <h1 class="page-header-title">Leaderboard</h1>
           </div>
           <div style="text-align:right">
@@ -91,7 +91,7 @@
 
   function renderRanking(entries, field) {
     if (!entries.length) {
-      return `<div class="empty-state"><div class="empty-icon">[T]</div><h3>Nenhum membro ainda</h3></div>`;
+      return `<div class="empty-state"><div class="empty-icon"><img src="/skrill/img/leaderboard.svg" alt="leaderboard" style="width:48px;height:48px"></div><h3>Nenhum membro ainda</h3></div>`;
     }
     return renderPodium(entries, field) + renderList(entries.slice(3), field, 4);
   }

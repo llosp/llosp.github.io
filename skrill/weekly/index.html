@@ -22,7 +22,7 @@
   <!-- Modal nova meta -->
   <div id="modal" class="modal-overlay hidden">
     <div class="modal">
-      <div class="modal-title">[G] Nova Meta</div>
+      <div class="modal-title" style="gap:8px"><img src="/skrill/img/goals.svg" alt="goals" style="width:24px;height:24px"> Nova Meta</div>
       <form id="goal-form" onsubmit="handleAddGoal(event)">
         <div class="modal-body">
           <div class="form-group">
@@ -59,7 +59,7 @@
   <!-- Modal entrega -->
   <div id="delivery-modal" class="modal-overlay hidden">
     <div class="modal">
-      <div class="modal-title">[G] Entregar Meta</div>
+      <div class="modal-title" style="gap:8px"><img src="/skrill/img/goals.svg" alt="goals" style="width:24px;height:24px"> Entregar Meta</div>
       <div class="modal-body">
         <div id="delivery-goal-title" style="font-size:24px;font-weight:700;margin-bottom:14px;color:var(--text)"></div>
         <div class="form-group">
@@ -131,7 +131,7 @@
       app.innerHTML = `<div style="width:100%">
         <div class="page-header">
           <div>
-            <div class="page-header-label">[G] Metas da Temporada</div>
+            <div class="page-header-label" style="display:flex;align-items:center;gap:8px"><img src="/skrill/img/goals.svg" alt="goals" style="width:24px;height:24px"> Metas da Temporada</div>
             <h1 class="page-header-title">Metas da Temporada</h1>
           </div>
         </div>
@@ -154,7 +154,7 @@
       <div style="width:100%">
         <div class="page-header">
           <div>
-            <div class="page-header-label">[G] Metas da Temporada</div>
+            <div class="page-header-label" style="display:flex;align-items:center;gap:8px"><img src="/skrill/img/goals.svg" alt="goals" style="width:24px;height:24px"> Metas da Temporada</div>
             <h1 class="page-header-title">${weekLabel}<span class="page-header-sub">${weekSub}</span></h1>
           </div>
           ${revealed ? '' : `<button class="btn btn-primary" onclick="openModal()">+ Declarar Meta</button>`}
@@ -179,7 +179,7 @@
   }
 
   function renderGoals(goals, isOwnerAll, revealed) {
-    if (!goals.length) return `<div class="empty-state"><div class="empty-icon">[G]</div><h3>Nenhuma meta ainda</h3><p>Seja o primeiro a declarar uma!</p></div>`;
+    if (!goals.length) return `<div class="empty-state"><div class="empty-icon"><img src="/skrill/img/goals.svg" alt="goals" style="width:48px;height:48px"></div><h3>Nenhuma meta ainda</h3><p>Seja o primeiro a declarar uma!</p></div>`;
     return goals.map(g => renderGoalCard(g, isOwnerAll ?? (g.profile_id === currentProfile?.id), revealed)).join('');
   }
 

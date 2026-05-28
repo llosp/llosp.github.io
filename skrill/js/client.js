@@ -93,10 +93,18 @@ function renderSeasonLocked(week, profile, pageLabel, pageTitle) {
   const wSub = week ? ` · Temporada ${week.week_number}` : '';
   const safeWeekId = week?.id ?? '';
   const safeProfileId = profile?.id ?? '';
+
+  let labelHTML = pageLabel;
+  if (pageLabel.includes('[G]')) {
+    labelHTML = `<span style="display:flex;align-items:center;gap:8px"><img src="/skrill/img/goals.svg" alt="goals" style="width:24px;height:24px"> Metas da Temporada</span>`;
+  } else if (pageLabel.includes('[T]')) {
+    labelHTML = `<span style="display:flex;align-items:center;gap:8px"><img src="/skrill/img/leaderboard.svg" alt="leaderboard" style="width:24px;height:24px"> Leaderboard</span>`;
+  }
+
   return `<div style="width:100%">
     <div class="page-header">
       <div>
-        <div class="page-header-label">${pageLabel}</div>
+        <div class="page-header-label">${labelHTML}</div>
         <h1 class="page-header-title">${pageTitle}<span class="page-header-sub">${wSub}</span></h1>
       </div>
     </div>
@@ -122,20 +130,34 @@ function toast(msg, color = '#22c55e') {
   setTimeout(() => t.remove(), 2500);
 }
 
+// ── Icon helper ───────────────────────────────────────────────────────────────
+function iconHTML(type) {
+  const svgIcons = {
+    'G': '/skrill/img/goals.svg',
+    'T': '/skrill/img/leaderboard.svg',
+    'P': '/skrill/img/Profile.svg',
+    'A': '/skrill/img/admin.svg'
+  };
+  if (svgIcons[type]) {
+    return `<img src="${svgIcons[type]}" class="icon-svg" alt="${type}" style="width:24px;height:24px;display:block">`;
+  }
+  return `[${type}]`;
+}
+
 // ── Shared UI ─────────────────────────────────────────────────────────────────
 function renderSidebar(profile, activePage) {
   const NAV = [
     { href: '/skrill/dashboard/',   label: 'Dashboard',    icon: '[+]', key: 'dashboard' },
-    { href: '/skrill/weekly/',      label: 'Season Goals', icon: '[G]', key: 'weekly' },
-    { href: '/skrill/leaderboard/', label: 'Leaderboard',  icon: '[T]', key: 'leaderboard' },
+    { href: '/skrill/weekly/',      label: 'Season Goals', icon: 'G', key: 'weekly' },
+    { href: '/skrill/leaderboard/', label: 'Leaderboard',  icon: 'T', key: 'leaderboard' },
     { href: '/skrill/skrill-time/', label: 'Skrill Time',  icon: '[S]', key: 'skrill-time' },
   ];
-  if (profile) NAV.push({ href: `/skrill/profile/?id=${profile.id}`, label: 'Profile', icon: '[P]', key: 'profile' });
+  if (profile) NAV.push({ href: `/skrill/profile/?id=${profile.id}`, label: 'Profile', icon: 'P', key: 'profile' });
 
   const navItems = NAV.map(({ href, label, icon, key }) => {
     const active = activePage === key;
     return `<a href="${href}" class="nav-link ${active ? 'active' : ''}">
-      <span class="nav-icon">${icon}</span>
+      <span class="nav-icon">${iconHTML(icon)}</span>
       <span>${label}</span>
       ${active ? '<span class="nav-arrow">▶</span>' : ''}
     </a>`;
@@ -171,15 +193,15 @@ function renderSidebar(profile, activePage) {
 function renderMobileNav(activeKey) {
   const items = [
     { href: '/skrill/dashboard/',   label: 'Home',   icon: '[+]', key: 'dashboard' },
-    { href: '/skrill/weekly/',      label: 'Goals',  icon: '[G]', key: 'weekly' },
-    { href: '/skrill/leaderboard/', label: 'Ranks',  icon: '[T]', key: 'leaderboard' },
+    { href: '/skrill/weekly/',      label: 'Goals',  icon: 'G', key: 'weekly' },
+    { href: '/skrill/leaderboard/', label: 'Ranks',  icon: 'T', key: 'leaderboard' },
     { href: '/skrill/skrill-time/', label: 'S.Time', icon: '[S]', key: 'skrill-time' },
-    { href: '/skrill/profile/',     label: 'Perfil', icon: '[P]', key: 'profile' },
+    { href: '/skrill/profile/',     label: 'Perfil', icon: 'P', key: 'profile' },
   ];
   return `<nav class="mobile-nav">
     ${items.map(({ href, label, icon, key }) =>
       `<a href="${href}" class="${activeKey === key ? 'active' : ''}">
-        <span class="nav-icon">${icon}</span><span>${label}</span>
+        <span class="nav-icon">${iconHTML(icon)}</span><span>${label}</span>
       </a>`
     ).join('')}
   </nav>`;

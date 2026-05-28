@@ -104,7 +104,7 @@
             <div class="stat-sub">esta temporada</div>
           </div>
           <div class="stat-card">
-            <div class="stat-icon green">[G]</div>
+            <div class="stat-icon green" style="padding:8px"><img src="/skrill/img/goals.svg" alt="goals" style="width:40px;height:40px"></div>
             <div class="stat-value">${done.length}/${myGoals.length}</div>
             <div class="stat-label">Metas Feitas</div>
             <div class="stat-sub">esta temporada</div>
@@ -171,7 +171,7 @@
       <div class="card">
         <div class="card-header"><div class="card-title">>> Progresso da Temporada</div></div>
         <div class="card-body">
-          <div class="empty-state"><div class="empty-icon">[G]</div><p>Nenhuma meta ainda esta temporada</p></div>
+          <div class="empty-state"><div class="empty-icon"><img src="/skrill/img/goals.svg" alt="goals" style="width:48px;height:48px"></div><p>Nenhuma meta ainda esta temporada</p></div>
         </div>
       </div>`;
     const rows = goals.slice(0, 8).map(g => `
@@ -239,7 +239,7 @@
   function renderMiniLeaderboard(profiles, currentId) {
     if (!profiles.length) return `
       <div class="card">
-        <div class="card-header"><div class="card-title">[T] Top Guild</div></div>
+        <div class="card-header"><div class="card-title" style="gap:8px"><img src="/skrill/img/leaderboard.svg" alt="leaderboard" style="width:24px;height:24px"> Top Guild</div></div>
         <div class="card-body"><div class="empty-state"><p>Nenhum membro ainda</p></div></div>
       </div>`;
     const items = profiles.slice(0, 5).map((p, i) => `
@@ -252,7 +252,7 @@
     return `
       <div class="card">
         <div class="card-header" style="gap: 20px;">
-          <div class="card-title">[T] Top Guild</div>
+          <div class="card-title" style="gap:8px"><img src="/skrill/img/leaderboard.svg" alt="leaderboard" style="width:24px;height:24px"> Top Guild</div>
           <a href="/skrill/leaderboard/" class="card-link">→</a>
         </div>
         <div class="card-body" style="padding:8px 12px">${items}</div>

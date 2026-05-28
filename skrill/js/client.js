@@ -99,6 +99,8 @@ function renderSeasonLocked(week, profile, pageLabel, pageTitle) {
     labelHTML = `<span style="display:flex;align-items:center;gap:8px"><img src="/skrill/img/goals.svg" alt="goals" style="width:24px;height:24px"> Metas da Temporada</span>`;
   } else if (pageLabel.includes('[T]')) {
     labelHTML = `<span style="display:flex;align-items:center;gap:8px"><img src="/skrill/img/leaderboard.svg" alt="leaderboard" style="width:24px;height:24px"> Leaderboard</span>`;
+  } else if (pageLabel.includes('[S]')) {
+    labelHTML = `<span style="display:flex;align-items:center;gap:8px"><img src="/skrill/img/Skrill_time.svg" alt="skrill-time" style="width:24px;height:24px"> Skrill Time</span>`;
   }
 
   return `<div style="width:100%">
@@ -136,7 +138,9 @@ function iconHTML(type) {
     'G': '/skrill/img/goals.svg',
     'T': '/skrill/img/leaderboard.svg',
     'P': '/skrill/img/Profile.svg',
-    'A': '/skrill/img/admin.svg'
+    'A': '/skrill/img/admin.svg',
+    '+': '/skrill/img/dashboard.svg',
+    'S': '/skrill/img/Skrill_time.svg'
   };
   if (svgIcons[type]) {
     return `<img src="${svgIcons[type]}" class="icon-svg" alt="${type}" style="width:24px;height:24px;display:block">`;
@@ -147,10 +151,10 @@ function iconHTML(type) {
 // ── Shared UI ─────────────────────────────────────────────────────────────────
 function renderSidebar(profile, activePage) {
   const NAV = [
-    { href: '/skrill/dashboard/',   label: 'Dashboard',    icon: '[+]', key: 'dashboard' },
+    { href: '/skrill/dashboard/',   label: 'Dashboard',    icon: '+', key: 'dashboard' },
     { href: '/skrill/weekly/',      label: 'Season Goals', icon: 'G', key: 'weekly' },
     { href: '/skrill/leaderboard/', label: 'Leaderboard',  icon: 'T', key: 'leaderboard' },
-    { href: '/skrill/skrill-time/', label: 'Skrill Time',  icon: '[S]', key: 'skrill-time' },
+    { href: '/skrill/skrill-time/', label: 'Skrill Time',  icon: 'S', key: 'skrill-time' },
   ];
   if (profile) NAV.push({ href: `/skrill/profile/?id=${profile.id}`, label: 'Profile', icon: 'P', key: 'profile' });
 
@@ -192,10 +196,10 @@ function renderSidebar(profile, activePage) {
 
 function renderMobileNav(activeKey) {
   const items = [
-    { href: '/skrill/dashboard/',   label: 'Home',   icon: '[+]', key: 'dashboard' },
+    { href: '/skrill/dashboard/',   label: 'Home',   icon: '+', key: 'dashboard' },
     { href: '/skrill/weekly/',      label: 'Goals',  icon: 'G', key: 'weekly' },
     { href: '/skrill/leaderboard/', label: 'Ranks',  icon: 'T', key: 'leaderboard' },
-    { href: '/skrill/skrill-time/', label: 'S.Time', icon: '[S]', key: 'skrill-time' },
+    { href: '/skrill/skrill-time/', label: 'S.Time', icon: 'S', key: 'skrill-time' },
     { href: '/skrill/profile/',     label: 'Perfil', icon: 'P', key: 'profile' },
   ];
   return `<nav class="mobile-nav">

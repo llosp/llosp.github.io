@@ -130,8 +130,13 @@
               Marcar Pronto
             </button>
           ` : `
-            <div style="font-size:24px;color:var(--amber);font-weight:700;text-transform:uppercase">
-              Voce esta pronto! Aguardando os outros...
+            <div style="display:flex;flex-direction:column;align-items:center;gap:12px">
+              <div style="font-size:24px;color:var(--amber);font-weight:700;text-transform:uppercase">
+                Voce esta pronto! Aguardando os outros...
+              </div>
+              <button class="btn btn-ghost" style="font-size:22px;padding:10px 24px;opacity:0.7" onclick="unmarkReady()">
+                Desmarcar Pronto
+              </button>
             </div>
           `}
           ${allReady ? `<div style="font-size:24px;color:#22c55e;margin-top:12px;font-weight:700">Todos prontos! Revelando...</div>` : ''}
@@ -278,6 +283,20 @@
       await awardPointsForAll();
     }
 
+    renderPage();
+  }
+
+  async function unmarkReady() {
+    if (!currentWeek) return;
+    const btn = document.querySelector('[onclick="unmarkReady()"]');
+    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+
+    await sb.from('week_ready')
+      .delete()
+      .eq('week_id', currentWeek.id)
+      .eq('profile_id', stored.id);
+
+    readyIds.delete(stored.id);
     renderPage();
   }
 

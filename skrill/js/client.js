@@ -180,3 +180,47 @@ function switchTab(tabId) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === tabId));
 }
+
+// ── Windows-style image lightbox ──────────────────────────────────────────────
+function openImageLightbox(url) {
+  let overlay = document.getElementById('win-lightbox');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'win-lightbox';
+    overlay.className = 'win-overlay hidden';
+    overlay.innerHTML = `
+      <div class="win-window" onclick="event.stopPropagation()">
+        <div class="win-titlebar">
+          <span class="win-titlebar-icon">[IMG]</span>
+          <span class="win-titlebar-title">Visualizar Entrega</span>
+          <button class="win-btn" onclick="closeImageLightbox()">X</button>
+        </div>
+        <div class="win-body">
+          <img id="win-lightbox-img" src="" alt="entrega">
+        </div>
+        <div class="win-statusbar">
+          <span id="win-lightbox-status">Pronto</span>
+        </div>
+      </div>`;
+    overlay.addEventListener('click', closeImageLightbox);
+    document.body.appendChild(overlay);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeImageLightbox(); });
+  }
+  const img = document.getElementById('win-lightbox-img');
+  img.src = url;
+  img.onload = () => {
+    document.getElementById('win-lightbox-status').textContent =
+      `${img.naturalWidth} x ${img.naturalHeight}px`;
+  };
+  overlay.classList.remove('hidden');
+}
+
+function closeImageLightbox() {
+  const overlay = document.getElementById('win-lightbox');
+  if (overlay) overlay.classList.add('hidden');
+}
+
+document.addEventListener('click', e => {
+  const img = e.target.closest('img.delivery-img:not(.blurred), img.reveal-img');
+  if (img) openImageLightbox(img.src);
+});

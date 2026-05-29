@@ -322,7 +322,7 @@ function initSkrillWalker() {
   let directionChangeTimer = 0;
   let jumpY = 0;
   let jumpT = 0;
-  const speed = 4;
+  const speed = 8;
   const sidebarWidth = 280;
   const charWidth = 150;
   const charHeight = 130;

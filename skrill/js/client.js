@@ -324,13 +324,13 @@ function initSkrillWalker() {
   let jumpT = 0;
   const speed = 2;
   const sidebarWidth = 280;
-  const charWidth = 94;
+  const charWidth = 150;
 
-  // Blink: shift the img left through frames (-94px per frame at 25% bigger)
+  // Blink: shift the img left through frames (-150px per frame)
   const blink = () => {
     if (Math.random() < 0.2) {
       let frame = 1;
-      const frames = [0, -94, -188, -282, -376, -282, -188, -94, 0];
+      const frames = [0, -150, -300, -450, -600, -450, -300, -150, 0];
       const blinkInterval = setInterval(() => {
         sprite.style.left = frames[frame] + 'px';
         frame++;

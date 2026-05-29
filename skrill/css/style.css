@@ -68,9 +68,9 @@ body {
 .skrill-walker {
   position: fixed;
   bottom: 0;
-  left: -94px;
-  width: 94px;
-  height: 81px;
+  left: -150px;
+  width: 150px;
+  height: 130px;
   overflow: hidden;
   pointer-events: none;
   z-index: 50;
@@ -80,8 +80,8 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  height: 81px;
-  width: 470px;
+  height: 130px;
+  width: 750px;
   image-rendering: pixelated;
 }
 

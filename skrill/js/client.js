@@ -307,64 +307,74 @@ function closeImageLightbox() {
 
 function initSkrillWalker() {
   if (document.getElementById('skrill-walker')) return;
+
   const walker = document.createElement('div');
   walker.id = 'skrill-walker';
   walker.className = 'skrill-walker';
+
+  const sprite = document.createElement('img');
+  sprite.src = '/skrill/img/skrill-fullbody-Sheet.png';
+  walker.appendChild(sprite);
   document.body.appendChild(walker);
 
   let x = window.innerWidth / 2;
-  let direction = 1; // 1 = right, -1 = left
+  let direction = 1;
   let directionChangeTimer = 0;
-  const speed = 1;
+  let jumpY = 0;
+  let jumpT = 0;
+  const speed = 2;
   const sidebarWidth = 280;
-  const charWidth = 150;
+  const charWidth = 75;
 
-  // Apply jump animation
-  walker.style.animation = 'skrill-jump 0.6s ease-in-out infinite';
-
-  // Randomly blink
+  // Blink: shift the img left through frames at half size (-75px per frame)
   const blink = () => {
     if (Math.random() < 0.2) {
-      walker.classList.add('blink');
-      setTimeout(() => walker.classList.remove('blink'), 4000);
+      let frame = 1;
+      const frames = [0, -75, -150, -225, -300, -225, -150, -75, 0];
+      const blinkInterval = setInterval(() => {
+        sprite.style.left = frames[frame] + 'px';
+        frame++;
+        if (frame >= frames.length) {
+          clearInterval(blinkInterval);
+          sprite.style.left = '0px';
+        }
+      }, 80);
     }
   };
-  setInterval(blink, 18000);
-  blink();
+  setInterval(blink, 12000);
+  setTimeout(blink, 3000);
 
-  // Set initial direction
-  walker.style.transform = 'scaleX(1)';
-
-  // Movement loop
+  // Movement + jump loop
   setInterval(() => {
-    // Random direction change (3% chance each frame)
+    // Random direction change
     if (directionChangeTimer <= 0 && Math.random() < 0.03) {
       direction *= -1;
-      walker.style.transform = direction === 1 ? 'scaleX(1)' : 'scaleX(-1)';
       directionChangeTimer = 60;
     }
     directionChangeTimer--;
 
-    // Move in current direction
     x += direction * speed;
 
-    // Check for sidebar collision (left boundary)
+    // Left boundary (sidebar)
     if (x < sidebarWidth) {
       x = sidebarWidth;
       direction = 1;
-      walker.style.transform = 'scaleX(1)';
       directionChangeTimer = 60;
     }
 
-    // Check for right edge
+    // Right boundary
     if (x + charWidth > window.innerWidth) {
       x = window.innerWidth - charWidth;
       direction = -1;
-      walker.style.transform = 'scaleX(-1)';
       directionChangeTimer = 60;
     }
 
+    // Long horizontal jump (slow arc, big amplitude)
+    jumpT += 0.05;
+    jumpY = Math.abs(Math.sin(jumpT)) * 28;
+
     walker.style.left = x + 'px';
+    walker.style.bottom = jumpY + 'px';
   }, 50);
 }
 

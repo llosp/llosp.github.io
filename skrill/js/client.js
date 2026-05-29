@@ -111,7 +111,7 @@ function renderSeasonLocked(week, profile, pageLabel, pageTitle) {
       </div>
     </div>
     <div class="card" style="text-align:center;padding:48px 20px;background:var(--amber-light);border-color:var(--amber)">
-      <div style="font-size:36px;font-weight:700;margin-bottom:10px">[!] Voce nao entrou nesta Temporada</div>
+      <div style="font-size:36px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:10px;justify-content:center"><img src="/skrill/img/attention.svg" alt="attention" style="width:36px;height:36px"> Voce nao entrou nesta Temporada</div>
       <div style="font-size:24px;color:var(--text-muted);margin-bottom:24px;text-transform:uppercase">
         Junte-se a Temporada para declarar metas, participar do Skrill Time<br>
         e da avaliacao por pares.
@@ -131,6 +131,11 @@ function toast(msg, color = '#22c55e') {
   document.body.appendChild(t);
   setTimeout(() => t.remove(), 2500);
 }
+
+// ── Checkbox SVGs ─────────────────────────────────────────────────────────────
+const SVG_CHECK = `<svg style="display:inline-block;vertical-align:middle;flex-shrink:0" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1.5" y="1.5" width="19" height="19" stroke="black" stroke-width="2"/><line x1="5" y1="5" x2="17" y2="17" stroke="black" stroke-width="2.5"/><line x1="17" y1="5" x2="5" y2="17" stroke="black" stroke-width="2.5"/></svg>`;
+const SVG_EMPTY = `<svg style="display:inline-block;vertical-align:middle;flex-shrink:0" width="22" height="22" viewBox="0 0 22 22" fill="none" xmlns="http://www.w3.org/2000/svg"><rect x="1.5" y="1.5" width="19" height="19" stroke="black" stroke-width="2"/></svg>`;
+const SVG_S     = `<img src="/skrill/img/Skrill_time.svg" alt="skrill-time" style="width:24px;height:24px;display:inline-block;vertical-align:middle">`;
 
 // ── Icon helper ───────────────────────────────────────────────────────────────
 function iconHTML(type) {
@@ -251,7 +256,7 @@ function renderNoWeekBanner() {
     </div>` : '';
   return `
     <div class="card" style="text-align:center;padding:48px 20px;margin-top:20px">
-      <div style="font-size:36px;font-weight:700;margin-bottom:10px">[S] Temporada não iniciada</div>
+      <div style="font-size:36px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:10px;justify-content:center">${SVG_S} Temporada não iniciada</div>
       <div style="font-size:24px;color:var(--text-muted)">
         A Temporada 1 ainda não foi criada.<br>
         Fique de olho — o Skrill Time inaugural está chegando.

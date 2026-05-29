@@ -132,7 +132,7 @@
           <div style="flex:1;min-width:0">
             <div style="font-size:26px;font-weight:700">Temporada ${currentWeek.week_number} · ${currentWeek.year}</div>
             <div style="font-size:20px;color:var(--text-muted);text-transform:uppercase">
-              ${isParticipating ? '[v] Voce esta participando' : '[ ] Voce nao esta participando'}
+              ${isParticipating ? `${SVG_CHECK} Voce esta participando` : `${SVG_EMPTY} Voce nao esta participando`}
             </div>
           </div>
           ${isParticipating
@@ -176,7 +176,7 @@
       </div>`;
     const rows = goals.slice(0, 8).map(g => `
       <div class="goal-row">
-        <span style="font-size:24px">${g.status === 'completed' || g.status === 'beyond' ? '[v]' : '[ ]'}</span>
+        <span>${g.status === 'completed' || g.status === 'beyond' ? SVG_CHECK : SVG_EMPTY}</span>
         <div class="goal-row-title">${g.title}</div>
         ${statusBadge(g.status, g.points_earned)}
       </div>`).join('');

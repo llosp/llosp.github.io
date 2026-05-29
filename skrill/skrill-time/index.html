@@ -147,7 +147,7 @@
       app.innerHTML = `<div style="width:100%">
         <div class="page-header">
           <div>
-            <div class="page-header-label">[S] Reuniao</div>
+            <div class="page-header-label" style="display:flex;align-items:center;gap:8px"><img src="/skrill/img/Skrill_time.svg" alt="skrill-time" style="width:24px;height:24px"> Reuniao</div>
             <h1 class="page-header-title">Skrill Time</h1>
           </div>
         </div>
@@ -222,7 +222,7 @@
       <div style="width:100%">
         <div class="page-header">
           <div>
-            <div class="page-header-label">[S] Reuniao</div>
+            <div class="page-header-label" style="display:flex;align-items:center;gap:8px"><img src="/skrill/img/Skrill_time.svg" alt="skrill-time" style="width:24px;height:24px"> Reuniao</div>
             <h1 class="page-header-title">Skrill Time</h1>
             ${week ? `<div style="font-size:24px;color:var(--text-muted);margin-top:6px;text-transform:uppercase;">
               Temporada ${week.week_number} · ${week.year}
@@ -399,7 +399,7 @@
         return `
           <div style="margin-bottom:12px">
             <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px;flex-wrap:wrap">
-              <span style="font-size:24px">[v]</span>
+              <span style="font-size:24px">${SVG_CHECK}</span>
               <span style="font-size:24px;font-weight:700">${g.title}</span>
               ${difficultyChip(g.difficulty)}
               <span style="margin-left:auto;display:flex;gap:6px;align-items:center;flex-wrap:wrap">
@@ -482,7 +482,7 @@
     overlay.innerHTML = `
       <div class="win-window" onclick="event.stopPropagation()" style="width:min(480px,92vw)">
         <div class="win-titlebar">
-          <span class="win-titlebar-icon">[S]</span>
+          <span class="win-titlebar-icon"><img src="/skrill/img/Skrill_time.svg" alt="skrill-time" style="width:20px;height:20px;display:block"></span>
           <span class="win-titlebar-title">Encerrar Temporada ${currentWeek.week_number}</span>
           <button class="win-btn" onclick="closeAdvanceWeekModal()">X</button>
         </div>

@@ -57,6 +57,41 @@ body {
 .skrill-sprite-md  { width: 56px; height: 56px; background-size: 280px 56px; }
 .skrill-sprite-lg  { width: 70px; height: 70px; background-size: 350px 70px; }
 
+/* ── Skrill fullbody walker ────────────────────────────────────────────────────── */
+@keyframes skrill-walk {
+  0% { left: -70px; }
+  100% { left: 100vw; }
+}
+
+@keyframes skrill-jump {
+  0%, 100% { bottom: 0; }
+  50% { bottom: 8px; }
+}
+
+@keyframes skrill-fullblink {
+  0%, 10%, 20%, 30%, 40%, 50%, 60%, 70%, 85%, 100% { background-position: 0 0; }
+  75%, 80% { background-position: -70px 0; }
+}
+
+.skrill-walker {
+  position: fixed;
+  bottom: 0;
+  left: -70px;
+  width: 70px;
+  height: 70px;
+  background-image: url('/skrill/img/skrill-fullbody-Sheet.png');
+  background-size: 140px 70px;
+  background-repeat: no-repeat;
+  image-rendering: pixelated;
+  pointer-events: none;
+  z-index: 50;
+  animation: skrill-walk 18s linear infinite, skrill-jump 0.6s ease-in-out infinite;
+}
+
+.skrill-walker.blink {
+  animation: skrill-walk 18s linear infinite, skrill-jump 0.6s ease-in-out infinite, skrill-fullblink 4s steps(1) 2;
+}
+
 /* ── Spinner ────────────────────────────────────────────────────────────────── */
 .spinner {
   width: 28px; height: 28px;

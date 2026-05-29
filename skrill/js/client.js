@@ -305,6 +305,26 @@ function closeImageLightbox() {
   if (overlay) overlay.classList.add('hidden');
 }
 
+function initSkrillWalker() {
+  if (document.getElementById('skrill-walker')) return;
+  const walker = document.createElement('div');
+  walker.id = 'skrill-walker';
+  walker.className = 'skrill-walker';
+  document.body.appendChild(walker);
+
+  // Randomly blink (20% chance every time walker resets)
+  const blink = () => {
+    if (Math.random() < 0.2) {
+      walker.classList.add('blink');
+      setTimeout(() => walker.classList.remove('blink'), 4000);
+    }
+  };
+
+  // Trigger blink on each walk cycle
+  setInterval(blink, 18000);
+  blink();
+}
+
 document.addEventListener('click', e => {
   const img = e.target.closest('img.delivery-img:not(.blurred), img.reveal-img');
   if (img) openImageLightbox(img.src);

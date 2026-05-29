@@ -324,13 +324,13 @@ function initSkrillWalker() {
   let jumpT = 0;
   const speed = 2;
   const sidebarWidth = 280;
-  const charWidth = 75;
+  const charWidth = 94;
 
-  // Blink: shift the img left through frames at half size (-75px per frame)
+  // Blink: shift the img left through frames (-94px per frame at 25% bigger)
   const blink = () => {
     if (Math.random() < 0.2) {
       let frame = 1;
-      const frames = [0, -75, -150, -225, -300, -225, -150, -75, 0];
+      const frames = [0, -94, -188, -282, -376, -282, -188, -94, 0];
       const blinkInterval = setInterval(() => {
         sprite.style.left = frames[frame] + 'px';
         frame++;
@@ -346,8 +346,12 @@ function initSkrillWalker() {
 
   // Movement + jump loop
   setInterval(() => {
-    // Random direction change
-    if (directionChangeTimer <= 0 && Math.random() < 0.03) {
+    jumpT += 0.05;
+    jumpY = Math.abs(Math.sin(jumpT)) * 18;
+    const onGround = jumpY < 1;
+
+    // Only change direction while on the ground
+    if (onGround && directionChangeTimer <= 0 && Math.random() < 0.03) {
       direction *= -1;
       directionChangeTimer = 60;
     }
@@ -355,23 +359,19 @@ function initSkrillWalker() {
 
     x += direction * speed;
 
-    // Left boundary (sidebar)
+    // Left boundary (sidebar) — only bounce on ground
     if (x < sidebarWidth) {
       x = sidebarWidth;
       direction = 1;
       directionChangeTimer = 60;
     }
 
-    // Right boundary
+    // Right boundary — only bounce on ground
     if (x + charWidth > window.innerWidth) {
       x = window.innerWidth - charWidth;
       direction = -1;
       directionChangeTimer = 60;
     }
-
-    // Long horizontal jump (slow arc, big amplitude)
-    jumpT += 0.05;
-    jumpY = Math.abs(Math.sin(jumpT)) * 28;
 
     walker.style.left = x + 'px';
     walker.style.bottom = jumpY + 'px';

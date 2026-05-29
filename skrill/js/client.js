@@ -312,17 +312,55 @@ function initSkrillWalker() {
   walker.className = 'skrill-walker';
   document.body.appendChild(walker);
 
-  // Randomly blink (20% chance every time walker resets)
+  let x = window.innerWidth / 2;
+  let y = 0;
+  let direction = 1; // 1 = right, -1 = left
+  let directionChangeTimer = 0;
+  const speed = 1.5;
+  const sidebarWidth = 260;
+  const charWidth = 70;
+
+  // Randomly blink
   const blink = () => {
     if (Math.random() < 0.2) {
       walker.classList.add('blink');
       setTimeout(() => walker.classList.remove('blink'), 4000);
     }
   };
-
-  // Trigger blink on each walk cycle
   setInterval(blink, 18000);
   blink();
+
+  // Movement loop
+  setInterval(() => {
+    // Random direction change (5% chance each frame)
+    if (directionChangeTimer <= 0 && Math.random() < 0.05) {
+      direction *= -1;
+      walker.style.transform = direction === 1 ? 'scaleX(1)' : 'scaleX(-1)';
+      directionChangeTimer = 30;
+    }
+    directionChangeTimer--;
+
+    // Move in current direction
+    x += direction * speed;
+
+    // Check for sidebar collision (left boundary)
+    if (x < sidebarWidth) {
+      x = sidebarWidth;
+      direction = 1;
+      walker.style.transform = 'scaleX(1)';
+      directionChangeTimer = 30;
+    }
+
+    // Check for right edge
+    if (x + charWidth > window.innerWidth) {
+      x = window.innerWidth - charWidth;
+      direction = -1;
+      walker.style.transform = 'scaleX(-1)';
+      directionChangeTimer = 30;
+    }
+
+    walker.style.left = x + 'px';
+  }, 30);
 }
 
 document.addEventListener('click', e => {

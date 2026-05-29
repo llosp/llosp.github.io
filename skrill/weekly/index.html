@@ -94,7 +94,7 @@
 
     const [{ data: profile }, { data: week }] = await Promise.all([
       sb.from('profiles').select('*').eq('id', stored.id).single(),
-      sb.from('weeks').select('*').eq('is_current', true).single(),
+      sb.from('weeks').select('*').eq('is_current', true).maybeSingle(),
     ]);
 
     currentProfile = profile;

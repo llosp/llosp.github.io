@@ -47,7 +47,7 @@
 
     const [{ data: me }, { data: week }, { data: profiles }] = await Promise.all([
       sb.from('profiles').select('*').eq('id', stored.id).single(),
-      sb.from('weeks').select('*').eq('is_current', true).single(),
+      sb.from('weeks').select('*').eq('is_current', true).maybeSingle(),
       sb.from('profiles').select('*').order('name'),
     ]);
 
@@ -646,8 +646,17 @@
   async function forceFinalize() {
     if (!confirm('Forçar encerramento agora? Os pontos serão concedidos imediatamente.')) return;
     finalizing = true;
-    try { await finalizeSeason(); }
-    finally { finalizing = false; }
+    try {
+      // Mark every participant as submitted so the season closes (reveal phase),
+      // even if some never sent their peer rating.
+      const missing = [...participantIds].filter(id => !submissionIds.has(id));
+      if (missing.length) {
+        await sb.from('peer_rating_submissions').insert(
+          missing.map(id => ({ week_id: currentWeek.id, rater_id: id }))
+        );
+      }
+      await finalizeSeason();
+    } finally { finalizing = false; }
     await reload();
   }
 

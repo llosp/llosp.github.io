@@ -9,7 +9,8 @@
 - O grupo é majoritariamente técnico (devs, designers, etc.).
 - Toda temporada culmina num **Skrill Time** (reunião no Discord) onde cada membro:
   - Revela o que entregou na temporada com imagens de prova.
-  - Recebe os pontos da temporada.
+  - Avalia os outros de forma anônima (distribuição de bônus por pares).
+  - Recebe os pontos base + bônus da temporada.
   - Define implicitamente o ritmo da próxima temporada.
 - O sistema incentiva **produtividade**, **consistência**, **competição amigável** e **senso de evolução**.
 
@@ -35,23 +36,30 @@ Não há build step, bundler ou SSR — tudo é estático, servido diretamente d
 skrill/
 ├── index.html                  # Redireciona para login ou dashboard
 ├── Skrill.md                   # Este arquivo
+├── CLAUDE.md                   # Guia rápido para Claude
 ├── favicon.ico
 │
-├── login/index.html            # Senha do app ("familiasteam")
+├── login/index.html            # Senha do app ("familiasteam") — titlebar Windows 95
 ├── select-profile/index.html   # Escolha de perfil + senha individual
 ├── create-profile/index.html   # Criação de perfil com pixel art canvas
 │
-├── dashboard/index.html        # Visão geral: pts, metas, entregas, participação na temporada
-├── weekly/index.html           # Metas da Temporada: declarar, completar, ver do grupo
-├── leaderboard/index.html      # Ranking all-time com pódio
-├── profile/index.html          # Perfil: stats, timeline por temporada com imagens
-├── skrill-time/index.html      # Página de revelação (evento central) + countdown
-├── admin/index.html            # Painel de administração (requer is_admin no perfil)
+├── dashboard/index.html        # Visão geral: pts, metas, entregas, participação
+├── weekly/index.html           # Metas da Temporada: declarar com dificuldade, completar
+├── leaderboard/index.html      # Ranking com pódio + tabs 30 dias / All-Time
+├── profile/index.html          # Perfil: stats, timeline por temporada
+├── skrill-time/index.html      # Countdown → ready → rating → reveal
+├── admin/index.html            # Painel de administração (requer is_admin)
 │
 ├── css/style.css               # Estilos globais — tema retro pixel / Micro 5
 ├── js/client.js                # Lógica compartilhada: Supabase, auth, UI helpers
 │
-└── img/skrill-Sheet.png        # Sprite sheet do mascote Skrill
+└── img/
+    ├── skrill-Sheet.png             # Sprite sheet do mascote (sidebar)
+    ├── skrill-fullbody-Sheet.png    # Sprite sheet fullbody (walker animado)
+    ├── dashboard.svg / goals.svg / leaderboard.svg
+    ├── Profile.svg / admin.svg / Skrill_time.svg
+    ├── points.svg / season.svg / attention.svg
+    └── ...
 ```
 
 ---
@@ -66,7 +74,7 @@ O app usa autenticação em duas camadas, sem Supabase Auth:
 O perfil selecionado fica salvo em `localStorage['skrill_profile']` como JSON.
 
 **Admin** — verificado pela função `isAdmin()` em `client.js`:
-- `profiles.is_admin === true` (role persistente atribuída no painel Admin → aba Perfis), OU
+- `profiles.is_admin === true`, OU
 - `sessionStorage['skrill_admin'] === '1'` (fallback legado)
 
 ---
@@ -75,74 +83,101 @@ O perfil selecionado fica salvo em `localStorage['skrill_profile']` como JSON.
 
 ### Temporadas
 
-- Cada **temporada** corresponde a uma linha na tabela `weeks` (`week_number`, `year`, `start_date`, `end_date`, `is_current`, `skrill_time_revealed`).
-- O admin inicia a temporada pelo banner "Temporada não iniciada" ou pelo painel admin → Temporadas → Nova Temporada.
-- A temporada só avança depois do **Skrill Time**: o admin clica em "Encerrar e iniciar Temporada N+1" após a revelação (com modal para definir a data de encerramento da próxima).
+- Cada **temporada** corresponde a uma linha na tabela `weeks`.
+- Para entrar em uma temporada, o membro clica em **Participar** no dashboard. Participantes ficam registrados em `season_participants`.
+- Páginas `/weekly/` e `/skrill-time/` mostram tela travada para não-participantes, com CTA para entrar.
+- **Após a revelação (`skrill_time_revealed = true`)**, novos membros não podem mais entrar naquela temporada.
+- A temporada avança pelo admin após o Skrill Time: "Encerrar e iniciar Temporada N+1" (modal para definir `end_date`).
 - Se não há temporada ativa, todas as páginas mostram o banner "Temporada não iniciada".
-
-**Participação na temporada** — membros escolhem entrar ou sair de cada temporada pelo card no dashboard. Só participantes contam nos quadradinhos do Skrill Time e aparecem no painel de reveal.
 
 ---
 
 ### Objetivos (`/weekly/`)
 
-- Cada membro declara suas metas para a temporada (`status: active`).
-- Status possíveis: `active` · `completed` · `beyond` · `failed`.
-- **Beyond Scope**: meta que foi além do planejado — 8pts vs. 5pts.
-- Ao completar uma meta, um **modal de entrega** exige upload de pelo menos uma imagem como prova.
+- Ao declarar uma meta, o membro escolhe a **dificuldade**:
+  - `Simples` → 2 pts base
+  - `Complexa` → 5 pts base
+- Pontos base ficam em `goals.points_earned` desde a criação — não mudam na entrega.
+- Status possíveis: `active` · `completed` · `failed`.
+- Ao completar uma meta, o **modal de entrega** exige upload de pelo menos uma imagem como prova.
   - Imagens vão para o bucket `deliveries` do Supabase Storage.
   - URLs salvas em `goals.image_urls TEXT[]`.
-- **Pontos não são creditados imediatamente** — ficam pendentes até o Skrill Time.
-- Metas de outros membros com imagens aparecem com **blur forte** até a revelação.
+- **Pontos não são creditados imediatamente** — ficam pendentes até a finalização do Skrill Time.
+- Metas de outros membros com imagens aparecem com **blur** até a revelação.
 - Abas: Todas / Minhas / Outros.
 
 ---
 
 ### Skrill Time (`/skrill-time/`)
 
-Página central da temporada — o evento de revelação:
+Página central da temporada — quatro fases determinadas por `getPhase()`:
 
-**Antes do dia da deadline (`end_date`):**
-- Exibe countdown regressivo `DD : HH : MM : SS` em fonte Jersey 25 gigante (até 160px).
-- Texto dinâmico acima: "faltam X dias pro Skrill Day" / "falta 1 hora pro Skrill Day" etc.
+**1. `countdown`** — antes do `end_date`:
+- Exibe countdown regressivo `DD : HH : MM : SS` em Jersey 25 gigante.
+- Texto dinâmico: "faltam X dias pro Skrill Day" / "falta 1 hora" etc.
 
-**No dia da deadline (ou após):**
-1. Quadradinhos de pixel (um por participante da temporada): preto = não pronto, verde = pronto.
-2. Cada um clica em **"Marcar Pronto"** quando estiver na reunião (pode desmarcar também).
-3. Quando **todos os participantes marcam pronto**: `skrill_time_revealed` vira `true`, imagens desbloqueiam, pontos creditados automaticamente.
-4. Pontos usam flag `points_awarded` para evitar duplicação em múltiplos clientes simultâneos.
-5. Após a revelação, o **admin** vê o botão "Encerrar e iniciar Temporada N+1".
-6. Clicar em imagens de entrega abre **lightbox estilo Windows 95** (`.win-overlay` + `.win-window`).
-7. A página usa **Supabase Realtime** para atualizar quadradinhos, revelação e participações em tempo real.
+**2. `ready`** — no dia do `end_date` (ou após), antes da revelação:
+- Grid de quadradinhos (um por participante): preto = não pronto, verde = pronto.
+- Cada membro clica **"Marcar Pronto"** na reunião.
+- Quando **todos os participantes marcam pronto**: `skrill_time_revealed` vira `true`.
+
+**3. `rating`** — após revelação, enquanto há avaliações pendentes:
+- Pool de bônus por avaliador = `floor(N_participantes / 2)`, mínimo 1.
+- Cada avaliador distribui seu pool entre as metas entregues (auto-avaliação permitida).
+- UI: contador `Pool: X/Total` + controles `[-] N [+]` por meta.
+- "Enviar avaliação" só habilita quando o pool está **totalmente distribuído**.
+- Ao submeter: insere em `peer_rating_submissions`. Outros veem quem já enviou.
+- Quando **todos os participantes submetem**: `finalizeSeason()` é chamado automaticamente.
+- Se não há entregas com imagem: pula rating e finaliza imediatamente.
+
+**4. `closed`** — todos avaliaram:
+- Reveal final: para cada meta, mostra `[+2 base] [+N bônus] = Total`.
+- Bônus = soma dos `peer_ratings.amount` de todos os avaliadores para aquela meta.
+- Identidade do avaliador nunca é exibida.
+- Admin vê botão "Encerrar e iniciar Temporada N+1".
+
+**Finalização** (`finalizeSeason()`):
+- Soma base (`difficulty`) + bônus (`peer_ratings`) por meta.
+- Escreve `point_history` (razões: `complete_simple`/`complete_complex` + `peer_bonus`).
+- Atualiza `goals.points_earned` com o total e seta `points_awarded = true`.
+- Incrementa `profiles.total_points` e `weekly_points`.
+
+A página usa **Supabase Realtime** para atualizar quadradinhos, `peer_ratings` e `peer_rating_submissions` em tempo real.
 
 ---
 
 ### Dashboard (`/dashboard/`)
 
-- Boas-vindas com nome do membro, temporada atual e streak inline.
+- Boas-vindas com nome, temporada atual e streak inline.
 - 3 stat cards: Total Pts · Pts Temporada · Metas Feitas.
-- **Card de participação**: entra/sai da temporada atual (`season_participants`).
-- **Feed de entregas**: posts com avatar, nome, título da meta e imagens (borradas antes da revelação).
-- Card da próxima reunião com link para o Discord e botão para o Skrill Time.
+- **Card de participação**: entra/sai da temporada (`season_participants`). Bloqueado após revelação.
+- **Progresso da Temporada**: lista das metas do membro com status e ícones SVG.
+- **Feed de entregas**: posts com avatar, nome, título e imagens (borradas antes da revelação).
+- **Mini Leaderboard**: top 5 por `weekly_points`.
+- Card da próxima reunião / botão para Skrill Time.
 
 ---
 
 ### Leaderboard (`/leaderboard/`)
 
-- Ranking all-time por `total_points`.
-- Pódio visual para os 3 primeiros.
-- Lista completa do 4º em diante.
-- Destaque "Seu rank: #N" no header.
+- **Duas tabs**: `30 dias` (padrão) e `All-Time`.
+  - 30 dias: soma de `point_history.amount` dos últimos 30 dias por perfil.
+  - All-time: ordenado por `profiles.total_points`.
+- **Pódio** visual para os 3 primeiros (sempre exibido, mesmo com 0 pts).
+- **Lista** completa do 4º em diante — todos os perfis aparecem, incluindo com 0 pts.
+- "Seu rank" no header mostra posição em ambas as tabs.
 
 ---
 
 ### Perfil (`/profile/`)
 
-- Avatar pixel art (canvas 100×100, renderizado em escala), nome, stats.
+- Layout responsivo:
+  - **Mobile**: avatar + nome em linha → botões abaixo do nome → grids de stats (3-col + 2-col).
+  - **Desktop**: layout horizontal clássico — avatar | nome + stats em linha | botões à direita.
 - Estatísticas: Total Pts · Pts Temporada · Metas Feitas · Streak atual · Melhor Streak.
-- **Timeline por temporada** (estilo Twitter): metas agrupadas por temporada, com imagens.
+- **Timeline por temporada**: metas agrupadas por temporada, com chip de dificuldade, status e imagens.
   - Imagens com blur se a temporada ainda não foi revelada.
-- **Editar Perfil** (apenas no próprio perfil): renomear + redesenhar pixel art com brush ajustável.
+- **Editar Perfil** (apenas no próprio perfil): renomear + redesenhar pixel art.
 
 ---
 
@@ -154,32 +189,41 @@ Página central da temporada — o evento de revelação:
 
 ---
 
+### Login (`/login/`)
+
+- Titlebar estilo Windows 95: ícone `Skrill_time.svg` + "Login" em Micro 5 + botões `[_] [□] [X]`.
+- Campo de senha do app + botão Entrar.
+
+---
+
 ### Admin (`/admin/`)
 
-Painel protegido por `is_admin === true` no perfil. Tabs:
+Painel protegido por `is_admin === true`. Tabs:
 
 | Tab | O que faz |
 |---|---|
-| **Perfis** | Editar nome, pts, streaks inline · Atribuir/remover admin · Excluir perfil |
+| **Perfis** | Editar nome, pts, streaks inline · Atribuir/remover admin · Excluir |
 | **Temporadas** | Criar temporada · Definir atual · Revelar/ocultar · Excluir |
-| **Metas** | Filtrar por temporada · Mudar status · Editar pts · Excluir |
-| **Pontos** | Histórico de point_history · Excluir entradas |
-| **Ready** | Listar week_ready · Remover entradas |
-| **Danger** | Zerar pts temporada · Limpar ready · Ocultar reveal · Desfazer Skrill Time · Factory Reset · Apagar tudo |
+| **Metas** | Filtrar por temporada · Mudar status/dificuldade · Editar pts · Excluir |
+| **Pontos** | Histórico de `point_history` · Excluir entradas |
+| **Ready** | Listar `week_ready` · Remover entradas |
+| **Danger** | Zerar pts temporada · Limpar ready · Desfazer Skrill Time · Factory Reset |
 
-**"Desfazer Skrill Time"** — apaga point_history da temporada, recalcula totais, reverte ready/reveal/points_awarded.  
-**"Factory Reset"** — apaga tudo operacional (temporadas, metas, pontos, ready) mantendo perfis e avatares.
+**"Desfazer Skrill Time"** — apaga `point_history`, `peer_ratings` e `peer_rating_submissions` da temporada, reverte `points_awarded`, `skrill_time_revealed`, recalcula totais dos perfis.
+**"Factory Reset"** — apaga tudo operacional mantendo perfis e avatares.
 
 ---
 
 ## Pontuação
 
-| Ação | Pts |
-|------|-----|
-| Completar uma meta | +5 pts |
-| Completar "Beyond Scope" | +8 pts |
+| Ação | Pts base |
+|------|----------|
+| Meta `Simples` completada | +2 pts |
+| Meta `Complexa` completada | +5 pts |
+| Bônus de avaliação por pares | +N pts (variável) |
 
-Pontos são **diferidos**: só creditados no `point_history` e nos perfis durante o Skrill Time, após todos os participantes marcarem pronto. A flag `goals.points_awarded` evita duplicação.
+**Pool de bônus por avaliador** = `floor(N_participantes / 2)`, mínimo 1.  
+Pontos são **diferidos** — creditados apenas na finalização do Skrill Time, após todos avaliarem. A flag `goals.points_awarded` evita duplicação.
 
 ---
 
@@ -191,51 +235,48 @@ Pontos são **diferidos**: só creditados no `point_history` e nos perfis durant
 |---|---|
 | `profiles` | `id, name, avatar_data, password, total_points, weekly_points, streak_current, streak_longest, is_admin` |
 | `weeks` | `id, week_number, year, start_date, end_date, is_current, skrill_time_revealed` |
-| `goals` | `id, profile_id, week_id, title, description, status, points_earned, points_awarded, completed_at, image_urls, is_beyond_scope` |
+| `goals` | `id, profile_id, week_id, title, description, status, difficulty, points_earned, points_awarded, completed_at, image_urls, is_beyond_scope` |
 | `point_history` | `id, profile_id, week_id, goal_id, amount, reason, created_at` |
 | `week_ready` | `id, week_id, profile_id, created_at` — UNIQUE(week_id, profile_id) |
 | `season_participants` | `id, week_id, profile_id, joined_at` — UNIQUE(week_id, profile_id) |
+| `peer_ratings` | `id, week_id, rater_id, goal_id, amount, created_at` — UNIQUE(week_id, rater_id, goal_id) |
+| `peer_rating_submissions` | `id, week_id, rater_id, submitted_at` — UNIQUE(week_id, rater_id) |
 | `meetings` | `id, scheduled_at, discord_link` |
 
-RLS desativado em todas as tabelas (`DISABLE ROW LEVEL SECURITY`).
+RLS desativado em todas as tabelas.
 
 ### Storage
 
-Bucket `deliveries` (público) — imagens de entrega das metas.  
+Bucket `deliveries` (público) — imagens de entrega das metas.
 Path: `{goal_id}/{timestamp}-{filename}`
 
-### SQL de setup completo
+### SQL de setup (migração atual)
 
 ```sql
--- Colunas adicionais nas tabelas base
-ALTER TABLE goals ADD COLUMN IF NOT EXISTS image_urls TEXT[] DEFAULT '{}';
-ALTER TABLE goals ADD COLUMN IF NOT EXISTS points_awarded BOOLEAN DEFAULT false;
-ALTER TABLE weeks ADD COLUMN IF NOT EXISTS skrill_time_revealed BOOLEAN DEFAULT false;
-ALTER TABLE profiles ADD COLUMN IF NOT EXISTS is_admin BOOLEAN DEFAULT false;
+-- Coluna de dificuldade nas metas
+ALTER TABLE goals ADD COLUMN IF NOT EXISTS difficulty TEXT
+  CHECK (difficulty IN ('simple','complex')) DEFAULT 'simple';
 
--- Tabela de controle de reveal
-CREATE TABLE IF NOT EXISTS week_ready (
+-- Avaliação por pares
+CREATE TABLE IF NOT EXISTS peer_ratings (
   id         UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
   week_id    UUID        NOT NULL REFERENCES weeks(id)    ON DELETE CASCADE,
-  profile_id UUID        NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  rater_id   UUID        NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  goal_id    UUID        NOT NULL REFERENCES goals(id)    ON DELETE CASCADE,
+  amount     INT         NOT NULL CHECK (amount >= 0),
   created_at TIMESTAMPTZ NOT NULL DEFAULT now(),
-  UNIQUE(week_id, profile_id)
+  UNIQUE(week_id, rater_id, goal_id)
 );
-ALTER TABLE week_ready DISABLE ROW LEVEL SECURITY;
+ALTER TABLE peer_ratings DISABLE ROW LEVEL SECURITY;
 
--- Tabela de participação por temporada
-CREATE TABLE IF NOT EXISTS season_participants (
-  id         UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
-  week_id    UUID        NOT NULL REFERENCES weeks(id)    ON DELETE CASCADE,
-  profile_id UUID        NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
-  joined_at  TIMESTAMPTZ NOT NULL DEFAULT now(),
-  UNIQUE(week_id, profile_id)
+CREATE TABLE IF NOT EXISTS peer_rating_submissions (
+  id           UUID        PRIMARY KEY DEFAULT gen_random_uuid(),
+  week_id      UUID        NOT NULL REFERENCES weeks(id)    ON DELETE CASCADE,
+  rater_id     UUID        NOT NULL REFERENCES profiles(id) ON DELETE CASCADE,
+  submitted_at TIMESTAMPTZ NOT NULL DEFAULT now(),
+  UNIQUE(week_id, rater_id)
 );
-ALTER TABLE season_participants DISABLE ROW LEVEL SECURITY;
-
--- Storage (após criar bucket 'deliveries' como público no dashboard)
-CREATE POLICY "anon_upload" ON storage.objects FOR INSERT TO anon WITH CHECK (bucket_id = 'deliveries');
-CREATE POLICY "anon_select" ON storage.objects FOR SELECT TO anon USING (bucket_id = 'deliveries');
+ALTER TABLE peer_rating_submissions DISABLE ROW LEVEL SECURITY;
 ```
 
 ---
@@ -244,32 +285,36 @@ CREATE POLICY "anon_select" ON storage.objects FOR SELECT TO anon USING (bucket_
 
 - Tema **Retro Pixel / Mono** — paleta clara com acentos âmbar e roxo.
 - Tipografia: `Micro 5` (corpo, mínimo 24px) + `Jersey 25` (headings/títulos).
-- Mascote **Skrill** — sprite pixel art com animação de piscar.
-- Layout: sidebar no desktop, nav inferior no mobile.
-- Avatar: pixel art 100×100 desenhado em canvas, exportado como PNG 100×100 base64.
-- Sem emojis — substituídos por texto ASCII: `[+]` `[G]` `[T]` `[S]` `[P]` `[v]` `[ ]` etc.
-- Janelas de lightbox e modais especiais usam estilo Windows 95 (`.win-overlay`, `.win-window`, `.win-titlebar`, `.win-btn`).
+- **Ícones de navegação**: SVG files em `/skrill/img/` — `dashboard.svg`, `goals.svg`, `leaderboard.svg`, `Profile.svg`, `admin.svg`, `Skrill_time.svg`.
+- **Checkboxes**: `SVG_CHECK` (X em quadrado) e `SVG_EMPTY` (quadrado vazio) — constantes em `client.js`.
+- **Mascote Skrill Walker**: sprite fullbody animado (`skrill-fullbody-Sheet.png`, 750×130px, 5 frames) que caminha na base de todas as páginas app. Pisca aleatoriamente, vira ao mudar de direção, é arremessado com física ao clicar.
+- Layout: sidebar no desktop (≥ 768px), nav inferior no mobile.
+- Janelas e lightbox usam estilo Windows 95 (`.win-overlay`, `.win-window`, `.win-titlebar`, `.win-btn`).
+- Tela de login tem titlebar Windows 95 com `Skrill_time.svg` + "Login" em Micro 5 + botões `[_] [□] [X]`.
 
 ---
 
 ## Fluxo de uma temporada
 
 ```
-Admin cria Temporada N (ou "Iniciar Temporada" para a primeira)
+Admin cria Temporada N
     ↓
-Membros entram na temporada pelo dashboard (season_participants)
+Membros entram no dashboard → clicam "Participar" (season_participants)
     ↓
-Membros declaram metas durante a temporada
+Membros declaram metas com dificuldade (simple 2pts / complex 5pts)
     ↓
 Ao completar: modal de upload de imagem obrigatório
-    ↓ (imagens borradas para todos até a revelação)
+    ↓ (imagens borradas até a revelação)
 Skrill Day — reunião no Discord
     ↓
 Todos abrem /skrill-time/ e clicam "Marcar Pronto"
     ↓
-Quadradinhos acendem verde conforme cada participante marca
+Quando todos prontos → skrill_time_revealed = true, fase de rating inicia
     ↓
-Último participante → reveal automático: imagens desbloqueiam, pontos creditados
+Cada membro distribui seu pool de bônus entre as metas entregues
+    ↓
+Quando todos submetem avaliação → finalizeSeason() automático
+    → point_history gravado, profiles atualizados, goals.points_awarded = true
     ↓
 Admin clica "Encerrar e iniciar Temporada N+1" (modal para definir end_date)
     ↓ (weekly_points zerados, nova temporada ativa)
@@ -280,17 +325,13 @@ Próximo ciclo
 
 ## Como rodar localmente
 
-O projeto não tem dependências de build. Basta servir a pasta via qualquer servidor HTTP estático:
-
 ```bash
-# Python
-python3 -m http.server 8080
-
-# Node
-npx serve .
+python3 -m http.server 8765
 ```
 
-Acesse `http://localhost:8080/skrill/` no browser.
+Acesse `http://localhost:8765/skrill/` no browser.
+
+O `.claude/launch.json` já configura este comando para o preview.
 
 ---
 
@@ -304,4 +345,4 @@ git commit -m "feat: descrição da mudança"
 git push origin main
 ```
 
-Site: `https://llosp.github.io/skrill/`
+Site: `https://llosp.github.io/skrill/` · Domínio customizado: `lope.design/skrill/`

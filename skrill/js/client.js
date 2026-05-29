@@ -93,6 +93,7 @@ function renderSeasonLocked(week, profile, pageLabel, pageTitle) {
   const wSub = week ? ` · Temporada ${week.week_number}` : '';
   const safeWeekId = week?.id ?? '';
   const safeProfileId = profile?.id ?? '';
+  const revealed = week?.skrill_time_revealed ?? false;
 
   let labelHTML = pageLabel;
   if (pageLabel.includes('[G]')) {
@@ -112,14 +113,20 @@ function renderSeasonLocked(week, profile, pageLabel, pageTitle) {
     </div>
     <div class="card" style="text-align:center;padding:48px 20px;background:var(--amber-light);border-color:var(--amber)">
       <div style="font-size:36px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:10px;justify-content:center"><img src="/skrill/img/attention.svg" alt="attention" style="width:36px;height:36px"> Voce nao entrou nesta Temporada</div>
-      <div style="font-size:24px;color:var(--text-muted);margin-bottom:24px;text-transform:uppercase">
-        Junte-se a Temporada para declarar metas, participar do Skrill Time<br>
-        e da avaliacao por pares.
-      </div>
-      <button class="btn btn-primary" style="font-size:24px;padding:12px 28px"
-        onclick="(async()=>{const{error}=await sb.from('season_participants').insert({week_id:'${safeWeekId}',profile_id:'${safeProfileId}'});if(error&&!error.message.includes('duplicate'))alert(error.message);else window.location.reload();})()">
-        Junte-se a Temporada
-      </button>
+      ${revealed
+        ? `<div style="font-size:24px;color:var(--text-muted);text-transform:uppercase">
+            Esta Temporada ja foi revelada.<br>
+            Aguarde a proxima Temporada para participar.
+          </div>`
+        : `<div style="font-size:24px;color:var(--text-muted);margin-bottom:24px;text-transform:uppercase">
+            Junte-se a Temporada para declarar metas, participar do Skrill Time<br>
+            e da avaliacao por pares.
+          </div>
+          <button class="btn btn-primary" style="font-size:24px;padding:12px 28px"
+            onclick="(async()=>{const{error}=await sb.from('season_participants').insert({week_id:'${safeWeekId}',profile_id:'${safeProfileId}'});if(error&&!error.message.includes('duplicate'))alert(error.message);else window.location.reload();})()">
+            Junte-se a Temporada
+          </button>`
+      }
     </div>
   </div>`;
 }

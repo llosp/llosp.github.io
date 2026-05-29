@@ -34,18 +34,21 @@
     currentStored = requireAuth();
     if (!currentStored) return;
 
-    let profile, week, allProfiles, meeting;
+    let profile, week, allProfiles, meeting, history;
+    const lbCutoff = new Date(Date.now() - 30 * 86400000).toISOString();
     try {
       ([
         { data: profile },
         { data: week },
         { data: allProfiles },
         { data: meeting },
+        { data: history },
       ] = await Promise.all([
         sb.from('profiles').select('*').eq('id', currentStored.id).single(),
         sb.from('weeks').select('*').eq('is_current', true).maybeSingle(),
-        sb.from('profiles').select('*').order('weekly_points', { ascending: false }).limit(6),
+        sb.from('profiles').select('*'),
         sb.from('meetings').select('*').order('scheduled_at', { ascending: false }).limit(1).maybeSingle(),
+        sb.from('point_history').select('profile_id,amount').gte('created_at', lbCutoff),
       ]));
     } catch (e) {
       document.getElementById('app').innerHTML = `<div class="card" style="padding:32px;text-align:center;border-color:#ef4444">
@@ -59,6 +62,14 @@
     if (profile) setStoredProfile(profile);
     currentProfile = profile;
     currentWeek    = week;
+
+    const lbMap = new Map();
+    for (const h of (history ?? [])) {
+      lbMap.set(h.profile_id, (lbMap.get(h.profile_id) ?? 0) + (h.amount ?? 0));
+    }
+    const miniRanked = (allProfiles ?? [])
+      .map(p => ({ ...p, period_points: lbMap.get(p.id) ?? 0 }))
+      .sort((a, b) => (b.period_points - a.period_points) || a.name.localeCompare(b.name));
 
     document.getElementById('sidebar-root').innerHTML  = renderSidebar(profile, 'dashboard');
     document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('dashboard');
@@ -127,7 +138,7 @@
             ${renderDeliveryFeed(deliveries, revealed)}
           </div>
           <div class="col-right">
-            ${renderMiniLeaderboard(allProfiles ?? [], currentStored.id)}
+            ${renderMiniLeaderboard(miniRanked, currentStored.id)}
             ${renderNextMeeting(meeting)}
           </div>
         </div>
@@ -147,7 +158,9 @@
           </div>
           ${isParticipating
             ? `<button class="btn btn-ghost btn-sm" style="font-size:20px;opacity:0.6" onclick="leaveSeason()">Sair</button>`
-            : `<button class="btn btn-primary btn-sm" style="font-size:22px;padding:10px 20px" onclick="joinSeason()">Participar</button>`
+            : currentWeek?.skrill_time_revealed
+              ? `<span style="font-size:20px;color:var(--text-muted);text-transform:uppercase;text-align:right">Temporada revelada<br>aguarde a proxima</span>`
+              : `<button class="btn btn-primary btn-sm" style="font-size:22px;padding:10px 20px" onclick="joinSeason()">Participar</button>`
           }
         </div>
       </div>`;
@@ -257,12 +270,12 @@
         <div class="rank-num">${i===0?'#1':i===1?'#2':i===2?'#3':'#'+(i+1)}</div>
         ${avatarHTML(p)}
         <div class="entry-info"><div class="entry-name-main">${p.name}</div></div>
-        <div class="entry-xp">${p.weekly_points ?? 0}pts</div>
+        <div class="entry-xp">${p.period_points ?? 0}pts</div>
       </a>`).join('');
     return `
       <div class="card">
         <div class="card-header" style="gap: 20px;">
-          <div class="card-title" style="gap:8px"><img src="/skrill/img/leaderboard.svg" alt="leaderboard" style="width:24px;height:24px"> Top Guild</div>
+          <div class="card-title" style="gap:8px"><img src="/skrill/img/leaderboard.svg" alt="leaderboard" style="width:24px;height:24px"> Top 30 Dias</div>
           <a href="/skrill/leaderboard/" class="card-link">→</a>
         </div>
         <div class="card-body" style="padding:8px 12px">${items}</div>

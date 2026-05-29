@@ -329,6 +329,7 @@ function initSkrillWalker() {
 
   let thrown = false;
   let vx = 0, vy = 0, rotation = 0;
+  let flip = 1; // 1 = normal, -1 = flipped
   const gravity = 0.6;
 
   // Make clickable
@@ -391,7 +392,7 @@ function initSkrillWalker() {
       if (x < sidebarWidth) { x = sidebarWidth; vx = Math.abs(vx) * 0.7; }
       if (x + charWidth > window.innerWidth) { x = window.innerWidth - charWidth; vx = -Math.abs(vx) * 0.7; }
 
-      walker.style.transform = `rotate(${rotation}deg)`;
+      walker.style.transform = `scaleX(${flip}) rotate(${rotation}deg)`;
       walker.style.left = x + 'px';
       walker.style.bottom = jumpY + 'px';
       return;
@@ -413,7 +414,8 @@ function initSkrillWalker() {
     if (x < sidebarWidth) { x = sidebarWidth; direction = 1; directionChangeTimer = 60; }
     if (x + charWidth > window.innerWidth) { x = window.innerWidth - charWidth; direction = -1; directionChangeTimer = 60; }
 
-    walker.style.transform = direction > 0 ? 'scaleX(-1)' : 'scaleX(1)';
+    flip = direction > 0 ? -1 : 1;
+    walker.style.transform = `scaleX(${flip})`;
     walker.style.left = x + 'px';
     walker.style.bottom = jumpY + 'px';
   }, 50);

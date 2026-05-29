@@ -324,14 +324,12 @@ function initSkrillWalker() {
   let jumpT = 0;
   const speed = 8;
   const sidebarWidth = 280;
-  const charWidth = 150;
-  const charHeight = 130;
+  const charWidth = 128;
+  const charHeight = 111;
 
   let thrown = false;
   let vx = 0, vy = 0, rotation = 0;
   const gravity = 0.6;
-
-  sprite.style.transformOrigin = '75px center';
 
   walker.addEventListener('click', () => {
     if (thrown) return;
@@ -348,7 +346,7 @@ function initSkrillWalker() {
     if (thrown) return;
     if (Math.random() < 0.2) {
       let frame = 1;
-      const frames = [0, -150, -300, -450, -600, -450, -300, -150, 0];
+      const frames = [0, -128, -256, -384, -512, -384, -256, -128, 0];
       const blinkInterval = setInterval(() => {
         sprite.style.left = frames[frame] + 'px';
         frame++;
@@ -411,8 +409,7 @@ function initSkrillWalker() {
     if (x < sidebarWidth) { x = sidebarWidth; direction = 1; directionChangeTimer = 60; }
     if (x + charWidth > window.innerWidth) { x = window.innerWidth - charWidth; direction = -1; directionChangeTimer = 60; }
 
-    sprite.style.transform = direction > 0 ? 'scaleX(-1)' : 'scaleX(1)';
-    walker.style.transform = '';
+    walker.style.transform = direction > 0 ? 'scaleX(-1)' : 'scaleX(1)';
     walker.style.left = x + 'px';
     walker.style.bottom = jumpY + 'px';
   }, 50);

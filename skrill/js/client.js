@@ -396,8 +396,8 @@ function initSkrillWalker() {
     }
 
     // Normal walk + jump
-    jumpT += 0.05;
-    jumpY = Math.abs(Math.sin(jumpT)) * 18;
+    jumpT += 0.22;
+    jumpY = Math.abs(Math.sin(jumpT)) * 32;
     const onGround = jumpY < 1;
 
     if (onGround && directionChangeTimer <= 0 && Math.random() < 0.01) {

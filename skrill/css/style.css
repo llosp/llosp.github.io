@@ -72,7 +72,7 @@ body {
   width: 150px;
   height: 130px;
   overflow: hidden;
-  pointer-events: none;
+  cursor: pointer;
   z-index: 50;
 }
 

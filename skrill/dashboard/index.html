@@ -34,17 +34,27 @@
     currentStored = requireAuth();
     if (!currentStored) return;
 
-    const [
-      { data: profile },
-      { data: week },
-      { data: allProfiles },
-      { data: meeting },
-    ] = await Promise.all([
-      sb.from('profiles').select('*').eq('id', currentStored.id).single(),
-      sb.from('weeks').select('*').eq('is_current', true).single(),
-      sb.from('profiles').select('*').order('weekly_points', { ascending: false }).limit(6),
-      sb.from('meetings').select('*').order('scheduled_at', { ascending: false }).limit(1).single(),
-    ]);
+    let profile, week, allProfiles, meeting;
+    try {
+      ([
+        { data: profile },
+        { data: week },
+        { data: allProfiles },
+        { data: meeting },
+      ] = await Promise.all([
+        sb.from('profiles').select('*').eq('id', currentStored.id).single(),
+        sb.from('weeks').select('*').eq('is_current', true).maybeSingle(),
+        sb.from('profiles').select('*').order('weekly_points', { ascending: false }).limit(6),
+        sb.from('meetings').select('*').order('scheduled_at', { ascending: false }).limit(1).maybeSingle(),
+      ]));
+    } catch (e) {
+      document.getElementById('app').innerHTML = `<div class="card" style="padding:32px;text-align:center;border-color:#ef4444">
+        <div style="font-size:26px;font-weight:700;color:#ef4444;margin-bottom:8px">Erro ao carregar dashboard</div>
+        <div style="font-size:22px;color:var(--text-muted)">${e?.message ?? 'Erro desconhecido. Verifique a conexão.'}</div>
+        <button class="btn btn-primary" style="margin-top:16px" onclick="location.reload()">Tentar novamente</button>
+      </div>`;
+      return;
+    }
 
     if (profile) setStoredProfile(profile);
     currentProfile = profile;
@@ -60,11 +70,11 @@
 
     // Participation status + goals for current week
     const [{ data: participation }, { data: goalsData }] = await Promise.all([
-      sb.from('season_participants').select('id').eq('week_id', week.id).eq('profile_id', currentStored.id).single(),
+      sb.from('season_participants').select('id').eq('week_id', week.id).eq('profile_id', currentStored.id).maybeSingle(),
       sb.from('goals').select('*, profile:profiles(*)')
         .eq('week_id', week.id)
         .order('completed_at', { ascending: false, nullsFirst: false }),
-    ]);
+    ]).catch(() => [{ data: null }, { data: [] }]);
 
     isParticipating = !!participation;
     const goals      = goalsData ?? [];

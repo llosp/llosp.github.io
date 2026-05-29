@@ -313,12 +313,14 @@ function initSkrillWalker() {
   document.body.appendChild(walker);
 
   let x = window.innerWidth / 2;
-  let y = 0;
   let direction = 1; // 1 = right, -1 = left
   let directionChangeTimer = 0;
-  const speed = 1.5;
-  const sidebarWidth = 260;
+  const speed = 1;
+  const sidebarWidth = 280;
   const charWidth = 70;
+
+  // Apply jump animation
+  walker.style.animation = 'skrill-jump 0.6s ease-in-out infinite';
 
   // Randomly blink
   const blink = () => {
@@ -330,13 +332,16 @@ function initSkrillWalker() {
   setInterval(blink, 18000);
   blink();
 
+  // Set initial direction
+  walker.style.transform = 'scaleX(1)';
+
   // Movement loop
   setInterval(() => {
-    // Random direction change (5% chance each frame)
-    if (directionChangeTimer <= 0 && Math.random() < 0.05) {
+    // Random direction change (3% chance each frame)
+    if (directionChangeTimer <= 0 && Math.random() < 0.03) {
       direction *= -1;
       walker.style.transform = direction === 1 ? 'scaleX(1)' : 'scaleX(-1)';
-      directionChangeTimer = 30;
+      directionChangeTimer = 60;
     }
     directionChangeTimer--;
 
@@ -348,7 +353,7 @@ function initSkrillWalker() {
       x = sidebarWidth;
       direction = 1;
       walker.style.transform = 'scaleX(1)';
-      directionChangeTimer = 30;
+      directionChangeTimer = 60;
     }
 
     // Check for right edge
@@ -356,11 +361,11 @@ function initSkrillWalker() {
       x = window.innerWidth - charWidth;
       direction = -1;
       walker.style.transform = 'scaleX(-1)';
-      directionChangeTimer = 30;
+      directionChangeTimer = 60;
     }
 
     walker.style.left = x + 'px';
-  }, 30);
+  }, 50);
 }
 
 document.addEventListener('click', e => {

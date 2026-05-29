@@ -325,9 +325,29 @@ function initSkrillWalker() {
   const speed = 2;
   const sidebarWidth = 280;
   const charWidth = 150;
+  const charHeight = 130;
+
+  let thrown = false;
+  let vx = 0, vy = 0, rotation = 0;
+  const gravity = 0.6;
+
+  // Make clickable
+  walker.style.pointerEvents = 'auto';
+  walker.style.cursor = 'pointer';
+
+  walker.addEventListener('click', () => {
+    if (thrown) return;
+    thrown = true;
+    jumpT = 0;
+    vx = (direction > 0 ? 1 : -1) * (12 + Math.random() * 6);
+    vy = -(14 + Math.random() * 6);
+    rotation = 0;
+    walker.style.transformOrigin = 'center center';
+  });
 
   // Blink: shift the img left through frames (-150px per frame)
   const blink = () => {
+    if (thrown) return;
     if (Math.random() < 0.2) {
       let frame = 1;
       const frames = [0, -150, -300, -450, -600, -450, -300, -150, 0];
@@ -344,14 +364,45 @@ function initSkrillWalker() {
   setInterval(blink, 12000);
   setTimeout(blink, 3000);
 
-  // Movement + jump loop
+  // Main loop
   setInterval(() => {
+    if (thrown) {
+      // Physics
+      vy += gravity;
+      x += vx;
+      jumpY = Math.max(0, jumpY - vy);
+      rotation += vx * 3;
+
+      // Bounce off floor
+      if (jumpY <= 0) {
+        jumpY = 0;
+        vy *= -0.55;
+        vx *= 0.8;
+        if (Math.abs(vy) < 1.5) {
+          // Settle back to normal
+          thrown = false;
+          vy = 0; vx = 0; rotation = 0;
+          walker.style.transform = '';
+          jumpT = 0;
+        }
+      }
+
+      // Bounce off walls
+      if (x < sidebarWidth) { x = sidebarWidth; vx = Math.abs(vx) * 0.7; }
+      if (x + charWidth > window.innerWidth) { x = window.innerWidth - charWidth; vx = -Math.abs(vx) * 0.7; }
+
+      walker.style.transform = `rotate(${rotation}deg)`;
+      walker.style.left = x + 'px';
+      walker.style.bottom = jumpY + 'px';
+      return;
+    }
+
+    // Normal walk + jump
     jumpT += 0.05;
     jumpY = Math.abs(Math.sin(jumpT)) * 18;
     const onGround = jumpY < 1;
 
-    // Only change direction while on the ground
-    if (onGround && directionChangeTimer <= 0 && Math.random() < 0.03) {
+    if (onGround && directionChangeTimer <= 0 && Math.random() < 0.01) {
       direction *= -1;
       directionChangeTimer = 60;
     }
@@ -359,20 +410,10 @@ function initSkrillWalker() {
 
     x += direction * speed;
 
-    // Left boundary (sidebar) — only bounce on ground
-    if (x < sidebarWidth) {
-      x = sidebarWidth;
-      direction = 1;
-      directionChangeTimer = 60;
-    }
+    if (x < sidebarWidth) { x = sidebarWidth; direction = 1; directionChangeTimer = 60; }
+    if (x + charWidth > window.innerWidth) { x = window.innerWidth - charWidth; direction = -1; directionChangeTimer = 60; }
 
-    // Right boundary — only bounce on ground
-    if (x + charWidth > window.innerWidth) {
-      x = window.innerWidth - charWidth;
-      direction = -1;
-      directionChangeTimer = 60;
-    }
-
+    walker.style.transform = direction > 0 ? 'scaleX(-1)' : 'scaleX(1)';
     walker.style.left = x + 'px';
     walker.style.bottom = jumpY + 'px';
   }, 50);

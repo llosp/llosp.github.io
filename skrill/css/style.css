@@ -515,8 +515,26 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 .profile-hero-identity { flex: 1; min-width: 0; }
 .profile-display { font-family: 'Jersey 25', monospace; font-size: 32px; line-height: 1.1; }
 .profile-hero-actions { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+.profile-stats-row { display: flex; gap: 18px; margin-top: 12px; flex-wrap: wrap; }
+.profile-stat { display: flex; flex-direction: column; }
+.profile-stat-val { font-family: 'Jersey 25', monospace; font-size: 28px; }
+.profile-stat-lbl { font-size: 24px; color: var(--text-muted); text-transform: uppercase; }
 .profile-stat-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
 .profile-stat-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
+
+/* desktop vs mobile visibility for profile page */
+.profile-desktop-only { display: none !important; }
+.profile-mobile-only  { display: flex; }
+
+@media (min-width: 768px) {
+  .profile-desktop-only { display: flex !important; }
+  .profile-mobile-only  { display: none !important; }
+  /* On desktop, hero is back to horizontal: avatar | info | buttons */
+  .profile-hero { flex-direction: row; align-items: center; gap: 18px; }
+  .profile-hero-head { flex: 1; align-items: center; }
+  /* Desktop-only buttons column styling */
+  .profile-hero-btns-desktop { flex-direction: column; gap: 8px; align-items: flex-end; flex-shrink: 0; }
+}
 .level-pill {
   display: inline-flex; align-items: center; gap: 4px;
   background: var(--amber); border: 1px solid var(--amber-dark);

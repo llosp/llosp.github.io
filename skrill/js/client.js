@@ -322,7 +322,7 @@ function initSkrillWalker() {
   let directionChangeTimer = 0;
   let jumpY = 0;
   let jumpT = 0;
-  const speed = 2;
+  const speed = 4;
   const sidebarWidth = 280;
   const charWidth = 150;
   const charHeight = 130;
@@ -337,8 +337,8 @@ function initSkrillWalker() {
     if (thrown) return;
     thrown = true;
     jumpT = 0;
-    vx = (direction > 0 ? 1 : -1) * (12 + Math.random() * 6);
-    vy = -(14 + Math.random() * 6);
+    vx = (direction > 0 ? 1 : -1) * (20 + Math.random() * 8);
+    vy = -(28 + Math.random() * 10);
     rotation = 0;
     walker.style.transformOrigin = 'center center';
   });

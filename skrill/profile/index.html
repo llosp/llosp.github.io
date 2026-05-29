@@ -109,38 +109,42 @@
     document.getElementById('app').innerHTML = `
       <div style="width:100%">
         <div class="profile-hero">
-          ${avatarHTML(profile, 'avatar-xl')}
-          <div class="profile-hero-info">
-            <div class="profile-display">${profile.name}</div>
-            <div class="profile-stats-row">
-              <div class="profile-stat">
-                <div class="profile-stat-val">${(profile.total_points ?? 0).toLocaleString()}</div>
-                <div class="profile-stat-lbl">Total Pts</div>
-              </div>
-              <div class="profile-stat">
-                <div class="profile-stat-val">${profile.weekly_points ?? 0}</div>
-                <div class="profile-stat-lbl">Pts Temporada</div>
-              </div>
-              <div class="profile-stat">
-                <div class="profile-stat-val">${completedGoals.length}</div>
-                <div class="profile-stat-lbl">Metas Feitas</div>
-              </div>
-              <div class="profile-stat">
-                <div class="profile-stat-val">${profile.streak_current ?? 0}w</div>
-                <div class="profile-stat-lbl">Streak</div>
-              </div>
-              <div class="profile-stat">
-                <div class="profile-stat-val">${profile.streak_longest ?? 0}w</div>
-                <div class="profile-stat-lbl">Melhor</div>
-              </div>
+          <div class="profile-hero-head">
+            ${avatarHTML(profile, 'avatar-xl')}
+            <div class="profile-hero-identity">
+              <div class="profile-display">${profile.name}</div>
+              ${isMe ? `
+                <div class="profile-hero-actions">
+                  <button class="btn btn-sm btn-primary" onclick="openEditModal()">Editar Perfil</button>
+                  <button class="btn btn-sm btn-ghost" onclick="signOut()">Trocar Perfil</button>
+                </div>
+              ` : ''}
             </div>
           </div>
-          ${isMe ? `
-            <div style="display:flex;flex-direction:column;gap:8px;align-items:flex-end">
-              <button class="btn btn-sm btn-primary" onclick="openEditModal()">Editar Perfil</button>
-              <button class="btn btn-sm btn-ghost" onclick="signOut()">Trocar perfil</button>
+          <div class="profile-stat-grid">
+            <div class="stat-card" style="padding:12px 8px">
+              <div class="stat-value">${(profile.total_points ?? 0).toLocaleString()}</div>
+              <div class="stat-label">Total Pts</div>
             </div>
-          ` : ''}
+            <div class="stat-card" style="padding:12px 8px">
+              <div class="stat-value">${profile.weekly_points ?? 0}</div>
+              <div class="stat-label">Pts Temp</div>
+            </div>
+            <div class="stat-card" style="padding:12px 8px">
+              <div class="stat-value">${completedGoals.length}</div>
+              <div class="stat-label">Metas</div>
+            </div>
+          </div>
+          <div class="profile-stat-grid-2">
+            <div class="stat-card" style="padding:12px 8px">
+              <div class="stat-value">${profile.streak_current ?? 0}w</div>
+              <div class="stat-label">Streak</div>
+            </div>
+            <div class="stat-card" style="padding:12px 8px">
+              <div class="stat-value">${profile.streak_longest ?? 0}w</div>
+              <div class="stat-label">Melhor</div>
+            </div>
+          </div>
         </div>
 
         <div id="tab-timeline" class="tab-panel active">

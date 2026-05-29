@@ -317,7 +317,7 @@ function initSkrillWalker() {
   let directionChangeTimer = 0;
   const speed = 1;
   const sidebarWidth = 280;
-  const charWidth = 70;
+  const charWidth = 150;
 
   // Apply jump animation
   walker.style.animation = 'skrill-jump 0.6s ease-in-out infinite';

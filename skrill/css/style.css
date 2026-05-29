@@ -77,17 +77,16 @@ body {
 .skrill-walker {
   position: fixed;
   bottom: 0;
-  left: -70px;
-  width: 70px;
-  height: 70px;
+  left: -150px;
+  width: 150px;
+  height: 130px;
   background-image: url('/skrill/img/skrill-fullbody-Sheet.png');
-  background-size: 210px 70px;
+  background-size: 300px 130px;
   background-repeat: no-repeat;
   background-position: 0 0;
   image-rendering: pixelated;
   pointer-events: none;
   z-index: 50;
-  animation: skrill-walk 18s linear infinite, skrill-jump 0.6s ease-in-out infinite;
 }
 
 .skrill-walker.blink {

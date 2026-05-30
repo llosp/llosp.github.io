@@ -302,17 +302,13 @@ canvas.particles { display: none; }
 .stat-label { font-size: 24px; font-weight: bold; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; }
 .stat-sub { font-size: 24px; color: var(--text-light); margin-top: 2px; text-transform: uppercase; }
 
-/* Stats de duas caixas largas (dashboard) — layout horizontal */
-.stats-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 20px; }
-.stat-card-row { display: flex; align-items: center; gap: 18px; padding: 20px 24px; }
-.stat-card-row .stat-icon { width: 64px; height: 64px; margin-bottom: 0; flex-shrink: 0; }
-.stat-card-row .stat-value { font-size: 44px; line-height: 1; }
-.stat-card-info { min-width: 0; }
-@media (max-width: 420px) {
-  .stat-card-row { flex-direction: column; align-items: flex-start; gap: 10px; padding: 16px; }
-  .stat-card-row .stat-icon { width: 48px; height: 48px; }
-  .stat-card-row .stat-value { font-size: 36px; }
-}
+/* Stats compactas lado a lado (dashboard) — layout horizontal */
+.stats-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 20px; }
+.stat-card-row { display: flex; align-items: center; gap: 12px; padding: 10px 14px; }
+.stat-card-row .stat-icon { width: 40px; height: 40px; margin-bottom: 0; flex-shrink: 0; }
+.stat-card-info { min-width: 0; line-height: 1; }
+.stat-card-row .stat-value { font-size: 34px; line-height: 1; }
+.stat-card-row .stat-label { margin-top: 1px; font-size: 20px; }
 
 /* ── Main grid ──────────────────────────────────────────────────────────────── */
 .main-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }

@@ -29,6 +29,7 @@
   let currentProfile  = null;
   let currentStored   = null;
   let isParticipating = false;
+  let canAdvance      = false;
 
   async function init() {
     currentStored = requireAuth();
@@ -80,14 +81,17 @@
     }
 
     // Participation status + goals for current week
-    const [{ data: participation }, { data: goalsData }] = await Promise.all([
+    const [{ data: participation }, { data: goalsData }, { data: allParticipants }] = await Promise.all([
       sb.from('season_participants').select('id').eq('week_id', week.id).eq('profile_id', currentStored.id).maybeSingle(),
       sb.from('goals').select('*, profile:profiles(*)')
         .eq('week_id', week.id)
         .order('completed_at', { ascending: false, nullsFirst: false }),
-    ]).catch(() => [{ data: null }, { data: [] }]);
+      sb.from('season_participants').select('profile_id').eq('week_id', week.id),
+    ]).catch(() => [{ data: null }, { data: [] }, { data: [] }]);
 
     isParticipating = !!participation;
+    const participantIds = new Set((allParticipants ?? []).map(p => p.profile_id));
+    canAdvance = canAdvanceSeason(week, participantIds, allProfiles ?? []);
     const goals      = goalsData ?? [];
     const myGoals    = goals.filter(g => g.profile_id === currentStored.id);
     const done       = myGoals.filter(g => g.status === 'completed' || g.status === 'beyond');
@@ -113,19 +117,17 @@
 
         <div class="stats-grid-2">
           <div class="stat-card stat-card-row">
-            <div class="stat-icon amber"><img src="/skrill/img/points.svg" alt="points" style="width:36px;height:36px"></div>
+            <div class="stat-icon amber"><img src="/skrill/img/points.svg" alt="points" style="width:22px;height:22px"></div>
             <div class="stat-card-info">
               <div class="stat-value">${(profile?.total_points ?? 0).toLocaleString()}</div>
               <div class="stat-label">Total Pts</div>
-              <div class="stat-sub">acumulado</div>
             </div>
           </div>
           <div class="stat-card stat-card-row">
-            <div class="stat-icon green"><img src="/skrill/img/goals.svg" alt="goals" style="width:42px;height:42px"></div>
+            <div class="stat-icon green"><img src="/skrill/img/goals.svg" alt="goals" style="width:26px;height:26px"></div>
             <div class="stat-card-info">
               <div class="stat-value">${done.length}/${myGoals.length}</div>
               <div class="stat-label">Metas Feitas</div>
-              <div class="stat-sub">esta temporada</div>
             </div>
           </div>
         </div>
@@ -154,10 +156,12 @@
               ${isParticipating ? `${SVG_CHECK} Voce esta participando` : `${SVG_EMPTY} Voce nao esta participando`}
             </div>
           </div>
-          ${isParticipating
-            ? `<button class="btn btn-ghost btn-sm" style="font-size:20px;opacity:0.6" onclick="leaveSeason()">Sair</button>`
-            : currentWeek?.skrill_time_revealed
-              ? `<span style="font-size:20px;color:var(--text-muted);text-transform:uppercase;text-align:right">Temporada revelada<br>aguarde a proxima</span>`
+          ${currentWeek?.skrill_time_revealed
+            ? (canAdvance
+                ? `<button class="btn btn-primary btn-sm" style="font-size:22px;padding:10px 20px" onclick="openAdvanceSeasonModal(currentWeek)">Iniciar próxima Temporada</button>`
+                : `<span style="font-size:20px;color:var(--text-muted);text-transform:uppercase;text-align:right">Temporada revelada<br>aguarde a proxima</span>`)
+            : isParticipating
+              ? `<button class="btn btn-ghost btn-sm" style="font-size:20px;opacity:0.6" onclick="leaveSeason()">Sair</button>`
               : `<button class="btn btn-primary btn-sm" style="font-size:22px;padding:10px 20px" onclick="joinSeason()">Participar</button>`
           }
         </div>

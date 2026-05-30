@@ -134,7 +134,7 @@ Página central da temporada — quatro fases determinadas por `getPhase()`:
 - Reveal final: para cada meta, mostra `[+2 base] [+N bônus] = Total`.
 - Bônus = soma dos `peer_ratings.amount` de todos os avaliadores para aquela meta.
 - Identidade do avaliador nunca é exibida.
-- Admin vê botão "Encerrar e iniciar Temporada N+1".
+- Botão "Encerrar e iniciar Temporada N+1" para avançar. **Quem pode avançar** (`canAdvanceSeason` em `client.js`): a temporada precisa estar revelada, e então **admin sempre pode**, OU **qualquer membro se nenhum admin estiver participando** daquela temporada (inclui o caso de 0 participantes). A ação aparece tanto no Skrill Time (inclusive para quem não participou, via tela "Temporada encerrada") quanto no card de participação do Dashboard.
 
 **Finalização** (`finalizeSeason()`):
 - Soma base (`difficulty`) + bônus (`peer_ratings`) por meta.

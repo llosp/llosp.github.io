@@ -258,6 +258,93 @@ async function startSeason() {
   window.location.reload();
 }
 
+// ── Avançar temporada (encerrar revelada e iniciar a próxima) ────────────────────
+// Permissão: admin sempre; ou qualquer membro se nenhum admin estiver participando.
+function adminParticipating(participantIds, profiles) {
+  return (profiles || []).some(p => participantIds.has(p.id) && p.is_admin);
+}
+function canAdvanceSeason(week, participantIds, profiles) {
+  if (!week?.skrill_time_revealed) return false;
+  return isAdmin() || !adminParticipating(participantIds, profiles);
+}
+
+function openAdvanceSeasonModal(week) {
+  if (!week) return;
+  const nextNum  = week.week_number + 1 > 52 ? 1 : week.week_number + 1;
+  const nextYear = week.week_number + 1 > 52 ? week.year + 1 : week.year;
+
+  const fmt    = d => d.toISOString().split('T')[0];
+  const today  = new Date();
+  const defEnd = new Date(today);
+  defEnd.setDate(today.getDate() + 7);
+
+  let overlay = document.getElementById('advance-season-modal');
+  if (!overlay) {
+    overlay = document.createElement('div');
+    overlay.id = 'advance-season-modal';
+    overlay.className = 'win-overlay hidden';
+    overlay.addEventListener('click', e => { if (e.target === overlay) closeAdvanceSeasonModal(); });
+    document.body.appendChild(overlay);
+  }
+
+  overlay.innerHTML = `
+    <div class="win-window" onclick="event.stopPropagation()" style="width:min(480px,92vw)">
+      <div class="win-titlebar">
+        <span class="win-titlebar-icon"><img src="/skrill/img/Skrill_time.svg" alt="skrill-time" style="width:20px;height:20px;display:block"></span>
+        <span class="win-titlebar-title">Encerrar Temporada ${week.week_number}</span>
+        <button class="win-btn" onclick="closeAdvanceSeasonModal()">X</button>
+      </div>
+      <div class="win-body" style="flex-direction:column;align-items:stretch;gap:16px;padding:20px 20px 16px">
+        <div style="text-align:center;font-family:'Jersey 25',monospace;font-size:28px">
+          Temporada ${nextNum} · ${nextYear}
+        </div>
+        <div style="font-size:22px;color:#404040;text-align:center;border-bottom:1px solid #808080;padding-bottom:14px">
+          Os pontos da temporada de todos serao zerados.
+        </div>
+        <div>
+          <label style="display:block;font-size:20px;font-weight:700;margin-bottom:6px;font-family:'Micro 5',monospace;text-transform:uppercase;letter-spacing:.04em">
+            Data final da Temporada ${nextNum}
+          </label>
+          <input id="advance-end-date" type="date" value="${fmt(defEnd)}"
+            style="width:100%;box-sizing:border-box;font-size:22px;padding:8px 10px;border:2px inset #808080;background:#fff;font-family:'Micro 5',monospace"/>
+        </div>
+      </div>
+      <div class="win-statusbar" style="justify-content:flex-end;gap:8px;padding:8px 10px">
+        <button class="btn btn-ghost btn-sm" style="font-size:20px" onclick="closeAdvanceSeasonModal()">Cancelar</button>
+        <button id="advance-confirm-btn" class="btn btn-primary btn-sm" style="font-size:20px" onclick="advanceSeason('${week.id}',${nextNum},${nextYear})">Confirmar</button>
+      </div>
+    </div>`;
+
+  overlay.classList.remove('hidden');
+}
+
+function closeAdvanceSeasonModal() {
+  const overlay = document.getElementById('advance-season-modal');
+  if (overlay) overlay.classList.add('hidden');
+}
+
+async function advanceSeason(weekId, nextNum, nextYear) {
+  const endDate = document.getElementById('advance-end-date')?.value || null;
+  const today   = new Date().toISOString().split('T')[0];
+
+  const btn = document.getElementById('advance-confirm-btn');
+  if (btn) { btn.disabled = true; btn.textContent = '...'; }
+
+  await sb.from('weeks').update({ is_current: false }).eq('id', weekId);
+  await sb.from('weeks').insert({
+    week_number:          nextNum,
+    year:                 nextYear,
+    start_date:           today,
+    end_date:             endDate,
+    is_current:           true,
+    skrill_time_revealed: false,
+  });
+  await sb.from('profiles').update({ weekly_points: 0 }).not('id', 'is', null);
+
+  closeAdvanceSeasonModal();
+  window.location.reload();
+}
+
 function renderNoWeekBanner() {
   const adminSection = isAdmin() ? `
     <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--border)">

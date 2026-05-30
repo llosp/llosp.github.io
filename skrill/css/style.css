@@ -573,6 +573,47 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 }
 .modal-body { padding: 22px 22px 14px; }
 .modal-footer { display: flex; gap: 8px; justify-content: flex-end; padding: 14px 22px; border-top: 1px solid var(--border); }
+.modal-wide { max-width: 720px; width: 100%; }
+.modal-scroll { max-height: 70vh; overflow-y: auto; }
+
+/* ── Archive (Acervo) timeline ───────────────────────────────────────────────── */
+.arch-year { margin-bottom: 30px; }
+.arch-year-head {
+  font-family: 'Jersey 25', monospace; font-size: 34px; color: var(--text);
+  border-bottom: 2px solid var(--amber); margin-bottom: 8px; padding-bottom: 2px;
+}
+.arch-months, .arch-row { display: grid; grid-template-columns: 130px 1fr; gap: 10px; align-items: center; }
+.arch-months { margin-bottom: 6px; }
+.arch-months-track { display: grid; grid-template-columns: repeat(12, 1fr); }
+.arch-months-track span { text-align: center; font-size: 18px; color: var(--text-light); text-transform: uppercase; }
+.arch-row { cursor: pointer; padding: 6px 0; }
+.arch-row-name { font-family: 'Jersey 25', monospace; font-size: 24px; color: var(--text); line-height: 1.1; }
+.arch-row-pts { font-size: 20px; color: var(--amber-dark); }
+.arch-track {
+  position: relative; height: 38px; background: #fff;
+  border: 1px solid var(--border); box-shadow: var(--shadow);
+}
+.arch-grid { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(12, 1fr); }
+.arch-grid span { border-left: 1px solid var(--border); }
+.arch-grid span:first-child { border-left: none; }
+.arch-bar {
+  position: absolute; top: 4px; bottom: 4px; min-width: 10px;
+  background: var(--amber); border: 1px solid var(--amber-dark); box-shadow: 1px 1px 0 var(--amber-dark);
+  display: flex; align-items: center; padding: 0 6px; overflow: hidden;
+  transition: transform 0.08s, box-shadow 0.08s;
+}
+.arch-bar.current { background: #E8D5F5; border-color: var(--purple); box-shadow: 1px 1px 0 var(--purple); }
+.arch-bar-txt { font-size: 18px; color: #000; white-space: nowrap; }
+.arch-row:hover .arch-bar { transform: translate(-1px,-1px); box-shadow: 2px 2px 0 var(--amber-dark); }
+.arch-row:hover .arch-bar.current { box-shadow: 2px 2px 0 var(--purple); }
+.arch-delivery { border: 1px solid var(--border); box-shadow: var(--shadow); padding: 12px; margin-bottom: 12px; background: var(--surface); }
+.arch-delivery-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+.arch-delivery-name { font-weight: 700; font-size: 24px; text-transform: uppercase; }
+.arch-delivery-title { font-size: 22px; color: var(--text-muted); }
+@media (max-width: 520px) {
+  .arch-months, .arch-row { grid-template-columns: 92px 1fr; gap: 6px; }
+  .arch-row-name { font-size: 20px; }
+}
 
 /* ── Login ──────────────────────────────────────────────────────────────────── */
 .login-wrap {

@@ -152,7 +152,8 @@ function iconHTML(type) {
     'P': '/skrill/img/Profile.svg',
     'A': '/skrill/img/admin.svg',
     '+': '/skrill/img/dashboard.svg',
-    'S': '/skrill/img/Skrill_time.svg'
+    'S': '/skrill/img/Skrill_time.svg',
+    'R': '/skrill/img/archive.svg'
   };
   if (svgIcons[type]) {
     return `<img src="${svgIcons[type]}" class="icon-svg" alt="${type}" style="width:24px;height:24px;display:block">`;
@@ -167,6 +168,7 @@ function renderSidebar(profile, activePage) {
     { href: '/skrill/weekly/',      label: 'Season Goals', icon: 'G', key: 'weekly' },
     { href: '/skrill/leaderboard/', label: 'Leaderboard',  icon: 'T', key: 'leaderboard' },
     { href: '/skrill/skrill-time/', label: 'Skrill Time',  icon: 'S', key: 'skrill-time' },
+    { href: '/skrill/archive/',     label: 'Acervo',       icon: 'R', key: 'archive' },
   ];
   if (profile) NAV.push({ href: `/skrill/profile/?id=${profile.id}`, label: 'Profile', icon: 'P', key: 'profile' });
 
@@ -212,6 +214,7 @@ function renderMobileNav(activeKey) {
     { href: '/skrill/weekly/',      label: 'Goals',  icon: 'G', key: 'weekly' },
     { href: '/skrill/leaderboard/', label: 'Ranks',  icon: 'T', key: 'leaderboard' },
     { href: '/skrill/skrill-time/', label: 'S.Time', icon: 'S', key: 'skrill-time' },
+    { href: '/skrill/archive/',     label: 'Acervo', icon: 'R', key: 'archive' },
     { href: '/skrill/profile/',     label: 'Perfil', icon: 'P', key: 'profile' },
   ];
   return `<nav class="mobile-nav">

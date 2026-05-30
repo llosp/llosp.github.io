@@ -64,8 +64,11 @@
         <div id="delivery-goal-title" style="font-size:24px;font-weight:700;margin-bottom:14px;color:var(--text)"></div>
         <div class="form-group">
           <label class="form-label">Prova de entrega <span style="color:var(--amber)">*</span></label>
-          <input id="delivery-files" class="form-input" type="file" multiple accept="image/*" required style="padding:8px"/>
-          <div style="font-size:20px;color:var(--text-muted);margin-top:4px">Selecione uma ou mais imagens como comprovante</div>
+          <input id="delivery-files" type="file" multiple accept="image/*" required style="display:none" onchange="updateFileList()"/>
+          <button type="button" class="btn btn-ghost btn-full" onclick="document.getElementById('delivery-files').click()">
+            Selecionar imagens
+          </button>
+          <div id="delivery-file-list" style="margin-top:8px;font-size:22px;color:var(--text-muted)">Nenhuma imagem selecionada</div>
         </div>
         <div id="delivery-error" class="form-error hidden"></div>
       </div>
@@ -259,11 +262,24 @@
     }
   }
 
+  function updateFileList() {
+    const files = document.getElementById('delivery-files').files;
+    const list  = document.getElementById('delivery-file-list');
+    if (!files.length) {
+      list.textContent = 'Nenhuma imagem selecionada';
+      return;
+    }
+    list.innerHTML = Array.from(files).map(f =>
+      `<div style="padding:2px 0;border-bottom:1px solid var(--border)">${f.name} <span style="color:var(--text-light)">(${(f.size/1024).toFixed(0)} KB)</span></div>`
+    ).join('');
+  }
+
   function openDeliveryModal(goalId) {
     pendingGoalId = goalId;
     const goal = allGoals.find(g => g.id === goalId);
     document.getElementById('delivery-goal-title').textContent = goal?.title ?? '';
     document.getElementById('delivery-files').value = '';
+    document.getElementById('delivery-file-list').textContent = 'Nenhuma imagem selecionada';
     document.getElementById('delivery-error').classList.add('hidden');
     document.getElementById('delivery-modal').classList.remove('hidden');
   }

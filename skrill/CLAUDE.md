@@ -75,7 +75,6 @@ Storage bucket `deliveries` (público) — path: `{goal_id}/{timestamp}-{filenam
 | `admin.svg` | Nav: Admin |
 | `Skrill_time.svg` | Nav: Skrill Time · login titlebar |
 | `points.svg` | Stat card de Total Pts |
-| `season.svg` | Stat card de Pts Temporada |
 | `attention.svg` | Avisos e telas travadas |
 
 ## Padrões de código

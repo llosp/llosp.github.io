@@ -58,7 +58,7 @@ skrill/
     ├── skrill-fullbody-Sheet.png    # Sprite sheet fullbody (walker animado)
     ├── dashboard.svg / goals.svg / leaderboard.svg
     ├── Profile.svg / admin.svg / Skrill_time.svg
-    ├── points.svg / season.svg / attention.svg
+    ├── points.svg / attention.svg
     └── ...
 ```
 

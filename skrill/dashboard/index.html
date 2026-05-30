@@ -111,24 +111,22 @@
           ${renderParticipationCard()}
         </div>
 
-        <div class="stats-grid" style="grid-template-columns:repeat(3,1fr)">
-          <div class="stat-card">
-            <div class="stat-icon amber" style="padding:8px"><img src="/skrill/img/points.svg" alt="points" style="width:28px;height:28px"></div>
-            <div class="stat-value">${(profile?.total_points ?? 0).toLocaleString()}</div>
-            <div class="stat-label">Total Pts</div>
-            <div class="stat-sub">acumulado</div>
+        <div class="stats-grid-2">
+          <div class="stat-card stat-card-row">
+            <div class="stat-icon amber"><img src="/skrill/img/points.svg" alt="points" style="width:36px;height:36px"></div>
+            <div class="stat-card-info">
+              <div class="stat-value">${(profile?.total_points ?? 0).toLocaleString()}</div>
+              <div class="stat-label">Total Pts</div>
+              <div class="stat-sub">acumulado</div>
+            </div>
           </div>
-          <div class="stat-card">
-            <div class="stat-icon purple" style="padding:8px"><img src="/skrill/img/season.svg" alt="season" style="width:32px;height:32px"></div>
-            <div class="stat-value">${profile?.weekly_points ?? 0}</div>
-            <div class="stat-label">Pts Temporada</div>
-            <div class="stat-sub">esta temporada</div>
-          </div>
-          <div class="stat-card">
-            <div class="stat-icon green" style="padding:8px"><img src="/skrill/img/goals.svg" alt="goals" style="width:40px;height:40px"></div>
-            <div class="stat-value">${done.length}/${myGoals.length}</div>
-            <div class="stat-label">Metas Feitas</div>
-            <div class="stat-sub">esta temporada</div>
+          <div class="stat-card stat-card-row">
+            <div class="stat-icon green"><img src="/skrill/img/goals.svg" alt="goals" style="width:42px;height:42px"></div>
+            <div class="stat-card-info">
+              <div class="stat-value">${done.length}/${myGoals.length}</div>
+              <div class="stat-label">Metas Feitas</div>
+              <div class="stat-sub">esta temporada</div>
+            </div>
           </div>
         </div>
 

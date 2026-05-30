@@ -157,7 +157,7 @@ canvas.particles { display: none; }
 }
 .sidebar-logo:hover { filter: brightness(1.05); }
 .sidebar-logo:hover .skrill-sprite { animation-duration: 1.2s; }
-.sidebar-logo-textwrap { display: flex; flex-direction: column; line-height: 1; min-width: 0; }
+.sidebar-logo-textwrap { display: flex; flex-direction: column; line-height: 1; flex: 1; min-width: 0; }
 .sidebar-logo-text {
   font-family: 'Jersey 25', monospace;
   font-size: 36px;
@@ -165,14 +165,11 @@ canvas.particles { display: none; }
   letter-spacing: 0.10em;
   text-shadow: 2px 2px 0 var(--amber-dark);
 }
-.sidebar-logo-sub {
+.sidebar-logo-sub { display: block; width: 100%; height: auto; margin-top: 5px; }
+.sidebar-logo-sub text {
   font-family: 'Micro 5', monospace;
-  font-size: 18px;
-  color: rgba(0,0,0,0.55);
-  letter-spacing: 0.14em;
-  text-transform: uppercase;
-  margin-top: 4px;
-  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+  font-size: 9px;
+  fill: rgba(0,0,0,0.6);
 }
 .sidebar-logo-icon { display: none; }
 .sidebar-nav { flex: 1; padding: 8px; display: flex; flex-direction: column; gap: 3px; overflow-y: auto; }
@@ -310,6 +307,14 @@ canvas.particles { display: none; }
 .stat-value { font-family: 'Jersey 25', monospace; font-size: 30px; color: var(--text); }
 .stat-label { font-size: 24px; font-weight: bold; color: var(--text-muted); margin-top: 2px; text-transform: uppercase; }
 .stat-sub { font-size: 24px; color: var(--text-light); margin-top: 2px; text-transform: uppercase; }
+
+/* Stats de duas caixas largas (dashboard) — layout horizontal */
+.stats-grid-2 { display: grid; grid-template-columns: 1fr; gap: 12px; margin-bottom: 20px; }
+@media (min-width: 580px) { .stats-grid-2 { grid-template-columns: repeat(2, 1fr); } }
+.stat-card-row { display: flex; align-items: center; gap: 18px; padding: 20px 24px; }
+.stat-card-row .stat-icon { width: 64px; height: 64px; margin-bottom: 0; flex-shrink: 0; }
+.stat-card-row .stat-value { font-size: 44px; line-height: 1; }
+.stat-card-info { min-width: 0; }
 
 /* ── Main grid ──────────────────────────────────────────────────────────────── */
 .main-grid { display: grid; grid-template-columns: 1fr; gap: 16px; }

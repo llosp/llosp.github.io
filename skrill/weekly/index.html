@@ -197,7 +197,7 @@
         </div>`
       : isOwner ? `<div class="goal-actions">${deleteBtn}</div>` : '';
     const imagesHTML = isDone && imgs.length
-      ? `<div class="delivery-images" style="margin-top:10px;display:flex;flex-wrap:wrap;gap:6px">
+      ? `<div class="delivery-images">
           ${imgs.map(u => `<img class="delivery-img${revealed ? '' : ' blurred'}" src="${u}" alt="entrega">`).join('')}
         </div>`
       : '';

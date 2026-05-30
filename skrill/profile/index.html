@@ -177,7 +177,7 @@
         const isDone = g.status === 'completed';
         const imgs = g.image_urls ?? [];
         const imagesHTML = isDone && imgs.length
-          ? `<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">
+          ? `<div class="delivery-images">
               ${imgs.map(u => `<img class="delivery-img${revealed ? '' : ' blurred'}" src="${u}" alt="entrega">`).join('')}
             </div>`
           : '';

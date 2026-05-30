@@ -203,9 +203,6 @@ function renderSidebar(profile, activePage) {
       <div class="skrill-sprite skrill-sprite-md"></div>
       <div class="sidebar-logo-textwrap">
         <span class="sidebar-logo-text">SKRILL</span>
-        <svg class="sidebar-logo-sub" viewBox="0 0 100 11" preserveAspectRatio="xMidYMid meet" aria-label="improve your skrills">
-          <text x="0" y="9" textLength="100" lengthAdjust="spacingAndGlyphs">improve your skrills</text>
-        </svg>
       </div>
     </a>
     <nav class="sidebar-nav">${navItems}</nav>

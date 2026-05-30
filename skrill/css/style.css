@@ -21,6 +21,33 @@
   --sidebar-w: 260px;
 }
 
+/* ── Dark mode ──────────────────────────────────────────────────────────────── */
+html[data-theme="dark"] {
+  --bg: #16181d;
+  --surface: #20242b;
+  --surface-hover: #2a2f38;
+  --border: #3a4049;
+  --border-dark: #565f6b;
+  --border-light: #2c313a;
+  --text: #e6e8ea;
+  --text-muted: #9aa3ad;
+  --text-light: #6b7480;
+  --shadow: 2px 2px 0 #0c0e12;
+}
+html[data-theme="dark"] body { background-image: none; }
+/* superfícies que fixam branco */
+html[data-theme="dark"] .form-input,
+html[data-theme="dark"] .arch-track,
+html[data-theme="dark"] .cal-track,
+html[data-theme="dark"] .config-row { background: #14161a; }
+/* grandes superfícies âmbar → tom escuro */
+html[data-theme="dark"] .card-amber,
+html[data-theme="dark"] .lb-entry.r1,
+html[data-theme="dark"] .p1 .podium-block { background: #3a2c0e; }
+/* checkboxes inline (stroke preto) → claro */
+html[data-theme="dark"] svg [stroke="black"] { stroke: var(--text); }
+.card.card-amber { background: var(--amber-light); border-color: var(--amber); }
+
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body {
   background-color: var(--bg);

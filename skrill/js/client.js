@@ -2,6 +2,11 @@ const SUPABASE_URL = 'https://yrdfccjestplfqlnrnyg.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlyZGZjY2plc3RwbGZxbG5ybnlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODgzNzgsImV4cCI6MjA5NTQ2NDM3OH0.L0KljVjvIS6R-4zO51ORlGDM9sclAFeDFRP7TvAGagU';
 const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
+// Aplica o tema o quanto antes para minimizar flash
+if (localStorage.getItem('skrill_theme') === 'dark') {
+  document.documentElement.dataset.theme = 'dark';
+}
+
 // ── Session ───────────────────────────────────────────────────────────────────
 const APP_PASSWORD = 'familiasteam';
 const SESSION_KEY  = 'skrill_unlocked';
@@ -563,6 +568,27 @@ function configWalkerRowInner() {
     <span class="config-check">${hidden ? SVG_CHECK : SVG_EMPTY}</span>`;
 }
 
+function isDarkMode() {
+  return document.documentElement.dataset.theme === 'dark';
+}
+
+function setDarkMode(on) {
+  if (on) document.documentElement.dataset.theme = 'dark';
+  else delete document.documentElement.dataset.theme;
+  localStorage.setItem('skrill_theme', on ? 'dark' : 'light');
+}
+
+function toggleThemeSetting() {
+  setDarkMode(!isDarkMode());
+  const row = document.getElementById('config-theme-row');
+  if (row) row.innerHTML = configThemeRowInner();
+}
+
+function configThemeRowInner() {
+  return `<span class="config-row-label">Modo escuro</span>
+    <span class="config-check">${isDarkMode() ? SVG_CHECK : SVG_EMPTY}</span>`;
+}
+
 function initConfigButton() {
   if (document.getElementById('skrill-config-btn')) return;
 
@@ -585,6 +611,9 @@ function initConfigButton() {
         <button class="win-btn" onclick="toggleConfigPanel(false)">X</button>
       </div>
       <div class="config-panel-body">
+        <button id="config-theme-row" class="config-row" onclick="toggleThemeSetting()">
+          ${configThemeRowInner()}
+        </button>
         <button id="config-walker-row" class="config-row" onclick="toggleWalkerSetting()">
           ${configWalkerRowInner()}
         </button>

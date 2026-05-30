@@ -233,7 +233,7 @@ Pontos são **diferidos** — creditados apenas na finalização do Skrill Time,
 
 | Tabela | Descrição |
 |---|---|
-| `profiles` | `id, name, avatar_data, password, total_points, weekly_points, streak_current, streak_longest, is_admin` |
+| `profiles` | `id, name, avatar_data, password, total_points, weekly_points, streak_current, streak_longest, is_admin, sort_order` |
 | `weeks` | `id, week_number, year, start_date, end_date, is_current, skrill_time_revealed` |
 | `goals` | `id, profile_id, week_id, title, description, status, difficulty, points_earned, points_awarded, completed_at, image_urls, is_beyond_scope` |
 | `point_history` | `id, profile_id, week_id, goal_id, amount, reason, created_at` |
@@ -256,6 +256,15 @@ Path: `{goal_id}/{timestamp}-{filename}`
 -- Coluna de dificuldade nas metas
 ALTER TABLE goals ADD COLUMN IF NOT EXISTS difficulty TEXT
   CHECK (difficulty IN ('simple','complex')) DEFAULT 'simple';
+
+-- Ordem manual dos perfis na tela de seleção (admin reordena)
+ALTER TABLE profiles ADD COLUMN IF NOT EXISTS sort_order INT;
+-- Backfill: define a ordem inicial pela ordem alfabética atual
+WITH ranked AS (
+  SELECT id, (ROW_NUMBER() OVER (ORDER BY name) - 1) AS rn FROM profiles
+)
+UPDATE profiles p SET sort_order = ranked.rn
+FROM ranked WHERE p.id = ranked.id AND p.sort_order IS NULL;
 
 -- Avaliação por pares
 CREATE TABLE IF NOT EXISTS peer_ratings (

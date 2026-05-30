@@ -246,9 +246,18 @@
 
     const avatar = getAvatarDataURL();
 
+    // Novo perfil entra por último na ordem manual
+    const { data: maxRow } = await sb
+      .from('profiles')
+      .select('sort_order')
+      .order('sort_order', { ascending: false, nullsFirst: false })
+      .limit(1)
+      .maybeSingle();
+    const nextOrder = (maxRow?.sort_order ?? -1) + 1;
+
     const { data, error } = await sb
       .from('profiles')
-      .insert({ name, password, avatar_data: avatar })
+      .insert({ name, password, avatar_data: avatar, sort_order: nextOrder })
       .select('*')
       .single();
 

@@ -64,6 +64,7 @@
     const { data: profiles, error } = await sb
       .from('profiles')
       .select('id, name, avatar_data')
+      .order('sort_order', { ascending: true, nullsFirst: false })
       .order('name');
 
     const grid = document.getElementById('profile-grid');

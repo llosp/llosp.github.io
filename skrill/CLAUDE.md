@@ -36,7 +36,7 @@ Produtividade social em grupo. Reunião semanal ("Skrill Time") é o evento cent
 ## Banco de dados (tabelas-chave)
 | Tabela | Colunas relevantes |
 |---|---|
-| `profiles` | `id, name, avatar_data, password, total_points, weekly_points, streak_current, streak_longest, is_admin` |
+| `profiles` | `id, name, avatar_data, password, total_points, weekly_points, streak_current, streak_longest, is_admin, sort_order` |
 | `weeks` | `id, week_number, year, start_date, end_date, is_current, skrill_time_revealed` |
 | `goals` | `id, profile_id, week_id, title, status, difficulty, points_earned, points_awarded, image_urls, is_beyond_scope` |
 | `week_ready` | `week_id, profile_id` UNIQUE |

@@ -576,43 +576,43 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 .modal-wide { max-width: 720px; width: 100%; }
 .modal-scroll { max-height: 70vh; overflow-y: auto; }
 
-/* ── Archive (Acervo) timeline ───────────────────────────────────────────────── */
-.arch-year { margin-bottom: 30px; }
-.arch-year-head {
-  font-family: 'Jersey 25', monospace; font-size: 34px; color: var(--text);
-  border-bottom: 2px solid var(--amber); margin-bottom: 8px; padding-bottom: 2px;
+/* ── Archive (Acervo) — calendário mensal ────────────────────────────────────── */
+.cal-year { margin-bottom: 34px; }
+.cal-year-head {
+  font-family: 'Jersey 25', monospace; font-size: 42px; color: var(--text);
+  border-bottom: 3px solid var(--amber); margin-bottom: 12px; padding-bottom: 2px;
 }
-.arch-months, .arch-row { display: grid; grid-template-columns: 130px 1fr; gap: 10px; align-items: center; }
-.arch-months { margin-bottom: 6px; }
-.arch-months-track { display: grid; grid-template-columns: repeat(12, 1fr); }
-.arch-months-track span { text-align: center; font-size: 18px; color: var(--text-light); text-transform: uppercase; }
-.arch-row { cursor: pointer; padding: 6px 0; }
-.arch-row-name { font-family: 'Jersey 25', monospace; font-size: 24px; color: var(--text); line-height: 1.1; }
-.arch-row-pts { font-size: 20px; color: var(--amber-dark); }
-.arch-track {
-  position: relative; height: 38px; background: #fff;
-  border: 1px solid var(--border); box-shadow: var(--shadow);
+.cal-month { display: grid; grid-template-columns: 116px 1fr; gap: 12px; align-items: center; margin-bottom: 7px; }
+.cal-month-label { font-family: 'Jersey 25', monospace; font-size: 24px; color: var(--text-muted); text-transform: uppercase; text-align: right; }
+.cal-track {
+  position: relative; height: 36px; background: #fff;
+  border: 1px solid var(--border-dark); box-shadow: var(--shadow);
 }
-.arch-grid { position: absolute; inset: 0; display: grid; grid-template-columns: repeat(12, 1fr); }
-.arch-grid span { border-left: 1px solid var(--border); }
-.arch-grid span:first-child { border-left: none; }
-.arch-bar {
-  position: absolute; top: 4px; bottom: 4px; min-width: 10px;
+.cal-grid { position: absolute; inset: 0; display: grid; }
+.cal-grid span { border-left: 1px solid var(--border-light, #eee); }
+.cal-grid span:first-child { border-left: none; }
+.cal-grid span.wk { border-left-color: var(--border); }
+.cal-bar {
+  position: absolute; top: 3px; bottom: 3px; min-width: 6px;
   background: var(--amber); border: 1px solid var(--amber-dark); box-shadow: 1px 1px 0 var(--amber-dark);
-  display: flex; align-items: center; padding: 0 6px; overflow: hidden;
-  transition: transform 0.08s, box-shadow 0.08s;
+  display: flex; align-items: center; padding: 0 6px; overflow: hidden; cursor: pointer;
+  transition: transform 0.08s, box-shadow 0.08s; z-index: 1;
 }
-.arch-bar.current { background: #E8D5F5; border-color: var(--purple); box-shadow: 1px 1px 0 var(--purple); }
-.arch-bar-txt { font-size: 18px; color: #000; white-space: nowrap; }
-.arch-row:hover .arch-bar { transform: translate(-1px,-1px); box-shadow: 2px 2px 0 var(--amber-dark); }
-.arch-row:hover .arch-bar.current { box-shadow: 2px 2px 0 var(--purple); }
+.cal-bar:hover { transform: translate(-1px,-1px); box-shadow: 2px 2px 0 var(--amber-dark); z-index: 2; }
+.cal-bar.current { background: #E8D5F5; border-color: var(--purple); box-shadow: 1px 1px 0 var(--purple); }
+.cal-bar.current:hover { box-shadow: 2px 2px 0 var(--purple); }
+.cal-bar-txt { font-size: 18px; color: #000; white-space: nowrap; }
+.cal-legend { font-size: 20px; color: var(--text-muted); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
+.cal-legend i { width: 18px; height: 18px; display: inline-block; border: 1px solid var(--amber-dark); background: var(--amber); }
+.cal-legend i.current { background: #E8D5F5; border-color: var(--purple); }
 .arch-delivery { border: 1px solid var(--border); box-shadow: var(--shadow); padding: 12px; margin-bottom: 12px; background: var(--surface); }
 .arch-delivery-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .arch-delivery-name { font-weight: 700; font-size: 24px; text-transform: uppercase; }
 .arch-delivery-title { font-size: 22px; color: var(--text-muted); }
 @media (max-width: 520px) {
-  .arch-months, .arch-row { grid-template-columns: 92px 1fr; gap: 6px; }
-  .arch-row-name { font-size: 20px; }
+  .cal-month { grid-template-columns: 76px 1fr; gap: 7px; }
+  .cal-month-label { font-size: 19px; }
+  .cal-year-head { font-size: 34px; }
 }
 
 /* ── Login ──────────────────────────────────────────────────────────────────── */

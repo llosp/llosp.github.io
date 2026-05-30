@@ -37,8 +37,7 @@
   if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
   else if (!getStoredProfile()) { window.location.href = '/skrill/select-profile/'; }
 
-  const MONTHS = ['Jan','Fev','Mar','Abr','Mai','Jun','Jul','Ago','Set','Out','Nov','Dez'];
-  const GRID12 = `<div class="arch-grid">${'<span></span>'.repeat(12)}</div>`;
+  const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
   let weeks = [];
   const goalsByWeek  = {};
@@ -48,12 +47,11 @@
     const [y, m, d] = s.split('-');
     return `${d}/${m}/${y}`;
   }
-  function dayOfYear(s) {
+  function toDate(s) {
     const [y, m, d] = s.split('-').map(Number);
-    const date  = new Date(y, m - 1, d);
-    const start = new Date(y, 0, 1);
-    return Math.floor((date - start) / 86400000);
+    return new Date(y, m - 1, d);
   }
+  function daysInMonth(y, m) { return new Date(y, m + 1, 0).getDate(); } // m: 0-based
 
   async function init() {
     const stored = requireAuth();
@@ -90,7 +88,7 @@
     const header = `
       <div class="page-header">
         <div>
-          <div class="page-header-label" style="display:flex;align-items:center;gap:8px"><img src="/skrill/img/archive.svg" alt="acervo" style="width:24px;height:24px"> Linha do tempo</div>
+          <div class="page-header-label" style="display:flex;align-items:center;gap:8px"><img src="/skrill/img/archive.svg" alt="acervo" style="width:24px;height:24px"> Calendário</div>
           <h1 class="page-header-title">Acervo</h1>
         </div>
       </div>`;
@@ -104,48 +102,59 @@
       return;
     }
 
-    // Agrupa por ano, anos mais recentes primeiro; dentro do ano, ordem cronológica
-    const byYear = {};
-    weeks.forEach(w => { (byYear[w.year] ??= []).push(w); });
-    const years = Object.keys(byYear).map(Number).sort((a, b) => b - a);
+    // Intervalo de anos coberto por qualquer temporada (anos recentes primeiro)
+    let minY = Infinity, maxY = -Infinity;
+    weeks.forEach(w => {
+      minY = Math.min(minY, toDate(w.start_date).getFullYear());
+      maxY = Math.max(maxY, toDate(w.end_date).getFullYear());
+    });
 
-    const yearsHTML = years.map(year => {
-      const seasons = byYear[year].sort((a, b) => a.start_date.localeCompare(b.start_date));
-      const rows = seasons.map(w => {
-        const pts   = pointsByWeek[w.id] ?? 0;
-        const startD = dayOfYear(w.start_date);
-        const sameYearEnd = w.end_date.startsWith(String(year));
-        const endD  = sameYearEnd ? dayOfYear(w.end_date) : 364;
-        const left  = Math.max(0, Math.min(100, (startD / 365) * 100));
-        const width = Math.max(2, Math.min(100 - left, ((endD - startD + 1) / 365) * 100));
-        const range = `${fmtDate(w.start_date)} – ${fmtDate(w.end_date)}`;
-        return `
-          <div class="arch-row" onclick="openSeasonDetail('${w.id}')">
-            <div>
-              <div class="arch-row-name">Temporada ${w.week_number}${w.is_current ? ' ·' : ''}</div>
-              <div class="arch-row-pts">${pts} pts${w.is_current ? ' · ATUAL' : ''}</div>
+    const yearsHTML = [];
+    for (let year = maxY; year >= minY; year--) {
+      const monthsHTML = [];
+      for (let m = 0; m < 12; m++) {
+        const dim    = daysInMonth(year, m);
+        const mStart = new Date(year, m, 1);
+        const mEnd   = new Date(year, m, dim);
+        const overlapping = weeks.filter(w => toDate(w.start_date) <= mEnd && toDate(w.end_date) >= mStart);
+        if (!overlapping.length) continue;
+
+        // grade de dias — domingos recebem linha mais forte
+        let grid = '';
+        for (let d = 1; d <= dim; d++) {
+          grid += `<span class="${new Date(year, m, d).getDay() === 0 ? 'wk' : ''}"></span>`;
+        }
+
+        const bars = overlapping.map(w => {
+          const sd = toDate(w.start_date), ed = toDate(w.end_date);
+          const startDay = sd < mStart ? 1   : sd.getDate();
+          const endDay   = ed > mEnd   ? dim : ed.getDate();
+          const left  = ((startDay - 1) / dim) * 100;
+          const width = ((endDay - startDay + 1) / dim) * 100;
+          const pts   = pointsByWeek[w.id] ?? 0;
+          const range = `${fmtDate(w.start_date)} – ${fmtDate(w.end_date)}`;
+          return `<div class="cal-bar ${w.is_current ? 'current' : ''}" style="left:${left}%;width:${width}%"
+                    title="Temporada ${w.week_number} · ${range}" onclick="openSeasonDetail('${w.id}')">
+                    <span class="cal-bar-txt">T${w.week_number}${w.is_current ? '' : ` · ${pts}pts`}</span>
+                  </div>`;
+        }).join('');
+
+        monthsHTML.push(`
+          <div class="cal-month">
+            <div class="cal-month-label">${MONTHS[m]}</div>
+            <div class="cal-track">
+              <div class="cal-grid" style="grid-template-columns:repeat(${dim},1fr)">${grid}</div>
+              ${bars}
             </div>
-            <div class="arch-track">
-              ${GRID12}
-              <div class="arch-bar ${w.is_current ? 'current' : ''}" style="left:${left}%;width:${width}%" title="${range}">
-                <span class="arch-bar-txt">${range}</span>
-              </div>
-            </div>
-          </div>`;
-      }).join('');
+          </div>`);
+      }
+      if (monthsHTML.length) {
+        yearsHTML.push(`<div class="cal-year"><div class="cal-year-head">${year}</div>${monthsHTML.join('')}</div>`);
+      }
+    }
 
-      return `
-        <div class="arch-year">
-          <div class="arch-year-head">${year}</div>
-          <div class="arch-months">
-            <span></span>
-            <div class="arch-months-track">${MONTHS.map(m => `<span>${m}</span>`).join('')}</div>
-          </div>
-          ${rows}
-        </div>`;
-    }).join('');
-
-    app.innerHTML = `<div style="width:100%">${header}${yearsHTML}</div>`;
+    const legend = `<div class="cal-legend"><i></i> Temporada encerrada <i class="current" style="margin-left:14px"></i> Temporada atual</div>`;
+    app.innerHTML = `<div style="width:100%">${header}${legend}${yearsHTML.join('')}</div>`;
   }
 
   function openSeasonDetail(id) {

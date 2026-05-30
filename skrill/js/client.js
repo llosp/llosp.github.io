@@ -166,8 +166,8 @@ function renderSidebar(profile, activePage) {
   const NAV = [
     { href: '/skrill/dashboard/',   label: 'Dashboard',    icon: '+', key: 'dashboard' },
     { href: '/skrill/weekly/',      label: 'Season Goals', icon: 'G', key: 'weekly' },
-    { href: '/skrill/leaderboard/', label: 'Leaderboard',  icon: 'T', key: 'leaderboard' },
     { href: '/skrill/skrill-time/', label: 'Skrill Time',  icon: 'S', key: 'skrill-time' },
+    { href: '/skrill/leaderboard/', label: 'Leaderboard',  icon: 'T', key: 'leaderboard' },
     { href: '/skrill/archive/',     label: 'Acervo',       icon: 'R', key: 'archive' },
   ];
   if (profile) NAV.push({ href: `/skrill/profile/?id=${profile.id}`, label: 'Profile', icon: 'P', key: 'profile' });

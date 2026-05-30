@@ -35,7 +35,7 @@
       width: 300px;
       flex-shrink: 0;
       background: #1a1a2e;
-      border-left: 1px solid #2a2a4a;
+      border-right: 1px solid #2a2a4a;
       display: flex;
       flex-direction: column;
       padding: 36px 28px;
@@ -170,11 +170,6 @@
 </head>
 <body>
 
-  <!-- Canvas principal -->
-  <div id="canvas-wrapper">
-    <canvas id="canvas"></canvas>
-  </div>
-
   <!-- Barra lateral -->
   <aside id="sidebar">
     <div class="sidebar-header">
@@ -197,7 +192,7 @@
           <span>Quantidade de pontos</span>
           <span class="control-value" id="val-n">800</span>
         </div>
-        <input type="range" id="slider-n" min="50" max="2000" value="800">
+        <input type="range" id="slider-n" min="50" max="20000" value="800">
       </div>
 
       <div>
@@ -205,7 +200,7 @@
           <span>Espaçamento (c)</span>
           <span class="control-value" id="val-c">6.0</span>
         </div>
-        <input type="range" id="slider-c" min="2" max="20" value="60" step="1">
+        <input type="range" id="slider-c" min="2" max="200" value="60" step="1">
         <!-- interno: value/10 para ter casas decimais sem input number -->
       </div>
 
@@ -214,7 +209,7 @@
           <span>Tamanho dos pontos</span>
           <span class="control-value" id="val-r">3.0</span>
         </div>
-        <input type="range" id="slider-r" min="5" max="40" value="15" step="1">
+        <input type="range" id="slider-r" min="5" max="400" value="15" step="1">
         <!-- interno: value/5 -->
       </div>
 
@@ -226,6 +221,11 @@
       Padrão: filotaxia (girassol)
     </div>
   </aside>
+
+  <!-- Canvas principal -->
+  <div id="canvas-wrapper">
+    <canvas id="canvas"></canvas>
+  </div>
 
   <script>
     // ── Elementos ─────────────────────────────────────────────────────────────

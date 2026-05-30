@@ -410,6 +410,8 @@ function closeImageLightbox() {
 }
 
 function initSkrillWalker() {
+  initConfigButton();
+  if (isWalkerHidden()) return;
   if (document.getElementById('skrill-walker')) return;
 
   const walker = document.createElement('div');
@@ -461,11 +463,11 @@ function initSkrillWalker() {
       }, 80);
     }
   };
-  setInterval(blink, 12000);
+  const blinkId = setInterval(blink, 12000);
   setTimeout(blink, 3000);
 
   // Main loop
-  setInterval(() => {
+  const loopId = setInterval(() => {
     if (thrown) {
       // Physics
       vy += gravity;
@@ -517,6 +519,80 @@ function initSkrillWalker() {
     walker.style.left = x + 'px';
     walker.style.bottom = jumpY + 'px';
   }, 50);
+
+  walker._intervals = [loopId, blinkId];
+}
+
+// ── Config: esconder/mostrar o Skrill que passeia ───────────────────────────────
+function isWalkerHidden() {
+  return localStorage.getItem('skrill_hide_walker') === '1';
+}
+
+function removeSkrillWalker() {
+  const el = document.getElementById('skrill-walker');
+  if (!el) return;
+  (el._intervals || []).forEach(id => clearInterval(id));
+  el.remove();
+}
+
+function setWalkerHidden(hidden) {
+  localStorage.setItem('skrill_hide_walker', hidden ? '1' : '0');
+  if (hidden) removeSkrillWalker();
+  else initSkrillWalker();
+}
+
+function toggleConfigPanel(open) {
+  const overlay = document.getElementById('config-overlay');
+  const panel   = document.getElementById('config-panel');
+  if (!overlay || !panel) return;
+  const show = open ?? overlay.classList.contains('hidden');
+  overlay.classList.toggle('hidden', !show);
+  panel.classList.toggle('open', show);
+}
+
+function toggleWalkerSetting() {
+  const next = !isWalkerHidden();
+  setWalkerHidden(next);
+  const row = document.getElementById('config-walker-row');
+  if (row) row.innerHTML = configWalkerRowInner();
+}
+
+function configWalkerRowInner() {
+  const hidden = isWalkerHidden();
+  return `<span class="config-row-label">Esconder o Skrill que passeia</span>
+    <span class="config-check">${hidden ? SVG_CHECK : SVG_EMPTY}</span>`;
+}
+
+function initConfigButton() {
+  if (document.getElementById('skrill-config-btn')) return;
+
+  const btn = document.createElement('button');
+  btn.id = 'skrill-config-btn';
+  btn.className = 'config-btn';
+  btn.textContent = '[c]';
+  btn.title = 'Configurações';
+  btn.onclick = () => toggleConfigPanel(true);
+  document.body.appendChild(btn);
+
+  const overlay = document.createElement('div');
+  overlay.id = 'config-overlay';
+  overlay.className = 'config-overlay hidden';
+  overlay.addEventListener('click', e => { if (e.target === overlay) toggleConfigPanel(false); });
+  overlay.innerHTML = `
+    <div id="config-panel" class="config-panel">
+      <div class="config-panel-head">
+        <span class="config-panel-title">Configuracoes</span>
+        <button class="win-btn" onclick="toggleConfigPanel(false)">X</button>
+      </div>
+      <div class="config-panel-body">
+        <button id="config-walker-row" class="config-row" onclick="toggleWalkerSetting()">
+          ${configWalkerRowInner()}
+        </button>
+      </div>
+    </div>`;
+  document.body.appendChild(overlay);
+
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleConfigPanel(false); });
 }
 
 async function convertToWebP(file, quality = 0.85) {

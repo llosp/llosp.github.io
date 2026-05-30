@@ -85,6 +85,41 @@ body {
   image-rendering: pixelated;
 }
 
+/* ── Config button + painel hamburguer ──────────────────────────────────────── */
+.config-btn {
+  position: fixed; top: 14px; right: 16px; z-index: 60;
+  font-family: 'Micro 5', monospace; font-size: 26px; line-height: 1;
+  background: var(--surface); border: 1px solid var(--border-dark); box-shadow: var(--shadow);
+  color: var(--text); padding: 5px 12px; cursor: pointer;
+  transition: box-shadow 0.08s, transform 0.08s;
+}
+.config-btn:hover { box-shadow: 1px 1px 0 var(--border-dark); transform: translate(1px,1px); }
+.config-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.35); z-index: 70; }
+.config-overlay.hidden { display: none; }
+.config-panel {
+  position: fixed; top: 0; right: 0; height: 100%; width: min(320px, 86vw);
+  background: var(--surface); border-left: 2px solid var(--border-dark);
+  display: flex; flex-direction: column; box-shadow: -4px 0 0 rgba(0,0,0,0.08);
+  transform: translateX(100%); transition: transform 0.18s ease;
+}
+.config-panel.open { transform: translateX(0); }
+.config-panel-head {
+  background: var(--amber); border-bottom: 2px solid var(--amber-dark);
+  padding: 14px 16px; display: flex; align-items: center; gap: 8px;
+}
+.config-panel-title { font-family: 'Jersey 25', monospace; font-size: 28px; color: #000; flex: 1; }
+.config-panel-body { padding: 16px; display: flex; flex-direction: column; gap: 10px; }
+.config-row {
+  display: flex; align-items: center; gap: 12px; width: 100%; text-align: left;
+  padding: 14px; border: 1px solid var(--border); background: #fff; cursor: pointer;
+  font-family: 'Micro 5', monospace; color: var(--text);
+  transition: box-shadow 0.08s, transform 0.08s;
+}
+.config-row:hover { box-shadow: 2px 2px 0 var(--border-dark); transform: translate(-1px,-1px); }
+.config-row-label { flex: 1; font-size: 24px; }
+.config-check { flex-shrink: 0; display: flex; }
+.config-check svg { width: 26px; height: 26px; }
+
 /* ── Spinner ────────────────────────────────────────────────────────────────── */
 .spinner {
   width: 28px; height: 28px;

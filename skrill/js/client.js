@@ -165,8 +165,8 @@ function iconHTML(type) {
 function renderSidebar(profile, activePage) {
   const NAV = [
     { href: '/skrill/dashboard/',   label: 'Dashboard',    icon: '+', key: 'dashboard' },
-    { href: '/skrill/weekly/',      label: 'Season Goals', icon: 'G', key: 'weekly' },
     { href: '/skrill/skrill-time/', label: 'Skrill Time',  icon: 'S', key: 'skrill-time' },
+    { href: '/skrill/weekly/',      label: 'Season Goals', icon: 'G', key: 'weekly' },
     { href: '/skrill/leaderboard/', label: 'Leaderboard',  icon: 'T', key: 'leaderboard' },
     { href: '/skrill/archive/',     label: 'Acervo',       icon: 'R', key: 'archive' },
   ];
@@ -184,7 +184,7 @@ function renderSidebar(profile, activePage) {
   let footer = '';
   if (profile) {
     footer = `<div class="sidebar-footer">
-      <div class="profile-card">
+      <a class="profile-card" href="/skrill/profile/?id=${profile.id}" title="Ver perfil">
         <div class="profile-card-row">
           ${avatarHTML(profile)}
           <div style="flex:1;min-width:0">
@@ -193,15 +193,18 @@ function renderSidebar(profile, activePage) {
           </div>
           <div class="level-badge-sm">${profile.total_points ?? 0}pts</div>
         </div>
-      </div>
+      </a>
       <button class="signout-btn" onclick="signOut()">← Trocar perfil</button>
     </div>`;
   }
 
   return `<aside class="sidebar">
     <a href="/skrill/dashboard/" class="sidebar-logo">
-      <div class="skrill-sprite skrill-sprite-sm"></div>
-      <span class="sidebar-logo-text">SKRILL</span>
+      <div class="skrill-sprite skrill-sprite-md"></div>
+      <div class="sidebar-logo-textwrap">
+        <span class="sidebar-logo-text">SKRILL</span>
+        <span class="sidebar-logo-sub">Produtividade em Guild</span>
+      </div>
     </a>
     <nav class="sidebar-nav">${navItems}</nav>
     ${footer}

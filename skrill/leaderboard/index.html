@@ -140,7 +140,7 @@
             ${avatarHTML(p)}
             <div class="entry-info">
               <div class="entry-name-main">${p.name}</div>
-              <div class="entry-name-sub"><img src="/skrill/img/streak.svg" alt="streak" style="width:16px;height:16px;vertical-align:middle;margin-right:3px">${p.streak_current ?? 0}w</div>
+              <div class="entry-name-sub"><img src="/skrill/img/streak.svg" alt="streak" style="width:16px;height:16px;vertical-align:middle;position:relative;top:-2px;margin-right:3px">${p.streak_current ?? 0}w</div>
             </div>
             <div class="entry-xp">${(p[field] ?? 0).toLocaleString()}pts</div>
           </a>`).join('')}

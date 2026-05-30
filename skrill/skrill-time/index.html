@@ -326,7 +326,7 @@
               <button class="btn btn-sm btn-primary" ${remaining <= 0 ? 'disabled' : ''} onclick="incRating('${g.id}')">+</button>
             </div>
           </div>
-          ${imgs.length ? `<div class="delivery-images" style="margin-top:10px">
+          ${imgs.length ? `<div class="delivery-images">
             ${imgs.map(u => `<img class="reveal-img" src="${u}" alt="entrega">`).join('')}
           </div>` : ''}
         </div>`;

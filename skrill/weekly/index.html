@@ -290,8 +290,9 @@
     try {
       const urls = [];
       for (const file of filesInput.files) {
-        const path = `${pendingGoalId}/${Date.now()}-${file.name}`;
-        const { error: upErr } = await sb.storage.from('deliveries').upload(path, file);
+        const webp = await convertToWebP(file);
+        const path = `${pendingGoalId}/${Date.now()}.webp`;
+        const { error: upErr } = await sb.storage.from('deliveries').upload(path, webp, { contentType: 'image/webp' });
         if (upErr) throw upErr;
         const { data: pub } = sb.storage.from('deliveries').getPublicUrl(path);
         urls.push(pub.publicUrl);

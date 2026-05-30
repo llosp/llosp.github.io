@@ -766,6 +766,7 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 .reveal-member-pts { font-size: 24px; font-weight: bold; color: var(--amber-dark); }
 .reveal-images { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
 .reveal-img { width: 150px; height: 150px; object-fit: cover; border: 1px solid var(--border); }
+.delivery-images .reveal-img { width: 100%; height: auto; aspect-ratio: 1 / 1; }
 
 /* ── Windows-style image lightbox ────────────────────────────────────────────── */
 .delivery-img:not(.blurred), .reveal-img { cursor: pointer; }

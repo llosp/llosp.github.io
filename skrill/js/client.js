@@ -428,6 +428,7 @@ function initSkrillWalker() {
 }
 
 document.addEventListener('click', e => {
-  const img = e.target.closest('img.delivery-img:not(.blurred), img.reveal-img');
-  if (img) openImageLightbox(img.src);
+  const img = e.target.closest('img.delivery-img, img.reveal-img');
+  if (!img || img.classList.contains('blurred')) return;
+  openImageLightbox(img.src);
 });

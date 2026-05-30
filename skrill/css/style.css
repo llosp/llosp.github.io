@@ -723,7 +723,7 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 .delivery-post-time { font-size: 24px; color: var(--text-light); margin-top: 2px; text-transform: uppercase; }
 .delivery-images {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(110px, 120px));
   gap: 6px;
   margin: 8px 0;
 }

@@ -35,13 +35,13 @@
   --neutral-block-border: #909090;
   --neutral-avatar:       #707070;
   --neutral-text:         #606060;
-  /* Pódio 2º lugar — secundária do tema (gold = preto/grayscale) */
-  --sec-bg:           #EDEDED;
-  --sec-block:        #DADADA;
-  --sec-border:       #1A1A1A;
-  --sec-block-border: #000000;
-  --sec-avatar:       #1A1A1A;
-  --sec-text:         #111111;
+  /* Pódio 2º lugar — secundária do tema (gold = azul-marinho ultra escuro) */
+  --sec-bg:           #E4E7EF;
+  --sec-block:        #CDD3E2;
+  --sec-border:       #0A1128;
+  --sec-block-border: #0A1128;
+  --sec-avatar:       #0A1128;
+  --sec-text:         #0A1128;
   /* Borda clara */
   --border-light: #eee;
 }
@@ -105,8 +105,8 @@ html[data-theme="dark"] {
   /* Pódio escuro — 3º cinza neutro + 2º gold/preto (avatar/text mantêm claro) */
   --neutral-bg: #252525; --neutral-block: #252525;
   --neutral-border: #585858; --neutral-block-border: #585858;
-  --sec-bg: #2C2C2C; --sec-block: #2C2C2C; --sec-border: #777777;
-  --sec-block-border: #777777; --sec-avatar: #888888; --sec-text: #BBBBBB;
+  --sec-bg: #161C2E; --sec-block: #161C2E; --sec-border: #4A5878;
+  --sec-block-border: #4A5878; --sec-avatar: #6E7EA6; --sec-text: #A6B4D6;
 }
 /* Secundária por tema — modo escuro (especificidade vence o accent claro) */
 html[data-theme="dark"][data-accent="tomato"],

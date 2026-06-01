@@ -133,10 +133,10 @@
           const width = ((endDay - startDay + 1) / dim) * 100;
           const pts   = pointsByWeek[w.id] ?? 0;
           const range = `${fmtDate(w.start_date)} – ${fmtDate(w.end_date)}`;
-          let colorStyle = '';
+          const hue = (w.week_number * 47) % 360;
+          let colorStyle = `background:hsl(${hue} 60% 72%);`;
           if (!w.is_current) {
-            const hue = (w.week_number * 47) % 360;
-            colorStyle = `background:hsl(${hue} 60% 72%);border-color:hsl(${hue} 55% 42%);box-shadow:1px 1px 0 hsl(${hue} 55% 42%)`;
+            colorStyle += `border-color:hsl(${hue} 55% 42%);box-shadow:1px 1px 0 hsl(${hue} 55% 42%);`;
           }
           return `<div class="cal-bar ${w.is_current ? 'current' : ''}" style="left:${left}%;width:${width}%;${colorStyle}"
                     title="Temporada ${w.week_number} · ${range}" onclick="openSeasonDetail('${w.id}')">
@@ -158,8 +158,7 @@
       }
     }
 
-    const legend = `<div class="cal-legend"><i></i> Temporada encerrada <i class="current" style="margin-left:14px"></i> Temporada atual</div>`;
-    app.innerHTML = `<div style="width:100%">${header}${legend}${yearsHTML.join('')}</div>`;
+    app.innerHTML = `<div style="width:100%">${header}${yearsHTML.join('')}</div>`;
   }
 
   function openSeasonDetail(id) {

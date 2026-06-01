@@ -36,12 +36,12 @@
   --neutral-avatar:       #707070;
   --neutral-text:         #606060;
   /* Pódio 2º lugar — secundária do tema (gold = azul-marinho ultra escuro) */
-  --sec-bg:           #E5E5F2;
-  --sec-block:        #CECEE4;
-  --sec-border:       #0B0B45;
-  --sec-block-border: #0B0B45;
-  --sec-avatar:       #0B0B45;
-  --sec-text:         #0B0B45;
+  --sec-bg:           #E4E5F3;
+  --sec-block:        #CCCEE6;
+  --sec-border:       #00075D;
+  --sec-block-border: #00075D;
+  --sec-avatar:       #00075D;
+  --sec-text:         #00075D;
   /* Borda clara */
   --border-light: #eee;
 }
@@ -824,12 +824,9 @@ textarea.form-input { resize: vertical; min-height: 70px; }
   transition: transform 0.08s, box-shadow 0.08s; z-index: 1;
 }
 .cal-bar:hover { transform: translate(-1px,-1px); box-shadow: 2px 2px 0 var(--amber-dark); z-index: 2; }
-.cal-bar.current { background: var(--purple-soft); border-color: var(--purple); box-shadow: 1px 1px 0 var(--purple); }
-.cal-bar.current:hover { box-shadow: 2px 2px 0 var(--purple); }
+.cal-bar.current { border: 2px solid var(--sec-border); box-shadow: 1px 1px 0 var(--sec-border); }
+.cal-bar.current:hover { box-shadow: 2px 2px 0 var(--sec-border); }
 .cal-bar-txt { font-size: 18px; color: #000; white-space: nowrap; }
-.cal-legend { font-size: 20px; color: var(--text-muted); margin-bottom: 18px; display: flex; align-items: center; gap: 8px; }
-.cal-legend i { width: 18px; height: 18px; display: inline-block; border: 1px solid var(--amber-dark); background: var(--amber); }
-.cal-legend i.current { background: var(--purple-soft); border-color: var(--purple); }
 .arch-delivery { border: 1px solid var(--border); box-shadow: var(--shadow); padding: 12px; margin-bottom: 12px; background: var(--surface); }
 .arch-delivery-head { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
 .arch-delivery-name { font-weight: 700; font-size: 24px; text-transform: uppercase; }

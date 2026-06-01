@@ -390,7 +390,7 @@ function openImageLightbox(url) {
     overlay.innerHTML = `
       <div class="win-window" onclick="event.stopPropagation()">
         <div class="win-titlebar">
-          <span class="win-titlebar-icon">[IMG]</span>
+          <span class="win-titlebar-icon"><img src="/skrill/img/image.svg" alt="img" style="width:20px;height:20px;display:block"></span>
           <span class="win-titlebar-title">Visualizar Entrega</span>
           <button class="win-btn" onclick="closeImageLightbox()">X</button>
         </div>
@@ -575,10 +575,11 @@ function configWalkerRowInner() {
 
 // ── Accent themes (cor de destaque) ─────────────────────────────────────────────
 const ACCENTS = [
-  { id: 'gold',     name: 'Guadalupsion Gold', color: '#FFB300' },
-  { id: 'tomato',   name: 'Tomato Planet',     color: '#FF6347' },
-  { id: 'eggplant', name: 'Eggplant Eel',      color: '#A569BD' },
-  { id: 'bamboo',   name: 'Bamboo Fever',      color: '#8BC34A' },
+  { id: 'fuchsia',  name: 'Apocalypse Fuchsia', color: '#F06292' },
+  { id: 'bamboo',   name: 'Bamboo Fever',       color: '#8BC34A' },
+  { id: 'eggplant', name: 'Eggplant Eel',       color: '#A569BD' },
+  { id: 'gold',     name: 'Guadalupsion Gold',  color: '#FFB300' },
+  { id: 'tomato',   name: 'Tomato Planet',      color: '#FF6347' },
 ];
 
 function getAccent() {

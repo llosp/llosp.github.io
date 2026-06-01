@@ -38,10 +38,10 @@
   /* Pódio 2º lugar — secundária do tema (gold = preto/grayscale) */
   --sec-bg:           #EDEDED;
   --sec-block:        #DADADA;
-  --sec-border:       #333333;
-  --sec-block-border: #1A1A1A;
-  --sec-avatar:       #333333;
-  --sec-text:         #2A2A2A;
+  --sec-border:       #1A1A1A;
+  --sec-block-border: #000000;
+  --sec-avatar:       #1A1A1A;
+  --sec-text:         #111111;
   /* Borda clara */
   --border-light: #eee;
 }
@@ -68,6 +68,13 @@ html[data-accent="bamboo"] {
   --amber-deep: #33691E;
   --amber-darkbg: #1b2a12;
 }
+html[data-accent="fuchsia"] {
+  --amber: #F06292;
+  --amber-dark: #C2185B;
+  --amber-light: #F8BBD0;
+  --amber-deep: #880E4F;
+  --amber-darkbg: #3a1024;
+}
 /* Secundária (2º lugar + destaque "me") por tema — modo claro */
 html[data-accent="tomato"], html[data-accent="eggplant"] {   /* verde */
   --sec-bg: #D5F5E3; --sec-block: #ABEBC6; --sec-border: #27AE60;
@@ -76,6 +83,10 @@ html[data-accent="tomato"], html[data-accent="eggplant"] {   /* verde */
 html[data-accent="bamboo"] {   /* bege */
   --sec-bg: #F2E8D5; --sec-block: #E6D5B8; --sec-border: #B8915A;
   --sec-block-border: #92703F; --sec-avatar: #92703F; --sec-text: #6E5230;
+}
+html[data-accent="fuchsia"] {   /* lilás */
+  --sec-bg: #EBDEF0; --sec-block: #D7BDE2; --sec-border: #9B59B6;
+  --sec-block-border: #7D3C98; --sec-avatar: #7D3C98; --sec-text: #6C3483;
 }
 
 /* ── Dark mode ──────────────────────────────────────────────────────────────── */
@@ -106,6 +117,10 @@ html[data-theme="dark"][data-accent="eggplant"] {   /* verde escuro */
 html[data-theme="dark"][data-accent="bamboo"] {      /* bege escuro */
   --sec-bg: #2A2316; --sec-block: #2A2316; --sec-border: #7A6240;
   --sec-block-border: #7A6240; --sec-avatar: #A6855A; --sec-text: #C9AC7E;
+}
+html[data-theme="dark"][data-accent="fuchsia"] {     /* lilás escuro */
+  --sec-bg: #241730; --sec-block: #241730; --sec-border: #8E5BA8;
+  --sec-block-border: #8E5BA8; --sec-avatar: #A569BD; --sec-text: #C39BD3;
 }
 html[data-theme="dark"] body { background-image: none; }
 /* superfícies que fixam branco */

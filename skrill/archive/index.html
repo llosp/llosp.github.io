@@ -133,7 +133,12 @@
           const width = ((endDay - startDay + 1) / dim) * 100;
           const pts   = pointsByWeek[w.id] ?? 0;
           const range = `${fmtDate(w.start_date)} – ${fmtDate(w.end_date)}`;
-          return `<div class="cal-bar ${w.is_current ? 'current' : ''}" style="left:${left}%;width:${width}%"
+          let colorStyle = '';
+          if (!w.is_current) {
+            const hue = (w.week_number * 47) % 360;
+            colorStyle = `background:hsl(${hue} 60% 72%);border-color:hsl(${hue} 55% 42%);box-shadow:1px 1px 0 hsl(${hue} 55% 42%)`;
+          }
+          return `<div class="cal-bar ${w.is_current ? 'current' : ''}" style="left:${left}%;width:${width}%;${colorStyle}"
                     title="Temporada ${w.week_number} · ${range}" onclick="openSeasonDetail('${w.id}')">
                     <span class="cal-bar-txt">T${w.week_number}${w.is_current ? '' : ` · ${pts}pts`}</span>
                   </div>`;

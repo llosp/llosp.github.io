@@ -44,6 +44,12 @@ html[data-theme="dark"] .config-row { background: #14161a; }
 html[data-theme="dark"] .card-amber,
 html[data-theme="dark"] .lb-entry.r1,
 html[data-theme="dark"] .p1 .podium-block { background: #3a2c0e; }
+/* leaderboard silver/bronze → tom escuro */
+html[data-theme="dark"] .lb-entry.r2 { background: #252525; border-color: #585858; }
+html[data-theme="dark"] .lb-entry.r3 { background: #2a1e0e; border-color: #7a4a20; }
+/* podium blocks silver/bronze → tom escuro */
+html[data-theme="dark"] .p2 .podium-block { background: #252525; border-color: #585858; }
+html[data-theme="dark"] .p3 .podium-block { background: #2a1e0e; border-color: #7a4a20; }
 /* checkboxes inline (stroke preto) → claro */
 html[data-theme="dark"] svg [stroke="black"] { stroke: var(--text); }
 /* SVG img icons → white on dark surfaces */
@@ -58,7 +64,6 @@ html[data-theme="dark"] .modal-title img[src$=".svg"],
 html[data-theme="dark"] .week-section-header img[src$=".svg"],
 html[data-theme="dark"] .tab-btn.active img[src$=".svg"],
 html[data-theme="dark"] .config-panel-head img[src$=".svg"],
-html[data-theme="dark"] .card-amber img[src$=".svg"],
 html[data-theme="dark"] .stat-icon.amber img[src$=".svg"],
 html[data-theme="dark"] .stat-icon.purple img[src$=".svg"],
 html[data-theme="dark"] .stat-icon.green img[src$=".svg"],
@@ -134,9 +139,8 @@ body {
 /* ── Config button + painel hamburguer ──────────────────────────────────────── */
 .config-btn {
   position: fixed; top: 14px; right: 16px; z-index: 60;
-  font-family: 'Micro 5', monospace; font-size: 26px; line-height: 1;
   background: var(--surface); border: 1px solid var(--border-dark); box-shadow: var(--shadow);
-  color: var(--text); padding: 5px 12px; cursor: pointer;
+  padding: 7px; cursor: pointer; display: flex; align-items: center; justify-content: center;
   transition: box-shadow 0.08s, transform 0.08s;
 }
 .config-btn:hover { box-shadow: 1px 1px 0 var(--border-dark); transform: translate(1px,1px); }

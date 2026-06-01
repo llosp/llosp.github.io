@@ -595,7 +595,7 @@ function initConfigButton() {
   const btn = document.createElement('button');
   btn.id = 'skrill-config-btn';
   btn.className = 'config-btn';
-  btn.textContent = '[c]';
+  btn.innerHTML = '<img src="/skrill/img/config.svg" alt="config" style="width:20px;height:20px;display:block">';
   btn.title = 'Configurações';
   btn.onclick = () => toggleConfigPanel(true);
   document.body.appendChild(btn);

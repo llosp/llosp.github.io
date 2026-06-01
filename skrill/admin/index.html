@@ -244,8 +244,17 @@
     const streak = parseInt(document.getElementById(`pe-streak-${id}`).value) || 0;
     const best   = parseInt(document.getElementById(`pe-best-${id}`).value)   || 0;
     if (!name) return toast('Nome vazio!', '#ef4444');
+    const prev  = D.profiles.find(p => p.id === id);
+    const delta = total - (prev?.total_points ?? 0);
     const { error } = await sb.from('profiles').update({ name, total_points: total, weekly_points: weekly, streak_current: streak, streak_longest: best }).eq('id', id);
     if (error) return toast(error.message, '#ef4444');
+    // Registra o ajuste manual no histórico para que o ranking de 30 dias reflita a mudança.
+    if (delta !== 0) {
+      await sb.from('point_history').insert({
+        profile_id: id, amount: delta, reason: 'admin_adjust',
+        week_id: D.weeks.find(w => w.is_current)?.id ?? null,
+      });
+    }
     toast('Perfil salvo!');
     await loadAll();
   }
@@ -279,6 +288,7 @@
             </div>
             <div style="display:flex;gap:6px;flex-wrap:wrap">
               ${!w.is_current ? `<button class="btn btn-sm btn-primary" onclick="setCurrentWeek('${w.id}')">Definir Atual</button>` : ''}
+              <button class="btn btn-sm btn-primary" onclick="closeSeason('${w.id}',${w.week_number})">Encerrar</button>
               <button class="btn btn-sm btn-ghost" onclick="toggleWeekEdit('${w.id}')">Editar</button>
               <button class="btn btn-sm btn-ghost" onclick="toggleReveal('${w.id}',${w.skrill_time_revealed})">
                 ${w.skrill_time_revealed ? 'Ocultar' : 'Revelar'}
@@ -351,6 +361,14 @@
     await sb.from('weeks').update({ is_current: false }).neq('id', id);
     await sb.from('weeks').update({ is_current: true  }).eq('id', id);
     toast('Temporada atual atualizada!');
+    await loadAll();
+  }
+
+  async function closeSeason(id, num) {
+    if (!confirm(`Encerrar Temporada ${num}?\nConcede os pontos das metas completas dos participantes e atualiza os streaks de TODOS os perfis (quem não completou nenhuma meta zera). Idempotente: se já foi encerrada, nada acontece.`)) return;
+    const res = await finalizeSeasonById(id);
+    if (res.ok) toast(`Temporada encerrada! ${res.awarded} meta(s) premiada(s).`);
+    else toast('Esta temporada já foi encerrada.', '#f59e0b');
     await loadAll();
   }
 

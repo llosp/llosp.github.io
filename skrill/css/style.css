@@ -39,6 +39,13 @@ html[data-accent="eggplant"] {
   --amber-deep: #512E5F;
   --amber-darkbg: #2a1633;
 }
+html[data-accent="bamboo"] {
+  --amber: #8BC34A;
+  --amber-dark: #558B2F;
+  --amber-light: #C5E1A5;
+  --amber-deep: #33691E;
+  --amber-darkbg: #1b2a12;
+}
 
 /* ── Dark mode ──────────────────────────────────────────────────────────────── */
 html[data-theme="dark"] {

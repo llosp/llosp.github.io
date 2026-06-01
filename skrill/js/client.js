@@ -578,6 +578,7 @@ const ACCENTS = [
   { id: 'gold',     name: 'Guadalupsion Gold', color: '#FFB300' },
   { id: 'tomato',   name: 'Tomato Planet',     color: '#FF6347' },
   { id: 'eggplant', name: 'Eggplant Eel',      color: '#A569BD' },
+  { id: 'bamboo',   name: 'Bamboo Fever',      color: '#8BC34A' },
 ];
 
 function getAccent() {
@@ -677,6 +678,80 @@ function initConfigButton() {
     const sel = document.getElementById('accent-select');
     if (sel && sel.classList.contains('open') && !sel.contains(e.target)) sel.classList.remove('open');
   });
+}
+
+// Finaliza uma temporada: concede pontos das metas completas dos participantes
+// e atualiza os streaks de TODOS os perfis (quem completou >=1 meta sobe, os
+// demais zeram). Idempotente: se a temporada já foi finalizada, não faz nada.
+async function finalizeSeasonById(weekId) {
+  const { data: already } = await sb.from('goals')
+    .select('id').eq('week_id', weekId).eq('points_awarded', true).limit(1);
+  if (already?.length) return { ok: false, reason: 'already' };
+
+  const [{ data: goals }, { data: parts }, { data: ratings }, { data: profiles }] =
+    await Promise.all([
+      sb.from('goals').select('*').eq('week_id', weekId),
+      sb.from('season_participants').select('profile_id').eq('week_id', weekId),
+      sb.from('peer_ratings').select('goal_id,amount').eq('week_id', weekId),
+      sb.from('profiles').select('id,total_points,weekly_points,streak_current,streak_longest'),
+    ]);
+
+  const weekGoals      = goals ?? [];
+  const participantIds = new Set((parts ?? []).map(p => p.profile_id));
+  const allProfiles    = profiles ?? [];
+
+  const bonusMap = new Map();
+  for (const r of (ratings ?? [])) {
+    bonusMap.set(r.goal_id, (bonusMap.get(r.goal_id) ?? 0) + r.amount);
+  }
+
+  const toAward = weekGoals.filter(g =>
+    g.status === 'completed' && !g.points_awarded && participantIds.has(g.profile_id)
+  );
+  for (const g of toAward) {
+    const base  = g.difficulty === 'complex' ? 5 : 2;
+    const bonus = bonusMap.get(g.id) ?? 0;
+    const total = base + bonus;
+    await sb.from('goals').update({ points_awarded: true, points_earned: total }).eq('id', g.id);
+    if (base > 0) {
+      await sb.from('point_history').insert({
+        profile_id: g.profile_id, amount: base,
+        reason: g.difficulty === 'complex' ? 'complete_complex' : 'complete_simple',
+        goal_id: g.id, week_id: weekId,
+      });
+    }
+    if (bonus > 0) {
+      await sb.from('point_history').insert({
+        profile_id: g.profile_id, amount: bonus, reason: 'peer_bonus',
+        goal_id: g.id, week_id: weekId,
+      });
+    }
+    const prof = allProfiles.find(p => p.id === g.profile_id);
+    if (prof) {
+      prof.total_points  = (prof.total_points  ?? 0) + total;
+      prof.weekly_points = (prof.weekly_points ?? 0) + total;
+      await sb.from('profiles').update({
+        total_points:  prof.total_points,
+        weekly_points: prof.weekly_points,
+      }).eq('id', g.profile_id);
+    }
+  }
+
+  // Streaks: qualquer perfil que completou ao menos uma meta nesta temporada
+  // estende o streak; todos os demais zeram.
+  const completedByProfile = new Set(
+    weekGoals.filter(g => g.status === 'completed').map(g => g.profile_id)
+  );
+  for (const prof of allProfiles) {
+    const newCurrent = completedByProfile.has(prof.id) ? (prof.streak_current ?? 0) + 1 : 0;
+    const newLongest = Math.max(prof.streak_longest ?? 0, newCurrent);
+    await sb.from('profiles').update({
+      streak_current: newCurrent,
+      streak_longest: newLongest,
+    }).eq('id', prof.id);
+  }
+
+  return { ok: true, awarded: toAward.length };
 }
 
 async function convertToWebP(file, quality = 0.85) {

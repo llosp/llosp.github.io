@@ -47,7 +47,6 @@ skrill/
 ├── weekly/index.html           # Metas da Temporada: declarar com dificuldade, completar
 ├── leaderboard/index.html      # Ranking com pódio + tabs 30 dias / All-Time
 ├── profile/index.html          # Perfil: stats, timeline por temporada
-├── archive/index.html          # Acervo: calendário mensal de temporadas com modal de detalhes
 ├── skrill-time/index.html      # Countdown → ready → rating → reveal
 ├── admin/index.html            # Painel de administração (requer is_admin)
 │
@@ -58,9 +57,8 @@ skrill/
     ├── skrill-Sheet.png             # Sprite sheet do mascote (sidebar)
     ├── skrill-fullbody-Sheet.png    # Sprite sheet fullbody (walker animado)
     ├── dashboard.svg / goals.svg / leaderboard.svg
-    ├── Profile.svg / admin.svg / Skrill_time.svg / archive.svg
-    ├── points.svg / attention.svg / streak.svg
-    ├── image.svg / config.svg
+    ├── Profile.svg / admin.svg / Skrill_time.svg
+    ├── points.svg / attention.svg
     └── ...
 ```
 
@@ -151,7 +149,7 @@ A página usa **Supabase Realtime** para atualizar quadradinhos, `peer_ratings` 
 ### Dashboard (`/dashboard/`)
 
 - Boas-vindas com nome, temporada atual e streak inline.
-- 2 stat cards: Total Pts · Metas Feitas (ambos com ícone na cor do tema).
+- 3 stat cards: Total Pts · Pts Temporada · Metas Feitas.
 - **Card de participação**: entra/sai da temporada (`season_participants`). Bloqueado após revelação.
 - **Progresso da Temporada**: lista das metas do membro com status e ícones SVG.
 - **Feed de entregas**: posts com avatar, nome, título e imagens (borradas antes da revelação).
@@ -165,9 +163,8 @@ A página usa **Supabase Realtime** para atualizar quadradinhos, `peer_ratings` 
 - **Duas tabs**: `30 dias` (padrão) e `All-Time`.
   - 30 dias: soma de `point_history.amount` dos últimos 30 dias por perfil.
   - All-time: ordenado por `profiles.total_points`.
-- **Pódio** visual para os 3 primeiros: 1º = cor primária do tema · 2º = cor secundária do tema · 3º = cinza neutro.
-- **Lista** completa do 4º em diante — todos os perfis aparecem, incluindo com 0 pts. Ícone de streak à cor do texto muted.
-- O próprio perfil (`.lb-entry.me`) é destacado com contorno na cor secundária do tema.
+- **Pódio** visual para os 3 primeiros (sempre exibido, mesmo com 0 pts).
+- **Lista** completa do 4º em diante — todos os perfis aparecem, incluindo com 0 pts.
 - "Seu rank" no header mostra posição em ambas as tabs.
 
 ---
@@ -181,13 +178,6 @@ A página usa **Supabase Realtime** para atualizar quadradinhos, `peer_ratings` 
 - **Timeline por temporada**: metas agrupadas por temporada, com chip de dificuldade, status e imagens.
   - Imagens com blur se a temporada ainda não foi revelada.
 - **Editar Perfil** (apenas no próprio perfil): renomear + redesenhar pixel art.
-
----
-
-### Acervo (`/archive/`)
-
-- **Calendário mensal**: cada temporada aparece como uma barra colorida sobre a grade de dias. Cada temporada tem cor própria derivada do `week_number` via HSL (`hue = (week_number * 47) % 360`). A temporada ativa é distinguida por contorno na cor secundária do tema.
-- Clicando numa barra abre um **modal de detalhes** com: intervalo de datas, pts totais, metas feitas, nº de participantes e feed de entregas com imagens (borradas se não revelada).
 
 ---
 
@@ -302,16 +292,13 @@ ALTER TABLE peer_rating_submissions DISABLE ROW LEVEL SECURITY;
 
 ## Design
 
-- Tema **Retro Pixel / Mono** com sistema de 5 accent themes selecionáveis.
+- Tema **Retro Pixel / Mono** — paleta clara com acentos âmbar e roxo.
 - Tipografia: `Micro 5` (corpo, mínimo 24px) + `Jersey 25` (headings/títulos).
-- **Sistema de accent themes**: cada tema define uma cor primária (`--amber*`) e uma secundária (`--sec-*`) via CSS custom properties. O tema padrão é **Amber Lupus** (`gold`). Temas disponíveis: Amber Lupus · Bamboo Fever · Eggplant Eel · Gentle Fuchsia · Tomato Planet. A seleção persiste em `localStorage['skrill_accent']`.
-- **Cor secundária**: usada em pódio 2º lugar, destaque "me", eyebrow labels, faixa dos stat cards, barra de XP, feed timeline, divisores do Acervo e contorno da temporada ativa. Tokens semânticos (`--purple`, `--green`, `--blue`) não mudam por tema.
-- **Ícones de navegação**: SVG files em `/skrill/img/` — `dashboard.svg`, `goals.svg`, `leaderboard.svg`, `Profile.svg`, `admin.svg`, `Skrill_time.svg`, `archive.svg`.
+- **Ícones de navegação**: SVG files em `/skrill/img/` — `dashboard.svg`, `goals.svg`, `leaderboard.svg`, `Profile.svg`, `admin.svg`, `Skrill_time.svg`.
 - **Checkboxes**: `SVG_CHECK` (X em quadrado) e `SVG_EMPTY` (quadrado vazio) — constantes em `client.js`.
 - **Mascote Skrill Walker**: sprite fullbody animado (`skrill-fullbody-Sheet.png`, 750×130px, 5 frames) que caminha na base de todas as páginas app. Pisca aleatoriamente, vira ao mudar de direção, é arremessado com física ao clicar.
-- **Configurações**: botão flutuante (`config.svg`) em todas as páginas app — abre painel com seletor de tema e toggle dark mode.
 - Layout: sidebar no desktop (≥ 768px), nav inferior no mobile.
-- Janelas e lightbox usam estilo Windows 95 (`.win-overlay`, `.win-window`, `.win-titlebar`, `.win-btn`). O lightbox de imagem usa `image.svg` no titlebar.
+- Janelas e lightbox usam estilo Windows 95 (`.win-overlay`, `.win-window`, `.win-titlebar`, `.win-btn`).
 - Tela de login tem titlebar Windows 95 com `Skrill_time.svg` + "Login" em Micro 5 + botões `[_] [□] [X]`.
 
 ---

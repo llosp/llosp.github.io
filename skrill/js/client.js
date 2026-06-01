@@ -341,6 +341,7 @@ async function advanceSeason(weekId, nextNum, nextYear) {
   if (btn) { btn.disabled = true; btn.textContent = '...'; }
 
   await sb.from('weeks').update({ is_current: false }).eq('id', weekId);
+  await sb.from('goals').delete().eq('week_id', weekId).eq('status', 'active');
   await sb.from('weeks').insert({
     week_number:          nextNum,
     year:                 nextYear,

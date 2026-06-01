@@ -9,6 +9,8 @@
   --amber: #FFB300;
   --amber-dark: #CC8F00;
   --amber-light: #FFD54F;
+  --amber-deep: #7D5A00;
+  --amber-darkbg: #3a2c0e;
   --text: #333333;
   --text-muted: #888888;
   --text-light: #AAAAAA;
@@ -20,6 +22,22 @@
   --purple: #9B59B6;
   --shadow: 2px 2px 0 var(--border-dark);
   --sidebar-w: 260px;
+}
+
+/* ── Accent themes (cor de destaque) ─────────────────────────────────────────── */
+html[data-accent="tomato"] {
+  --amber: #FF6347;
+  --amber-dark: #C0392B;
+  --amber-light: #FF9E8F;
+  --amber-deep: #7A2218;
+  --amber-darkbg: #3a1410;
+}
+html[data-accent="eggplant"] {
+  --amber: #A569BD;
+  --amber-dark: #7D3C98;
+  --amber-light: #D2B4DE;
+  --amber-deep: #512E5F;
+  --amber-darkbg: #2a1633;
 }
 
 /* ── Dark mode ──────────────────────────────────────────────────────────────── */
@@ -41,11 +59,12 @@ html[data-theme="dark"] body { background-image: none; }
 html[data-theme="dark"] .form-input,
 html[data-theme="dark"] .arch-track,
 html[data-theme="dark"] .cal-track,
-html[data-theme="dark"] .config-row { background: #14161a; }
+html[data-theme="dark"] .config-row,
+html[data-theme="dark"] .accent-opt { background: #14161a; }
 /* grandes superfícies âmbar → tom escuro */
 html[data-theme="dark"] .card-amber,
 html[data-theme="dark"] .lb-entry.r1,
-html[data-theme="dark"] .p1 .podium-block { background: #3a2c0e; }
+html[data-theme="dark"] .p1 .podium-block { background: var(--amber-darkbg); }
 /* leaderboard silver/bronze → tom escuro */
 html[data-theme="dark"] .lb-entry.r2 { background: #252525; border-color: #585858; }
 html[data-theme="dark"] .lb-entry.r3 { background: #2a1e0e; border-color: #7a4a20; }
@@ -171,6 +190,23 @@ body {
 .config-row-label { flex: 1; font-size: 24px; }
 .config-check { flex-shrink: 0; display: flex; }
 .config-check svg { width: 26px; height: 26px; }
+.config-section-label {
+  font-size: 22px; font-weight: bold; text-transform: uppercase;
+  letter-spacing: 0.04em; color: var(--text-muted); margin: 2px 2px -2px;
+}
+.config-accent-list { display: flex; flex-direction: column; gap: 6px; }
+.accent-opt {
+  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+  padding: 11px 12px; border: 1px solid var(--border); background: #fff; cursor: pointer;
+  font-family: 'Micro 5', monospace; color: var(--text);
+  transition: box-shadow 0.08s, transform 0.08s;
+}
+.accent-opt:hover { box-shadow: 2px 2px 0 var(--border-dark); transform: translate(-1px,-1px); }
+.accent-opt.active { border-color: var(--amber); box-shadow: inset 0 0 0 1px var(--amber); }
+.accent-swatch { width: 24px; height: 24px; border: 1px solid #000; flex-shrink: 0; }
+.accent-name { flex: 1; font-size: 22px; }
+.accent-check { flex-shrink: 0; display: flex; }
+.accent-check svg { width: 24px; height: 24px; }
 
 /* ── Spinner ────────────────────────────────────────────────────────────────── */
 .spinner {
@@ -445,7 +481,7 @@ canvas.particles { display: none; }
 .lb-entry.r3 { background: #F5E6D3; border-color: #CD7F32; }
 .lb-entry.me { border-color: var(--purple) !important; box-shadow: 2px 2px 0 var(--purple) !important; }
 .rank-num { font-family: 'Jersey 25', monospace; font-size: 24px; width: 32px; text-align: center; flex-shrink: 0; }
-.r1 .rank-num { color: #7D5A00; }
+.r1 .rank-num { color: var(--amber-deep); }
 .r2 .rank-num { color: #606060; }
 .r3 .rank-num { color: #7D4A1A; }
 .entry-info { flex: 1; min-width: 0; }
@@ -659,7 +695,7 @@ textarea.form-input { resize: vertical; min-height: 70px; }
   background: var(--amber-light); border: 1px solid var(--amber);
   box-shadow: 2px 2px 0 var(--amber-dark); padding: 16px;
 }
-.meeting-lbl { font-size: 24px; font-weight: bold; color: #7D5A00; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
+.meeting-lbl { font-size: 24px; font-weight: bold; color: var(--amber-deep); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
 .meeting-date { font-family: 'Jersey 25', monospace; font-size: 28px; margin-bottom: 3px; }
 .meeting-time { font-size: 24px; color: #555; text-transform: uppercase; }
 
@@ -889,7 +925,7 @@ textarea.form-input { resize: vertical; min-height: 70px; }
   font-family: 'Jersey 25', monospace; font-size: 24px; color: #000;
   display: flex; align-items: center; justify-content: space-between; text-transform: uppercase;
 }
-.week-section-header .week-pts { font-size: 24px; color: #7D5A00; }
+.week-section-header .week-pts { font-size: 24px; color: var(--amber-deep); }
 
 /* ── Skrill Time page ────────────────────────────────────────────────────────── */
 .ready-squares { display: flex; flex-wrap: wrap; gap: 10px; justify-content: center; margin: 20px 0; }

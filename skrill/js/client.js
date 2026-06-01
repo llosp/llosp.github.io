@@ -6,6 +6,11 @@ const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 if (localStorage.getItem('skrill_theme') === 'dark') {
   document.documentElement.dataset.theme = 'dark';
 }
+// Aplica a cor de destaque (accent) cedo
+(function () {
+  const a = localStorage.getItem('skrill_accent');
+  if (a && a !== 'gold') document.documentElement.dataset.accent = a;
+})();
 
 // ── Session ───────────────────────────────────────────────────────────────────
 const APP_PASSWORD = 'familiasteam';
@@ -568,6 +573,35 @@ function configWalkerRowInner() {
     <span class="config-check">${hidden ? SVG_CHECK : SVG_EMPTY}</span>`;
 }
 
+// ── Accent themes (cor de destaque) ─────────────────────────────────────────────
+const ACCENTS = [
+  { id: 'gold',     name: 'Guadalupsion Gold', color: '#FFB300' },
+  { id: 'tomato',   name: 'Tomato Planet',     color: '#FF6347' },
+  { id: 'eggplant', name: 'Eggplant Eel',      color: '#A569BD' },
+];
+
+function getAccent() {
+  return localStorage.getItem('skrill_accent') || 'gold';
+}
+
+function setAccent(id) {
+  localStorage.setItem('skrill_accent', id);
+  if (id === 'gold') delete document.documentElement.dataset.accent;
+  else document.documentElement.dataset.accent = id;
+  const list = document.getElementById('config-accent-list');
+  if (list) list.innerHTML = configAccentListInner();
+}
+
+function configAccentListInner() {
+  const cur = getAccent();
+  return ACCENTS.map(a => `
+    <button class="accent-opt ${a.id === cur ? 'active' : ''}" onclick="setAccent('${a.id}')" title="${a.name}">
+      <span class="accent-swatch" style="background:${a.color}"></span>
+      <span class="accent-name">${a.name}</span>
+      <span class="accent-check">${a.id === cur ? SVG_CHECK : SVG_EMPTY}</span>
+    </button>`).join('');
+}
+
 function isDarkMode() {
   return document.documentElement.dataset.theme === 'dark';
 }
@@ -611,6 +645,10 @@ function initConfigButton() {
         <button class="win-btn" onclick="toggleConfigPanel(false)">X</button>
       </div>
       <div class="config-panel-body">
+        <div class="config-section-label">Tema</div>
+        <div id="config-accent-list" class="config-accent-list">
+          ${configAccentListInner()}
+        </div>
         <button id="config-theme-row" class="config-row" onclick="toggleThemeSetting()">
           ${configThemeRowInner()}
         </button>

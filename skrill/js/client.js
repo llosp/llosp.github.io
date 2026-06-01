@@ -575,10 +575,10 @@ function configWalkerRowInner() {
 
 // ── Accent themes (cor de destaque) ─────────────────────────────────────────────
 const ACCENTS = [
+  { id: 'gold',     name: 'Amber Lupsion',      color: '#FFB300' },
   { id: 'fuchsia',  name: 'Apocalypse Fuchsia', color: '#F06292' },
   { id: 'bamboo',   name: 'Bamboo Fever',       color: '#8BC34A' },
   { id: 'eggplant', name: 'Eggplant Eel',       color: '#A569BD' },
-  { id: 'gold',     name: 'Guadalupsion Gold',  color: '#FFB300' },
   { id: 'tomato',   name: 'Tomato Planet',      color: '#FF6347' },
 ];
 

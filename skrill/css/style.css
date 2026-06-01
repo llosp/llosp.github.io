@@ -735,11 +735,6 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 .profile-hero {
   background: var(--surface); border: 1px solid var(--border); box-shadow: var(--shadow);
   padding: 18px; display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px;
-  border-top: 3px solid var(--sec-border);
-}
-.profile-hero .avatar {
-  border-color: var(--sec-border);
-  box-shadow: 2px 2px 0 var(--sec-text);
 }
 .profile-hero-head { display: flex; align-items: center; gap: 14px; }
 .profile-hero-identity { flex: 1; min-width: 0; }

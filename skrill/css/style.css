@@ -28,19 +28,20 @@
   --purple-soft: #E8D5F5;
   --red-soft:    #FDEDEC;
   --red-dark:    #C0392B;
-  /* Pódio / leaderboard — prata */
-  --silver-bg:           #F4F4F4;
-  --silver-block:        #DCDCDC;
-  --silver-border:       #C0C0C0;
-  --silver-block-border: #909090;
-  --silver-avatar:       #707070;
-  --silver-text:         #606060;
-  /* Pódio / leaderboard — bronze */
-  --bronze-bg:    #F5E6D3;
-  --bronze-block: #F0D9B7;
-  --bronze:       #CD7F32;
-  --bronze-dark:  #8B5A2B;
-  --bronze-text:  #7D4A1A;
+  /* Pódio 3º lugar — cinza neutro (todos os temas) */
+  --neutral-bg:           #F4F4F4;
+  --neutral-block:        #DCDCDC;
+  --neutral-border:       #C0C0C0;
+  --neutral-block-border: #909090;
+  --neutral-avatar:       #707070;
+  --neutral-text:         #606060;
+  /* Pódio 2º lugar — secundária do tema (gold = preto/grayscale) */
+  --sec-bg:           #EDEDED;
+  --sec-block:        #DADADA;
+  --sec-border:       #333333;
+  --sec-block-border: #1A1A1A;
+  --sec-avatar:       #333333;
+  --sec-text:         #2A2A2A;
   /* Borda clara */
   --border-light: #eee;
 }
@@ -67,6 +68,15 @@ html[data-accent="bamboo"] {
   --amber-deep: #33691E;
   --amber-darkbg: #1b2a12;
 }
+/* Secundária (2º lugar + destaque "me") por tema — modo claro */
+html[data-accent="tomato"], html[data-accent="eggplant"] {   /* verde */
+  --sec-bg: #D5F5E3; --sec-block: #ABEBC6; --sec-border: #27AE60;
+  --sec-block-border: #1E8449; --sec-avatar: #1E8449; --sec-text: #196F3D;
+}
+html[data-accent="bamboo"] {   /* bege */
+  --sec-bg: #F2E8D5; --sec-block: #E6D5B8; --sec-border: #B8915A;
+  --sec-block-border: #92703F; --sec-avatar: #92703F; --sec-text: #6E5230;
+}
 
 /* ── Dark mode ──────────────────────────────────────────────────────────────── */
 html[data-theme="dark"] {
@@ -81,10 +91,21 @@ html[data-theme="dark"] {
   --text-light: #6b7480;
   --amber-text: var(--text-muted);
   --shadow: 2px 2px 0 #0c0e12;
-  --silver-dk-bg:     #252525;
-  --silver-dk-border: #585858;
-  --bronze-dk-bg:     #2A1E0E;
-  --bronze-dk-border: #7A4A20;
+  /* Pódio escuro — 3º cinza neutro + 2º gold/preto (avatar/text mantêm claro) */
+  --neutral-bg: #252525; --neutral-block: #252525;
+  --neutral-border: #585858; --neutral-block-border: #585858;
+  --sec-bg: #2C2C2C; --sec-block: #2C2C2C; --sec-border: #777777;
+  --sec-block-border: #777777; --sec-avatar: #888888; --sec-text: #BBBBBB;
+}
+/* Secundária por tema — modo escuro (especificidade vence o accent claro) */
+html[data-theme="dark"][data-accent="tomato"],
+html[data-theme="dark"][data-accent="eggplant"] {   /* verde escuro */
+  --sec-bg: #16271C; --sec-block: #16271C; --sec-border: #2E7D46;
+  --sec-block-border: #2E7D46; --sec-avatar: #3DA45E; --sec-text: #5FBE7E;
+}
+html[data-theme="dark"][data-accent="bamboo"] {      /* bege escuro */
+  --sec-bg: #2A2316; --sec-block: #2A2316; --sec-border: #7A6240;
+  --sec-block-border: #7A6240; --sec-avatar: #A6855A; --sec-text: #C9AC7E;
 }
 html[data-theme="dark"] body { background-image: none; }
 /* superfícies que fixam branco */
@@ -97,11 +118,6 @@ html[data-theme="dark"] .accent-trigger { background: #14161a; }
 html[data-theme="dark"] .card-amber,
 html[data-theme="dark"] .lb-entry.r1,
 html[data-theme="dark"] .p1 .podium-block { background: var(--amber-darkbg); }
-/* leaderboard + podium silver/bronze → tom escuro */
-html[data-theme="dark"] .lb-entry.r2,
-html[data-theme="dark"] .p2 .podium-block { background: var(--silver-dk-bg); border-color: var(--silver-dk-border); }
-html[data-theme="dark"] .lb-entry.r3,
-html[data-theme="dark"] .p3 .podium-block { background: var(--bronze-dk-bg); border-color: var(--bronze-dk-border); }
 /* checkboxes inline (stroke preto) → claro */
 html[data-theme="dark"] svg [stroke="black"] { stroke: var(--text); }
 /* SVG img icons → white on dark surfaces */
@@ -527,13 +543,13 @@ canvas.particles { display: none; }
 }
 .lb-entry:hover { background: var(--surface-hover); box-shadow: var(--shadow); transform: translate(-1px,-1px); }
 .lb-entry.r1 { background: var(--amber-light); border-color: var(--amber); }
-.lb-entry.r2 { background: var(--silver-bg); border-color: var(--silver-border); }
-.lb-entry.r3 { background: var(--bronze-bg); border-color: var(--bronze); }
-.lb-entry.me { border-color: var(--purple) !important; box-shadow: 2px 2px 0 var(--purple) !important; }
+.lb-entry.r2 { background: var(--sec-bg); border-color: var(--sec-border); }
+.lb-entry.r3 { background: var(--neutral-bg); border-color: var(--neutral-border); }
+.lb-entry.me { border-color: var(--sec-border) !important; box-shadow: 2px 2px 0 var(--sec-border) !important; }
 .rank-num { font-family: 'Jersey 25', monospace; font-size: 24px; width: 32px; text-align: center; flex-shrink: 0; }
 .r1 .rank-num { color: var(--amber-deep); }
-.r2 .rank-num { color: var(--silver-text); }
-.r3 .rank-num { color: var(--bronze-text); }
+.r2 .rank-num { color: var(--sec-text); }
+.r3 .rank-num { color: var(--neutral-text); }
 .entry-info { flex: 1; min-width: 0; }
 .entry-name-main { font-size: 24px; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-transform: uppercase; }
 .entry-name-sub { font-size: 24px; color: var(--text-muted); text-transform: uppercase; }
@@ -559,8 +575,8 @@ canvas.particles { display: none; }
 }
 .podium-col .avatar { box-shadow: 3px 3px 0 var(--border-dark); }
 .p1 .avatar { width: 90px; height: 90px; border: 3px solid var(--amber-dark); box-shadow: 3px 3px 0 var(--amber-dark); }
-.p2 .avatar { width: 72px; height: 72px; border: 3px solid var(--silver-avatar); box-shadow: 3px 3px 0 var(--silver-text); }
-.p3 .avatar { width: 64px; height: 64px; border: 3px solid var(--bronze); box-shadow: 3px 3px 0 var(--bronze-dark); }
+.p2 .avatar { width: 72px; height: 72px; border: 3px solid var(--sec-avatar); box-shadow: 3px 3px 0 var(--sec-text); }
+.p3 .avatar { width: 64px; height: 64px; border: 3px solid var(--neutral-avatar); box-shadow: 3px 3px 0 var(--neutral-text); }
 .podium-name {
   font-size: 24px; font-weight: bold; text-align: center;
   overflow: hidden; text-overflow: ellipsis; white-space: nowrap; width: 100%;
@@ -568,8 +584,8 @@ canvas.particles { display: none; }
 }
 .podium-xp { font-size: 24px; font-weight: bold; margin-bottom: 6px; text-transform: uppercase; }
 .p1 .podium-xp { color: var(--amber-dark); }
-.p2 .podium-xp { color: var(--silver-text); }
-.p3 .podium-xp { color: var(--bronze-text); }
+.p2 .podium-xp { color: var(--sec-text); }
+.p3 .podium-xp { color: var(--neutral-text); }
 .podium-block {
   width: 100%; position: relative;
   display: flex; align-items: center; justify-content: center;
@@ -581,8 +597,8 @@ canvas.particles { display: none; }
   text-shadow: 1px 1px 0 rgba(255,255,255,0.4);
 }
 .p1 .podium-block { height: 110px; background: var(--amber-light); border: 2px solid var(--amber-dark); border-bottom: none; }
-.p2 .podium-block { height:  84px; background: var(--silver-block); border: 2px solid var(--silver-block-border); border-bottom: none; }
-.p3 .podium-block { height:  60px; background: var(--bronze-block); border: 2px solid var(--bronze-dark);        border-bottom: none; }
+.p2 .podium-block { height:  84px; background: var(--sec-block);     border: 2px solid var(--sec-block-border);     border-bottom: none; }
+.p3 .podium-block { height:  60px; background: var(--neutral-block); border: 2px solid var(--neutral-block-border); border-bottom: none; }
 .p2 .podium-block-num { font-size: 44px; }
 .p3 .podium-block-num { font-size: 36px; }
 

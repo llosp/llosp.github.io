@@ -161,7 +161,7 @@
       </div>`;
 
     timelineLimit = 4;
-    document.getElementById('tab-timeline').innerHTML = renderTimelinePanel();
+    renderTimeline();
     document.getElementById('tab-gallery').innerHTML  = renderGallery();
   }
 
@@ -204,12 +204,17 @@
       </div>`;
   }
 
+  let timelineObserver = null;
+
   function renderTimelinePanel() {
     if (!completedGoals.length) return `<div class="empty-state"><div class="empty-icon"><img src="/skrill/img/goals.svg" alt="goals" style="width:48px;height:48px"></div><h3>Nenhuma meta ainda</h3></div>`;
 
     const sections = groupByWeek(completedGoals);
-    const chips = sections.map(s =>
-      `<button class="season-chip" onclick="jumpToSeason('${s.wid}')">${weekLabel(s.week)}</button>`
+    const nodes = sections.map((s, i) =>
+      `<button class="timeline-node${i === 0 ? ' active' : ''}" data-season="${s.wid}" onclick="jumpToSeason('${s.wid}')">
+        <span class="timeline-dot"></span>
+        <span class="timeline-node-label">${weekLabel(s.week)}</span>
+      </button>`
     ).join('');
 
     let shown = 0;
@@ -230,14 +235,39 @@
       : '';
 
     return `
-      <div class="season-chips">${chips}</div>
-      <div class="profile-timeline">${body.join('')}</div>
-      ${moreBtn}`;
+      <div class="profile-timeline-layout">
+        <nav class="timeline-rail">${nodes}</nav>
+        <div>
+          <div class="profile-timeline">${body.join('')}</div>
+          ${moreBtn}
+        </div>
+      </div>`;
+  }
+
+  function setActiveNode(weekId) {
+    document.querySelectorAll('.timeline-node').forEach(n =>
+      n.classList.toggle('active', n.dataset.season === weekId)
+    );
+  }
+
+  function markActiveOnScroll() {
+    timelineObserver?.disconnect();
+    timelineObserver = new IntersectionObserver(entries => {
+      const visible = entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)[0];
+      if (visible) setActiveNode(visible.target.id.replace('season-', ''));
+    }, { rootMargin: '0px 0px -60% 0px' });
+    document.querySelectorAll('.week-section').forEach(el => timelineObserver.observe(el));
+  }
+
+  function renderTimeline() {
+    document.getElementById('tab-timeline').innerHTML = renderTimelinePanel();
+    markActiveOnScroll();
   }
 
   function loadMoreTimeline() {
     timelineLimit += 4;
-    document.getElementById('tab-timeline').innerHTML = renderTimelinePanel();
+    renderTimeline();
   }
 
   function jumpToSeason(weekId) {
@@ -248,7 +278,8 @@
       if (s.wid === weekId) break;
     }
     timelineLimit = Math.max(timelineLimit, acc);
-    document.getElementById('tab-timeline').innerHTML = renderTimelinePanel();
+    renderTimeline();
+    setActiveNode(weekId);
     document.getElementById('season-' + weekId)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }
 

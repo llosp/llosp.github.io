@@ -762,8 +762,9 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 .timeline-node.active .timeline-node-label { color: var(--text); font-weight: bold; }
 
 @media (min-width: 768px) {
-  .profile-timeline-layout { grid-template-columns: 160px 1fr; gap: 18px; }
+  .profile-timeline-layout { grid-template-columns: 1fr 160px; gap: 18px; }
   .timeline-rail {
+    order: 2;
     position: sticky; top: 16px; flex-direction: column; overflow-x: visible;
     margin-bottom: 0; padding-bottom: 0;
   }

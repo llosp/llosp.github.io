@@ -35,13 +35,13 @@
   --neutral-block-border: #909090;
   --neutral-avatar:       #707070;
   --neutral-text:         #606060;
-  /* Pódio 2º lugar — secundária do tema (gold = azul-marinho ultra escuro) */
-  --sec-bg:           #E4E5F3;
-  --sec-block:        #CCCEE6;
-  --sec-border:       #00075D;
-  --sec-block-border: #00075D;
-  --sec-avatar:       #00075D;
-  --sec-text:         #00075D;
+  /* Pódio 2º lugar — secundária do tema (gold = índigo médio) */
+  --sec-bg:           #E8E8F5;
+  --sec-block:        #D0D0EA;
+  --sec-border:       #4B4BA0;
+  --sec-block-border: #4B4BA0;
+  --sec-avatar:       #6E6EC0;
+  --sec-text:         #4B4BA0;
   /* Borda clara */
   --border-light: #eee;
 }

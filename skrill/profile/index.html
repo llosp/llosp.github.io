@@ -113,9 +113,9 @@
           <div class="profile-hero-head">
             ${avatarHTML(profile, 'avatar-xl')}
             <div class="profile-hero-identity">
-              <div class="profile-display">${profile.name}</div>
+              <div class="profile-display" style="color:var(--sec-text)">${profile.name}</div>
               <!-- desktop: stats horizontal row -->
-              <div class="profile-stats-row profile-desktop-only">
+              <div class="profile-stats-row profile-desktop-only" style="border-top:2px solid var(--sec-border);padding-top:10px;margin-top:4px">
                 <div class="profile-stat"><div class="profile-stat-val">${(profile.total_points ?? 0).toLocaleString()}</div><div class="profile-stat-lbl">Total Pts</div></div>
                 <div class="profile-stat"><div class="profile-stat-val">${completedGoals.length}</div><div class="profile-stat-lbl">Metas Feitas</div></div>
                 <div class="profile-stat"><div class="profile-stat-val">${profile.streak_current ?? 0}<img src="/skrill/img/streak.svg" alt="streak" style="width:18px;height:18px;vertical-align:middle;position:relative;top:-2px;margin-left:2px"></div><div class="profile-stat-lbl">Streak</div></div>

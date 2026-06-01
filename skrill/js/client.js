@@ -588,18 +588,31 @@ function setAccent(id) {
   localStorage.setItem('skrill_accent', id);
   if (id === 'gold') delete document.documentElement.dataset.accent;
   else document.documentElement.dataset.accent = id;
-  const list = document.getElementById('config-accent-list');
-  if (list) list.innerHTML = configAccentListInner();
+  const sel = document.getElementById('accent-select');
+  if (sel) { sel.innerHTML = accentDropdownInner(); sel.classList.remove('open'); }
 }
 
-function configAccentListInner() {
-  const cur = getAccent();
-  return ACCENTS.map(a => `
-    <button class="accent-opt ${a.id === cur ? 'active' : ''}" onclick="setAccent('${a.id}')" title="${a.name}">
+function toggleAccentMenu(e) {
+  if (e) e.stopPropagation();
+  const sel = document.getElementById('accent-select');
+  if (sel) sel.classList.toggle('open');
+}
+
+function accentDropdownInner() {
+  const cur = ACCENTS.find(a => a.id === getAccent()) || ACCENTS[0];
+  const options = ACCENTS.map(a => `
+    <button class="accent-opt ${a.id === cur.id ? 'active' : ''}" onclick="setAccent('${a.id}')">
       <span class="accent-swatch" style="background:${a.color}"></span>
       <span class="accent-name">${a.name}</span>
-      <span class="accent-check">${a.id === cur ? SVG_CHECK : SVG_EMPTY}</span>
+      <span class="accent-check">${a.id === cur.id ? SVG_CHECK : ''}</span>
     </button>`).join('');
+  return `
+    <button class="accent-trigger" onclick="toggleAccentMenu(event)">
+      <span class="accent-swatch" style="background:${cur.color}"></span>
+      <span class="accent-name">${cur.name}</span>
+      <span class="accent-caret">▼</span>
+    </button>
+    <div class="accent-menu">${options}</div>`;
 }
 
 function isDarkMode() {
@@ -646,8 +659,8 @@ function initConfigButton() {
       </div>
       <div class="config-panel-body">
         <div class="config-section-label">Tema</div>
-        <div id="config-accent-list" class="config-accent-list">
-          ${configAccentListInner()}
+        <div id="accent-select" class="accent-select">
+          ${accentDropdownInner()}
         </div>
         <button id="config-theme-row" class="config-row" onclick="toggleThemeSetting()">
           ${configThemeRowInner()}
@@ -660,6 +673,10 @@ function initConfigButton() {
   document.body.appendChild(overlay);
 
   document.addEventListener('keydown', e => { if (e.key === 'Escape') toggleConfigPanel(false); });
+  document.addEventListener('click', e => {
+    const sel = document.getElementById('accent-select');
+    if (sel && sel.classList.contains('open') && !sel.contains(e.target)) sel.classList.remove('open');
+  });
 }
 
 async function convertToWebP(file, quality = 0.85) {

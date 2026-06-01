@@ -199,7 +199,7 @@ function renderSidebar(profile, activePage) {
           ${avatarHTML(profile)}
           <div style="flex:1;min-width:0">
             <div class="profile-name">${profile.name}</div>
-            <div class="profile-role">${profile.streak_current ?? 0}w streak</div>
+            <div class="profile-role">${profile.streak_current ?? 0} streak</div>
           </div>
           <div class="level-badge-sm">${profile.total_points ?? 0}pts</div>
         </div>

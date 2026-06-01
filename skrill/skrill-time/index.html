@@ -615,6 +615,12 @@
   }
 
   async function finalizeSeason() {
+    // Idempotency guard: if this season was already finalized, bail so points
+    // and streaks are never awarded twice (forceFinalize skips the auto-close guard).
+    const { data: already } = await sb.from('goals')
+      .select('id').eq('week_id', currentWeek.id).eq('points_awarded', true).limit(1);
+    if (already?.length) return;
+
     const { data: ratings } = await sb.from('peer_ratings')
       .select('goal_id,amount').eq('week_id', currentWeek.id);
     const bonusMap = new Map();
@@ -658,6 +664,25 @@
           weekly_points: (prof.weekly_points ?? 0) + total,
         }).eq('id', g.profile_id);
       }
+    }
+
+    // Update streaks: each participant who completed at least one goal this
+    // season extends their streak; participants who completed nothing reset to 0.
+    const completedByProfile = new Set(
+      weekGoals
+        .filter(g => g.status === 'completed' && participantIds.has(g.profile_id))
+        .map(g => g.profile_id)
+    );
+    for (const pid of participantIds) {
+      const { data: prof } = await sb.from('profiles')
+        .select('streak_current,streak_longest').eq('id', pid).single();
+      if (!prof) continue;
+      const newCurrent = completedByProfile.has(pid) ? (prof.streak_current ?? 0) + 1 : 0;
+      const newLongest = Math.max(prof.streak_longest ?? 0, newCurrent);
+      await sb.from('profiles').update({
+        streak_current: newCurrent,
+        streak_longest: newLongest,
+      }).eq('id', pid);
     }
   }
 

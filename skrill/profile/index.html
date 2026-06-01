@@ -157,16 +157,17 @@
   }
 
   function renderWeekTimeline(goals) {
-    if (!goals.length) return `<div class="empty-state"><div class="empty-icon"><img src="/skrill/img/goals.svg" alt="goals" style="width:48px;height:48px"></div><h3>Nenhuma meta ainda</h3></div>`;
+    const completed = goals.filter(g => g.status === 'completed');
+    if (!completed.length) return `<div class="empty-state"><div class="empty-icon"><img src="/skrill/img/goals.svg" alt="goals" style="width:48px;height:48px"></div><h3>Nenhuma meta ainda</h3></div>`;
 
     const byWeek = new Map();
-    for (const g of goals) {
+    for (const g of completed) {
       const wid = g.week_id ?? 'sem-semana';
       if (!byWeek.has(wid)) byWeek.set(wid, { week: g.week, goals: [] });
       byWeek.get(wid).goals.push(g);
     }
 
-    return [...byWeek.values()].map(({ week, goals: wGoals }) => {
+    return `<div class="profile-timeline">${[...byWeek.values()].map(({ week, goals: wGoals }) => {
       const revealed = week?.skrill_time_revealed ?? false;
       const label = week
         ? `Temporada ${week.week_number} · ${week.year}`
@@ -200,7 +201,7 @@
           <div class="week-section-header">${label}</div>
           ${items}
         </div>`;
-    }).join('');
+    }).join('')}</div>`;
   }
 
   // ── Edit Profile Canvas ───────────────────────────────────────────────────────

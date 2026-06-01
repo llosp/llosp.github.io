@@ -732,6 +732,7 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 .goal-actions { margin-left: auto; display: flex; gap: 6px; }
 
 /* ── Profile ────────────────────────────────────────────────────────────────── */
+.profile-timeline .goal-card.completed { border-color: var(--sec-border); box-shadow: 2px 2px 0 var(--sec-border); }
 .profile-hero {
   background: var(--surface); border: 1px solid var(--border); border-top: 3px solid var(--sec-border); box-shadow: var(--shadow);
   padding: 18px; display: flex; flex-direction: column; gap: 14px; margin-bottom: 20px;

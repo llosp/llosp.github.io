@@ -113,10 +113,6 @@
           <div class="profile-hero-head">
             ${avatarHTML(profile, 'avatar-xl')}
             <div class="profile-hero-identity">
-<<<<<<< HEAD
-              <div class="page-header-label" style="margin-bottom:6px">Membro</div>
-=======
->>>>>>> parent of 49b1bb1 (hero)
               <div class="profile-display">${profile.name}</div>
               <!-- desktop: stats horizontal row -->
               <div class="profile-stats-row profile-desktop-only">
@@ -201,7 +197,7 @@
       }).join('');
       return `
         <div class="week-section">
-          <div class="week-section-header" style="background:var(--sec-bg);border-color:var(--sec-border);color:var(--sec-text);box-shadow:1px 1px 0 var(--sec-border)">${label}</div>
+          <div class="week-section-header">${label}</div>
           ${items}
         </div>`;
     }).join('');

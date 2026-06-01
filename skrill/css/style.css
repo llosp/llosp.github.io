@@ -289,9 +289,6 @@ canvas.particles { display: none; }
 .sidebar-logo {
   position: relative;
   background: linear-gradient(135deg, var(--amber-light) 0%, var(--amber) 100%);
-}
-html[data-accent="tomato"] .sidebar-logo {
-  background: linear-gradient(135deg, var(--amber-dark) 0%, var(--amber) 100%);
   border-bottom: 2px solid var(--amber-dark);
   box-shadow: inset 2px 2px 0 rgba(255,255,255,0.5), inset -2px -2px 0 rgba(0,0,0,0.10);
   padding: 16px 14px;

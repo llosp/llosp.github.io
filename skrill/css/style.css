@@ -12,6 +12,7 @@
   --text: #333333;
   --text-muted: #888888;
   --text-light: #AAAAAA;
+  --amber-text: #555555;
   --green: #2ECC71;
   --green-dark: #27AE60;
   --red: #E74C3C;
@@ -32,6 +33,7 @@ html[data-theme="dark"] {
   --text: #e6e8ea;
   --text-muted: #9aa3ad;
   --text-light: #6b7480;
+  --amber-text: var(--text-muted);
   --shadow: 2px 2px 0 #0c0e12;
 }
 html[data-theme="dark"] body { background-image: none; }
@@ -659,7 +661,7 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 }
 .meeting-lbl { font-size: 24px; font-weight: bold; color: #7D5A00; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 5px; }
 .meeting-date { font-family: 'Jersey 25', monospace; font-size: 28px; margin-bottom: 3px; }
-.meeting-time { font-size: 24px; color: var(--text-muted); text-transform: uppercase; }
+.meeting-time { font-size: 24px; color: #555; text-transform: uppercase; }
 
 /* ── Modal ──────────────────────────────────────────────────────────────────── */
 .modal-overlay {

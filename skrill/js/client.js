@@ -119,11 +119,11 @@ function renderSeasonLocked(week, profile, pageLabel, pageTitle) {
     <div class="card card-amber" style="text-align:center;padding:48px 20px">
       <div style="font-size:36px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:10px;justify-content:center"><img src="/skrill/img/attention.svg" alt="attention" style="width:36px;height:36px"> Voce nao entrou nesta Temporada</div>
       ${revealed
-        ? `<div style="font-size:24px;color:var(--text-muted);text-transform:uppercase">
+        ? `<div style="font-size:24px;color:var(--amber-text);text-transform:uppercase">
             Esta Temporada ja foi revelada.<br>
             Aguarde a proxima Temporada para participar.
           </div>`
-        : `<div style="font-size:24px;color:var(--text-muted);margin-bottom:24px;text-transform:uppercase">
+        : `<div style="font-size:24px;color:var(--amber-text);margin-bottom:24px;text-transform:uppercase">
             Junte-se a Temporada para declarar metas, participar do Skrill Time<br>
             e da avaliacao por pares.
           </div>

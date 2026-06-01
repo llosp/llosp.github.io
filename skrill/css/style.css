@@ -36,12 +36,12 @@
   --neutral-avatar:       #707070;
   --neutral-text:         #606060;
   /* Pódio 2º lugar — secundária do tema (gold = azul-marinho ultra escuro) */
-  --sec-bg:           #E4E7EF;
-  --sec-block:        #CDD3E2;
-  --sec-border:       #0A1128;
-  --sec-block-border: #0A1128;
-  --sec-avatar:       #0A1128;
-  --sec-text:         #0A1128;
+  --sec-bg:           #E5E5F2;
+  --sec-block:        #CECEE4;
+  --sec-border:       #0B0B45;
+  --sec-block-border: #0B0B45;
+  --sec-avatar:       #0B0B45;
+  --sec-text:         #0B0B45;
   /* Borda clara */
   --border-light: #eee;
 }
@@ -105,8 +105,8 @@ html[data-theme="dark"] {
   /* Pódio escuro — 3º cinza neutro + 2º gold/preto (avatar/text mantêm claro) */
   --neutral-bg: #252525; --neutral-block: #252525;
   --neutral-border: #585858; --neutral-block-border: #585858;
-  --sec-bg: #161C2E; --sec-block: #161C2E; --sec-border: #4A5878;
-  --sec-block-border: #4A5878; --sec-avatar: #6E7EA6; --sec-text: #A6B4D6;
+  --sec-bg: #18183A; --sec-block: #18183A; --sec-border: #4B4BA0;
+  --sec-block-border: #4B4BA0; --sec-avatar: #6E6EC0; --sec-text: #ADADE0;
 }
 /* Secundária por tema — modo escuro (especificidade vence o accent claro) */
 html[data-theme="dark"][data-accent="tomato"],
@@ -568,6 +568,8 @@ canvas.particles { display: none; }
 .entry-info { flex: 1; min-width: 0; }
 .entry-name-main { font-size: 24px; font-weight: bold; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; text-transform: uppercase; }
 .entry-name-sub { font-size: 24px; color: var(--text-muted); text-transform: uppercase; }
+.entry-name-sub img[src$="streak.svg"] { filter: brightness(0) invert(0.53); }
+html[data-theme="dark"] .entry-name-sub img[src$="streak.svg"] { filter: brightness(0) invert(0.65); }
 .entry-xp { font-size: 24px; font-weight: bold; color: var(--amber-dark); white-space: nowrap; }
 
 /* ── Podium ─────────────────────────────────────────────────────────────────── */

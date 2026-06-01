@@ -46,6 +46,25 @@ html[data-theme="dark"] .lb-entry.r1,
 html[data-theme="dark"] .p1 .podium-block { background: #3a2c0e; }
 /* checkboxes inline (stroke preto) → claro */
 html[data-theme="dark"] svg [stroke="black"] { stroke: var(--text); }
+/* SVG img icons → white on dark surfaces */
+html[data-theme="dark"] img[src$=".svg"] { filter: invert(1); }
+/* Keep icons black on amber/colored backgrounds */
+html[data-theme="dark"] .nav-link.active img[src$=".svg"],
+html[data-theme="dark"] .mobile-nav a.active img[src$=".svg"],
+html[data-theme="dark"] .win-titlebar img[src$=".svg"],
+html[data-theme="dark"] .card-header img[src$=".svg"],
+html[data-theme="dark"] .window-title img[src$=".svg"],
+html[data-theme="dark"] .modal-title img[src$=".svg"],
+html[data-theme="dark"] .week-section-header img[src$=".svg"],
+html[data-theme="dark"] .tab-btn.active img[src$=".svg"],
+html[data-theme="dark"] .config-panel-head img[src$=".svg"],
+html[data-theme="dark"] .card-amber img[src$=".svg"],
+html[data-theme="dark"] .stat-icon.amber img[src$=".svg"],
+html[data-theme="dark"] .stat-icon.purple img[src$=".svg"],
+html[data-theme="dark"] .stat-icon.green img[src$=".svg"],
+html[data-theme="dark"] .stat-icon.cyan img[src$=".svg"],
+html[data-theme="dark"] .meeting-card img[src$=".svg"],
+html[data-theme="dark"] .sidebar-logo img[src$=".svg"] { filter: none; }
 .card.card-amber { background: var(--amber-light); border-color: var(--amber); }
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }

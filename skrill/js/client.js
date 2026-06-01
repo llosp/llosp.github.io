@@ -116,7 +116,7 @@ function renderSeasonLocked(week, profile, pageLabel, pageTitle) {
         <h1 class="page-header-title">${pageTitle}<span class="page-header-sub">${wSub}</span></h1>
       </div>
     </div>
-    <div class="card" style="text-align:center;padding:48px 20px;background:var(--amber-light);border-color:var(--amber)">
+    <div class="card card-amber" style="text-align:center;padding:48px 20px">
       <div style="font-size:36px;font-weight:700;margin-bottom:10px;display:flex;align-items:center;gap:10px;justify-content:center"><img src="/skrill/img/attention.svg" alt="attention" style="width:36px;height:36px"> Voce nao entrou nesta Temporada</div>
       ${revealed
         ? `<div style="font-size:24px;color:var(--text-muted);text-transform:uppercase">

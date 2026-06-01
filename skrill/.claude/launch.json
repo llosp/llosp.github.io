@@ -4,7 +4,7 @@
     {
       "name": "skrill",
       "runtimeExecutable": "python3",
-      "runtimeArgs": ["-m", "http.server", "8765", "--directory", ".."],
+      "runtimeArgs": ["/tmp/skrill-server.py"],
       "port": 8765
     }
   ]

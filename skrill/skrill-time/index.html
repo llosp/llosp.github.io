@@ -35,6 +35,9 @@
   let weekGoals         = [];
   let realtimeCh        = null;
   let countdownInterval = null;
+  let pollInterval      = null;
+  let lastSig           = '';
+  let revealShown       = false;
   let myRatings         = new Map();   // goal_id -> int (my own allocations)
   let myUsed            = 0;
   let mySubmitted       = false;
@@ -64,8 +67,9 @@
 
     if (week) await loadWeekState();
 
-    renderPage();
     subscribeRealtime();
+    startPolling();
+    renderPage();
   }
 
   async function loadWeekState() {
@@ -117,12 +121,18 @@
       .on('postgres_changes', { event: '*', schema: 'public', table: 'peer_ratings' }, () => reload())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'peer_rating_submissions' }, () => reload())
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'weeks' }, payload => {
-        if (payload.new?.id === currentWeek?.id) {
-          currentWeek = { ...currentWeek, ...payload.new };
-          renderPage();
-        }
+        if (payload.new?.id === currentWeek?.id) reload();
       })
       .subscribe();
+  }
+
+  function stateSignature() {
+    return `${currentWeek?.skrill_time_revealed}|${readyIds.size}|${submissionIds.size}|${weekGoals.length}|${bountySubs.length}`;
+  }
+
+  function startPolling() {
+    if (pollInterval) clearInterval(pollInterval);
+    pollInterval = setInterval(reloadQuiet, 4000);
   }
 
   async function reload() {
@@ -131,6 +141,16 @@
     if (week) currentWeek = week;
     await loadWeekState();
     renderPage();
+  }
+
+  // Poll de segurança: refaz o estado, mas só re-renderiza quando algo mudou
+  // (evita reanimar o reveal e atrapalhar a avaliação em andamento).
+  async function reloadQuiet() {
+    if (document.visibilityState !== 'visible' || !currentWeek) return;
+    const { data: week } = await sb.from('weeks').select('*').eq('id', currentWeek.id).single();
+    if (week) currentWeek = week;
+    await loadWeekState();
+    if (stateSignature() !== lastSig) renderPage();
   }
 
   function isSkrillDay() {
@@ -181,6 +201,7 @@
     const closed   = revealed && allSubmitted;
 
     let body = '';
+    if (!closed) revealShown = false;
     if (!revealed) {
       if (!isSkDay) {
         body = `
@@ -225,7 +246,10 @@
     } else if (!closed) {
       body = renderRatingPhase();
     } else {
-      body = renderReveal();
+      const animate = !revealShown;
+      revealShown = true;
+      if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
+      body = renderReveal(animate);
     }
 
     app.innerHTML = `
@@ -242,6 +266,7 @@
         ${body}
       </div>`;
 
+    lastSig = stateSignature();
     if (!revealed && !isSkDay) startCountdown();
   }
 
@@ -426,7 +451,7 @@
       </div>`;
   }
 
-  function renderReveal() {
+  function renderReveal(animate = false) {
     const completedGoals = deliveredGoals();
     const byMember = new Map();
     for (const p of allProfiles) byMember.set(p.id, { profile: p, goals: [] });
@@ -434,7 +459,7 @@
       if (byMember.has(g.profile_id)) byMember.get(g.profile_id).goals.push(g);
     }
 
-    const blocks = [...byMember.values()].map(({ profile, goals: mGoals }) => {
+    const memberBlocks = [...byMember.values()].map(({ profile, goals: mGoals }) => {
       const totalPts = mGoals.reduce((s, g) => {
         const base = g.difficulty === 'complex' ? 5 : 2;
         const bonus = bonusByGoal.get(g.id) ?? 0;
@@ -474,7 +499,7 @@
           </div>
           ${mGoals.length ? goalsHTML : `<div style="font-size:24px;color:var(--text-muted);text-align:center;padding:8px">Nenhuma meta entregue esta temporada</div>`}
         </div>`;
-    }).join('');
+    });
 
     const grandTotal = completedGoals.reduce((s, g) => {
       const base = g.difficulty === 'complex' ? 5 : 2;
@@ -498,13 +523,20 @@
         </button>
       </div>` : '';
 
+    const bountyHTML = renderBountySection(true);
+    const items = (bountyHTML ? [bountyHTML] : []).concat(memberBlocks);
+    const bodyHTML = items.map((html, i) => animate
+      ? `<div class="reveal-rise" style="animation-delay:${(i * 0.12).toFixed(2)}s">${html}</div>`
+      : html
+    ).join('');
+
     return `
       <div class="card">
         <div class="card-header">
           <div class="card-title">Resultados da Temporada</div>
           <div style="font-size:24px;font-weight:700;color:var(--amber)">${grandTotal}pts total</div>
         </div>
-        <div class="card-body" style="padding:16px">${renderBountySection(true)}${blocks}</div>
+        <div class="card-body" style="padding:16px">${bodyHTML}</div>
       </div>
       ${advanceBtn}`;
   }

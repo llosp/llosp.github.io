@@ -78,6 +78,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/skrill/js/bounties.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
   // ── Auth ───────────────────────────────────────────────────────────────────────
@@ -342,12 +343,44 @@
         </div>
       </div>` : '';
 
+    const cur = D.weeks.find(w => w.is_current);
+    const bountyPanel = cur ? `
+      <div class="card" style="margin-bottom:12px;border:2px solid var(--sec-border)">
+        <div class="card-body" style="padding:14px">
+          <div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">
+            <img src="/skrill/img/bounty.svg" alt="bounty" style="width:24px;height:24px">
+            <span style="font-size:24px;font-weight:700">Bounty — Temporada ${cur.week_number}</span>
+          </div>
+          <div style="font-size:20px;color:var(--text-muted);margin-bottom:12px">
+            ${cur.bounty_title ? `Bounty ativa: <strong>${cur.bounty_title}</strong>` : 'Nenhuma bounty sorteada nesta temporada.'}
+          </div>
+          <div class="inline-form" style="align-items:flex-end">
+            <div class="form-group" style="margin:0"><label class="form-label">Chance da Bounty (%)</label>
+              <input id="bounty-chance" class="form-input" type="number" min="0" max="100" value="${cur.bounty_chance ?? 20}"/></div>
+            <button class="btn btn-primary btn-sm" onclick="saveBountyChance('${cur.id}')">Salvar chance</button>
+          </div>
+          <div style="font-size:18px;color:var(--text-muted);margin-top:8px">
+            Chance registrada nesta temporada. A próxima parte deste valor: +5% se não sortear, volta a 20% quando sortear.
+          </div>
+        </div>
+      </div>` : '';
+
     el.innerHTML = `
       <div style="display:flex;justify-content:flex-end;margin-bottom:12px">
         <button class="btn btn-primary btn-sm" onclick="showNewWeekForm=true;renderWeeks()">+ Nova Temporada</button>
       </div>
+      ${bountyPanel}
       ${newForm}
       ${rows || emptyState('Nenhuma temporada')}`;
+  }
+
+  async function saveBountyChance(id) {
+    const v = parseInt(document.getElementById('bounty-chance').value);
+    if (isNaN(v) || v < 0 || v > 100) return toast('Chance deve ser entre 0 e 100!', '#ef4444');
+    const { error } = await sb.from('weeks').update({ bounty_chance: v }).eq('id', id);
+    if (error) return toast(error.message, '#ef4444');
+    toast('Chance da bounty atualizada!');
+    await loadAll();
   }
 
   function nextWeekNum() {
@@ -417,7 +450,8 @@
     const isCur  = document.getElementById('nw-current').checked;
     const resetP = document.getElementById('nw-reset-pts').checked;
     if (isCur) await sb.from('weeks').update({ is_current: false }).not('id', 'is', null);
-    await sb.from('weeks').insert({ week_number: num, year, start_date: start, end_date: end, is_current: isCur, skrill_time_revealed: false });
+    const prevWeek = D.weeks.find(w => w.is_current) ?? D.weeks[0] ?? null;
+    await sb.from('weeks').insert({ week_number: num, year, start_date: start, end_date: end, is_current: isCur, skrill_time_revealed: false, ...computeBountyForNewSeason(prevWeek) });
     if (resetP) await sb.from('profiles').update({ weekly_points: 0 }).not('id', 'is', null);
     showNewWeekForm = false;
     toast('Temporada criada!');
@@ -696,7 +730,8 @@
       sb.from('goals').delete().eq('week_id', wid),
       sb.from('week_ready').delete().eq('week_id', wid),
       sb.from('point_history').delete().eq('week_id', wid),
-      sb.from('weeks').update({ skrill_time_revealed: false }).eq('id', wid),
+      sb.from('bounty_submissions').delete().eq('week_id', wid),
+      sb.from('weeks').update({ skrill_time_revealed: false, bounty_awarded: false }).eq('id', wid),
       sb.from('profiles').update({ weekly_points: 0 }).not('id', 'is', null),
     ]);
     toast('Reset total concluído!');
@@ -735,7 +770,7 @@
       sb.from('week_ready').delete().eq('week_id', wid),
       sb.from('peer_ratings').delete().eq('week_id', wid),
       sb.from('peer_rating_submissions').delete().eq('week_id', wid),
-      sb.from('weeks').update({ skrill_time_revealed: false }).eq('id', wid),
+      sb.from('weeks').update({ skrill_time_revealed: false, bounty_awarded: false }).eq('id', wid),
       sb.from('goals').update({ points_awarded: false }).eq('week_id', wid),
     ]);
 

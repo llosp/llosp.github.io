@@ -79,7 +79,31 @@
     </div>
   </div>
 
+  <!-- Modal entrega Bounty -->
+  <div id="bounty-modal" class="modal-overlay hidden">
+    <div class="modal">
+      <div class="modal-title" style="gap:8px"><img src="/skrill/img/bounty.svg" alt="bounty" style="width:24px;height:24px"> Entregar Bounty</div>
+      <div class="modal-body">
+        <div id="bounty-modal-title" style="font-size:24px;font-weight:700;margin-bottom:14px;color:var(--text)"></div>
+        <div class="form-group">
+          <label class="form-label">Prova de entrega <span style="color:var(--amber)">*</span></label>
+          <input id="bounty-files" type="file" multiple accept="image/*" required style="display:none" onchange="updateBountyFileList()"/>
+          <button type="button" class="btn btn-ghost btn-full" onclick="document.getElementById('bounty-files').click()">
+            Selecionar imagens
+          </button>
+          <div id="bounty-file-list" style="margin-top:8px;font-size:22px;color:var(--text-muted)">Nenhuma imagem selecionada</div>
+        </div>
+        <div id="bounty-error" class="form-error hidden"></div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-ghost" onclick="closeBountyModal()">Cancelar</button>
+        <button type="button" id="bounty-submit" class="btn btn-primary" onclick="submitBounty()">Confirmar Entrega</button>
+      </div>
+    </div>
+  </div>
+
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/skrill/js/bounties.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
   if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
@@ -90,6 +114,7 @@
   let allGoals        = [];
   let isParticipating = false;
   let pendingGoalId   = null;
+  let bountySubs      = [];
 
   async function init() {
     const stored = requireAuth();
@@ -108,15 +133,18 @@
     document.getElementById('mobile-nav-root').innerHTML = renderMobileNav('weekly');
 
     if (week) {
-      const [{ data: goals }, { data: part }] = await Promise.all([
+      const [{ data: goals }, { data: part }, { data: bsubs }] = await Promise.all([
         sb.from('goals').select('*, profile:profiles(*)')
           .eq('week_id', week.id)
           .order('created_at', { ascending: false }),
         sb.from('season_participants').select('id')
           .eq('week_id', week.id).eq('profile_id', profile.id).maybeSingle(),
+        sb.from('bounty_submissions').select('*, profile:profiles(*)')
+          .eq('week_id', week.id).order('created_at', { ascending: false }),
       ]);
       allGoals = goals ?? [];
       isParticipating = !!part;
+      bountySubs = bsubs ?? [];
     }
 
     renderPage();
@@ -162,6 +190,8 @@
           </div>
           ${revealed ? '' : `<button class="btn btn-primary" onclick="openModal()">+ Declarar Meta</button>`}
         </div>
+
+        ${renderBountyCard(revealed)}
 
         <div class="tab-list">
           <button class="tab-btn active" data-tab="tab-all"    onclick="switchTab('tab-all')">
@@ -224,6 +254,81 @@
           ${actions}
         </div>
       </div>`;
+  }
+
+  function renderBountyCard(revealed) {
+    if (!currentWeek?.bounty_title) return '';
+    const submitters = bountySubs.map(s => s.profile).filter(Boolean);
+    const iDelivered = bountySubs.some(s => s.profile_id === currentProfile?.id);
+    let footer = '';
+    if (iDelivered) {
+      footer = `<div style="font-size:24px;color:var(--sec-text);text-transform:uppercase;display:flex;align-items:center;gap:6px">${SVG_CHECK} Bounty entregue</div>`;
+    } else if (!revealed) {
+      footer = `<button class="btn btn-primary btn-sm" onclick="openBountyModal()">Entregar Bounty</button>`;
+    }
+    return bountyCardHTML(currentWeek, submitters, { footer });
+  }
+
+  function updateBountyFileList() {
+    const files = document.getElementById('bounty-files').files;
+    const list  = document.getElementById('bounty-file-list');
+    if (!files.length) { list.textContent = 'Nenhuma imagem selecionada'; return; }
+    list.innerHTML = Array.from(files).map(f =>
+      `<div style="padding:2px 0;border-bottom:1px solid var(--border)">${f.name} <span style="color:var(--text-light)">(${(f.size/1024).toFixed(0)} KB)</span></div>`
+    ).join('');
+  }
+
+  function openBountyModal() {
+    document.getElementById('bounty-modal-title').textContent = currentWeek?.bounty_title ?? '';
+    document.getElementById('bounty-files').value = '';
+    document.getElementById('bounty-file-list').textContent = 'Nenhuma imagem selecionada';
+    document.getElementById('bounty-error').classList.add('hidden');
+    document.getElementById('bounty-modal').classList.remove('hidden');
+  }
+
+  function closeBountyModal() {
+    document.getElementById('bounty-modal').classList.add('hidden');
+  }
+
+  async function submitBounty() {
+    const filesInput = document.getElementById('bounty-files');
+    const errEl      = document.getElementById('bounty-error');
+    const btn        = document.getElementById('bounty-submit');
+    errEl.classList.add('hidden');
+
+    if (!filesInput.files.length) {
+      errEl.textContent = 'Selecione pelo menos uma imagem.';
+      errEl.classList.remove('hidden');
+      return;
+    }
+
+    btn.disabled = true; btn.textContent = 'Enviando...';
+    try {
+      const urls = [];
+      for (const file of filesInput.files) {
+        const webp = await convertToWebP(file);
+        const path = `bounty/${currentWeek.id}/${currentProfile.id}/${Date.now()}.webp`;
+        const { error: upErr } = await sb.storage.from('deliveries').upload(path, webp, { contentType: 'image/webp' });
+        if (upErr) throw upErr;
+        const { data: pub } = sb.storage.from('deliveries').getPublicUrl(path);
+        urls.push(pub.publicUrl);
+      }
+
+      const { data: row, error: insErr } = await sb.from('bounty_submissions').upsert(
+        { week_id: currentWeek.id, profile_id: currentProfile.id, image_urls: urls },
+        { onConflict: 'week_id,profile_id' }
+      ).select('*, profile:profiles(*)').single();
+      if (insErr) throw insErr;
+
+      bountySubs = [row, ...bountySubs.filter(s => s.profile_id !== currentProfile.id)];
+      closeBountyModal();
+      renderPage();
+    } catch (err) {
+      errEl.textContent = err.message ?? 'Erro ao enviar. Tente novamente.';
+      errEl.classList.remove('hidden');
+    } finally {
+      btn.disabled = false; btn.textContent = 'Confirmar Entrega';
+    }
   }
 
   async function handleAddGoal(e) {
@@ -361,7 +466,7 @@
   document.addEventListener('change', e => {
     if (e.target?.name === 'goal-difficulty') updateDiffPills();
   });
-  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeDeliveryModal(); } });
+  document.addEventListener('keydown', e => { if (e.key === 'Escape') { closeModal(); closeDeliveryModal(); closeBountyModal(); } });
 
   init();
   initSkrillWalker();

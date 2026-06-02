@@ -20,6 +20,7 @@
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/skrill/js/bounties.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
   if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
@@ -39,6 +40,7 @@
   let mySubmitted       = false;
   let submissionIds     = new Set();   // profile_ids that have finalized
   let bonusByGoal       = new Map();   // goal_id -> sum of all bonuses (post-close)
+  let bountySubs        = [];          // bounty submissions for this week (with profile)
   let finalizing        = false;
 
   async function init() {
@@ -74,6 +76,7 @@
       { data: myR },
       { data: subs },
       { data: allR },
+      { data: bsubs },
     ] = await Promise.all([
       sb.from('week_ready').select('*').eq('week_id', currentWeek.id),
       sb.from('goals').select('*, profile:profiles(*)').eq('week_id', currentWeek.id),
@@ -81,6 +84,7 @@
       sb.from('peer_ratings').select('goal_id,amount').eq('week_id', currentWeek.id).eq('rater_id', stored.id),
       sb.from('peer_rating_submissions').select('rater_id').eq('week_id', currentWeek.id),
       sb.from('peer_ratings').select('goal_id,amount').eq('week_id', currentWeek.id),
+      sb.from('bounty_submissions').select('*, profile:profiles(*)').eq('week_id', currentWeek.id).order('created_at', { ascending: false }),
     ]);
     readyIds       = new Set((ready ?? []).map(r => r.profile_id));
     weekGoals      = goals ?? [];
@@ -101,6 +105,8 @@
     for (const r of (allR ?? [])) {
       bonusByGoal.set(r.goal_id, (bonusByGoal.get(r.goal_id) ?? 0) + r.amount);
     }
+
+    bountySubs = (bsubs ?? []).filter(s => participantIds.has(s.profile_id));
   }
 
   function subscribeRealtime() {
@@ -288,6 +294,42 @@
     return weekGoals.filter(g => g.status === 'completed' && participantIds.has(g.profile_id));
   }
 
+  // Seção de entregas da Bounty no Skrill Time (sem stepper de avaliação).
+  // showPoints = true na fase de revelação (exibe os pontos calculados por contagem).
+  function renderBountySection(showPoints) {
+    if (!currentWeek?.bounty_title || !bountySubs.length) return '';
+    const bpts = (typeof bountyPointsFor === 'function') ? bountyPointsFor(bountySubs.length) : 0;
+    const cards = bountySubs.map(s => {
+      const profile = s.profile;
+      const imgs = s.image_urls ?? [];
+      return `
+        <div class="rating-card">
+          <div class="rating-card-head">
+            ${profile ? avatarHTML(profile) : ''}
+            <div style="flex:1;min-width:0">
+              <div style="font-size:22px;color:var(--text-muted);text-transform:uppercase">${profile?.name ?? '?'}</div>
+              <div style="font-size:26px;font-weight:700">${currentWeek.bounty_title}</div>
+            </div>
+            ${showPoints ? `<span class="xp-earned">+${bpts}pts</span>` : ''}
+          </div>
+          ${imgs.length ? `<div class="delivery-images">
+            ${imgs.map(u => `<div class="bounty-img-wrap"><img class="reveal-img" src="${u}" alt="bounty">${profile ? avatarHTML(profile, 'avatar-corner') : ''}</div>`).join('')}
+          </div>` : ''}
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="card bounty-card" style="margin-bottom:14px">
+        <div class="bounty-head">
+          <img src="/skrill/img/bounty.svg" alt="bounty" style="width:24px;height:24px">
+          <span class="bounty-label">Bounty</span>
+        </div>
+        <div class="bounty-title">${currentWeek.bounty_title}</div>
+        ${currentWeek.bounty_description ? `<div class="bounty-desc" style="margin-bottom:12px">${currentWeek.bounty_description}</div>` : ''}
+        ${cards}
+      </div>`;
+  }
+
   function renderRatingPhase() {
     const goals = deliveredGoals();
     const bonusTotal = bonusPoolFor(allProfiles.length);
@@ -297,6 +339,7 @@
       // Auto-close immediately if nothing to rate
       const adminBtn = isAdmin() ? `<button class="btn btn-primary btn-sm" style="margin-top:14px" onclick="forceFinalize()">Forçar Encerramento</button>` : '';
       return `
+        ${renderBountySection(false)}
         <div class="card" style="padding:36px 20px;text-align:center">
           <div style="font-size:30px;font-weight:700;margin-bottom:8px">Nenhuma entrega esta temporada</div>
           <div style="font-size:22px;color:var(--text-muted);text-transform:uppercase">Nada para avaliar.</div>
@@ -304,7 +347,7 @@
         </div>`;
     }
 
-    if (mySubmitted) return renderWaitingForOthers(goals);
+    if (mySubmitted) return `${renderBountySection(false)}${renderWaitingForOthers(goals)}`;
 
     const goalsHTML = goals.map(g => {
       const profile = g.profile;
@@ -338,6 +381,7 @@
 
     const canSubmit = myUsed === bonusTotal;
     return `
+      ${renderBountySection(false)}
       <div class="card" style="margin-bottom:14px">
         <div class="card-header">
           <div class="card-title">Avaliação por pares</div>
@@ -460,7 +504,7 @@
           <div class="card-title">Resultados da Temporada</div>
           <div style="font-size:24px;font-weight:700;color:var(--amber)">${grandTotal}pts total</div>
         </div>
-        <div class="card-body" style="padding:16px">${blocks}</div>
+        <div class="card-body" style="padding:16px">${renderBountySection(true)}${blocks}</div>
       </div>
       ${advanceBtn}`;
   }

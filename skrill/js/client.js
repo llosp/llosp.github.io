@@ -99,6 +99,53 @@ function bonusPoolFor(n) {
   return Math.max(1, Math.floor((n ?? 0) / 2));
 }
 
+// ── Bounties ─────────────────────────────────────────────────────────────────────
+// Sorteio só acontece na criação de uma nova temporada. Chance base 20%, +5% por
+// temporada sem sorteio, volta a 20% quando uma Bounty é sorteada.
+function pickBounty() {
+  return BOUNTIES[Math.floor(Math.random() * BOUNTIES.length)];
+}
+function computeBountyForNewSeason(prevWeek) {
+  let chance = 20;
+  if (prevWeek) chance = prevWeek.bounty_title ? 20 : ((prevWeek.bounty_chance ?? 20) + 5);
+  const b = (Math.random() * 100 < chance) ? pickBounty() : null;
+  return {
+    bounty_title:       b?.title ?? null,
+    bounty_description: b?.description ?? null,
+    bounty_chance:      chance,
+  };
+}
+// Pontos da Bounty por nº de jogadores que entregaram.
+function bountyPointsFor(n) {
+  if (n <= 0) return 0;
+  if (n === 1) return 7;
+  if (n === 2) return 4;
+  if (n === 3) return 3;
+  return 2;
+}
+// Card especial da Bounty (Dashboard / Season Goals). `submitters` = profiles que
+// entregaram. `opts.footer` = HTML opcional (botão de entrega ou CTA).
+function bountyCardHTML(week, submitters = [], opts = {}) {
+  if (!week?.bounty_title) return '';
+  const avatars = submitters.length
+    ? `<div class="bounty-avatars">${submitters.map(p => avatarHTML(p)).join('')}</div>`
+    : `<div style="font-size:22px;color:var(--sec-text);text-transform:uppercase">Ninguém entregou ainda</div>`;
+  return `
+    <div class="bounty-card">
+      <div class="bounty-head">
+        <img src="/skrill/img/bounty.svg" alt="bounty" style="width:26px;height:26px">
+        <span class="bounty-label">Bounty</span>
+      </div>
+      <div class="bounty-title">${week.bounty_title}</div>
+      ${week.bounty_description ? `<div class="bounty-desc">${week.bounty_description}</div>` : ''}
+      <div class="bounty-delivered-by">
+        <div style="font-size:22px;color:var(--sec-text);text-transform:uppercase;margin-bottom:6px">Entregue por:</div>
+        ${avatars}
+      </div>
+      ${opts.footer ? `<div class="bounty-footer">${opts.footer}</div>` : ''}
+    </div>`;
+}
+
 function renderSeasonLocked(week, profile, pageLabel, pageTitle) {
   const wSub = week ? ` · Temporada ${week.week_number}` : '';
   const safeWeekId = week?.id ?? '';
@@ -258,6 +305,7 @@ async function startSeason() {
     end_date:             fmt(nextWeek),
     is_current:           true,
     skrill_time_revealed: false,
+    ...computeBountyForNewSeason(null),
   });
 
   if (error) {
@@ -340,6 +388,9 @@ async function advanceSeason(weekId, nextNum, nextYear) {
   const btn = document.getElementById('advance-confirm-btn');
   if (btn) { btn.disabled = true; btn.textContent = '...'; }
 
+  const { data: prevWeek } = await sb.from('weeks')
+    .select('bounty_title,bounty_chance').eq('id', weekId).maybeSingle();
+
   await sb.from('weeks').update({ is_current: false }).eq('id', weekId);
   await sb.from('goals').delete().eq('week_id', weekId).eq('status', 'active');
   await sb.from('weeks').insert({
@@ -349,6 +400,7 @@ async function advanceSeason(weekId, nextNum, nextYear) {
     end_date:             endDate,
     is_current:           true,
     skrill_time_revealed: false,
+    ...computeBountyForNewSeason(prevWeek),
   });
   await sb.from('profiles').update({ weekly_points: 0 }).not('id', 'is', null);
 
@@ -737,6 +789,37 @@ async function finalizeSeasonById(weekId) {
         weekly_points: prof.weekly_points,
       }).eq('id', g.profile_id);
     }
+  }
+
+  // Bounty: pontua os participantes que entregaram, conforme a contagem.
+  // Idempotente via weeks.bounty_awarded (independente do guard de goals).
+  const { data: week } = await sb.from('weeks')
+    .select('bounty_title,bounty_awarded').eq('id', weekId).maybeSingle();
+  if (week?.bounty_title && !week.bounty_awarded) {
+    const { data: subs } = await sb.from('bounty_submissions')
+      .select('profile_id').eq('week_id', weekId);
+    const bountyProfiles = [...new Set((subs ?? [])
+      .map(s => s.profile_id)
+      .filter(id => participantIds.has(id)))];
+    const bpts = bountyPointsFor(bountyProfiles.length);
+    if (bpts > 0) {
+      for (const pid of bountyProfiles) {
+        await sb.from('point_history').insert({
+          profile_id: pid, amount: bpts, reason: 'bounty',
+          goal_id: null, week_id: weekId,
+        });
+        const prof = allProfiles.find(p => p.id === pid);
+        if (prof) {
+          prof.total_points  = (prof.total_points  ?? 0) + bpts;
+          prof.weekly_points = (prof.weekly_points ?? 0) + bpts;
+          await sb.from('profiles').update({
+            total_points:  prof.total_points,
+            weekly_points: prof.weekly_points,
+          }).eq('id', pid);
+        }
+      }
+    }
+    await sb.from('weeks').update({ bounty_awarded: true }).eq('id', weekId);
   }
 
   // Streaks: qualquer perfil que completou ao menos uma meta nesta temporada

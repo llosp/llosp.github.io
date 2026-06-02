@@ -1037,6 +1037,27 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 }
 .delivery-img.blurred { filter: blur(14px); pointer-events: none; }
 
+/* ── Bounty ──────────────────────────────────────────────────────────────────── */
+.bounty-card {
+  background: var(--sec-bg); border: 2px solid var(--sec-border);
+  box-shadow: var(--shadow); padding: 16px; margin-bottom: 16px;
+}
+.bounty-head { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+.bounty-label {
+  font-family: 'Micro 5', monospace; font-size: 24px; font-weight: bold;
+  color: var(--sec-text); text-transform: uppercase; letter-spacing: 0.06em;
+}
+.bounty-title { font-family: 'Jersey 25', monospace; font-size: 28px; color: var(--text); line-height: 1.1; }
+.bounty-desc { font-size: 24px; color: var(--text); margin-top: 6px; }
+.bounty-delivered-by { border-top: 1px solid var(--sec-border); margin-top: 12px; padding-top: 10px; }
+.bounty-avatars { display: flex; flex-wrap: wrap; gap: 6px; }
+.bounty-footer { margin-top: 12px; }
+.bounty-img-wrap { position: relative; }
+.bounty-img-wrap .avatar.avatar-corner {
+  position: absolute; right: 4px; bottom: 4px; width: 28px; height: 28px;
+  font-size: 18px; border: 2px solid var(--surface); box-shadow: var(--shadow);
+}
+
 /* ── Week section (profile timeline) ────────────────────────────────────────── */
 .week-section { margin-bottom: 24px; }
 .week-section-header {

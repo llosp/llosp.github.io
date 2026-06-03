@@ -305,9 +305,12 @@
     try {
       const urls = [];
       for (const file of filesInput.files) {
-        const webp = await convertToWebP(file);
-        const path = `bounty/${currentWeek.id}/${currentProfile.id}/${Date.now()}.webp`;
-        const { error: upErr } = await sb.storage.from('deliveries').upload(path, webp, { contentType: 'image/webp' });
+        const isGif = file.type === 'image/gif';
+        const uploadFile = isGif ? file : await convertToWebP(file);
+        const ext  = isGif ? 'gif' : 'webp';
+        const mime = isGif ? 'image/gif' : 'image/webp';
+        const path = `bounty/${currentWeek.id}/${currentProfile.id}/${Date.now()}.${ext}`;
+        const { error: upErr } = await sb.storage.from('deliveries').upload(path, uploadFile, { contentType: mime });
         if (upErr) throw upErr;
         const { data: pub } = sb.storage.from('deliveries').getPublicUrl(path);
         urls.push(pub.publicUrl);
@@ -410,9 +413,12 @@
     try {
       const urls = [];
       for (const file of filesInput.files) {
-        const webp = await convertToWebP(file);
-        const path = `${pendingGoalId}/${Date.now()}.webp`;
-        const { error: upErr } = await sb.storage.from('deliveries').upload(path, webp, { contentType: 'image/webp' });
+        const isGif = file.type === 'image/gif';
+        const uploadFile = isGif ? file : await convertToWebP(file);
+        const ext  = isGif ? 'gif' : 'webp';
+        const mime = isGif ? 'image/gif' : 'image/webp';
+        const path = `${pendingGoalId}/${Date.now()}.${ext}`;
+        const { error: upErr } = await sb.storage.from('deliveries').upload(path, uploadFile, { contentType: mime });
         if (upErr) throw upErr;
         const { data: pub } = sb.storage.from('deliveries').getPublicUrl(path);
         urls.push(pub.publicUrl);

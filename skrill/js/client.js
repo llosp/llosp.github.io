@@ -723,6 +723,12 @@ function initConfigButton() {
         <button id="config-walker-row" class="config-row" onclick="toggleWalkerSetting()">
           ${configWalkerRowInner()}
         </button>
+        ${isAdmin() ? `
+        <div class="config-section-label" style="margin-top:12px">Admin</div>
+        <a href="/skrill/admin/" class="config-row" style="text-decoration:none;color:inherit">
+          <img src="/skrill/img/admin.svg" alt="admin" style="width:18px;height:18px">
+          <span>Painel Admin</span>
+        </a>` : ''}
       </div>
     </div>`;
   document.body.appendChild(overlay);

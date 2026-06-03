@@ -65,6 +65,7 @@
     const { data: profiles, error } = await sb
       .from('profiles')
       .select('id, name, avatar_data')
+      .or('is_bot.is.null,is_bot.eq.false')
       .order('sort_order', { ascending: true, nullsFirst: false })
       .order('name');
 

@@ -695,7 +695,7 @@ html[data-theme="dark"] .entry-name-sub img[src$="streak.svg"] { filter: brightn
 .tab-btn:last-child { border-right: none; }
 .tab-btn.active { background: var(--amber); color: #000; }
 .tab-btn:not(.active):hover { background: var(--surface-hover); color: var(--text); }
-.tab-count { font-size: 24px; background: var(--bg); border: 1px solid var(--border); padding: 0 4px; }
+.tab-count { font-size: 24px; color: var(--text); background: var(--bg); border: 1px solid var(--border); padding: 0 4px; }
 .tab-panel { display: none; }
 .tab-panel.active { display: block; }
 

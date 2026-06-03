@@ -30,6 +30,7 @@ function requireAuth() {
   if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; return null; }
   const p = getStoredProfile();
   if (!p) { window.location.href = '/skrill/select-profile/'; return null; }
+  tickBoiBot().catch(() => {});
   return p;
 }
 
@@ -843,6 +844,108 @@ async function finalizeSeasonById(weekId) {
   }
 
   return { ok: true, awarded: toAward.length };
+}
+
+// ── Boi bot ─────────────────────────────────────────────────────────────────
+// O boi nao e um perfil logavel: e um competidor automatico. A cada dia (no
+// maximo 1x, na primeira visita de alguem ao app) ele rola os dados para criar
+// e cumprir metas tematicas de boi. Roda client-side porque o site e estatico.
+const BOI_CHANCE_CREATE  = 0.35;  // chance/dia de declarar uma meta nova
+const BOI_CHANCE_COMPLEX = 0.10;  // dentre as criadas, chance de ser complexa
+const BOI_COMPLETE_STEP  = 0.20;  // +20% de chance de cumprir por dia aberta
+const BOI_ACTIVITIES = [
+  { title: 'aprender blender',      img: '/skrill/img/boi/boi_3Dmodelo.webp' },
+  { title: 'cumprir proposito',     img: '/skrill/img/boi/boi_bife_carne_no_prato.webp' },
+  { title: 'treino de intimidacao', img: '/skrill/img/boi/boi_bravo.webp' },
+  { title: 'trabalho bracal',       img: '/skrill/img/boi/boi_carrossa.webp' },
+  { title: 'intercambio cultural',  img: '/skrill/img/boi/boi_chines_tradicional.jpeg' },
+  { title: 'aula de desenho',       img: '/skrill/img/boi/boi_desenho_simples.webp' },
+  { title: 'virar premium',         img: '/skrill/img/boi/boi_dourado.webp' },
+  { title: 'bombar nas redes',      img: '/skrill/img/boi/boi_emoji.webp' },
+  { title: 'fazer bulking',         img: '/skrill/img/boi/boi_gordo.webp' },
+  { title: 'cuidar da autoestima',  img: '/skrill/img/boi/boi_lindo.webp' },
+  { title: 'atualizar o linkedin',  img: '/skrill/img/boi/boi_sem_fundo.webp' },
+  { title: 'comecar a investir',    img: '/skrill/img/boi/boi_stocks_went_higher.webp' },
+  { title: 'encarar o urso',        img: '/skrill/img/boi/boi_vs_urso_estatua.webp' },
+  { title: 'comecar terapia',       img: '/skrill/img/boi/boizinho_triste_pensativo.webp' },
+];
+
+function boiImageFor(title) {
+  return (BOI_ACTIVITIES.find(a => a.title === title) ?? BOI_ACTIVITIES[0]).img;
+}
+
+function ymd(date) { return date.toISOString().split('T')[0]; }
+function daysBetween(fromYmd, toYmd) {
+  const ms = new Date(toYmd + 'T00:00:00Z') - new Date(fromYmd + 'T00:00:00Z');
+  return Math.max(0, Math.floor(ms / 86400000));
+}
+
+async function tickBoiBot() {
+  try {
+    const { data: boi } = await sb.from('profiles').select('*').eq('is_bot', true).maybeSingle();
+    if (!boi) return;
+
+    // Trava atomica de 1x/dia: so o primeiro request concorrente casa a condicao.
+    const today = ymd(new Date());
+    const { data: claimed } = await sb.from('profiles')
+      .update({ bot_last_tick: today })
+      .eq('id', boi.id)
+      .or(`bot_last_tick.is.null,bot_last_tick.lt.${today}`)
+      .select('id');
+    if (!claimed?.length) return;
+
+    // So age enquanto a temporada esta aberta (antes da revelacao / Skrill Day).
+    const { data: week } = await sb.from('weeks').select('*').eq('is_current', true).maybeSingle();
+    if (!week || week.skrill_time_revealed) return;
+    if (week.end_date && today > week.end_date) return;
+
+    const { data: boiGoals } = await sb.from('goals')
+      .select('*').eq('profile_id', boi.id).eq('week_id', week.id);
+    let goals = boiGoals ?? [];
+
+    // Cria meta nova (pode acumular).
+    if (Math.random() < BOI_CHANCE_CREATE) {
+      const act        = BOI_ACTIVITIES[Math.floor(Math.random() * BOI_ACTIVITIES.length)];
+      const difficulty = Math.random() < BOI_CHANCE_COMPLEX ? 'complex' : 'simple';
+      const basePts    = difficulty === 'complex' ? 5 : 2;
+      const { data: created } = await sb.from('goals').insert({
+        profile_id:    boi.id,
+        week_id:       week.id,
+        title:         act.title,
+        status:        'active',
+        difficulty,
+        points_earned: basePts,
+      }).select('*').single();
+      if (created) goals = [...goals, created];
+    }
+
+    // Cumpre cada meta aberta: chance escala com os dias que ela esta aberta.
+    for (const g of goals) {
+      if (g.status !== 'active') continue;
+      const createdYmd = ymd(new Date(g.created_at));
+      const d = daysBetween(createdYmd, today);
+      if (d < 1) continue; // nao cumpre no mesmo dia em que criou
+      if (Math.random() < Math.min(1, BOI_COMPLETE_STEP * d)) {
+        await sb.from('goals').update({
+          status:       'completed',
+          completed_at: new Date().toISOString(),
+          image_urls:   [boiImageFor(g.title)],
+        }).eq('id', g.id);
+      }
+    }
+
+    // Registra o boi como participante (idempotente) para suas metas pontuarem
+    // e aparecerem na revelacao. Marca-o como sempre "pronto" e "avaliou" para
+    // nunca travar os gates do Skrill Time dos humanos.
+    if (goals.length) {
+      await sb.from('season_participants')
+        .upsert({ week_id: week.id, profile_id: boi.id }, { onConflict: 'week_id,profile_id', ignoreDuplicates: true });
+      await sb.from('week_ready')
+        .upsert({ week_id: week.id, profile_id: boi.id }, { onConflict: 'week_id,profile_id', ignoreDuplicates: true });
+      await sb.from('peer_rating_submissions')
+        .upsert({ week_id: week.id, rater_id: boi.id }, { onConflict: 'week_id,rater_id', ignoreDuplicates: true });
+    }
+  } catch (_) { /* nunca quebra a pagina */ }
 }
 
 async function convertToWebP(file, quality = 0.85) {

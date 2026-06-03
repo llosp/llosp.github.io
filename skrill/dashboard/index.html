@@ -207,7 +207,7 @@
       <div class="goal-row">
         <span>${g.status === 'completed' || g.status === 'beyond' ? SVG_CHECK : SVG_EMPTY}</span>
         <div class="goal-row-title">${g.title}</div>
-        ${statusBadge(g.status, g.points_earned)}
+        ${difficultyChip(g.difficulty)}
       </div>`).join('');
     return `
       <div class="card">

@@ -90,9 +90,9 @@ function statusBadge(status, points) {
 
 function difficultyChip(difficulty) {
   if (difficulty === 'complex') {
-    return `<span class="badge" style="background:#E8D5F5;color:var(--purple);border-color:var(--purple);font-size:20px;padding:1px 6px">Complexa</span>`;
+    return `<span class="badge" style="background:#E8D5F5;color:var(--purple);border-color:var(--purple)">Complexa</span>`;
   }
-  return `<span class="badge" style="background:#D6EAF8;color:var(--blue);border-color:var(--blue);font-size:20px;padding:1px 6px">Simples</span>`;
+  return `<span class="badge" style="background:#D6EAF8;color:var(--blue);border-color:var(--blue)">Simples</span>`;
 }
 
 function bonusPoolFor(n) {

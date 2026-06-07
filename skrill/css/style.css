@@ -546,6 +546,7 @@ canvas.particles { display: none; }
 .badge-completed { color: var(--green-dark); background: var(--green-soft); border-color: var(--green-dark); }
 .badge-beyond    { color: var(--purple);     background: var(--purple-soft); border-color: var(--purple); }
 .badge-failed    { color: var(--red);        background: var(--red-soft); border-color: var(--red); }
+.badge-attempted { color: var(--amber-deep); background: var(--amber-light); border-color: var(--amber); }
 
 /* ── Activity feed ──────────────────────────────────────────────────────────── */
 .activity-item { display: flex; gap: 10px; padding: 10px 0; border-bottom: 1px solid var(--border); }
@@ -641,8 +642,18 @@ html[data-theme="dark"] .entry-name-sub img[src$="streak.svg"] { filter: brightn
 /* ── Peer rating UI ─────────────────────────────────────────────────────────── */
 .rating-card {
   background: var(--bg); border: 1px solid var(--border);
-  padding: 12px; margin-bottom: 10px;
+  padding: 12px; margin-bottom: 10px; position: relative;
 }
+.report-btn {
+  position: absolute; top: 0; right: 0;
+  width: 34px; height: 34px;
+  border: none; border-left: 2px solid var(--amber); border-bottom: 2px solid var(--amber);
+  background: var(--amber-light);
+  display: flex; align-items: center; justify-content: center;
+  cursor: pointer; padding: 0; z-index: 1; transition: background 0.12s;
+}
+.report-btn:hover:not(:disabled) { background: var(--amber); }
+.report-btn.reported { background: var(--amber); cursor: default; opacity: 0.7; }
 .rating-card-head { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; }
 .rating-stepper {
   display: flex; align-items: center; gap: 8px;
@@ -654,6 +665,17 @@ html[data-theme="dark"] .entry-name-sub img[src$="streak.svg"] { filter: brightn
   font-family: 'Jersey 25', monospace; font-size: 32px;
   min-width: 36px; text-align: center; color: var(--amber-dark);
 }
+.vote-btn {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-family: 'Micro 5', monospace; font-size: 24px; font-weight: bold;
+  padding: 4px 14px; border: 1px solid var(--border);
+  background: var(--surface); color: var(--text-muted);
+  cursor: pointer; box-shadow: var(--shadow); transition: background 0.1s;
+}
+.vote-btn:hover:not(:disabled) { background: var(--surface-hover); color: var(--text); }
+.vote-btn:disabled { cursor: default; opacity: 0.7; }
+.vote-btn.voted-up   { background: var(--green-soft); border-color: var(--green-dark); color: var(--green-dark); }
+.vote-btn.voted-down { background: var(--red-soft);   border-color: var(--red);        color: var(--red); }
 
 /* ── Buttons ────────────────────────────────────────────────────────────────── */
 .btn {
@@ -722,17 +744,24 @@ textarea.form-input { resize: vertical; min-height: 70px; }
   transition: box-shadow 0.1s, transform 0.1s;
 }
 .goal-card:hover { box-shadow: 3px 3px 0 var(--border-dark); transform: translate(-1px,-1px); }
-.goal-card.beyond  { border-color: var(--purple); box-shadow: 2px 2px 0 var(--purple); }
+.goal-card.beyond    { border-color: var(--purple);     box-shadow: 2px 2px 0 var(--purple); }
 .goal-card.completed { border-color: var(--green-dark); box-shadow: 2px 2px 0 var(--green-dark); }
+.goal-card.attempted { border-color: var(--amber);      box-shadow: 2px 2px 0 var(--amber-dark); }
 .goal-card-top { display: flex; align-items: flex-start; gap: 12px; margin-bottom: 10px; }
 .goal-card-meta { flex: 1; min-width: 0; }
 .goal-user-row { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
 .goal-username { font-size: 24px; color: var(--text-muted); font-weight: bold; text-transform: uppercase; }
 .goal-time { font-size: 24px; color: var(--text-light); text-transform: uppercase; }
 .goal-title { font-size: 24px; font-weight: bold; line-height: 1.3; text-transform: uppercase; }
-.goal-title.done   { color: var(--green-dark); }
-.goal-title.failed { color: var(--text-light); text-decoration: line-through; }
+.goal-title.done     { color: var(--green-dark); }
+.goal-title.failed   { color: var(--text-light); text-decoration: line-through; }
+.goal-title.attempted { color: var(--amber-dark); font-style: italic; }
 .goal-desc { font-size: 24px; color: var(--text-muted); margin-top: 5px; }
+.attempt-reflection {
+  font-style: italic; font-size: 24px; color: var(--text-muted);
+  border-left: 3px solid var(--amber); padding-left: 10px;
+  margin: 8px 0;
+}
 .goal-footer { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
 .xp-earned { font-size: 24px; font-weight: bold; color: var(--amber-dark); }
 .goal-actions { margin-left: auto; display: flex; gap: 6px; }

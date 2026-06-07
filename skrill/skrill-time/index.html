@@ -45,6 +45,10 @@
   let bonusByGoal       = new Map();   // goal_id -> sum of all bonuses (post-close)
   let bountySubs        = [];          // bounty submissions for this week (with profile)
   let finalizing        = false;
+  let myReports         = new Set();   // goal_ids que eu denunciei
+  let reportsByGoal     = new Map();   // goal_id -> Set de reporter_ids
+  let attemptVotes      = new Map();   // goal_id -> [{ voter_id, vote }]
+  let myAttemptVotes    = new Map();   // goal_id -> 'up'|'down'
 
   async function init() {
     stored = requireAuth();
@@ -81,6 +85,8 @@
       { data: subs },
       { data: allR },
       { data: bsubs },
+      { data: reportRows },
+      { data: attemptVoteRows },
     ] = await Promise.all([
       sb.from('week_ready').select('*').eq('week_id', currentWeek.id),
       sb.from('goals').select('*, profile:profiles(*)').eq('week_id', currentWeek.id),
@@ -89,6 +95,8 @@
       sb.from('peer_rating_submissions').select('rater_id').eq('week_id', currentWeek.id),
       sb.from('peer_ratings').select('goal_id,amount').eq('week_id', currentWeek.id),
       sb.from('bounty_submissions').select('*, profile:profiles(*)').eq('week_id', currentWeek.id).order('created_at', { ascending: false }),
+      sb.from('delivery_reports').select('goal_id,reporter_id').eq('week_id', currentWeek.id),
+      sb.from('attempt_votes').select('goal_id,voter_id,vote').eq('week_id', currentWeek.id),
     ]);
     readyIds       = new Set((ready ?? []).map(r => r.profile_id));
     weekGoals      = goals ?? [];
@@ -111,6 +119,22 @@
     }
 
     bountySubs = (bsubs ?? []).filter(s => participantIds.has(s.profile_id));
+
+    myReports = new Set();
+    reportsByGoal = new Map();
+    for (const r of (reportRows ?? [])) {
+      if (r.reporter_id === stored.id) myReports.add(r.goal_id);
+      if (!reportsByGoal.has(r.goal_id)) reportsByGoal.set(r.goal_id, new Set());
+      reportsByGoal.get(r.goal_id).add(r.reporter_id);
+    }
+
+    attemptVotes = new Map();
+    myAttemptVotes = new Map();
+    for (const v of (attemptVoteRows ?? [])) {
+      if (!attemptVotes.has(v.goal_id)) attemptVotes.set(v.goal_id, []);
+      attemptVotes.get(v.goal_id).push({ voter_id: v.voter_id, vote: v.vote });
+      if (v.voter_id === stored.id) myAttemptVotes.set(v.goal_id, v.vote);
+    }
   }
 
   function subscribeRealtime() {
@@ -123,11 +147,15 @@
       .on('postgres_changes', { event: 'UPDATE', schema: 'public', table: 'weeks' }, payload => {
         if (payload.new?.id === currentWeek?.id) reload();
       })
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'delivery_reports' }, () => reload())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'attempt_votes' }, () => reload())
       .subscribe();
   }
 
   function stateSignature() {
-    return `${currentWeek?.skrill_time_revealed}|${readyIds.size}|${submissionIds.size}|${weekGoals.length}|${bountySubs.length}`;
+    const totalReports = [...reportsByGoal.values()].reduce((s, v) => s + v.size, 0);
+    const totalAttemptVotes = [...attemptVotes.values()].reduce((s, v) => s + v.length, 0);
+    return `${currentWeek?.skrill_time_revealed}|${readyIds.size}|${submissionIds.size}|${weekGoals.length}|${bountySubs.length}|${totalReports}|${totalAttemptVotes}`;
   }
 
   function startPolling() {
@@ -379,8 +407,14 @@
       const cur = myRatings.get(g.id) ?? 0;
       const imgs = g.image_urls ?? [];
       const isMine = g.profile_id === stored.id;
+      const reportCount  = reportsByGoal.get(g.id)?.size ?? 0;
+      const reportNeeded = [...participantIds].filter(id => id !== g.profile_id).length;
+      const alreadyReported = myReports.has(g.id);
       return `
         <div class="rating-card">
+          ${!isMine ? `<button class="report-btn${alreadyReported ? ' reported' : ''}" onclick="reportDelivery('${g.id}')" title="Denunciar entrega (${reportCount}/${reportNeeded})" ${alreadyReported ? 'disabled' : ''}>
+            <img src="/skrill/img/attention.svg" alt="denunciar" style="width:18px;height:18px">
+          </button>` : ''}
           <div class="rating-card-head">
             ${profile ? avatarHTML(profile) : ''}
             <div style="flex:1;min-width:0">
@@ -538,7 +572,113 @@
         </div>
         <div class="card-body" style="padding:16px">${bodyHTML}</div>
       </div>
+      ${renderAttemptSection(animate)}
       ${advanceBtn}`;
+  }
+
+  function renderAttemptSection(animate = false) {
+    const attempted = weekGoals.filter(g => g.status === 'attempted' && participantIds.has(g.profile_id));
+    if (!attempted.length) return '';
+
+    const cards = attempted.map((g, i) => {
+      const profile     = g.profile;
+      const votes       = attemptVotes.get(g.id) ?? [];
+      const upCount     = votes.filter(v => v.vote === 'up').length;
+      const downCount   = votes.filter(v => v.vote === 'down').length;
+      const myVote      = myAttemptVotes.get(g.id);
+      const isMine      = g.profile_id === stored.id;
+      const imgs        = g.attempt_images ?? [];
+      const awarded     = !!g.attempt_pts_awarded;
+
+      const voteRow = !isMine ? `
+        <div style="display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap">
+          <button class="vote-btn${myVote === 'up' ? ' voted-up' : ''}" onclick="voteAttempt('${g.id}','up')" ${myVote ? 'disabled' : ''}>
+            &#9650; ${upCount}
+          </button>
+          <button class="vote-btn${myVote === 'down' ? ' voted-down' : ''}" onclick="voteAttempt('${g.id}','down')" ${myVote ? 'disabled' : ''}>
+            &#9660; ${downCount}
+          </button>
+          ${awarded
+            ? `<span class="badge badge-completed" style="font-size:20px">+1pt consolacao</span>`
+            : `<span style="font-size:20px;color:var(--text-muted);text-transform:uppercase">${myVote ? 'Votado' : 'Vote acima'}</span>`}
+        </div>` : `
+        <div style="margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
+          <span style="font-size:20px;color:var(--text-muted)">&#9650; ${upCount} &nbsp; &#9660; ${downCount}</span>
+          ${awarded ? `<span class="badge badge-completed" style="font-size:20px">+1pt consolacao</span>` : ''}
+        </div>`;
+
+      const cardHTML = `
+        <div style="padding:14px 0;${i < attempted.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap">
+            ${profile ? avatarHTML(profile) : ''}
+            <div style="flex:1;min-width:0">
+              <div style="font-size:22px;color:var(--text-muted);text-transform:uppercase">${profile?.name ?? '?'}</div>
+              <div style="font-size:24px;font-weight:700">${g.title}</div>
+            </div>
+            ${difficultyChip(g.difficulty)}
+          </div>
+          ${g.attempt_text ? `<div class="attempt-reflection">"${g.attempt_text}"</div>` : ''}
+          ${imgs.length ? `<div class="delivery-images" style="margin-top:8px">${imgs.map(u => `<img class="reveal-img" src="${u}" alt="tentativa">`).join('')}</div>` : ''}
+          ${voteRow}
+        </div>`;
+
+      return animate
+        ? `<div class="reveal-rise" style="animation-delay:${(i * 0.12).toFixed(2)}s">${cardHTML}</div>`
+        : cardHTML;
+    }).join('');
+
+    return `
+      <div class="card" style="margin-top:14px">
+        <div class="card-header">
+          <div class="card-title">Tentativas</div>
+          <div style="font-size:20px;color:#000;text-transform:uppercase">${attempted.length} tentativa${attempted.length !== 1 ? 's' : ''}</div>
+        </div>
+        <div class="card-body" style="padding:14px">${cards}</div>
+      </div>`;
+  }
+
+  async function voteAttempt(goalId, vote) {
+    if (myAttemptVotes.has(goalId)) return;
+    const goal = weekGoals.find(g => g.id === goalId);
+    if (!goal || goal.profile_id === stored.id) return;
+
+    const { error } = await sb.from('attempt_votes').insert({
+      week_id:  currentWeek.id,
+      goal_id:  goalId,
+      voter_id: stored.id,
+      vote,
+    });
+    if (error && !error.message.includes('duplicate')) {
+      toast('Erro ao votar', '#ef4444');
+      return;
+    }
+    myAttemptVotes.set(goalId, vote);
+
+    // Busca votos atualizados para decidir se concede o ponto
+    const { data: votes } = await sb.from('attempt_votes')
+      .select('voter_id,vote').eq('goal_id', goalId);
+    const upCount   = (votes ?? []).filter(v => v.vote === 'up').length;
+    const downCount = (votes ?? []).filter(v => v.vote === 'down').length;
+
+    if (upCount > downCount && !goal.attempt_pts_awarded) {
+      const { data: prof } = await sb.from('profiles')
+        .select('total_points,weekly_points').eq('id', goal.profile_id).single();
+      if (prof) {
+        await sb.from('profiles').update({
+          total_points:  (prof.total_points  ?? 0) + 1,
+          weekly_points: (prof.weekly_points ?? 0) + 1,
+        }).eq('id', goal.profile_id);
+      }
+      await sb.from('point_history').insert({
+        profile_id: goal.profile_id, amount: 1,
+        reason:     'attempt_consolation',
+        goal_id:    goalId, week_id: currentWeek.id,
+      });
+      await sb.from('goals').update({ attempt_pts_awarded: true }).eq('id', goalId);
+      toast('+1pt de consolacao concedido!', '#22c55e');
+    }
+
+    await reload();
   }
 
   // Tela para quem NÃO participou, quando a temporada já foi revelada/encerrada
@@ -671,6 +811,34 @@
     finalizing = true;
     try { await finalizeSeason(); }
     finally { finalizing = false; }
+  }
+
+  async function reportDelivery(goalId) {
+    if (myReports.has(goalId)) return;
+    const goal = weekGoals.find(g => g.id === goalId);
+    if (!goal || goal.profile_id === stored.id) return;
+
+    const { error } = await sb.from('delivery_reports').insert({
+      week_id:     currentWeek.id,
+      goal_id:     goalId,
+      reporter_id: stored.id,
+    });
+    if (error && !error.message.includes('duplicate')) {
+      toast('Erro ao denunciar', '#ef4444');
+      return;
+    }
+    myReports.add(goalId);
+
+    // Verifica se o limiar foi atingido (todos exceto o dono denunciaram)
+    const { data: reports } = await sb.from('delivery_reports')
+      .select('reporter_id').eq('goal_id', goalId);
+    const threshold = [...participantIds].filter(id => id !== goal.profile_id).length;
+    if ((reports?.length ?? 0) >= threshold && threshold > 0) {
+      await sb.from('goals').update({ status: 'failed' }).eq('id', goalId);
+      toast('Entrega cancelada por unanimidade', '#ef4444');
+    }
+
+    await reload();
   }
 
   async function forceFinalize() {

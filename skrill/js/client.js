@@ -83,6 +83,7 @@ function statusBadge(status, points) {
     active:    ['badge-active',    'Ativo'],
     completed: ['badge-completed', 'Feito ✓'],
     failed:    ['badge-failed',    'Perdeu'],
+    attempted: ['badge-attempted', 'Tentou'],
   };
   const [cls, label] = MAP[status] ?? ['badge-active', status];
   const pts = points > 0 ? `<span class="xp-earned" style="margin-left:4px">+${points}pts</span>` : '';

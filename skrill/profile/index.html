@@ -75,9 +75,10 @@
   if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
   else if (!getStoredProfile()) { window.location.href = '/skrill/select-profile/'; }
 
-  let viewedProfile = null;
-  let completedGoals = [];
-  let timelineLimit = 4;
+  let viewedProfile    = null;
+  let completedGoals   = [];
+  let allProfileGoals  = [];
+  let timelineLimit    = 4;
 
   async function init() {
     const stored = requireAuth();
@@ -107,7 +108,8 @@
 
     viewedProfile = profile;
     const isMe = profile.id === stored.id;
-    completedGoals = (goals ?? []).filter(g => g.status === 'completed');
+    completedGoals  = (goals ?? []).filter(g => g.status === 'completed');
+    allProfileGoals = goals ?? [];
 
     document.getElementById('app').innerHTML = `
       <div style="width:100%">
@@ -156,9 +158,11 @@
         <div class="tab-list">
           <button class="tab-btn active" data-tab="tab-timeline" onclick="switchTab('tab-timeline')">Temporadas</button>
           <button class="tab-btn" data-tab="tab-gallery" onclick="switchTab('tab-gallery')">Galeria</button>
+          <button class="tab-btn" data-tab="tab-evo" onclick="switchTab('tab-evo');renderEvoTab()">Evolucao</button>
         </div>
         <div id="tab-timeline" class="tab-panel active"></div>
         <div id="tab-gallery" class="tab-panel"></div>
+        <div id="tab-evo" class="tab-panel"></div>
       </div>`;
 
     timelineLimit = 4;
@@ -294,6 +298,123 @@
     return `<div class="profile-gallery">${items.map(it =>
       `<img class="delivery-img${it.revealed ? '' : ' blurred'}" src="${it.url}" alt="entrega">`
     ).join('')}</div>`;
+  }
+
+  function renderEvoTab() {
+    const goals    = allProfileGoals;
+    const total    = goals.length;
+    const completed = goals.filter(g => g.status === 'completed').length;
+    const attempted = goals.filter(g => g.status === 'attempted').length;
+    const pct       = total > 0 ? Math.round(completed / total * 100) + '%' : '—';
+
+    // ── stat cards ────────────────────────────────────────────────────────────
+    const statCards = `
+      <div class="stats-grid" style="margin-bottom:16px">
+        <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">Criadas</div></div>
+        <div class="stat-card"><div class="stat-value">${completed}</div><div class="stat-label">Completas</div></div>
+        <div class="stat-card"><div class="stat-value">${pct}</div><div class="stat-label">Aproveitamento</div></div>
+        <div class="stat-card"><div class="stat-value">${attempted}</div><div class="stat-label">Tentativas</div></div>
+      </div>`;
+
+    // ── aggregate by season ───────────────────────────────────────────────────
+    const seasonMap = new Map();
+    for (const g of goals) {
+      if (!g.week) continue;
+      const key = `${g.week.year}-${String(g.week.week_number).padStart(3,'0')}`;
+      if (!seasonMap.has(key)) {
+        seasonMap.set(key, { week_number: g.week.week_number, year: g.week.year, completed: 0, failed: 0, attempted: 0, pts: 0 });
+      }
+      const s = seasonMap.get(key);
+      if      (g.status === 'completed') { s.completed++; s.pts += g.points_earned ?? 0; }
+      else if (g.status === 'attempted') { s.attempted++; s.pts += g.points_earned ?? 0; }
+      else                               { s.failed++; }
+    }
+    const seasons = [...seasonMap.entries()]
+      .sort(([a],[b]) => a < b ? -1 : 1)
+      .map(([,v]) => v)
+      .slice(-8);
+
+    const CHART_H  = 120;
+    const noData   = `<div style="font-family:'Micro 5',monospace;font-size:24px;color:var(--text-muted);margin:auto">Sem dados</div>`;
+
+    // ── chart 1: metas por temporada ─────────────────────────────────────────
+    const maxGoals = seasons.length ? Math.max(...seasons.map(s => s.completed + s.failed + s.attempted), 1) : 1;
+    const goalBars = seasons.map(s => {
+      const tot = s.completed + s.failed + s.attempted;
+      const hG = s.completed ? Math.max(2, Math.round(s.completed / maxGoals * CHART_H)) : 0;
+      const hR = s.failed    ? Math.max(2, Math.round(s.failed    / maxGoals * CHART_H)) : 0;
+      const hA = s.attempted ? Math.max(2, Math.round(s.attempted / maxGoals * CHART_H)) : 0;
+      return `
+        <div class="evo-bar-col">
+          <div class="evo-bar-val">${tot || ''}</div>
+          <div class="evo-bar-group">
+            <div class="evo-bar green" style="height:${hG}px" title="Completas: ${s.completed}"></div>
+            <div class="evo-bar red"   style="height:${hR}px" title="Falhas: ${s.failed}"></div>
+            <div class="evo-bar amber" style="height:${hA}px" title="Tentativas: ${s.attempted}"></div>
+          </div>
+          <div class="evo-bar-lbl">T${s.week_number}</div>
+        </div>`;
+    }).join('');
+
+    const chartMetas = `
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-header"><div class="card-title">Metas por Temporada</div></div>
+        <div class="card-body" style="padding:14px">
+          <div class="evo-chart">${seasons.length ? goalBars : noData}</div>
+          <div class="evo-legend">
+            <div class="evo-legend-item"><div class="evo-legend-swatch" style="background:var(--green-dark)"></div> Completas</div>
+            <div class="evo-legend-item"><div class="evo-legend-swatch" style="background:var(--red)"></div> Falhas</div>
+            <div class="evo-legend-item"><div class="evo-legend-swatch" style="background:var(--amber)"></div> Tentativas</div>
+          </div>
+        </div>
+      </div>`;
+
+    // ── chart 2: pontos por temporada ─────────────────────────────────────────
+    const maxPts  = seasons.length ? Math.max(...seasons.map(s => s.pts), 1) : 1;
+    const ptsBars = seasons.map(s => {
+      const h = s.pts ? Math.max(4, Math.round(s.pts / maxPts * CHART_H)) : 2;
+      return `
+        <div class="evo-bar-col">
+          <div class="evo-bar-val">${s.pts || ''}</div>
+          <div class="evo-bar amber single" style="height:${h}px" title="${s.pts}pts"></div>
+          <div class="evo-bar-lbl">T${s.week_number}</div>
+        </div>`;
+    }).join('');
+
+    const chartPts = `
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-header"><div class="card-title">Pontos por Temporada</div></div>
+        <div class="card-body" style="padding:14px">
+          <div class="evo-chart">${seasons.length ? ptsBars : noData}</div>
+        </div>
+      </div>`;
+
+    // ── chart 3: dificuldade ──────────────────────────────────────────────────
+    const simples  = goals.filter(g => g.difficulty === 'simple').length;
+    const complexa = goals.filter(g => g.difficulty === 'complex').length;
+    const diffTot  = simples + complexa;
+    const simpPct  = diffTot > 0 ? Math.round(simples  / diffTot * 100) : 0;
+    const compPct  = diffTot > 0 ? Math.round(complexa / diffTot * 100) : 0;
+
+    const chartDiff = `
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-header"><div class="card-title">Dificuldade</div></div>
+        <div class="card-body" style="padding:14px">
+          ${diffTot === 0 ? noData : `
+          <div class="evo-hbar-wrap">
+            <div class="evo-hbar-row">
+              <div class="evo-hbar-label"><span>Simples · ${simples} metas</span><span>${simpPct}%</span></div>
+              <div class="evo-hbar-track"><div class="evo-hbar-fill blue" style="width:${simpPct}%"></div></div>
+            </div>
+            <div class="evo-hbar-row">
+              <div class="evo-hbar-label"><span>Complexa · ${complexa} metas</span><span>${compPct}%</span></div>
+              <div class="evo-hbar-track"><div class="evo-hbar-fill purple" style="width:${compPct}%"></div></div>
+            </div>
+          </div>`}
+        </div>
+      </div>`;
+
+    document.getElementById('tab-evo').innerHTML = statCards + chartMetas + chartPts + chartDiff;
   }
 
   // ── Edit Profile Canvas ───────────────────────────────────────────────────────

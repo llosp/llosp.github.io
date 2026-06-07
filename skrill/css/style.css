@@ -1234,3 +1234,25 @@ textarea.form-input { resize: vertical; min-height: 70px; }
   font-size:clamp(66px, 15vw, 134px);
   color:var(--amber); padding:0 2px; line-height:1;
 }
+
+/* ── Evolução tab ────────────────────────────────────────────────────────────── */
+.evo-chart { display:flex; align-items:flex-end; gap:6px; height:140px; padding:0 4px; overflow-x:auto; }
+.evo-bar-col { display:flex; flex-direction:column; align-items:center; gap:2px; flex-shrink:0; min-width:28px; }
+.evo-bar-group { display:flex; align-items:flex-end; gap:3px; }
+.evo-bar { width:16px; min-height:2px; flex-shrink:0; }
+.evo-bar.green  { background:var(--green-dark); border:1px solid var(--green-dark); }
+.evo-bar.red    { background:var(--red);        border:1px solid var(--red); }
+.evo-bar.amber  { background:var(--amber);      border:1px solid var(--amber-dark); }
+.evo-bar.single { width:24px; }
+.evo-bar-val { font-family:'Micro 5',monospace; font-size:24px; color:var(--text-muted); line-height:1; text-align:center; }
+.evo-bar-lbl { font-family:'Micro 5',monospace; font-size:24px; color:var(--text-muted); margin-top:4px; white-space:nowrap; }
+.evo-legend { display:flex; gap:14px; flex-wrap:wrap; padding:8px 0 0; font-family:'Micro 5',monospace; font-size:24px; }
+.evo-legend-item { display:flex; align-items:center; gap:5px; color:var(--text-muted); }
+.evo-legend-swatch { width:16px; height:16px; border:1px solid var(--border-dark); flex-shrink:0; }
+.evo-hbar-wrap { display:flex; flex-direction:column; gap:12px; }
+.evo-hbar-row  { display:flex; flex-direction:column; gap:4px; }
+.evo-hbar-label { font-family:'Micro 5',monospace; font-size:24px; display:flex; justify-content:space-between; }
+.evo-hbar-track { height:20px; background:var(--bg); border:1px solid var(--border); }
+.evo-hbar-fill { height:100%; min-width:2px; }
+.evo-hbar-fill.blue   { background:var(--blue); }
+.evo-hbar-fill.purple { background:var(--purple); }

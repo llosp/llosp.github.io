@@ -1256,3 +1256,7 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 .evo-hbar-fill { height:100%; min-width:2px; }
 .evo-hbar-fill.blue   { background:var(--blue); }
 .evo-hbar-fill.purple { background:var(--purple); }
+
+/* ── Editar Entrega ───────────────────── */
+.kept-img-row   { display:flex; align-items:center; gap:8px; padding:4px 0; border-bottom:1px solid var(--border); }
+.kept-img-thumb { width:48px; height:48px; object-fit:cover; border:1px solid var(--border); cursor:pointer; }

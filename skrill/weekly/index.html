@@ -62,6 +62,10 @@
       <div class="modal-title" style="gap:8px"><img src="/skrill/img/goals.svg" alt="goals" style="width:24px;height:24px"> Entregar Meta</div>
       <div class="modal-body">
         <div id="delivery-goal-title" style="font-size:24px;font-weight:700;margin-bottom:14px;color:var(--text)"></div>
+        <div id="current-images-section" class="hidden">
+          <div class="form-label" style="margin-bottom:6px">Imagens atuais</div>
+          <div id="current-images-list" style="margin-bottom:12px"></div>
+        </div>
         <div class="form-group">
           <label class="form-label">Prova de entrega <span style="color:var(--amber)">*</span></label>
           <input id="delivery-files" type="file" multiple accept="image/*" required style="display:none" onchange="updateFileList()"/>
@@ -143,6 +147,8 @@
   let isParticipating = false;
   let pendingGoalId   = null;
   let pendingAttemptId = null;
+  let isEditMode      = false;
+  let keptUrls        = [];
   let bountySubs      = [];
 
   async function init() {
@@ -257,13 +263,18 @@
     const deleteBtn = isOwner
       ? `<button class="btn btn-sm btn-ghost" style="color:var(--text-muted);margin-left:auto" onclick="deleteGoal('${g.id}')">Excluir</button>`
       : '';
+    const editBtn = isOwner && isDone && !revealed
+      ? `<button class="btn btn-sm btn-ghost" onclick="openEditDeliveryModal('${g.id}')">Editar Entrega</button>`
+      : '';
     const actions = isOwner && g.status === 'active'
       ? `<div class="goal-actions">
           ${!revealed ? `<button class="btn btn-sm btn-success" onclick="openDeliveryModal('${g.id}')">Concluir</button>` : ''}
           ${(isAfterSkrillDay || revealed) ? `<button class="btn btn-sm" style="background:var(--amber-light);border:1px solid var(--amber);color:var(--amber-deep);box-shadow:1px 1px 0 var(--amber-dark);cursor:pointer;font-family:'Micro 5',monospace;font-size:24px;padding:5px 12px" onclick="openAttemptModal('${g.id}')">Tentativa</button>` : ''}
           ${deleteBtn}
         </div>`
-      : isOwner ? `<div class="goal-actions">${deleteBtn}</div>` : '';
+      : isOwner && isDone
+        ? `<div class="goal-actions">${editBtn}${deleteBtn}</div>`
+        : isOwner ? `<div class="goal-actions">${deleteBtn}</div>` : '';
 
     const imagesHTML = (isDone || isAttempted) && imgs.length
       ? `<div class="delivery-images">
@@ -437,8 +448,47 @@
   }
 
   function closeDeliveryModal() {
+    isEditMode = false;
+    keptUrls   = [];
+    document.getElementById('current-images-section').classList.add('hidden');
+    document.querySelector('#delivery-modal .modal-title').textContent = ' Entregar Meta';
+    document.getElementById('delivery-submit').textContent = 'Confirmar Entrega';
     document.getElementById('delivery-modal').classList.add('hidden');
     pendingGoalId = null;
+  }
+
+  function openEditDeliveryModal(goalId) {
+    isEditMode = true;
+    const goal = allGoals.find(g => g.id === goalId);
+    keptUrls = [...(goal?.image_urls ?? [])];
+    pendingGoalId = goalId;
+    document.getElementById('delivery-goal-title').textContent = goal?.title ?? '';
+    document.querySelector('#delivery-modal .modal-title').textContent = ' Editar Entrega';
+    document.getElementById('delivery-submit').textContent = 'Salvar Alteracoes';
+    document.getElementById('delivery-files').value = '';
+    document.getElementById('delivery-file-list').textContent = 'Nenhuma imagem selecionada';
+    document.getElementById('delivery-error').classList.add('hidden');
+    renderKeptImages();
+    document.getElementById('current-images-section').classList.remove('hidden');
+    document.getElementById('delivery-modal').classList.remove('hidden');
+  }
+
+  function renderKeptImages() {
+    const el = document.getElementById('current-images-list');
+    if (!keptUrls.length) {
+      el.innerHTML = '<div style="color:var(--text-muted);font-size:24px;padding:4px 0">Nenhuma imagem mantida</div>';
+      return;
+    }
+    el.innerHTML = keptUrls.map((u, i) => `
+      <div class="kept-img-row">
+        <img src="${u}" class="kept-img-thumb" alt="imagem ${i+1}" onclick="openImageLightbox('${u}')">
+        <button type="button" class="btn btn-ghost btn-sm" onclick="removeKeptImage(${i})">Remover</button>
+      </div>`).join('');
+  }
+
+  function removeKeptImage(idx) {
+    keptUrls.splice(idx, 1);
+    renderKeptImages();
   }
 
   async function submitDelivery() {
@@ -446,6 +496,43 @@
     const errEl      = document.getElementById('delivery-error');
     const btn        = document.getElementById('delivery-submit');
     errEl.classList.add('hidden');
+
+    // ── Edit mode: merge kept URLs + new uploads ──────────────────────────────
+    if (isEditMode) {
+      if (!keptUrls.length && !filesInput.files.length) {
+        errEl.textContent = 'A entrega precisa ter pelo menos uma imagem.';
+        errEl.classList.remove('hidden');
+        return;
+      }
+      btn.disabled = true; btn.textContent = 'Salvando...';
+      try {
+        const newUrls = [];
+        for (const file of filesInput.files) {
+          const isGif = file.type === 'image/gif';
+          const uploadFile = isGif ? file : await convertToWebP(file);
+          const ext  = isGif ? 'gif' : 'webp';
+          const mime = isGif ? 'image/gif' : 'image/webp';
+          const path = `${pendingGoalId}/${Date.now()}.${ext}`;
+          const { error: upErr } = await sb.storage.from('deliveries').upload(path, uploadFile, { contentType: mime });
+          if (upErr) throw upErr;
+          const { data: pub } = sb.storage.from('deliveries').getPublicUrl(path);
+          newUrls.push(pub.publicUrl);
+        }
+        const finalUrls = [...keptUrls, ...newUrls];
+        const { error: updErr } = await sb.from('goals').update({ image_urls: finalUrls }).eq('id', pendingGoalId);
+        if (updErr) throw updErr;
+        allGoals = allGoals.map(g => g.id === pendingGoalId ? { ...g, image_urls: finalUrls } : g);
+        closeDeliveryModal();
+        renderPage();
+      } catch (err) {
+        errEl.textContent = err.message ?? 'Erro ao salvar. Tente novamente.';
+        errEl.classList.remove('hidden');
+      } finally {
+        btn.disabled = false; btn.textContent = 'Salvar Alteracoes';
+      }
+      return;
+    }
+    // ── Original delivery flow ─────────────────────────────────────────────────
 
     if (!filesInput.files.length) {
       errEl.textContent = 'Selecione pelo menos uma imagem.';

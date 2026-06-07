@@ -1236,8 +1236,10 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 }
 
 /* ── Evolução tab ────────────────────────────────────────────────────────────── */
-.evo-chart { display:flex; align-items:flex-end; gap:6px; height:140px; padding:0 4px; overflow-x:auto; }
-.evo-bar-col { display:flex; flex-direction:column; align-items:center; gap:2px; flex-shrink:0; min-width:28px; }
+.evo-chart { display:flex; align-items:flex-end; gap:6px; height:140px; padding:0 4px 0 30px; overflow-x:auto; position:relative; isolation:isolate; }
+.evo-bar-col { display:flex; flex-direction:column; align-items:center; gap:2px; flex-shrink:0; min-width:28px; position:relative; z-index:1; }
+.evo-grid-line { position:absolute; left:0; right:0; border-top:1px dashed var(--border-dark); z-index:-1; pointer-events:none; }
+.evo-grid-lbl { position:absolute; right:calc(100% - 26px); bottom:2px; font-family:'Micro 5',monospace; font-size:18px; color:var(--text-muted); line-height:1; text-align:right; width:24px; }
 .evo-bar-group { display:flex; align-items:flex-end; gap:3px; }
 .evo-bar { width:16px; min-height:2px; flex-shrink:0; }
 .evo-bar.green  { background:var(--green-dark); border:1px solid var(--green-dark); }

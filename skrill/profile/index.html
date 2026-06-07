@@ -158,7 +158,7 @@
         <div class="tab-list">
           <button class="tab-btn active" data-tab="tab-timeline" onclick="switchTab('tab-timeline')">Temporadas</button>
           <button class="tab-btn" data-tab="tab-gallery" onclick="switchTab('tab-gallery')">Galeria</button>
-          <button class="tab-btn" data-tab="tab-evo" onclick="switchTab('tab-evo');renderEvoTab()">Evolucao</button>
+          <button class="tab-btn" data-tab="tab-evo" onclick="switchTab('tab-evo');renderEvoTab()">Stats</button>
         </div>
         <div id="tab-timeline" class="tab-panel active"></div>
         <div id="tab-gallery" class="tab-panel"></div>
@@ -301,19 +301,17 @@
   }
 
   function renderEvoTab() {
-    const goals    = allProfileGoals;
-    const total    = goals.length;
+    const goals     = allProfileGoals;
+    const total     = goals.length;
     const completed = goals.filter(g => g.status === 'completed').length;
-    const attempted = goals.filter(g => g.status === 'attempted').length;
-    const pct       = total > 0 ? Math.round(completed / total * 100) + '%' : '—';
+    const failed    = goals.filter(g => g.status === 'failed').length;
 
     // ── stat cards ────────────────────────────────────────────────────────────
     const statCards = `
       <div class="stats-grid" style="margin-bottom:16px">
-        <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">Criadas</div></div>
-        <div class="stat-card"><div class="stat-value">${completed}</div><div class="stat-label">Completas</div></div>
-        <div class="stat-card"><div class="stat-value">${pct}</div><div class="stat-label">Aproveitamento</div></div>
-        <div class="stat-card"><div class="stat-value">${attempted}</div><div class="stat-label">Tentativas</div></div>
+        <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">Metas Criadas</div></div>
+        <div class="stat-card"><div class="stat-value">${completed}</div><div class="stat-label">Metas Completas</div></div>
+        <div class="stat-card"><div class="stat-value">${failed}</div><div class="stat-label">Metas Falhadas</div></div>
       </div>`;
 
     // ── aggregate by season ───────────────────────────────────────────────────
@@ -336,6 +334,19 @@
 
     const CHART_H  = 120;
     const noData   = `<div style="font-family:'Micro 5',monospace;font-size:24px;color:var(--text-muted);margin:auto">Sem dados</div>`;
+
+    // ── grid lines helper ─────────────────────────────────────────────────────
+    function gridLines(maxVal, h) {
+      if (!maxVal) return '';
+      const step = Math.max(1, Math.ceil(maxVal / 4));
+      let out = '';
+      for (let v = step; v <= maxVal + 0.01; v += step) {
+        const val = Math.min(Math.round(v), maxVal);
+        const bottom = Math.round(val / maxVal * h);
+        out += `<div class="evo-grid-line" style="bottom:${bottom}px"><span class="evo-grid-lbl">${val}</span></div>`;
+      }
+      return out;
+    }
 
     // ── chart 1: metas por temporada ─────────────────────────────────────────
     const maxGoals = seasons.length ? Math.max(...seasons.map(s => s.completed + s.failed + s.attempted), 1) : 1;
@@ -360,7 +371,7 @@
       <div class="card" style="margin-bottom:14px">
         <div class="card-header"><div class="card-title">Metas por Temporada</div></div>
         <div class="card-body" style="padding:14px">
-          <div class="evo-chart">${seasons.length ? goalBars : noData}</div>
+          <div class="evo-chart">${seasons.length ? gridLines(maxGoals, CHART_H) + goalBars : noData}</div>
           <div class="evo-legend">
             <div class="evo-legend-item"><div class="evo-legend-swatch" style="background:var(--green-dark)"></div> Completas</div>
             <div class="evo-legend-item"><div class="evo-legend-swatch" style="background:var(--red)"></div> Falhas</div>
@@ -385,7 +396,7 @@
       <div class="card" style="margin-bottom:14px">
         <div class="card-header"><div class="card-title">Pontos por Temporada</div></div>
         <div class="card-body" style="padding:14px">
-          <div class="evo-chart">${seasons.length ? ptsBars : noData}</div>
+          <div class="evo-chart">${seasons.length ? gridLines(maxPts, CHART_H) + ptsBars : noData}</div>
         </div>
       </div>`;
 

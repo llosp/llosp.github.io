@@ -351,17 +351,15 @@
     // ── chart 1: metas por temporada ─────────────────────────────────────────
     const maxGoals = seasons.length ? Math.max(...seasons.map(s => s.completed + s.failed + s.attempted), 1) : 1;
     const goalBars = seasons.map(s => {
-      const tot = s.completed + s.failed + s.attempted;
-      const hG = s.completed ? Math.max(2, Math.round(s.completed / maxGoals * CHART_H)) : 0;
-      const hR = s.failed    ? Math.max(2, Math.round(s.failed    / maxGoals * CHART_H)) : 0;
-      const hA = s.attempted ? Math.max(2, Math.round(s.attempted / maxGoals * CHART_H)) : 0;
+      const hG = s.completed ? Math.round(s.completed / maxGoals * CHART_H) : 0;
+      const hR = s.failed    ? Math.round(s.failed    / maxGoals * CHART_H) : 0;
+      const hA = s.attempted ? Math.round(s.attempted / maxGoals * CHART_H) : 0;
       return `
         <div class="evo-bar-col">
-          <div class="evo-bar-val">${tot || ''}</div>
           <div class="evo-bar-group">
-            <div class="evo-bar green" style="height:${hG}px" title="Completas: ${s.completed}"></div>
-            <div class="evo-bar red"   style="height:${hR}px" title="Falhas: ${s.failed}"></div>
-            <div class="evo-bar amber" style="height:${hA}px" title="Tentativas: ${s.attempted}"></div>
+            ${hG ? `<div class="evo-bar green" style="height:${hG}px" title="Completas: ${s.completed}"></div>` : ''}
+            ${hR ? `<div class="evo-bar red"   style="height:${hR}px" title="Falhas: ${s.failed}"></div>` : ''}
+            ${hA ? `<div class="evo-bar amber" style="height:${hA}px" title="Tentativas: ${s.attempted}"></div>` : ''}
           </div>
           <div class="evo-bar-lbl">T${s.week_number}</div>
         </div>`;
@@ -371,7 +369,9 @@
       <div class="card" style="margin-bottom:14px">
         <div class="card-header"><div class="card-title">Metas por Temporada</div></div>
         <div class="card-body" style="padding:14px">
-          <div class="evo-chart">${seasons.length ? gridLines(maxGoals, CHART_H) + goalBars : noData}</div>
+          ${seasons.length
+            ? `<div class="evo-chart-outer"><div class="evo-chart">${gridLines(maxGoals, CHART_H)}${goalBars}</div></div>`
+            : `<div style="height:80px;display:flex;align-items:center;justify-content:center">${noData}</div>`}
           <div class="evo-legend">
             <div class="evo-legend-item"><div class="evo-legend-swatch" style="background:var(--green-dark)"></div> Completas</div>
             <div class="evo-legend-item"><div class="evo-legend-swatch" style="background:var(--red)"></div> Falhas</div>
@@ -383,7 +383,7 @@
     // ── chart 2: pontos por temporada ─────────────────────────────────────────
     const maxPts  = seasons.length ? Math.max(...seasons.map(s => s.pts), 1) : 1;
     const ptsBars = seasons.map(s => {
-      const h = s.pts ? Math.max(4, Math.round(s.pts / maxPts * CHART_H)) : 2;
+      const h = s.pts ? Math.max(4, Math.round(s.pts / maxPts * CHART_H)) : 4;
       return `
         <div class="evo-bar-col">
           <div class="evo-bar-val">${s.pts || ''}</div>
@@ -396,7 +396,9 @@
       <div class="card" style="margin-bottom:14px">
         <div class="card-header"><div class="card-title">Pontos por Temporada</div></div>
         <div class="card-body" style="padding:14px">
-          <div class="evo-chart">${seasons.length ? gridLines(maxPts, CHART_H) + ptsBars : noData}</div>
+          ${seasons.length
+            ? `<div class="evo-chart-outer"><div class="evo-chart">${gridLines(maxPts, CHART_H)}${ptsBars}</div></div>`
+            : `<div style="height:80px;display:flex;align-items:center;justify-content:center">${noData}</div>`}
         </div>
       </div>`;
 

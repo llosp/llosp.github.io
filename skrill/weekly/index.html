@@ -278,7 +278,7 @@
 
     const imagesHTML = (isDone || isAttempted) && imgs.length
       ? `<div class="delivery-images">
-          ${imgs.map(u => `<img class="delivery-img${isDone && !revealed ? ' blurred' : ''}" src="${u}" alt="${isAttempted ? 'tentativa' : 'entrega'}">`).join('')}
+          ${imgs.map(u => `<img class="delivery-img${(isDone || isAttempted) && !revealed ? ' blurred' : ''}" src="${u}" alt="${isAttempted ? 'tentativa' : 'entrega'}">`).join('')}
         </div>`
       : '';
 

@@ -131,7 +131,7 @@
   }
 
   function logoutApp() {
-    sessionStorage.removeItem(SESSION_KEY);
+    sessionStorage.removeItem(sessionKey());
     clearStoredProfile();
     window.location.href = '/skrill/login/';
   }

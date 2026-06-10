@@ -21,6 +21,7 @@ Produtividade social em grupo. Reunião semanal ("Skrill Time") é o evento cent
 | `archive/` | Acervo: calendário de temporadas passadas com modal de detalhes |
 | `admin/` | Painel admin (requer `is_admin`) |
 | `login/` · `select-profile/` · `create-profile/` | Auth flow |
+| `demo/` | Launcher secreto do **modo demo** (sandbox offline) — não linkado na nav |
 
 ## Terminologia importante
 - **Temporada** = o que o código/DB chama de `week` / `weeks`. Nunca usar "semana" na UI.
@@ -33,6 +34,14 @@ Produtividade social em grupo. Reunião semanal ("Skrill Time") é o evento cent
 - `getStoredProfile()` — perfil em `localStorage['skrill_profile']`
 - `isAdmin()` — `profile.is_admin === true` OU `sessionStorage['skrill_admin'] === '1'`
 - `requireAuth()` — redireciona se não autenticado, retorna stored profile
+- Chaves de sessão usam `sessionKey()`/`profileKey()` — em modo demo viram `skrill_demo_*`, preservando o login real.
+
+## Modo Demo (sandbox offline) — bloco no topo de `client.js`
+- Ativado por `localStorage['skrill_demo'] === '1'` (`isDemoMode()`). Entrada pelo launcher secreto `/skrill/demo/`.
+- Quando ativo, `const sb = DemoDB.client()` — um mock do Supabase persistido em `localStorage['skrill_demo_db']`. **Nada toca o banco real.**
+- `DemoDB` implementa a superfície usada: `from().select/insert/update/upsert/delete`, filtros (`eq/neq/not/or/gte/lt`), `order/limit/single/maybeSingle`, joins embed (`profile:profiles(*)`, `week:weeks(*)`), `storage` (upload→dataURL) e `channel` (no-op).
+- `DemoDB.enter()/reset()/exit()` usados pelo launcher. Badge "MODO DEMO" injetado por `injectDemoBadge()`.
+- Seed: 1 perfil (`demo-you`, admin) + 1 season com `end_date` = hoje (Skrill Day já alcançável). Solo: o fluxo do Skrill Time fecha com 1 participante.
 
 ## Banco de dados (tabelas-chave)
 | Tabela | Colunas relevantes |

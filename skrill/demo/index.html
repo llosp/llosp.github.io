@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>SKRILL · Demo</title>
+  <link rel="stylesheet" href="/skrill/css/style.css">
+</head>
+<body>
+  <div id="app" class="center-screen">
+    <div class="card card-amber" style="max-width:540px;width:100%;text-align:center;padding:44px 28px">
+      <div style="font-size:44px;font-weight:700;margin-bottom:8px;display:flex;align-items:center;gap:12px;justify-content:center">
+        <img src="/skrill/img/Skrill_time.svg" alt="skrill" style="width:40px;height:40px"> Modo Demo
+      </div>
+      <div style="font-size:22px;color:var(--amber-text);text-transform:uppercase;margin-bottom:28px;line-height:1.4">
+        Sandbox 100% offline para testar o Skrill e o Skrill Time.<br>
+        Nada aqui afeta as temporadas reais.
+      </div>
+      <div style="display:flex;flex-direction:column;gap:12px;align-items:stretch">
+        <button class="btn btn-primary" style="font-size:26px;padding:14px 28px" onclick="enterDemo()">Entrar no modo demo</button>
+        <button class="btn btn-ghost" style="font-size:22px;padding:10px 24px" onclick="resetDemo()">Resetar demo (zerar dados)</button>
+        <button class="btn btn-ghost" style="font-size:22px;padding:10px 24px" onclick="exitDemo()">Sair do modo demo</button>
+      </div>
+      <div id="status" style="font-size:20px;color:var(--text-muted);margin-top:20px;text-transform:uppercase"></div>
+    </div>
+  </div>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+  <script src="/skrill/js/client.js"></script>
+  <script>
+    function refreshStatus() {
+      document.getElementById('status').textContent = isDemoMode() ? 'Demo ATIVA' : 'Demo desligada';
+    }
+    function enterDemo() { DemoDB.enter(); window.location.href = '/skrill/dashboard/'; }
+    function resetDemo() { DemoDB.reset(); document.getElementById('status').textContent = 'Demo resetada (dados zerados)'; }
+    function exitDemo()  { DemoDB.exit();  refreshStatus(); }
+    refreshStatus();
+  </script>
+</body>
+</html>

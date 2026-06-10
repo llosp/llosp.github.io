@@ -1,6 +1,281 @@
+// ════════════════════════════════════════════════════════════════════════════
+// MODO DEMO (sandbox offline) — BLOCO REMOVÍVEL.
+// Quando localStorage['skrill_demo'] === '1', o `sb` global vira um mock
+// persistido em localStorage (namespace skrill_demo_*). Nada toca o Supabase
+// real. Entrada pelo launcher secreto /skrill/demo/. Ver CLAUDE.md.
+// ════════════════════════════════════════════════════════════════════════════
+function isDemoMode() { return localStorage.getItem('skrill_demo') === '1'; }
+
+const DemoDB = (function () {
+  const DB_KEY = 'skrill_demo_db';
+  const TABLES = ['profiles','weeks','goals','season_participants','bounty_submissions',
+    'peer_ratings','peer_rating_submissions','week_ready','attempt_votes',
+    'attempt_vote_submissions','delivery_reports','point_history','meetings'];
+
+  function blankStore() { const s = { __storage: {} }; for (const t of TABLES) s[t] = []; return s; }
+  function load() { try { const s = JSON.parse(localStorage.getItem(DB_KEY)); if (s) return s; } catch (_) {} return null; }
+  function save(s) {
+    try { localStorage.setItem(DB_KEY, JSON.stringify(s)); }
+    catch (e) { console.warn('[demo] localStorage cheio — estado nao persistido', e); }
+  }
+  let store = load();
+
+  function uuid() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
+      const r = Math.random() * 16 | 0;
+      return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+    });
+  }
+  function ymdLocal(d) {
+    return d.getFullYear() + '-' + String(d.getMonth()+1).padStart(2,'0') + '-' + String(d.getDate()).padStart(2,'0');
+  }
+  function fileToDataURL(file) {
+    return new Promise((res, rej) => {
+      const fr = new FileReader();
+      fr.onload = () => res(fr.result);
+      fr.onerror = rej;
+      fr.readAsDataURL(file);
+    });
+  }
+
+  function seed() {
+    const s = blankStore();
+    const today = new Date();
+    const weekAgo = new Date(Date.now() - 7 * 86400000);
+    s.profiles.push({
+      id: 'demo-you', name: 'Demo', password: 'demo', avatar_data: null,
+      total_points: 0, weekly_points: 0, streak_current: 0, streak_longest: 0,
+      is_admin: true, is_bot: false, bot_last_tick: null, sort_order: 0,
+      created_at: new Date().toISOString(),
+    });
+    s.weeks.push({
+      id: 'demo-week-1', week_number: 1, year: today.getFullYear(),
+      start_date: ymdLocal(weekAgo), end_date: ymdLocal(today),
+      is_current: true, skrill_time_revealed: false,
+      bounty_title: null, bounty_description: null, bounty_chance: 0.2, bounty_awarded: false,
+      created_at: new Date().toISOString(),
+    });
+    s.season_participants.push({ id: uuid(), week_id: 'demo-week-1', profile_id: 'demo-you' });
+    store = s; save(store);
+  }
+  function ensure() { if (!store) seed(); }
+
+  class Query {
+    constructor(table) {
+      this.table = table;
+      this.filters = [];
+      this.orders = [];
+      this._limit = null;
+      this._select = null;
+      this._count = null;
+      this._head = false;
+      this._action = 'select';
+      this._payload = null;
+      this._onConflict = null;
+      this._ignoreDup = false;
+      this._single = null;
+    }
+    eq(col, val)  { this.filters.push({ col, op: 'eq',  val }); return this; }
+    neq(col, val) { this.filters.push({ col, op: 'neq', val }); return this; }
+    gte(col, val) { this.filters.push({ col, op: 'gte', val }); return this; }
+    lt(col, val)  { this.filters.push({ col, op: 'lt',  val }); return this; }
+    not(col, op, val) { this.filters.push({ col, op: 'not_' + op, val }); return this; }
+    or(expr) { this.filters.push({ op: 'or', expr }); return this; }
+    order(col, opts = {}) { this.orders.push({ col, asc: opts.ascending !== false, nullsFirst: !!opts.nullsFirst }); return this; }
+    limit(n) { this._limit = n; return this; }
+    select(cols = '*', opts = {}) { this._select = cols; if (opts.count) this._count = opts.count; if (opts.head) this._head = true; return this; }
+    insert(payload) { this._action = 'insert'; this._payload = payload; return this; }
+    update(payload) { this._action = 'update'; this._payload = payload; return this; }
+    upsert(payload, opts = {}) { this._action = 'upsert'; this._payload = payload; this._onConflict = opts.onConflict; this._ignoreDup = !!opts.ignoreDuplicates; return this; }
+    delete() { this._action = 'delete'; return this; }
+    single() { this._single = 'single'; return this._run(); }
+    maybeSingle() { this._single = 'maybe'; return this._run(); }
+    then(resolve, reject) { return this._run().then(resolve, reject); }
+
+    _match(row) {
+      for (const f of this.filters) {
+        if (f.op === 'or') { if (!this._matchOr(row, f.expr)) return false; continue; }
+        const v = row[f.col];
+        if (f.op === 'eq'  && v !== f.val) return false;
+        if (f.op === 'neq' && v === f.val) return false;
+        if (f.op === 'gte' && !(v >= f.val)) return false;
+        if (f.op === 'lt'  && !(v <  f.val)) return false;
+        if (f.op === 'not_is' && f.val === null && (v === null || v === undefined)) return false;
+      }
+      return true;
+    }
+    _matchOr(row, expr) {
+      for (const p of expr.split(',')) {
+        const m = p.match(/^([^.]+)\.([^.]+)\.(.*)$/);
+        if (!m) continue;
+        const [, col, op, raw] = m;
+        const v = row[col];
+        if (op === 'is' && raw === 'null' && (v === null || v === undefined)) return true;
+        if (op === 'eq' && String(v) === raw) return true;
+        if (op === 'lt' && v != null && v < raw) return true;
+      }
+      return false;
+    }
+    _sort(rows) {
+      if (!this.orders.length) return rows;
+      return [...rows].sort((a, b) => {
+        for (const o of this.orders) {
+          let av = a[o.col], bv = b[o.col];
+          const an = av === null || av === undefined, bn = bv === null || bv === undefined;
+          if (an && bn) continue;
+          if (an) return o.nullsFirst ? -1 : 1;
+          if (bn) return o.nullsFirst ? 1 : -1;
+          if (av < bv) return o.asc ? -1 : 1;
+          if (av > bv) return o.asc ? 1 : -1;
+        }
+        return 0;
+      });
+    }
+    _splitTop(s) {
+      const out = []; let depth = 0, cur = '';
+      for (const ch of s) {
+        if (ch === '(') depth++;
+        if (ch === ')') depth--;
+        if (ch === ',' && depth === 0) { out.push(cur); cur = ''; }
+        else cur += ch;
+      }
+      if (cur.trim()) out.push(cur);
+      return out;
+    }
+    _parseEmbeds(sel) {
+      const embeds = [];
+      for (const t of this._splitTop(sel)) {
+        const m = t.trim().match(/^(\w+):(\w+)\((.*)\)$/);
+        if (m) embeds.push({ alias: m[1], table: m[2], fields: m[3].trim() });
+      }
+      return embeds;
+    }
+    _project(row, fields) {
+      if (fields === '*' || fields === '') return { ...row };
+      const o = {}; for (const c of fields.split(',').map(x => x.trim())) o[c] = row[c]; return o;
+    }
+    _resolveSelect(rows) {
+      const sel = this._select;
+      if (!sel || sel === '*') return rows.map(r => ({ ...r }));
+      const embeds = this._parseEmbeds(sel);
+      if (!embeds.length) return rows.map(r => ({ ...r }));
+      return rows.map(r => {
+        const out = { ...r };
+        for (const e of embeds) {
+          const fk = e.alias + '_id';
+          const joined = (store[e.table] || []).find(x => x.id === r[fk]);
+          out[e.alias] = joined ? this._project(joined, e.fields) : null;
+        }
+        return out;
+      });
+    }
+    _reduce(data) {
+      if (this._single === 'single') {
+        if (data.length === 1) return { data: data[0], error: null };
+        return { data: null, error: { message: 'Row not found (demo single)' } };
+      }
+      if (this._single === 'maybe') return { data: data[0] ?? null, error: null };
+      return { data, error: null, count: this._count ? data.length : undefined };
+    }
+    async _run() {
+      ensure();
+      try {
+        if (this._action === 'select') {
+          let rows = (store[this.table] || []).filter(r => this._match(r));
+          rows = this._sort(rows);
+          if (this._head) return { data: null, count: rows.length, error: null };
+          if (this._limit != null) rows = rows.slice(0, this._limit);
+          return this._reduce(this._resolveSelect(rows));
+        }
+        if (this._action === 'insert') {
+          const rows = (Array.isArray(this._payload) ? this._payload : [this._payload]).map(r => {
+            const row = { ...r };
+            if (row.id === undefined) row.id = uuid();
+            if (row.created_at === undefined) row.created_at = new Date().toISOString();
+            store[this.table].push(row);
+            return row;
+          });
+          save(store);
+          return (this._select || this._single) ? this._reduce(this._resolveSelect(rows)) : { data: null, error: null };
+        }
+        if (this._action === 'update') {
+          const matched = store[this.table].filter(r => this._match(r));
+          for (const r of matched) Object.assign(r, this._payload);
+          save(store);
+          return (this._select || this._single) ? this._reduce(this._resolveSelect(matched)) : { data: null, error: null };
+        }
+        if (this._action === 'upsert') {
+          const rows = Array.isArray(this._payload) ? this._payload : [this._payload];
+          const cols = (this._onConflict || 'id').split(',').map(c => c.trim());
+          const affected = [];
+          for (const r of rows) {
+            const existing = store[this.table].find(x => cols.every(c => x[c] === r[c]));
+            if (existing) { if (!this._ignoreDup) Object.assign(existing, r); affected.push(existing); }
+            else {
+              const row = { ...r };
+              if (row.id === undefined) row.id = uuid();
+              if (row.created_at === undefined) row.created_at = new Date().toISOString();
+              store[this.table].push(row); affected.push(row);
+            }
+          }
+          save(store);
+          return (this._select || this._single) ? this._reduce(this._resolveSelect(affected)) : { data: null, error: null };
+        }
+        if (this._action === 'delete') {
+          const keep = [], removed = [];
+          for (const r of store[this.table]) (this._match(r) ? removed : keep).push(r);
+          store[this.table] = keep; save(store);
+          return (this._select || this._single) ? this._reduce(this._resolveSelect(removed)) : { data: null, error: null };
+        }
+        return { data: null, error: null };
+      } catch (e) {
+        return { data: null, error: { message: e.message } };
+      }
+    }
+  }
+
+  function makeChannel() {
+    const ch = { on() { return ch; }, subscribe() { return ch; }, unsubscribe() { return Promise.resolve({}); } };
+    return ch;
+  }
+  function client() {
+    return {
+      from(table) { ensure(); return new Query(table); },
+      storage: { from() { return {
+        async upload(path, file) { ensure(); store.__storage[path] = await fileToDataURL(file); save(store); return { data: { path }, error: null }; },
+        getPublicUrl(path) { ensure(); return { data: { publicUrl: store.__storage[path] || path } }; },
+      }; } },
+      channel() { return makeChannel(); },
+      removeChannel() { return Promise.resolve(); },
+      getChannels() { return []; },
+    };
+  }
+
+  return {
+    client,
+    active: isDemoMode,
+    seed,
+    reset() { localStorage.removeItem(DB_KEY); store = null; seed(); },
+    enter() {
+      localStorage.setItem('skrill_demo', '1');
+      if (!load()) seed(); else store = load();
+      sessionStorage.setItem('skrill_demo_unlocked', '1');
+      const you = store.profiles.find(p => p.id === 'demo-you') || store.profiles[0];
+      localStorage.setItem('skrill_demo_profile', JSON.stringify(you));
+    },
+    exit() {
+      localStorage.setItem('skrill_demo', '0');
+      sessionStorage.removeItem('skrill_demo_unlocked');
+      localStorage.removeItem('skrill_demo_profile');
+    },
+    store: () => store,
+  };
+})();
+// ════════════════════════════════════════════════════════════════════════════
+
 const SUPABASE_URL = 'https://yrdfccjestplfqlnrnyg.supabase.co';
 const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InlyZGZjY2plc3RwbGZxbG5ybnlnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzk4ODgzNzgsImV4cCI6MjA5NTQ2NDM3OH0.L0KljVjvIS6R-4zO51ORlGDM9sclAFeDFRP7TvAGagU';
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+const sb = isDemoMode() ? DemoDB.client() : supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
 
 // Aplica o tema o quanto antes para minimizar flash
 if (localStorage.getItem('skrill_theme') === 'dark') {
@@ -14,27 +289,30 @@ if (localStorage.getItem('skrill_theme') === 'dark') {
 
 // ── Session ───────────────────────────────────────────────────────────────────
 const APP_PASSWORD = 'familiasteam';
-const SESSION_KEY  = 'skrill_unlocked';
-const PROFILE_KEY  = 'skrill_profile';
+// Chaves de sessão dependem do modo: a sessão/perfil real (skrill_*) nunca é
+// sobrescrita pela demo (skrill_demo_*).
+function sessionKey() { return isDemoMode() ? 'skrill_demo_unlocked' : 'skrill_unlocked'; }
+function profileKey() { return isDemoMode() ? 'skrill_demo_profile' : 'skrill_profile'; }
 
-function isAppUnlocked() { return sessionStorage.getItem(SESSION_KEY) === '1'; }
-function unlockApp()     { sessionStorage.setItem(SESSION_KEY, '1'); }
+function isAppUnlocked() { return sessionStorage.getItem(sessionKey()) === '1'; }
+function unlockApp()     { sessionStorage.setItem(sessionKey(), '1'); }
 
 function getStoredProfile() {
-  try { return JSON.parse(localStorage.getItem(PROFILE_KEY)); } catch { return null; }
+  try { return JSON.parse(localStorage.getItem(profileKey())); } catch { return null; }
 }
-function setStoredProfile(p) { localStorage.setItem(PROFILE_KEY, JSON.stringify(p)); }
-function clearStoredProfile() { localStorage.removeItem(PROFILE_KEY); }
+function setStoredProfile(p) { localStorage.setItem(profileKey(), JSON.stringify(p)); }
+function clearStoredProfile() { localStorage.removeItem(profileKey()); }
 
 function requireAuth() {
-  if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; return null; }
+  if (!isAppUnlocked()) { window.location.href = isDemoMode() ? '/skrill/demo/' : '/skrill/login/'; return null; }
   const p = getStoredProfile();
-  if (!p) { window.location.href = '/skrill/select-profile/'; return null; }
+  if (!p) { window.location.href = isDemoMode() ? '/skrill/demo/' : '/skrill/select-profile/'; return null; }
   tickBoiBot().catch(() => {});
   return p;
 }
 
 function signOut() {
+  if (isDemoMode()) { DemoDB.exit(); window.location.href = '/skrill/demo/'; return; }
   clearStoredProfile();
   window.location.href = '/skrill/select-profile/';
 }
@@ -919,6 +1197,7 @@ function daysBetween(fromYmd, toYmd) {
 }
 
 async function tickBoiBot() {
+  if (isDemoMode()) return;  // o boi nao roda na demo offline
   try {
     const { data: boi } = await sb.from('profiles').select('*').eq('is_bot', true).maybeSingle();
     if (!boi) return;
@@ -1077,4 +1356,24 @@ function fireConfetti() {
     }
   }
   requestAnimationFrame(frame);
+}
+
+// ── Badge do modo demo ───────────────────────────────────────────────────────
+// Faixa fixa "MODO DEMO" com botao de sair, injetada em qualquer pagina quando
+// a demo esta ativa. Evita confundir o sandbox com o jogo real.
+function injectDemoBadge() {
+  if (document.getElementById('demo-badge')) return;
+  const b = document.createElement('div');
+  b.id = 'demo-badge';
+  b.style.cssText = 'position:fixed;top:8px;right:8px;z-index:10000;display:flex;align-items:center;gap:8px;'
+    + 'background:var(--amber,#FFB300);color:#000;font-family:\'Micro 5\',monospace;font-size:20px;'
+    + 'padding:4px 10px;border:2px solid #000;box-shadow:2px 2px 0 rgba(0,0,0,0.3);text-transform:uppercase';
+  b.innerHTML = '<span>Modo Demo</span>'
+    + '<button style="font-family:inherit;font-size:18px;cursor:pointer;border:1px solid #000;background:#fff;padding:1px 8px" '
+    + 'onclick="DemoDB.exit();window.location.href=\'/skrill/demo/\'">Sair</button>';
+  document.body.appendChild(b);
+}
+if (isDemoMode()) {
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectDemoBadge);
+  else injectDemoBadge();
 }

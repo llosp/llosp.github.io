@@ -94,8 +94,14 @@ function difficultyChip(difficulty) {
   if (difficulty === 'complex') {
     return `<span class="badge" style="background:#E8D5F5;color:var(--purple);border-color:var(--purple)">Complexa</span>`;
   }
+  if (difficulty === 'extra') {
+    return `<span class="badge" style="background:var(--surface);color:var(--text-muted);border-color:var(--border-dark)">Extra</span>`;
+  }
   return `<span class="badge" style="background:#D6EAF8;color:var(--blue);border-color:var(--blue)">Simples</span>`;
 }
+
+// Pontos base por dificuldade: simple=2, complex=5, extra=0 (só pontua via bônus).
+function basePoints(d) { return d === 'complex' ? 5 : d === 'extra' ? 0 : 2; }
 
 function bonusPoolFor(n) {
   return Math.max(1, Math.floor((n ?? 0) / 2));
@@ -750,12 +756,13 @@ async function finalizeSeasonById(weekId) {
     .select('id').eq('week_id', weekId).eq('points_awarded', true).limit(1);
   if (already?.length) return { ok: false, reason: 'already' };
 
-  const [{ data: goals }, { data: parts }, { data: ratings }, { data: profiles }] =
+  const [{ data: goals }, { data: parts }, { data: ratings }, { data: profiles }, { data: attVotes }] =
     await Promise.all([
       sb.from('goals').select('*').eq('week_id', weekId),
       sb.from('season_participants').select('profile_id').eq('week_id', weekId),
       sb.from('peer_ratings').select('goal_id,amount').eq('week_id', weekId),
       sb.from('profiles').select('id,total_points,weekly_points,streak_current,streak_longest'),
+      sb.from('attempt_votes').select('goal_id,vote').eq('week_id', weekId),
     ]);
 
   const weekGoals      = goals ?? [];
@@ -771,7 +778,7 @@ async function finalizeSeasonById(weekId) {
     g.status === 'completed' && !g.points_awarded && participantIds.has(g.profile_id)
   );
   for (const g of toAward) {
-    const base  = g.difficulty === 'complex' ? 5 : 2;
+    const base  = basePoints(g.difficulty);
     const bonus = bonusMap.get(g.id) ?? 0;
     const total = base + bonus;
     await sb.from('goals').update({ points_awarded: true, points_earned: total }).eq('id', g.id);
@@ -792,6 +799,36 @@ async function finalizeSeasonById(weekId) {
     if (prof) {
       prof.total_points  = (prof.total_points  ?? 0) + total;
       prof.weekly_points = (prof.weekly_points ?? 0) + total;
+      await sb.from('profiles').update({
+        total_points:  prof.total_points,
+        weekly_points: prof.weekly_points,
+      }).eq('id', g.profile_id);
+    }
+  }
+
+  // Consolação: tentativas com mais ▲ do que ▼ entre os participantes recebem +1pt.
+  // Concedido aqui (no encerramento), pois os votos são desmarcáveis até a confirmação.
+  const attemptTally = new Map();  // goal_id -> { up, down }
+  for (const v of (attVotes ?? [])) {
+    if (!attemptTally.has(v.goal_id)) attemptTally.set(v.goal_id, { up: 0, down: 0 });
+    const t = attemptTally.get(v.goal_id);
+    if (v.vote === 'up') t.up++; else if (v.vote === 'down') t.down++;
+  }
+  const attempted = weekGoals.filter(g =>
+    g.status === 'attempted' && !g.attempt_pts_awarded && participantIds.has(g.profile_id)
+  );
+  for (const g of attempted) {
+    const t = attemptTally.get(g.id) ?? { up: 0, down: 0 };
+    if (t.up <= t.down) continue;
+    await sb.from('goals').update({ attempt_pts_awarded: true }).eq('id', g.id);
+    await sb.from('point_history').insert({
+      profile_id: g.profile_id, amount: 1, reason: 'attempt_consolation',
+      goal_id: g.id, week_id: weekId,
+    });
+    const prof = allProfiles.find(p => p.id === g.profile_id);
+    if (prof) {
+      prof.total_points  = (prof.total_points  ?? 0) + 1;
+      prof.weekly_points = (prof.weekly_points ?? 0) + 1;
       await sb.from('profiles').update({
         total_points:  prof.total_points,
         weekly_points: prof.weekly_points,
@@ -908,7 +945,7 @@ async function tickBoiBot() {
     if (Math.random() < BOI_CHANCE_CREATE) {
       const act        = BOI_ACTIVITIES[Math.floor(Math.random() * BOI_ACTIVITIES.length)];
       const difficulty = Math.random() < BOI_CHANCE_COMPLEX ? 'complex' : 'simple';
-      const basePts    = difficulty === 'complex' ? 5 : 2;
+      const basePts    = basePoints(difficulty);
       const { data: created } = await sb.from('goals').insert({
         profile_id:    boi.id,
         week_id:       week.id,
@@ -945,6 +982,9 @@ async function tickBoiBot() {
         .upsert({ week_id: week.id, profile_id: boi.id }, { onConflict: 'week_id,profile_id', ignoreDuplicates: true });
       await sb.from('peer_rating_submissions')
         .upsert({ week_id: week.id, rater_id: boi.id }, { onConflict: 'week_id,rater_id', ignoreDuplicates: true });
+      // O boi nao vota tentativas, mas precisa "confirmar" para a fase fechar.
+      await sb.from('attempt_vote_submissions')
+        .upsert({ week_id: week.id, voter_id: boi.id }, { onConflict: 'week_id,voter_id', ignoreDuplicates: true });
     }
   } catch (_) { /* nunca quebra a pagina */ }
 }
@@ -974,3 +1014,67 @@ document.addEventListener('click', e => {
   if (!img || img.classList.contains('blurred')) return;
   openImageLightbox(img.src);
 });
+
+// ── Confetti ─────────────────────────────────────────────────────────────────
+// Animacao vanilla em canvas (sem libs). Dispara uma rajada de particulas com
+// gravidade por ~2.5s e remove o canvas ao terminar. Usado no reveal do Skrill Time.
+function fireConfetti() {
+  const existing = document.getElementById('confetti-canvas');
+  if (existing) existing.remove();
+  const canvas = document.createElement('canvas');
+  canvas.id = 'confetti-canvas';
+  canvas.className = 'confetti-canvas';
+  const dpr = window.devicePixelRatio || 1;
+  const W = window.innerWidth, H = window.innerHeight;
+  canvas.width = W * dpr; canvas.height = H * dpr;
+  document.body.appendChild(canvas);
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+
+  const accentVar = getComputedStyle(document.documentElement);
+  const colors = [
+    accentVar.getPropertyValue('--amber').trim() || '#FFB300',
+    accentVar.getPropertyValue('--sec-text').trim() || '#00075D',
+    '#22c55e', '#3498DB', '#9B59B6', '#FF6347',
+  ].filter(Boolean);
+
+  const N = 130;
+  const parts = [];
+  for (let i = 0; i < N; i++) {
+    parts.push({
+      x: W / 2 + (Math.random() - 0.5) * W * 0.3,
+      y: H * 0.35 + (Math.random() - 0.5) * 60,
+      vx: (Math.random() - 0.5) * 14,
+      vy: Math.random() * -12 - 4,
+      size: 5 + Math.random() * 7,
+      color: colors[Math.floor(Math.random() * colors.length)],
+      rot: Math.random() * Math.PI,
+      vrot: (Math.random() - 0.5) * 0.3,
+    });
+  }
+
+  const start = performance.now();
+  const DURATION = 2600;
+  function frame(now) {
+    const elapsed = now - start;
+    ctx.clearRect(0, 0, W, H);
+    for (const p of parts) {
+      p.vy += 0.35;        // gravidade
+      p.vx *= 0.99;
+      p.x += p.vx; p.y += p.vy; p.rot += p.vrot;
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rot);
+      ctx.globalAlpha = Math.max(0, 1 - elapsed / DURATION);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+      ctx.restore();
+    }
+    if (elapsed < DURATION) {
+      requestAnimationFrame(frame);
+    } else {
+      canvas.remove();
+    }
+  }
+  requestAnimationFrame(frame);
+}

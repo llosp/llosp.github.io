@@ -405,9 +405,11 @@
     // ── chart 3: dificuldade ──────────────────────────────────────────────────
     const simples  = goals.filter(g => g.difficulty === 'simple').length;
     const complexa = goals.filter(g => g.difficulty === 'complex').length;
-    const diffTot  = simples + complexa;
+    const extra    = goals.filter(g => g.difficulty === 'extra').length;
+    const diffTot  = simples + complexa + extra;
     const simpPct  = diffTot > 0 ? Math.round(simples  / diffTot * 100) : 0;
     const compPct  = diffTot > 0 ? Math.round(complexa / diffTot * 100) : 0;
+    const extraPct = diffTot > 0 ? Math.round(extra    / diffTot * 100) : 0;
 
     const chartDiff = `
       <div class="card" style="margin-bottom:14px">
@@ -423,6 +425,10 @@
               <div class="evo-hbar-label"><span>Complexa · ${complexa} metas</span><span>${compPct}%</span></div>
               <div class="evo-hbar-track"><div class="evo-hbar-fill purple" style="width:${compPct}%"></div></div>
             </div>
+            ${extra > 0 ? `<div class="evo-hbar-row">
+              <div class="evo-hbar-label"><span>Extra · ${extra} metas</span><span>${extraPct}%</span></div>
+              <div class="evo-hbar-track"><div class="evo-hbar-fill grey" style="width:${extraPct}%"></div></div>
+            </div>` : ''}
           </div>`}
         </div>
       </div>`;

@@ -485,6 +485,7 @@
                 <select class="form-input" style="padding:4px 8px;font-size:20px;width:auto" onchange="changeGoalDifficulty('${g.id}',this.value)" title="Dificuldade">
                   <option value="simple"  ${g.difficulty==='simple' ?'selected':''}>Simples</option>
                   <option value="complex" ${g.difficulty==='complex'?'selected':''}>Complexa</option>
+                  <option value="extra"   ${g.difficulty==='extra'  ?'selected':''}>Extra</option>
                 </select>
                 <select class="form-input" style="padding:4px 8px;font-size:20px;width:auto" onchange="changeGoalStatus('${g.id}',this.value)">
                   <option value="active"    ${g.status==='active'   ?'selected':''}>Ativo</option>
@@ -726,6 +727,9 @@
     await Promise.all([
       sb.from('peer_ratings').delete().eq('week_id', wid),
       sb.from('peer_rating_submissions').delete().eq('week_id', wid),
+      sb.from('attempt_votes').delete().eq('week_id', wid),
+      sb.from('attempt_vote_submissions').delete().eq('week_id', wid),
+      sb.from('delivery_reports').delete().eq('week_id', wid),
       sb.from('season_participants').delete().eq('week_id', wid),
       sb.from('goals').delete().eq('week_id', wid),
       sb.from('week_ready').delete().eq('week_id', wid),
@@ -765,13 +769,15 @@
       await sb.from('profiles').update({ total_points: newTotal, weekly_points: 0 }).eq('id', p.id);
     }
 
-    // 3. Limpar ready, avaliações, ocultar reveal, resetar points_awarded
+    // 3. Limpar ready, avaliações, votos de tentativa, ocultar reveal, resetar awards
     await Promise.all([
       sb.from('week_ready').delete().eq('week_id', wid),
       sb.from('peer_ratings').delete().eq('week_id', wid),
       sb.from('peer_rating_submissions').delete().eq('week_id', wid),
+      sb.from('attempt_votes').delete().eq('week_id', wid),
+      sb.from('attempt_vote_submissions').delete().eq('week_id', wid),
       sb.from('weeks').update({ skrill_time_revealed: false, bounty_awarded: false }).eq('id', wid),
-      sb.from('goals').update({ points_awarded: false }).eq('week_id', wid),
+      sb.from('goals').update({ points_awarded: false, attempt_pts_awarded: false }).eq('week_id', wid),
     ]);
 
     toast('Skrill Time desfeito!');

@@ -36,6 +36,10 @@
                 <input type="radio" name="goal-difficulty" value="complex"/>
                 <span>Complexa · 5pts</span>
               </label>
+              <label class="diff-pill" id="diff-extra-label">
+                <input type="radio" name="goal-difficulty" value="extra"/>
+                <span>Extra · 0pts</span>
+              </label>
             </div>
           </div>
           <div class="form-group">
@@ -394,7 +398,7 @@
     const title = document.getElementById('goal-title').value.trim();
     const desc  = document.getElementById('goal-desc').value.trim();
     const difficulty = document.querySelector('input[name="goal-difficulty"]:checked')?.value || 'simple';
-    const basePts = difficulty === 'complex' ? 5 : 2;
+    const basePts = basePoints(difficulty);
     const btn   = document.getElementById('goal-submit');
     const errEl = document.getElementById('goal-error');
     errEl.classList.add('hidden');
@@ -680,6 +684,7 @@
     const v = document.querySelector('input[name="goal-difficulty"]:checked')?.value;
     document.getElementById('diff-simple-label').classList.toggle('active', v === 'simple');
     document.getElementById('diff-complex-label').classList.toggle('active', v === 'complex');
+    document.getElementById('diff-extra-label').classList.toggle('active', v === 'extra');
   }
   document.addEventListener('change', e => {
     if (e.target?.name === 'goal-difficulty') updateDiffPills();

@@ -25,7 +25,7 @@ Produtividade social em grupo. Reunião semanal ("Skrill Time") é o evento cent
 ## Terminologia importante
 - **Temporada** = o que o código/DB chama de `week` / `weeks`. Nunca usar "semana" na UI.
 - **Skrill Day** = o dia da `end_date` da temporada, quando ocorre a revelação.
-- **Dificuldade** = `simple` (2pts) ou `complex` (5pts) — definida ao criar a meta.
+- **Dificuldade** = `simple` (2pts), `complex` (5pts) ou `extra` (0pts, só pontua via bônus de pares) — definida ao criar a meta. Use `basePoints(d)` em client.js, nunca o ternário `? 5 : 2`.
 - **Beyond** = removido da UI. Coluna `is_beyond_scope` existe no DB por compatibilidade.
 
 ## Auth
@@ -45,15 +45,22 @@ Produtividade social em grupo. Reunião semanal ("Skrill Time") é o evento cent
 | `point_history` | `profile_id, week_id, goal_id, amount, reason` |
 | `peer_ratings` | `week_id, rater_id, goal_id, amount` UNIQUE(week_id, rater_id, goal_id) |
 | `peer_rating_submissions` | `week_id, rater_id` UNIQUE — marca quem finalizou a avaliação |
+| `attempt_votes` | `week_id, goal_id, voter_id, vote('up'/'down')` UNIQUE(goal_id, voter_id) — voto de consolação (toggle/desmarcável até confirmar) |
+| `attempt_vote_submissions` | `week_id, voter_id` UNIQUE — marca quem confirmou os votos de tentativa |
+| `delivery_reports` | `week_id, goal_id, reporter_id` UNIQUE(goal_id, reporter_id) — denúncias de entrega |
 
 RLS desativado em todas as tabelas.
+
+**Fluxo Skrill Time:** `pronto → votar bônus (peer_ratings) → confirmar (peer_rating_submissions) → votar tentativas (attempt_votes, se houver) → confirmar (attempt_vote_submissions) → reveal + finalize + confetti`. Pontos (base+bônus+consolação) são concedidos em `finalizeSeasonById` (client.js), não nos votos.
 Storage bucket `deliveries` (público) — path: `{goal_id}/{timestamp}-{filename}`
 
 ## Helpers em client.js
 - `avatarHTML(profile, extraClass?)` — avatar com pixel art ou inicial
 - `statusBadge(status, points)` — badge colorido de status
-- `difficultyChip(difficulty)` — chip `Simples` (azul) ou `Complexa` (roxo)
+- `difficultyChip(difficulty)` — chip `Simples` (azul) · `Complexa` (roxo) · `Extra` (neutro)
+- `basePoints(difficulty)` — `simple`→2, `complex`→5, `extra`→0
 - `bonusPoolFor(n)` — `Math.max(1, Math.floor(n/2))` — pool de bônus por avaliador
+- `fireConfetti()` — rajada de confetti em canvas (sem libs); usada no reveal do Skrill Time
 - `iconHTML(type)` — SVG img tag para ícones de nav (`G`, `T`, `P`, `A`, `+`, `S`, `R`)
 - `renderSidebar(profile, activePage)` — sidebar com ícones SVG
 - `renderMobileNav(activeKey)` — nav inferior mobile

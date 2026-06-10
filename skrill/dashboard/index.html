@@ -179,10 +179,13 @@
     }
     const btn = document.querySelector('[onclick="joinSeason()"]');
     if (btn) { btn.disabled = true; btn.textContent = '...'; }
-    await sb.from('season_participants').insert({ week_id: currentWeek.id, profile_id: currentProfile.id });
-    isParticipating = true;
-    const card = document.getElementById('participation-card');
-    if (card) card.innerHTML = renderParticipationCard();
+    const { error } = await sb.from('season_participants').insert({ week_id: currentWeek.id, profile_id: currentProfile.id });
+    if (error && !error.message.includes('duplicate')) {
+      toast(error.message, '#ef4444');
+      if (btn) { btn.disabled = false; btn.textContent = 'Participar'; }
+      return;
+    }
+    window.location.reload();
   }
 
   async function leaveSeason() {

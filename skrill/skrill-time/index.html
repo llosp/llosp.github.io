@@ -49,6 +49,8 @@
   let reportsByGoal     = new Map();   // goal_id -> Set de reporter_ids
   let attemptVotes      = new Map();   // goal_id -> [{ voter_id, vote }]
   let myAttemptVotes    = new Map();   // goal_id -> 'up'|'down'
+  let attemptSubmissionIds = new Set();// voter_ids que confirmaram os votos de tentativa
+  let myAttemptSubmitted   = false;
 
   async function init() {
     stored = requireAuth();
@@ -87,6 +89,7 @@
       { data: bsubs },
       { data: reportRows },
       { data: attemptVoteRows },
+      { data: attemptSubRows },
     ] = await Promise.all([
       sb.from('week_ready').select('*').eq('week_id', currentWeek.id),
       sb.from('goals').select('*, profile:profiles(*)').eq('week_id', currentWeek.id),
@@ -97,6 +100,7 @@
       sb.from('bounty_submissions').select('*, profile:profiles(*)').eq('week_id', currentWeek.id).order('created_at', { ascending: false }),
       sb.from('delivery_reports').select('goal_id,reporter_id').eq('week_id', currentWeek.id),
       sb.from('attempt_votes').select('goal_id,voter_id,vote').eq('week_id', currentWeek.id),
+      sb.from('attempt_vote_submissions').select('voter_id').eq('week_id', currentWeek.id),
     ]);
     readyIds       = new Set((ready ?? []).map(r => r.profile_id));
     weekGoals      = goals ?? [];
@@ -135,6 +139,9 @@
       attemptVotes.get(v.goal_id).push({ voter_id: v.voter_id, vote: v.vote });
       if (v.voter_id === stored.id) myAttemptVotes.set(v.goal_id, v.vote);
     }
+
+    attemptSubmissionIds = new Set((attemptSubRows ?? []).map(s => s.voter_id));
+    myAttemptSubmitted   = attemptSubmissionIds.has(stored.id);
   }
 
   function subscribeRealtime() {
@@ -149,13 +156,16 @@
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'delivery_reports' }, () => reload())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'attempt_votes' }, () => reload())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'attempt_vote_submissions' }, () => reload())
       .subscribe();
   }
 
   function stateSignature() {
     const totalReports = [...reportsByGoal.values()].reduce((s, v) => s + v.size, 0);
     const totalAttemptVotes = [...attemptVotes.values()].reduce((s, v) => s + v.length, 0);
-    return `${currentWeek?.skrill_time_revealed}|${readyIds.size}|${submissionIds.size}|${weekGoals.length}|${bountySubs.length}|${totalReports}|${totalAttemptVotes}`;
+    const awarded = weekGoals.filter(g => g.points_awarded).length;
+    const consol  = weekGoals.filter(g => g.attempt_pts_awarded).length;
+    return `${currentWeek?.skrill_time_revealed}|${readyIds.size}|${submissionIds.size}|${weekGoals.length}|${bountySubs.length}|${totalReports}|${totalAttemptVotes}|${attemptSubmissionIds.size}|${awarded}|${consol}`;
   }
 
   function startPolling() {
@@ -225,8 +235,10 @@
     const allReady = total > 0 && count >= total;
     const iReady   = readyIds.has(stored.id);
     const isSkDay  = isSkrillDay();
-    const allSubmitted = total > 0 && [...participantIds].every(id => submissionIds.has(id));
-    const closed   = revealed && allSubmitted;
+    const allRatingsSubmitted = total > 0 && [...participantIds].every(id => submissionIds.has(id));
+    const hasAttempts = weekGoals.some(g => g.status === 'attempted' && participantIds.has(g.profile_id));
+    const allAttemptsConfirmed = !hasAttempts || (total > 0 && [...participantIds].every(id => attemptSubmissionIds.has(id)));
+    const closed   = revealed && allRatingsSubmitted && allAttemptsConfirmed;
 
     let body = '';
     if (!closed) revealShown = false;
@@ -271,8 +283,10 @@
             </div>
           </div>`;
       }
-    } else if (!closed) {
+    } else if (!allRatingsSubmitted) {
       body = renderRatingPhase();
+    } else if (!allAttemptsConfirmed) {
+      body = renderAttemptVotePhase();
     } else {
       const animate = !revealShown;
       revealShown = true;
@@ -389,13 +403,16 @@
     const remaining = bonusTotal - myUsed;
 
     if (!goals.length) {
-      // Auto-close immediately if nothing to rate
-      const adminBtn = isAdmin() ? `<button class="btn btn-primary btn-sm" style="margin-top:14px" onclick="forceFinalize()">Forçar Encerramento</button>` : '';
+      // Sem entregas para avaliar. Permite confirmar (rating vazio) para seguir
+      // ao restante do fluxo (tentativas / reveal) sem depender do admin.
+      if (mySubmitted) return `${renderBountySection(false)}${renderWaitingForOthers(goals)}`;
+      const adminBtn = isAdmin() ? `<div style="margin-top:10px"><button class="btn btn-ghost btn-sm" onclick="forceFinalize()">Admin: forçar encerramento</button></div>` : '';
       return `
         ${renderBountySection(false)}
         <div class="card" style="padding:36px 20px;text-align:center">
           <div style="font-size:30px;font-weight:700;margin-bottom:8px">Nenhuma entrega esta temporada</div>
-          <div style="font-size:22px;color:var(--text-muted);text-transform:uppercase">Nada para avaliar.</div>
+          <div style="font-size:22px;color:var(--text-muted);text-transform:uppercase;margin-bottom:14px">Nada para avaliar.</div>
+          <button class="btn btn-primary" style="font-size:24px;padding:10px 28px" onclick="skipRatings()">Continuar</button>
           ${adminBtn}
         </div>`;
     }
@@ -423,7 +440,7 @@
               </div>
               <div style="font-size:26px;font-weight:700">${g.title}</div>
               <div style="font-size:20px;color:var(--text-muted);margin-top:2px">
-                ${difficultyChip(g.difficulty)} · base ${g.difficulty === 'complex' ? 5 : 2}pts
+                ${difficultyChip(g.difficulty)} · base ${basePoints(g.difficulty)}pts
               </div>
             </div>
             <div class="rating-stepper">
@@ -486,6 +503,7 @@
   }
 
   function renderReveal(animate = false) {
+    if (animate && typeof fireConfetti === 'function') setTimeout(fireConfetti, 250);
     const completedGoals = deliveredGoals();
     const byMember = new Map();
     for (const p of allProfiles) byMember.set(p.id, { profile: p, goals: [] });
@@ -495,13 +513,13 @@
 
     const memberBlocks = [...byMember.values()].map(({ profile, goals: mGoals }) => {
       const totalPts = mGoals.reduce((s, g) => {
-        const base = g.difficulty === 'complex' ? 5 : 2;
+        const base = basePoints(g.difficulty);
         const bonus = bonusByGoal.get(g.id) ?? 0;
         return s + base + bonus;
       }, 0);
       const goalsHTML = mGoals.map(g => {
         const imgs = g.image_urls ?? [];
-        const base = g.difficulty === 'complex' ? 5 : 2;
+        const base = basePoints(g.difficulty);
         const bonus = bonusByGoal.get(g.id) ?? 0;
         return `
           <div style="margin-bottom:12px">
@@ -536,7 +554,7 @@
     });
 
     const grandTotal = completedGoals.reduce((s, g) => {
-      const base = g.difficulty === 'complex' ? 5 : 2;
+      const base = basePoints(g.difficulty);
       return s + base + (bonusByGoal.get(g.id) ?? 0);
     }, 0);
     const nextNum  = currentWeek.week_number + 1;
@@ -576,6 +594,8 @@
       ${advanceBtn}`;
   }
 
+  // Seção de tentativas no REVEAL — somente leitura: mostra contagem final de
+  // votos e o badge de consolação (concedido no encerramento). Sem botões.
   function renderAttemptSection(animate = false) {
     const attempted = weekGoals.filter(g => g.status === 'attempted' && participantIds.has(g.profile_id));
     if (!attempted.length) return '';
@@ -585,26 +605,16 @@
       const votes       = attemptVotes.get(g.id) ?? [];
       const upCount     = votes.filter(v => v.vote === 'up').length;
       const downCount   = votes.filter(v => v.vote === 'down').length;
-      const myVote      = myAttemptVotes.get(g.id);
-      const isMine      = g.profile_id === stored.id;
       const imgs        = g.attempt_images ?? [];
       const awarded     = !!g.attempt_pts_awarded;
 
-      const voteRow = !isMine ? `
-        <div style="display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap">
-          <button class="vote-btn${myVote === 'up' ? ' voted-up' : ''}" onclick="voteAttempt('${g.id}','up')" ${myVote ? 'disabled' : ''}>
-            &#9650; ${upCount}
-          </button>
-          <button class="vote-btn${myVote === 'down' ? ' voted-down' : ''}" onclick="voteAttempt('${g.id}','down')" ${myVote ? 'disabled' : ''}>
-            &#9660; ${downCount}
-          </button>
+      const resultRow = `
+        <div style="margin-top:10px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          <span style="font-size:22px;color:var(--green-dark);font-weight:700">&#9650; ${upCount}</span>
+          <span style="font-size:22px;color:var(--red);font-weight:700">&#9660; ${downCount}</span>
           ${awarded
             ? `<span class="badge badge-completed" style="font-size:20px">+1pt consolacao</span>`
-            : `<span style="font-size:20px;color:var(--text-muted);text-transform:uppercase">${myVote ? 'Votado' : 'Vote acima'}</span>`}
-        </div>` : `
-        <div style="margin-top:10px;display:flex;align-items:center;gap:10px;flex-wrap:wrap">
-          <span style="font-size:20px;color:var(--text-muted)">&#9650; ${upCount} &nbsp; &#9660; ${downCount}</span>
-          ${awarded ? `<span class="badge badge-completed" style="font-size:20px">+1pt consolacao</span>` : ''}
+            : `<span style="font-size:20px;color:var(--text-muted);text-transform:uppercase">sem consolacao</span>`}
         </div>`;
 
       const cardHTML = `
@@ -619,7 +629,7 @@
           </div>
           ${g.attempt_text ? `<div class="attempt-reflection">"${g.attempt_text}"</div>` : ''}
           ${imgs.length ? `<div class="delivery-images" style="margin-top:8px">${imgs.map(u => `<img class="reveal-img" src="${u}" alt="tentativa">`).join('')}</div>` : ''}
-          ${voteRow}
+          ${resultRow}
         </div>`;
 
       return animate
@@ -637,47 +647,127 @@
       </div>`;
   }
 
+  // Fase de votação de tentativas (entre o submit de bônus e o reveal). Votos
+  // ▲/▼ são desmarcáveis até confirmar. Bônus permanece oculto aqui.
+  function renderAttemptVotePhase() {
+    const attempted = weekGoals.filter(g => g.status === 'attempted' && participantIds.has(g.profile_id));
+
+    if (myAttemptSubmitted) {
+      const squares = allProfiles.map(p => `
+        <div class="ready-square ${attemptSubmissionIds.has(p.id) ? 'on' : ''}" title="${p.name}"></div>
+      `).join('');
+      const adminBtn = isAdmin() ? `
+        <div style="margin-top:18px"><button class="btn btn-ghost btn-sm" onclick="forceFinalize()">Admin: forçar encerramento</button></div>` : '';
+      return `
+        <div class="card">
+          <div class="card-body" style="padding:24px;text-align:center">
+            <div style="font-size:28px;font-weight:700;margin-bottom:12px;text-transform:uppercase">Votos de tentativa enviados</div>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px">${squares}</div>
+            <div style="font-size:24px;color:var(--text-muted);text-transform:uppercase">
+              ${attemptSubmissionIds.size} / ${allProfiles.length} confirmados
+            </div>
+            <div style="font-size:22px;color:var(--text-muted);margin-top:8px;text-transform:uppercase">Aguardando os demais...</div>
+            ${adminBtn}
+          </div>
+        </div>`;
+    }
+
+    const cards = attempted.map((g, i) => {
+      const profile   = g.profile;
+      const votes     = attemptVotes.get(g.id) ?? [];
+      const upCount   = votes.filter(v => v.vote === 'up').length;
+      const downCount = votes.filter(v => v.vote === 'down').length;
+      const myVote    = myAttemptVotes.get(g.id);
+      const isMine    = g.profile_id === stored.id;
+      const imgs      = g.attempt_images ?? [];
+
+      const voteRow = isMine
+        ? `<div style="margin-top:10px;font-size:20px;color:var(--text-muted);text-transform:uppercase">Sua tentativa · ${upCount} a favor, ${downCount} contra</div>`
+        : `<div style="display:flex;align-items:center;gap:10px;margin-top:10px;flex-wrap:wrap">
+            <button class="vote-btn${myVote === 'up' ? ' voted-up' : ''}" onclick="voteAttempt('${g.id}','up')">&#9650; ${upCount}</button>
+            <button class="vote-btn${myVote === 'down' ? ' voted-down' : ''}" onclick="voteAttempt('${g.id}','down')">&#9660; ${downCount}</button>
+            <span style="font-size:20px;color:var(--text-muted);text-transform:uppercase">${myVote ? 'Clique de novo para desmarcar' : 'Vote (opcional)'}</span>
+          </div>`;
+
+      return `
+        <div style="padding:14px 0;${i < attempted.length - 1 ? 'border-bottom:1px solid var(--border);' : ''}">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:8px;flex-wrap:wrap">
+            ${profile ? avatarHTML(profile) : ''}
+            <div style="flex:1;min-width:0">
+              <div style="font-size:22px;color:var(--text-muted);text-transform:uppercase">${profile?.name ?? '?'}</div>
+              <div style="font-size:24px;font-weight:700">${g.title}</div>
+            </div>
+            ${difficultyChip(g.difficulty)}
+          </div>
+          ${g.attempt_text ? `<div class="attempt-reflection">"${g.attempt_text}"</div>` : ''}
+          ${imgs.length ? `<div class="delivery-images" style="margin-top:8px">${imgs.map(u => `<img class="reveal-img" src="${u}" alt="tentativa">`).join('')}</div>` : ''}
+          ${voteRow}
+        </div>`;
+    }).join('');
+
+    return `
+      <div class="card" style="margin-bottom:14px">
+        <div class="card-header">
+          <div class="card-title">Votação de Tentativas</div>
+          <div style="font-size:20px;color:var(--text-muted);text-transform:uppercase">${attempted.length} tentativa${attempted.length !== 1 ? 's' : ''}</div>
+        </div>
+        <div class="card-body" style="padding:14px">
+          <div style="font-size:22px;color:var(--text-muted);text-transform:uppercase;margin-bottom:14px">
+            Vote &#9650; nas tentativas que merecem 1 ponto de consolação. O voto é opcional e pode ser desmarcado até confirmar.
+            Os resultados dos bônus só aparecem após esta etapa.
+          </div>
+          ${cards}
+          <div style="text-align:center;margin-top:18px">
+            <button id="attempt-submit" class="btn btn-primary" style="font-size:26px;padding:12px 32px" onclick="submitAttemptVotes()">
+              Confirmar votos
+            </button>
+          </div>
+        </div>
+      </div>`;
+  }
+
+  // Voto de tentativa toggleável: clicar no mesmo voto desmarca; clicar no outro
+  // troca. SEM conceder pontos aqui — a consolação é apurada no encerramento.
   async function voteAttempt(goalId, vote) {
-    if (myAttemptVotes.has(goalId)) return;
+    if (myAttemptSubmitted) return;
     const goal = weekGoals.find(g => g.id === goalId);
     if (!goal || goal.profile_id === stored.id) return;
 
-    const { error } = await sb.from('attempt_votes').insert({
-      week_id:  currentWeek.id,
-      goal_id:  goalId,
-      voter_id: stored.id,
-      vote,
+    const current = myAttemptVotes.get(goalId);
+
+    if (current === vote) {
+      // desmarcar
+      const { error } = await sb.from('attempt_votes')
+        .delete().eq('goal_id', goalId).eq('voter_id', stored.id);
+      if (error) { toast('Erro ao desmarcar', '#ef4444'); return; }
+      myAttemptVotes.delete(goalId);
+    } else {
+      // inserir/trocar
+      const { error } = await sb.from('attempt_votes').upsert(
+        { week_id: currentWeek.id, goal_id: goalId, voter_id: stored.id, vote },
+        { onConflict: 'goal_id,voter_id' }
+      );
+      if (error) { toast('Erro ao votar', '#ef4444'); return; }
+      myAttemptVotes.set(goalId, vote);
+    }
+    await reload();
+  }
+
+  async function submitAttemptVotes() {
+    if (myAttemptSubmitted) return;
+    const btn = document.getElementById('attempt-submit');
+    if (btn) { btn.disabled = true; btn.textContent = '...'; }
+    const { error } = await sb.from('attempt_vote_submissions').insert({
+      week_id: currentWeek.id, voter_id: stored.id,
     });
     if (error && !error.message.includes('duplicate')) {
-      toast('Erro ao votar', '#ef4444');
+      toast(error.message, '#ef4444');
+      if (btn) { btn.disabled = false; btn.textContent = 'Confirmar votos'; }
       return;
     }
-    myAttemptVotes.set(goalId, vote);
-
-    // Busca votos atualizados para decidir se concede o ponto
-    const { data: votes } = await sb.from('attempt_votes')
-      .select('voter_id,vote').eq('goal_id', goalId);
-    const upCount   = (votes ?? []).filter(v => v.vote === 'up').length;
-    const downCount = (votes ?? []).filter(v => v.vote === 'down').length;
-
-    if (upCount > downCount && !goal.attempt_pts_awarded) {
-      const { data: prof } = await sb.from('profiles')
-        .select('total_points,weekly_points').eq('id', goal.profile_id).single();
-      if (prof) {
-        await sb.from('profiles').update({
-          total_points:  (prof.total_points  ?? 0) + 1,
-          weekly_points: (prof.weekly_points ?? 0) + 1,
-        }).eq('id', goal.profile_id);
-      }
-      await sb.from('point_history').insert({
-        profile_id: goal.profile_id, amount: 1,
-        reason:     'attempt_consolation',
-        goal_id:    goalId, week_id: currentWeek.id,
-      });
-      await sb.from('goals').update({ attempt_pts_awarded: true }).eq('id', goalId);
-      toast('+1pt de consolacao concedido!', '#22c55e');
-    }
-
+    myAttemptSubmitted = true;
+    attemptSubmissionIds.add(stored.id);
+    await checkAndAutoClose();
     await reload();
   }
 
@@ -798,13 +888,39 @@
     await reload();
   }
 
+  // Confirma sem avaliar (usado quando não há entregas para pontuar).
+  async function skipRatings() {
+    if (mySubmitted) return;
+    const { error } = await sb.from('peer_rating_submissions').insert({
+      week_id: currentWeek.id, rater_id: stored.id,
+    });
+    if (error && !error.message.includes('duplicate')) {
+      toast(error.message, '#ef4444');
+      return;
+    }
+    mySubmitted = true;
+    submissionIds.add(stored.id);
+    await checkAndAutoClose();
+    await reload();
+  }
+
   async function checkAndAutoClose() {
     if (!currentWeek || finalizing) return;
+    // 1. todos enviaram a avaliação por pares?
     const { data: subs } = await sb.from('peer_rating_submissions')
       .select('rater_id').eq('week_id', currentWeek.id);
     const sIds = new Set((subs ?? []).map(s => s.rater_id));
-    const allDone = allProfiles.length > 0 && allProfiles.every(p => sIds.has(p.id));
-    if (!allDone) return;
+    const ratingsDone = allProfiles.length > 0 && allProfiles.every(p => sIds.has(p.id));
+    if (!ratingsDone) return;
+    // 2. se há tentativas, todos confirmaram os votos de tentativa?
+    const hasAttempts = weekGoals.some(g => g.status === 'attempted' && participantIds.has(g.profile_id));
+    if (hasAttempts) {
+      const { data: asubs } = await sb.from('attempt_vote_submissions')
+        .select('voter_id').eq('week_id', currentWeek.id);
+      const aIds = new Set((asubs ?? []).map(s => s.voter_id));
+      if (!allProfiles.every(p => aIds.has(p.id))) return;
+    }
+    // 3. idempotência: já finalizado?
     const { data: anyAwarded } = await sb.from('goals')
       .select('id').eq('week_id', currentWeek.id).eq('points_awarded', true).limit(1);
     if (anyAwarded?.length) return;
@@ -845,12 +961,18 @@
     if (!confirm('Forçar encerramento agora? Os pontos serão concedidos imediatamente.')) return;
     finalizing = true;
     try {
-      // Mark every participant as submitted so the season closes (reveal phase),
-      // even if some never sent their peer rating.
+      // Mark every participant as submitted (avaliação E tentativas) para a
+      // temporada fechar e ir ao reveal, mesmo que alguém não tenha enviado.
       const missing = [...participantIds].filter(id => !submissionIds.has(id));
       if (missing.length) {
         await sb.from('peer_rating_submissions').insert(
           missing.map(id => ({ week_id: currentWeek.id, rater_id: id }))
+        );
+      }
+      const missingAtt = [...participantIds].filter(id => !attemptSubmissionIds.has(id));
+      if (missingAtt.length) {
+        await sb.from('attempt_vote_submissions').insert(
+          missingAtt.map(id => ({ week_id: currentWeek.id, voter_id: id }))
         );
       }
       await finalizeSeason();

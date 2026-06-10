@@ -627,15 +627,16 @@ html[data-theme="dark"] .entry-name-sub img[src$="streak.svg"] { filter: brightn
 .p3 .podium-block-num { font-size: 36px; }
 
 /* ── Difficulty pills (weekly modal) ────────────────────────────────────────── */
-.difficulty-pills { display: flex; gap: 0; border: 1px solid var(--border-dark); box-shadow: var(--shadow); }
+.difficulty-pills { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--border-dark); box-shadow: var(--shadow); }
 .diff-pill {
-  flex: 1; padding: 10px 12px; cursor: pointer; text-align: center;
+  padding: 10px 12px; cursor: pointer; text-align: center;
   font-family: 'Micro 5', monospace; font-size: 24px; font-weight: bold;
   background: var(--surface); color: var(--text-muted);
-  border-right: 1px solid var(--border-dark);
   text-transform: uppercase; letter-spacing: 0.04em;
 }
-.diff-pill:last-child { border-right: none; }
+/* Extra ocupa uma linha cheia acima de Simples + Complexa */
+#diff-extra-label  { grid-column: 1 / -1; order: -1; border-bottom: 1px solid var(--border-dark); }
+#diff-simple-label { border-right: 1px solid var(--border-dark); }
 .diff-pill.active { background: var(--amber); color: #000; }
 .diff-pill input { display: none; }
 

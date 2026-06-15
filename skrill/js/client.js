@@ -1120,8 +1120,9 @@ async function finalizeSeasonById(weekId) {
     .select('bounty_title,bounty_awarded').eq('id', weekId).maybeSingle();
   if (week?.bounty_title && !week.bounty_awarded) {
     const { data: subs } = await sb.from('bounty_submissions')
-      .select('profile_id').eq('week_id', weekId);
+      .select('profile_id,canceled').eq('week_id', weekId);
     const bountyProfiles = [...new Set((subs ?? [])
+      .filter(s => !s.canceled)
       .map(s => s.profile_id)
       .filter(id => participantIds.has(id)))];
     const bpts = bountyPointsFor(bountyProfiles.length);

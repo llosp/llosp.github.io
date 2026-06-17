@@ -79,6 +79,7 @@
   let completedGoals   = [];
   let allProfileGoals  = [];
   let timelineItems    = [];
+  let bountyDoneCount  = 0;
   let timelineLimit    = 4;
 
   async function init() {
@@ -131,6 +132,7 @@
       }));
     timelineItems = [...completedGoals, ...bountyDeliveries]
       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+    bountyDoneCount = bountyDeliveries.length;
 
     document.getElementById('app').innerHTML = `
       <div style="width:100%">
@@ -327,6 +329,7 @@
     const total     = goals.length;
     const completed = goals.filter(g => g.status === 'completed').length;
     const failed    = goals.filter(g => g.status === 'failed').length;
+    const rate      = total ? Math.round(completed / total * 100) : 0;
 
     // ── stat cards ────────────────────────────────────────────────────────────
     const statCards = `
@@ -334,6 +337,8 @@
         <div class="stat-card"><div class="stat-value">${total}</div><div class="stat-label">Metas Criadas</div></div>
         <div class="stat-card"><div class="stat-value">${completed}</div><div class="stat-label">Metas Completas</div></div>
         <div class="stat-card"><div class="stat-value">${failed}</div><div class="stat-label">Metas Falhadas</div></div>
+        <div class="stat-card"><div class="stat-value">${rate}%</div><div class="stat-label">Taxa de Conclusão</div></div>
+        <div class="stat-card"><div class="stat-value">${bountyDoneCount}</div><div class="stat-label">Bounties Feitas</div></div>
       </div>`;
 
     // ── aggregate by season ───────────────────────────────────────────────────
@@ -347,7 +352,8 @@
       const s = seasonMap.get(key);
       if      (g.status === 'completed') { s.completed++; s.pts += g.points_earned ?? 0; }
       else if (g.status === 'attempted') { s.attempted++; s.pts += g.points_earned ?? 0; }
-      else                               { s.failed++; }
+      else if (g.status === 'failed')    { s.failed++; }
+      // metas ainda 'active' (declaradas e não concluídas) não contam como falhadas
     }
     const seasons = [...seasonMap.entries()]
       .sort(([a],[b]) => a < b ? -1 : 1)

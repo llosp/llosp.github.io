@@ -1120,8 +1120,9 @@ async function finalizeSeasonById(weekId) {
     .select('bounty_title,bounty_awarded').eq('id', weekId).maybeSingle();
   if (week?.bounty_title && !week.bounty_awarded) {
     const { data: subs } = await sb.from('bounty_submissions')
-      .select('profile_id').eq('week_id', weekId);
+      .select('profile_id,canceled').eq('week_id', weekId);
     const bountyProfiles = [...new Set((subs ?? [])
+      .filter(s => !s.canceled)
       .map(s => s.profile_id)
       .filter(id => participantIds.has(id)))];
     const bpts = bountyPointsFor(bountyProfiles.length);
@@ -1174,12 +1175,14 @@ const BOI_ACTIVITIES = [
   { title: 'cumprir proposito',     img: '/skrill/img/boi/boi_bife_carne_no_prato.webp' },
   { title: 'treino de intimidacao', img: '/skrill/img/boi/boi_bravo.webp' },
   { title: 'trabalho bracal',       img: '/skrill/img/boi/boi_carrossa.webp' },
+  { title: 'aprender uma manobra',  img: '/skrill/img/boi/boi_de_skate.png' },
   { title: 'intercambio cultural',  img: '/skrill/img/boi/boi_chines_tradicional.jpeg' },
   { title: 'aula de desenho',       img: '/skrill/img/boi/boi_desenho_simples.webp' },
   { title: 'virar premium',         img: '/skrill/img/boi/boi_dourado.webp' },
   { title: 'bombar nas redes',      img: '/skrill/img/boi/boi_emoji.webp' },
   { title: 'fazer bulking',         img: '/skrill/img/boi/boi_gordo.webp' },
   { title: 'cuidar da autoestima',  img: '/skrill/img/boi/boi_lindo.webp' },
+  { title: 'trabalhar o core',      img: '/skrill/img/boi/boi_pilates.png' },
   { title: 'atualizar o linkedin',  img: '/skrill/img/boi/boi_sem_fundo.webp' },
   { title: 'comecar a investir',    img: '/skrill/img/boi/boi_stocks_went_higher.webp' },
   { title: 'encarar o urso',        img: '/skrill/img/boi/boi_vs_urso_estatua.webp' },

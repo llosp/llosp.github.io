@@ -47,6 +47,9 @@
   let finalizing        = false;
   let myReports         = new Set();   // goal_ids que eu denunciei
   let reportsByGoal     = new Map();   // goal_id -> Set de reporter_ids
+  let myBountyReports   = new Set();   // submission_ids de bounty que eu denunciei
+  let bountyReportsBySub = new Map();  // submission_id -> Set de reporter_ids
+  let botIds            = new Set();   // profile_ids que sao bots (nao votam/denunciam)
   let attemptVotes      = new Map();   // goal_id -> [{ voter_id, vote }]
   let myAttemptVotes    = new Map();   // goal_id -> 'up'|'down'
   let attemptSubmissionIds = new Set();// voter_ids que confirmaram os votos de tentativa
@@ -88,6 +91,7 @@
       { data: allR },
       { data: bsubs },
       { data: reportRows },
+      { data: bountyReportRows },
       { data: attemptVoteRows },
       { data: attemptSubRows },
     ] = await Promise.all([
@@ -99,6 +103,7 @@
       sb.from('peer_ratings').select('goal_id,amount').eq('week_id', currentWeek.id),
       sb.from('bounty_submissions').select('*, profile:profiles(*)').eq('week_id', currentWeek.id).order('created_at', { ascending: false }),
       sb.from('delivery_reports').select('goal_id,reporter_id').eq('week_id', currentWeek.id),
+      sb.from('bounty_reports').select('submission_id,reporter_id').eq('week_id', currentWeek.id),
       sb.from('attempt_votes').select('goal_id,voter_id,vote').eq('week_id', currentWeek.id),
       sb.from('attempt_vote_submissions').select('voter_id').eq('week_id', currentWeek.id),
     ]);
@@ -106,6 +111,7 @@
     weekGoals      = goals ?? [];
     participantIds = new Set((participants ?? []).map(p => p.profile_id));
     allProfiles    = allProfilesFull.filter(p => participantIds.has(p.id));
+    botIds         = new Set(allProfilesFull.filter(p => p.is_bot).map(p => p.id));
 
     myRatings = new Map();
     myUsed = 0;
@@ -122,7 +128,7 @@
       bonusByGoal.set(r.goal_id, (bonusByGoal.get(r.goal_id) ?? 0) + r.amount);
     }
 
-    bountySubs = (bsubs ?? []).filter(s => participantIds.has(s.profile_id));
+    bountySubs = (bsubs ?? []).filter(s => participantIds.has(s.profile_id) && !s.canceled);
 
     myReports = new Set();
     reportsByGoal = new Map();
@@ -130,6 +136,14 @@
       if (r.reporter_id === stored.id) myReports.add(r.goal_id);
       if (!reportsByGoal.has(r.goal_id)) reportsByGoal.set(r.goal_id, new Set());
       reportsByGoal.get(r.goal_id).add(r.reporter_id);
+    }
+
+    myBountyReports = new Set();
+    bountyReportsBySub = new Map();
+    for (const r of (bountyReportRows ?? [])) {
+      if (r.reporter_id === stored.id) myBountyReports.add(r.submission_id);
+      if (!bountyReportsBySub.has(r.submission_id)) bountyReportsBySub.set(r.submission_id, new Set());
+      bountyReportsBySub.get(r.submission_id).add(r.reporter_id);
     }
 
     attemptVotes = new Map();
@@ -155,6 +169,8 @@
         if (payload.new?.id === currentWeek?.id) reload();
       })
       .on('postgres_changes', { event: '*', schema: 'public', table: 'delivery_reports' }, () => reload())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'bounty_reports' }, () => reload())
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'bounty_submissions' }, () => reload())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'attempt_votes' }, () => reload())
       .on('postgres_changes', { event: '*', schema: 'public', table: 'attempt_vote_submissions' }, () => reload())
       .subscribe();
@@ -162,10 +178,11 @@
 
   function stateSignature() {
     const totalReports = [...reportsByGoal.values()].reduce((s, v) => s + v.size, 0);
+    const totalBountyReports = [...bountyReportsBySub.values()].reduce((s, v) => s + v.size, 0);
     const totalAttemptVotes = [...attemptVotes.values()].reduce((s, v) => s + v.length, 0);
     const awarded = weekGoals.filter(g => g.points_awarded).length;
     const consol  = weekGoals.filter(g => g.attempt_pts_awarded).length;
-    return `${currentWeek?.skrill_time_revealed}|${readyIds.size}|${submissionIds.size}|${weekGoals.length}|${bountySubs.length}|${totalReports}|${totalAttemptVotes}|${attemptSubmissionIds.size}|${awarded}|${consol}`;
+    return `${currentWeek?.skrill_time_revealed}|${readyIds.size}|${submissionIds.size}|${weekGoals.length}|${bountySubs.length}|${totalReports}|${totalBountyReports}|${totalAttemptVotes}|${attemptSubmissionIds.size}|${awarded}|${consol}`;
   }
 
   function startPolling() {
@@ -361,16 +378,31 @@
     return weekGoals.filter(g => g.status === 'completed' && participantIds.has(g.profile_id));
   }
 
+  // Quantos votos de denúncia cancelam uma entrega/bounty: todos os participantes
+  // exceto o dono e os bots (que nunca denunciam).
+  function reportThreshold(ownerId) {
+    return [...participantIds].filter(id => id !== ownerId && !botIds.has(id)).length;
+  }
+
   // Seção de entregas da Bounty no Skrill Time (sem stepper de avaliação).
   // showPoints = true na fase de revelação (exibe os pontos calculados por contagem).
+  // Fora do reveal (showPoints=false) permite denunciar bounties.
   function renderBountySection(showPoints) {
     if (!currentWeek?.bounty_title || !bountySubs.length) return '';
+    const allowReport = !showPoints;
     const bpts = (typeof bountyPointsFor === 'function') ? bountyPointsFor(bountySubs.length) : 0;
     const cards = bountySubs.map(s => {
       const profile = s.profile;
       const imgs = s.image_urls ?? [];
+      const isMine = s.profile_id === stored.id;
+      const reportCount = bountyReportsBySub.get(s.id)?.size ?? 0;
+      const reportNeeded = reportThreshold(s.profile_id);
+      const alreadyReported = myBountyReports.has(s.id);
       return `
         <div class="rating-card">
+          ${allowReport && !isMine ? `<button class="report-btn${alreadyReported ? ' reported' : ''}" onclick="reportBounty('${s.id}')" title="Denunciar bounty (${reportCount}/${reportNeeded})" ${alreadyReported ? 'disabled' : ''}>
+            <img src="/skrill/img/attention.svg" alt="denunciar" style="width:18px;height:18px">
+          </button>` : ''}
           <div class="rating-card-head">
             ${profile ? avatarHTML(profile) : ''}
             <div style="flex:1;min-width:0">
@@ -425,7 +457,7 @@
       const imgs = g.image_urls ?? [];
       const isMine = g.profile_id === stored.id;
       const reportCount  = reportsByGoal.get(g.id)?.size ?? 0;
-      const reportNeeded = [...participantIds].filter(id => id !== g.profile_id).length;
+      const reportNeeded = reportThreshold(g.profile_id);
       const alreadyReported = myReports.has(g.id);
       return `
         <div class="rating-card">
@@ -659,6 +691,7 @@
       const adminBtn = isAdmin() ? `
         <div style="margin-top:18px"><button class="btn btn-ghost btn-sm" onclick="forceFinalize()">Admin: forçar encerramento</button></div>` : '';
       return `
+        ${renderBountySection(false)}
         <div class="card">
           <div class="card-body" style="padding:24px;text-align:center">
             <div style="font-size:28px;font-weight:700;margin-bottom:12px;text-transform:uppercase">Votos de tentativa enviados</div>
@@ -706,6 +739,7 @@
     }).join('');
 
     return `
+      ${renderBountySection(false)}
       <div class="card" style="margin-bottom:14px">
         <div class="card-header">
           <div class="card-title">Votação de Tentativas</div>
@@ -945,13 +979,41 @@
     }
     myReports.add(goalId);
 
-    // Verifica se o limiar foi atingido (todos exceto o dono denunciaram)
+    // Verifica se o limiar foi atingido (todos exceto o dono e bots denunciaram)
     const { data: reports } = await sb.from('delivery_reports')
       .select('reporter_id').eq('goal_id', goalId);
-    const threshold = [...participantIds].filter(id => id !== goal.profile_id).length;
+    const threshold = reportThreshold(goal.profile_id);
     if ((reports?.length ?? 0) >= threshold && threshold > 0) {
       await sb.from('goals').update({ status: 'failed' }).eq('id', goalId);
       toast('Entrega cancelada por unanimidade', '#ef4444');
+    }
+
+    await reload();
+  }
+
+  async function reportBounty(submissionId) {
+    if (myBountyReports.has(submissionId)) return;
+    const sub = bountySubs.find(s => s.id === submissionId);
+    if (!sub || sub.profile_id === stored.id) return;
+
+    const { error } = await sb.from('bounty_reports').insert({
+      week_id:       currentWeek.id,
+      submission_id: submissionId,
+      reporter_id:   stored.id,
+    });
+    if (error && !error.message.includes('duplicate')) {
+      toast('Erro ao denunciar', '#ef4444');
+      return;
+    }
+    myBountyReports.add(submissionId);
+
+    // Verifica se o limiar foi atingido (todos exceto o dono e bots denunciaram)
+    const { data: reports } = await sb.from('bounty_reports')
+      .select('reporter_id').eq('submission_id', submissionId);
+    const threshold = reportThreshold(sub.profile_id);
+    if ((reports?.length ?? 0) >= threshold && threshold > 0) {
+      await sb.from('bounty_submissions').update({ canceled: true }).eq('id', submissionId);
+      toast('Bounty cancelada por unanimidade', '#ef4444');
     }
 
     await reload();

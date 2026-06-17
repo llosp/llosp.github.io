@@ -155,40 +155,100 @@
       cursor: pointer;
     }
 
-    /* Seletores de cor */
-    .color-row {
-      display: flex;
-      gap: 14px;
+    /* Seletor de padrão */
+    select#select-padrao {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 100%;
+      font-family: 'Cormorant Garamond', Georgia, serif;
+      font-size: 17px;
+      font-weight: 600;
+      color: #f0ead6;
+      background: #28332a;
+      border: 1px solid #465040;
+      border-radius: 8px;
+      padding: 11px 38px 11px 14px;
+      cursor: pointer;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='8' viewBox='0 0 12 8'%3E%3Cpath fill='%23cdb47e' d='M6 8 0 0h12z'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-position: right 14px center;
+      transition: border-color 0.15s, box-shadow 0.15s;
     }
 
-    .color-field {
+    select#select-padrao:hover,
+    select#select-padrao:focus {
+      border-color: #cdb47e;
+      box-shadow: 0 0 10px rgba(205, 180, 126, 0.25);
+      outline: none;
+    }
+
+    select#select-padrao option {
+      background: #28332a;
+      color: #f0ead6;
+    }
+
+    /* Card de gradiente */
+    .color-card {
+      background: #28332a;
+      border: 1px solid #465040;
+      border-radius: 10px;
+      padding: 16px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .color-card-title {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: #cdb47e;
+    }
+
+    .gradient-preview {
+      width: 100%;
+      height: 26px;
+      border-radius: 6px;
+      border: 1px solid #465040;
+      background: linear-gradient(90deg, #e0a82e, #b4501a);
+    }
+
+    .swatch-row {
+      display: flex;
+      gap: 12px;
+    }
+
+    .swatch {
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
     }
 
-    .color-field span {
-      font-size: 15px;
-      font-weight: 600;
-      color: #d4dcc8;
+    .swatch span {
+      font-size: 13px;
+      font-weight: 500;
+      color: #a8b89a;
     }
 
     input[type="color"] {
       -webkit-appearance: none;
       appearance: none;
       width: 100%;
-      height: 34px;
+      height: 30px;
       border: 1px solid #465040;
       border-radius: 6px;
-      background: #2a342b;
+      background: #28332a;
       cursor: pointer;
-      padding: 3px;
+      padding: 2px;
     }
 
     input[type="color"]::-webkit-color-swatch-wrapper { padding: 0; }
-    input[type="color"]::-webkit-color-swatch { border: none; border-radius: 3px; }
-    input[type="color"]::-moz-color-swatch { border: none; border-radius: 3px; }
+    input[type="color"]::-webkit-color-swatch { border: none; border-radius: 4px; }
+    input[type="color"]::-moz-color-swatch { border: none; border-radius: 4px; }
 
     /* Botão salvar */
     .btn-salvar {
@@ -239,12 +299,11 @@
   <!-- Barra lateral -->
   <aside id="sidebar">
     <div class="sidebar-header">
-      <div class="tag">Biônica</div>
-      <h1>Proporção <span>Áurea</span> na Natureza</h1>
-      <p>
-        O girassol distribui suas sementes usando o <strong>ângulo áureo</strong>
-        (≈ 137,5°), derivado de φ ≈ 1,618. Isso garante que nenhuma semente
-        fique no mesmo raio, cobrindo o espaço de forma perfeita.
+      <div class="tag">Biônica · Estúdio Generativo</div>
+      <h1>A geometria <span>secreta</span> da natureza</h1>
+      <p id="padrao-desc">
+        Cada forma viva esconde a mesma proporção. Escolha um padrão, componha
+        seu gradiente e veja φ desenhar diante de você.
       </p>
     </div>
 
@@ -255,7 +314,18 @@
 
       <div>
         <div class="control-label">
-          <span>Quantidade de pontos</span>
+          <span>Padrão</span>
+        </div>
+        <select id="select-padrao">
+          <option value="girassol">Girassol — Filotaxia</option>
+          <option value="nautilus">Nautilus — Concha</option>
+          <option value="arvore">Árvore Áurea — Ramo</option>
+        </select>
+      </div>
+
+      <div>
+        <div class="control-label">
+          <span id="lbl-n">Quantidade de pontos</span>
           <span class="control-value" id="val-n">800</span>
         </div>
         <input type="range" id="slider-n" min="50" max="20000" value="800">
@@ -263,31 +333,37 @@
 
       <div>
         <div class="control-label">
-          <span>Espaçamento (c)</span>
+          <span id="lbl-c">Espaçamento</span>
           <span class="control-value" id="val-c">6.0</span>
         </div>
         <input type="range" id="slider-c" min="2" max="200" value="60" step="1">
-        <!-- interno: value/10 para ter casas decimais sem input number -->
       </div>
 
       <div>
         <div class="control-label">
-          <span>Tamanho dos pontos</span>
+          <span id="lbl-r">Tamanho dos pontos</span>
           <span class="control-value" id="val-r">3.0</span>
         </div>
         <input type="range" id="slider-r" min="5" max="400" value="15" step="1">
-        <!-- interno: value/5 -->
       </div>
 
-      <div class="color-row">
-        <label class="color-field">
-          <span>Cor do centro</span>
-          <input type="color" id="cor-centro" value="#e0a82e">
-        </label>
-        <label class="color-field">
-          <span>Cor da borda</span>
-          <input type="color" id="cor-borda" value="#b4501a">
-        </label>
+      <div class="color-card">
+        <div class="color-card-title">Gradiente</div>
+        <div class="gradient-preview" id="gradient-preview"></div>
+        <div class="swatch-row">
+          <label class="swatch">
+            <input type="color" id="cor-centro" value="#e0a82e">
+            <span>Centro</span>
+          </label>
+          <label class="swatch">
+            <input type="color" id="cor-borda" value="#b4501a">
+            <span>Borda</span>
+          </label>
+          <label class="swatch">
+            <input type="color" id="cor-fundo" value="#0d0d0d">
+            <span>Fundo</span>
+          </label>
+        </div>
       </div>
 
       <button class="btn-salvar" id="btn-salvar">Salvar imagem</button>
@@ -296,8 +372,7 @@
 
     <div class="sidebar-footer">
       <span class="phi">φ = 1.6180…</span>
-      Ângulo áureo = 360° × (2 − φ) ≈ 137,508°<br>
-      Padrão: filotaxia (girassol)
+      <span id="padrao-legenda">Ângulo áureo = 360° × (2 − φ) ≈ 137,508°</span>
     </div>
   </aside>
 
@@ -312,35 +387,180 @@
     const ctx     = canvas.getContext('2d');
     const wrapper = document.getElementById('canvas-wrapper');
 
-    const sliderN  = document.getElementById('slider-n');
-    const sliderC  = document.getElementById('slider-c');
-    const sliderR  = document.getElementById('slider-r');
-    const valN     = document.getElementById('val-n');
-    const valC     = document.getElementById('val-c');
-    const valR     = document.getElementById('val-r');
+    const sliderN   = document.getElementById('slider-n');
+    const sliderC   = document.getElementById('slider-c');
+    const sliderR   = document.getElementById('slider-r');
+    const valN      = document.getElementById('val-n');
+    const valC      = document.getElementById('val-c');
+    const valR      = document.getElementById('val-r');
+    const lblN      = document.getElementById('lbl-n');
+    const lblC      = document.getElementById('lbl-c');
+    const lblR      = document.getElementById('lbl-r');
     const corCentro = document.getElementById('cor-centro');
     const corBorda  = document.getElementById('cor-borda');
+    const corFundo  = document.getElementById('cor-fundo');
     const btnSalvar = document.getElementById('btn-salvar');
+    const selectPadrao  = document.getElementById('select-padrao');
+    const gradientPrev  = document.getElementById('gradient-preview');
+    const padraoDesc    = document.getElementById('padrao-desc');
+    const padraoLegenda = document.getElementById('padrao-legenda');
 
     // Cor de fundo do canvas (usada também na exportação)
-    const COR_FUNDO = '#0d0d0d';
+    let COR_FUNDO = corFundo.value;
 
     // ── Constantes da proporção áurea ────────────────────────────────────────
-    const ANGULO_AUREO_DEG = 137.50776405003785; // 360° × (2 − φ)
+    const PHI = (1 + Math.sqrt(5)) / 2;               // 1.618…
+    const ANGULO_AUREO_DEG = 137.50776405003785;      // 360° × (2 − φ)
     const ANGULO_AUREO_RAD = ANGULO_AUREO_DEG * (Math.PI / 180);
 
-    // ── Lê os valores atuais dos sliders ─────────────────────────────────────
+    // ── Helpers de cor ───────────────────────────────────────────────────────
+    function hexParaRgb(hex) {
+      const v = parseInt(hex.slice(1), 16);
+      return { r: (v >> 16) & 255, g: (v >> 8) & 255, b: v & 255 };
+    }
+
+    // Interpola entre a cor do centro e a cor da borda (progresso 0 → 1)
+    function corPonto(progresso, centro, borda) {
+      const r = Math.round(centro.r + (borda.r - centro.r) * progresso);
+      const g = Math.round(centro.g + (borda.g - centro.g) * progresso);
+      const b = Math.round(centro.b + (borda.b - centro.b) * progresso);
+      const a = 0.55 + progresso * 0.45;                // 0.55 → 1.0
+      return `rgba(${r},${g},${b},${a})`;
+    }
+
+    // ── Registro de padrões áureos ───────────────────────────────────────────
+    // Cada padrão define: descrição, legenda, config dos 3 sliders e render().
+    const PADROES = {
+      girassol: {
+        desc: 'No coração do girassol, cada semente nasce girada 137,5° da anterior — o ângulo áureo. Nenhuma se repete, e o espaço se preenche com exatidão.',
+        legenda: 'Filotaxia · ângulo áureo ≈ 137,508°',
+        controles: {
+          n: { min: 50, max: 20000, step: 1, value: 800, rotulo: 'Quantidade de sementes', formata: v => v,                  mapeia: v => v },
+          c: { min: 2,  max: 200,   step: 1, value: 60,  rotulo: 'Espaçamento',            formata: v => (v / 10).toFixed(1), mapeia: v => v / 10 },
+          r: { min: 5,  max: 400,   step: 1, value: 15,  rotulo: 'Tamanho dos pontos',     formata: v => (v / 5).toFixed(1),  mapeia: v => v / 5 },
+        },
+        render(ctx, { cx, cy, n, c, r, centro, borda }) {
+          const distMax = c * Math.sqrt(n);
+          for (let i = 1; i <= n; i++) {
+            const angulo = i * ANGULO_AUREO_RAD;
+            const dist   = c * Math.sqrt(i);
+            const x = cx + dist * Math.cos(angulo);
+            const y = cy + dist * Math.sin(angulo);
+            const progresso = dist / distMax;
+
+            ctx.beginPath();
+            ctx.arc(x, y, r, 0, Math.PI * 2);
+            ctx.fillStyle = corPonto(progresso, centro, borda);
+
+            if (progresso < 0.15) {
+              ctx.shadowColor = 'rgba(255, 220, 100, 0.6)';
+              ctx.shadowBlur  = 6;
+            } else {
+              ctx.shadowBlur  = 0;
+            }
+            ctx.fill();
+          }
+          ctx.shadowBlur = 0;
+        },
+      },
+
+      nautilus: {
+        desc: 'A concha do nautilus cresce sem mudar de forma: a cada quarto de volta, sua espiral se expande exatamente φ vezes — a espiral logarítmica perfeita.',
+        legenda: 'Espiral logarítmica · r = a·φ^(2θ/π)',
+        controles: {
+          n: { min: 200, max: 6000, step: 10, value: 2400, rotulo: 'Resolução',  formata: v => v,                  mapeia: v => v },
+          c: { min: 5,   max: 40,   step: 1,  value: 12,   rotulo: 'Escala',     formata: v => (v / 10).toFixed(1), mapeia: v => v / 10 },
+          r: { min: 1,   max: 40,   step: 1,  value: 7,    rotulo: 'Espessura',  formata: v => (v / 2).toFixed(1),  mapeia: v => v / 2 },
+        },
+        render(ctx, { W, H, cx, cy, n, c, r, centro, borda }) {
+          const voltas   = 5;
+          const thetaMax = voltas * 2 * Math.PI;
+          const b = Math.pow(PHI, 2 / Math.PI);         // cresce ×φ a cada 90°
+          const rawMax = Math.pow(b, thetaMax);
+          const a = (0.42 * Math.min(W, H) / rawMax) * c;
+
+          ctx.lineJoin = 'round';
+          ctx.lineCap  = 'round';
+          ctx.lineWidth = r;
+
+          let px = cx + a, py = cy;
+          for (let k = 1; k <= n; k++) {
+            const prog = k / n;
+            const t = thetaMax * prog;
+            const rad = a * Math.pow(b, t);
+            const x = cx + rad * Math.cos(t);
+            const y = cy + rad * Math.sin(t);
+            ctx.beginPath();
+            ctx.moveTo(px, py);
+            ctx.lineTo(x, y);
+            ctx.strokeStyle = corPonto(prog, centro, borda);
+            ctx.stroke();
+            px = x; py = y;
+          }
+        },
+      },
+
+      arvore: {
+        desc: 'Os galhos seguem a mesma lei: cada ramo nasce 1/φ mais curto que o anterior, equilibrando luz e matéria como fazem as plantas ao crescer.',
+        legenda: 'Ramificação áurea · cada galho × 1/φ',
+        controles: {
+          n: { min: 4,  max: 13,  step: 1, value: 11,  rotulo: 'Profundidade', formata: v => v, mapeia: v => v },
+          c: { min: 40, max: 220, step: 1, value: 150, rotulo: 'Comprimento',  formata: v => v, mapeia: v => v },
+          r: { min: 1,  max: 16,  step: 1, value: 9,   rotulo: 'Espessura',    formata: v => v, mapeia: v => v },
+        },
+        render(ctx, { W, H, cx, n, c, r, centro, borda }) {
+          const maxDepth = n;
+          const spread = 0.46;                          // abertura de cada bifurcação
+          ctx.lineCap = 'round';
+
+          (function ramo(x, y, ang, len, depth) {
+            if (depth > maxDepth || len < 1) return;
+            const x2 = x + Math.cos(ang) * len;
+            const y2 = y + Math.sin(ang) * len;
+            const prog = depth / maxDepth;
+            ctx.beginPath();
+            ctx.lineWidth = Math.max(1, r * (1 - prog));
+            ctx.strokeStyle = corPonto(prog, centro, borda);
+            ctx.moveTo(x, y);
+            ctx.lineTo(x2, y2);
+            ctx.stroke();
+            const nl = len / PHI;
+            ramo(x2, y2, ang - spread, nl, depth + 1);
+            ramo(x2, y2, ang + spread, nl, depth + 1);
+          })(cx, H * 0.94, -Math.PI / 2, c, 1);
+        },
+      },
+    };
+
+    let padraoAtivo = 'girassol';
+
+    // ── Lê os valores dos sliders já mapeados para o padrão ativo ────────────
     function lerParametros() {
-      const n = parseInt(sliderN.value, 10);
-      const c = parseInt(sliderC.value, 10) / 10; // 2–20 → 0.2–2.0, mapeado para px
-      const r = parseInt(sliderR.value, 10) / 5;  // 5–40 → 1.0–8.0 px de raio
+      const cfg = PADROES[padraoAtivo].controles;
+      const rawN = +sliderN.value, rawC = +sliderC.value, rawR = +sliderR.value;
+      valN.textContent = cfg.n.formata(rawN);
+      valC.textContent = cfg.c.formata(rawC);
+      valR.textContent = cfg.r.formata(rawR);
+      return { n: cfg.n.mapeia(rawN), c: cfg.c.mapeia(rawC), r: cfg.r.mapeia(rawR) };
+    }
 
-      // Atualiza os rótulos ao lado dos sliders
-      valN.textContent = n;
-      valC.textContent = c.toFixed(1);
-      valR.textContent = r.toFixed(1);
+    // ── Reconfigura sliders, rótulos e textos ao trocar de padrão ────────────
+    function aplicarControles(key) {
+      const p = PADROES[key];
+      [[sliderN, lblN, p.controles.n],
+       [sliderC, lblC, p.controles.c],
+       [sliderR, lblR, p.controles.r]].forEach(([sl, lbl, cfg]) => {
+        sl.min = cfg.min; sl.max = cfg.max; sl.step = cfg.step; sl.value = cfg.value;
+        lbl.textContent = cfg.rotulo;
+      });
+      padraoDesc.textContent = p.desc;
+      padraoLegenda.textContent = p.legenda;
+    }
 
-      return { n, c, r };
+    // ── Atualiza a barra de prévia do gradiente ──────────────────────────────
+    function atualizarPreviaGradiente() {
+      gradientPrev.style.background =
+        `linear-gradient(90deg, ${corCentro.value}, ${corBorda.value})`;
     }
 
     // ── Redimensiona o canvas para preencher o wrapper ───────────────────────
@@ -349,86 +569,43 @@
       canvas.height = wrapper.clientHeight;
     }
 
-    // ── Converte uma cor hexadecimal (#rrggbb) em {r, g, b} ──────────────────
-    function hexParaRgb(hex) {
-      const v = parseInt(hex.slice(1), 16);
-      return { r: (v >> 16) & 255, g: (v >> 8) & 255, b: v & 255 };
-    }
-
-    // ── Gera uma cor para o ponto com base em sua posição relativa ───────────
-    // Interpola entre a cor do centro e a cor da borda escolhidas pelo usuário
-    function corPonto(progresso, centro, borda) {
-      // progresso vai de 0 (centro) a 1 (borda)
-      const r = Math.round(centro.r + (borda.r - centro.r) * progresso);
-      const g = Math.round(centro.g + (borda.g - centro.g) * progresso);
-      const b = Math.round(centro.b + (borda.b - centro.b) * progresso);
-      const a = 0.55 + progresso * 0.45;                // 0.55 → 1.0
-      return `rgba(${r},${g},${b},${a})`;
-    }
-
-    // ── Desenha o padrão de filotaxia (girassol) ─────────────────────────────
-    // Esta função é o coração do app; expanda aqui para adicionar outros padrões.
+    // ── Desenha o padrão ativo ───────────────────────────────────────────────
     function desenhar() {
       const { n, c, r } = lerParametros();
-
-      // Cores escolhidas pelo usuário (centro e borda do gradiente)
       const centro = hexParaRgb(corCentro.value);
       const borda  = hexParaRgb(corBorda.value);
 
-      // Preenche o fundo (sólido, para que a exportação tenha fundo)
+      COR_FUNDO = corFundo.value;
+      ctx.shadowBlur = 0;
       ctx.fillStyle = COR_FUNDO;
       ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-      // Centro do canvas
-      const cx = canvas.width  / 2;
-      const cy = canvas.height / 2;
-
-      // Distância máxima possível (para normalizar as cores)
-      const distMax = c * Math.sqrt(n);
-
-      for (let i = 1; i <= n; i++) {
-        // Ângulo acumulado: cada semente gira exatamente um ângulo áureo
-        const angulo = i * ANGULO_AUREO_RAD;
-
-        // Distância cresce com a raiz do índice, garantindo densidade uniforme
-        const dist = c * Math.sqrt(i);
-
-        // Coordenadas cartesianas a partir do centro
-        const x = cx + dist * Math.cos(angulo);
-        const y = cy + dist * Math.sin(angulo);
-
-        // Progresso de 0 (centro) a 1 (borda) para colorir o gradiente
-        const progresso = dist / distMax;
-
-        // Desenha o círculo do ponto
-        ctx.beginPath();
-        ctx.arc(x, y, r, 0, Math.PI * 2);
-        ctx.fillStyle = corPonto(progresso, centro, borda);
-
-        // Brilho sutil no núcleo interno
-        if (progresso < 0.15) {
-          ctx.shadowColor  = 'rgba(255, 220, 100, 0.6)';
-          ctx.shadowBlur   = 6;
-        } else {
-          ctx.shadowBlur   = 0;
-        }
-
-        ctx.fill();
-      }
-
-      // Reseta sombra para não vazar em outros desenhos futuros
+      PADROES[padraoAtivo].render(ctx, {
+        W: canvas.width, H: canvas.height,
+        cx: canvas.width / 2, cy: canvas.height / 2,
+        n, c, r, centro, borda,
+      });
       ctx.shadowBlur = 0;
     }
 
-    // ── Atualização em tempo real: sliders e seletores de cor redesenham ──────
-    [sliderN, sliderC, sliderR, corCentro, corBorda].forEach(el =>
+    // ── Eventos ──────────────────────────────────────────────────────────────
+    [sliderN, sliderC, sliderR, corCentro, corBorda, corFundo].forEach(el =>
       el.addEventListener('input', desenhar)
     );
+    [corCentro, corBorda].forEach(el =>
+      el.addEventListener('input', atualizarPreviaGradiente)
+    );
+
+    selectPadrao.addEventListener('change', () => {
+      padraoAtivo = selectPadrao.value;
+      aplicarControles(padraoAtivo);
+      desenhar();
+    });
 
     // ── Exporta o canvas atual como imagem PNG ───────────────────────────────
     btnSalvar.addEventListener('click', () => {
       const link = document.createElement('a');
-      link.download = 'bionica-proporcao-aurea.png';
+      link.download = `bionica-${padraoAtivo}.png`;
       link.href = canvas.toDataURL('image/png');
       link.click();
     });
@@ -440,6 +617,8 @@
     });
 
     // ── Inicialização ─────────────────────────────────────────────────────────
+    aplicarControles(padraoAtivo);
+    atualizarPreviaGradiente();
     redimensionar();
     desenhar();
   </script>

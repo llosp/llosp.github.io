@@ -78,6 +78,7 @@
   let viewedProfile    = null;
   let completedGoals   = [];
   let allProfileGoals  = [];
+  let timelineItems    = [];
   let timelineLimit    = 4;
 
   async function init() {
@@ -90,10 +91,12 @@
       { data: me },
       { data: profile },
       { data: goals },
+      { data: bountySubs },
     ] = await Promise.all([
       sb.from('profiles').select('*').eq('id', stored.id).single(),
       sb.from('profiles').select('*').eq('id', targetId).single(),
       sb.from('goals').select('*, week:weeks(*)').eq('profile_id', targetId).order('created_at', { ascending: false }),
+      sb.from('bounty_submissions').select('*, week:weeks(*)').eq('profile_id', targetId).order('created_at', { ascending: false }),
     ]);
 
     if (me) setStoredProfile(me);
@@ -110,6 +113,24 @@
     const isMe = profile.id === stored.id;
     completedGoals  = (goals ?? []).filter(g => g.status === 'completed');
     allProfileGoals = goals ?? [];
+
+    // Bounties entregues entram na timeline/galeria como entregas especiais.
+    const bountyDeliveries = (bountySubs ?? [])
+      .filter(b => (b.image_urls?.length ?? 0) > 0)
+      .map(b => ({
+        id:          'bounty-' + b.id,
+        title:       b.week?.bounty_title || 'Bounty',
+        description: b.week?.bounty_description || null,
+        image_urls:  b.image_urls ?? [],
+        week:        b.week,
+        week_id:     b.week_id,
+        created_at:  b.created_at,
+        status:      'completed',
+        difficulty:  null,
+        is_bounty:   true,
+      }));
+    timelineItems = [...completedGoals, ...bountyDeliveries]
+      .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
     document.getElementById('app').innerHTML = `
       <div style="width:100%">
@@ -203,8 +224,9 @@
         </div>
         ${imagesHTML}
         <div class="goal-footer">
-          ${difficultyChip(g.difficulty)}
-          ${statusBadge(g.status, g.points_earned)}
+          ${g.is_bounty
+            ? `<span class="bounty-chip"><img src="/skrill/img/bounty.svg" alt="bounty" style="width:18px;height:18px;vertical-align:middle;margin-right:4px">Bounty</span>`
+            : `${difficultyChip(g.difficulty)}${statusBadge(g.status, g.points_earned)}`}
         </div>
       </div>`;
   }
@@ -212,9 +234,9 @@
   let timelineObserver = null;
 
   function renderTimelinePanel() {
-    if (!completedGoals.length) return `<div class="empty-state"><div class="empty-icon"><img src="/skrill/img/goals.svg" alt="goals" style="width:48px;height:48px"></div><h3>Nenhuma meta ainda</h3></div>`;
+    if (!timelineItems.length) return `<div class="empty-state"><div class="empty-icon"><img src="/skrill/img/goals.svg" alt="goals" style="width:48px;height:48px"></div><h3>Nenhuma meta ainda</h3></div>`;
 
-    const sections = groupByWeek(completedGoals);
+    const sections = groupByWeek(timelineItems);
     const nodes = sections.map((s, i) =>
       `<button class="timeline-node${i === 0 ? ' active' : ''}" data-season="${s.wid}" onclick="jumpToSeason('${s.wid}')">
         <span class="timeline-dot"></span>
@@ -235,7 +257,7 @@
         </div>`);
     }
 
-    const moreBtn = completedGoals.length > timelineLimit
+    const moreBtn = timelineItems.length > timelineLimit
       ? `<button class="btn btn-ghost" style="width:100%;margin-top:12px" onclick="loadMoreTimeline()">Carregar mais</button>`
       : '';
 
@@ -276,7 +298,7 @@
   }
 
   function jumpToSeason(weekId) {
-    const sections = groupByWeek(completedGoals);
+    const sections = groupByWeek(timelineItems);
     let acc = 0;
     for (const s of sections) {
       acc += s.goals.length;
@@ -290,7 +312,7 @@
 
   function renderGallery() {
     const items = [];
-    for (const g of completedGoals) {
+    for (const g of timelineItems) {
       const revealed = g.week?.skrill_time_revealed ?? false;
       for (const u of (g.image_urls ?? [])) items.push({ url: u, revealed });
     }

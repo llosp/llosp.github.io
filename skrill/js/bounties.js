@@ -92,4 +92,8 @@ const BOUNTIES = [
     title: 'Reimagine o avatar de outro membro do grupo',
     description: 'Escolha o avatar de pixel art de alguém do grupo e recrie-o no seu estilo, como uma homenagem.',
   },
+  {
+    title: 'Faça uma arte sobre pesca',
+    description: 'Crie uma ilustração com tema de pesca: um pescador, o mar, um lago tranquilo, aquele peixão lendário fisgado — você decide a cena e o clima.',
+  },
 ];

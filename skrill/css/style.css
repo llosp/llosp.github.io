@@ -1088,6 +1088,13 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 .bounty-delivered-by { border-top: 1px solid var(--sec-border); margin-top: 12px; padding-top: 10px; }
 .bounty-avatars { display: flex; flex-wrap: wrap; gap: 6px; }
 .bounty-footer { margin-top: 12px; }
+.bounty-chip {
+  display: inline-flex; align-items: center;
+  font-family: 'Micro 5', monospace; font-size: 24px; font-weight: bold;
+  text-transform: uppercase; letter-spacing: 0.04em;
+  color: var(--sec-text); background: var(--sec-bg);
+  border: 1px solid var(--sec-border); padding: 2px 10px;
+}
 .bounty-img-wrap { position: relative; }
 .bounty-img-wrap .avatar.avatar-corner {
   position: absolute; right: 4px; bottom: 4px; width: 28px; height: 28px;

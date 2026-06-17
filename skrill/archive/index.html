@@ -41,8 +41,9 @@
   const MONTHS = ['Janeiro','Fevereiro','Março','Abril','Maio','Junho','Julho','Agosto','Setembro','Outubro','Novembro','Dezembro'];
 
   let weeks = [];
-  const goalsByWeek  = {};
-  const pointsByWeek = {};
+  const goalsByWeek    = {};
+  const pointsByWeek   = {};
+  const bountiesByWeek = {};
 
   function fmtDate(s) {
     const [y, m, d] = s.split('-');
@@ -59,11 +60,12 @@
     if (!stored) return;
 
     try {
-      const [{ data: profile }, { data: wks }, { data: goals }, { data: history }] = await Promise.all([
+      const [{ data: profile }, { data: wks }, { data: goals }, { data: history }, { data: bounties }] = await Promise.all([
         sb.from('profiles').select('*').eq('id', stored.id).single(),
         sb.from('weeks').select('*'),
         sb.from('goals').select('*, profile:profiles(*)').not('week_id', 'is', null),
         sb.from('point_history').select('week_id,amount'),
+        sb.from('bounty_submissions').select('*, profile:profiles(*)'),
       ]);
 
       if (profile) setStoredProfile(profile);
@@ -73,6 +75,7 @@
       weeks = (wks ?? []).filter(w => w.start_date && w.end_date);
       (goals ?? []).forEach(g => { (goalsByWeek[g.week_id] ??= []).push(g); });
       (history ?? []).forEach(h => { pointsByWeek[h.week_id] = (pointsByWeek[h.week_id] ?? 0) + (h.amount ?? 0); });
+      (bounties ?? []).forEach(b => { if ((b.image_urls?.length ?? 0) > 0) (bountiesByWeek[b.week_id] ??= []).push(b); });
 
       renderPage();
     } catch (e) {
@@ -166,15 +169,16 @@
     const w = weeks.find(x => x.id === id);
     if (!w) return;
     const g        = goalsByWeek[id] ?? [];
+    const bounties = bountiesByWeek[id] ?? [];
     const done     = g.filter(x => x.status === 'completed');
     const pts      = pointsByWeek[id] ?? 0;
     const revealed = w.skrill_time_revealed;
-    const participants = new Set(g.map(x => x.profile_id)).size;
-    const imgCount = done.reduce((s, x) => s + ((x.image_urls ?? []).length), 0);
+    const participants = new Set([...g.map(x => x.profile_id), ...bounties.map(b => b.profile_id)]).size;
+    const imgCount = done.reduce((s, x) => s + ((x.image_urls ?? []).length), 0)
+                   + bounties.reduce((s, b) => s + ((b.image_urls ?? []).length), 0);
 
     const withImgs = done.filter(x => (x.image_urls ?? []).length);
-    const feed = withImgs.length
-      ? withImgs.map(x => `
+    const goalsFeed = withImgs.map(x => `
           <div class="arch-delivery">
             <div class="arch-delivery-head">
               ${avatarHTML(x.profile)}
@@ -187,8 +191,25 @@
             <div class="delivery-images">
               ${x.image_urls.map(u => `<img class="delivery-img${revealed ? '' : ' blurred'}" src="${u}" alt="entrega">`).join('')}
             </div>
-          </div>`).join('')
-      : `<div style="font-size:22px;color:var(--text-muted);text-align:center;padding:20px">Nenhuma imagem foi enviada nesta temporada.</div>`;
+          </div>`).join('');
+
+    const bountyFeed = bounties.map(b => `
+          <div class="arch-delivery">
+            <div class="arch-delivery-head">
+              ${avatarHTML(b.profile)}
+              <div style="flex:1;min-width:0">
+                <div class="arch-delivery-name">${b.profile?.name ?? '?'}</div>
+                <div class="arch-delivery-title">${w.bounty_title ?? 'Bounty'}</div>
+              </div>
+              <span class="bounty-chip"><img src="/skrill/img/bounty.svg" alt="bounty" style="width:18px;height:18px;vertical-align:middle;margin-right:4px">Bounty</span>
+            </div>
+            <div class="delivery-images">
+              ${b.image_urls.map(u => `<img class="delivery-img${revealed ? '' : ' blurred'}" src="${u}" alt="bounty">`).join('')}
+            </div>
+          </div>`).join('');
+
+    const feed = (goalsFeed + bountyFeed)
+      || `<div style="font-size:22px;color:var(--text-muted);text-align:center;padding:20px">Nenhuma imagem foi enviada nesta temporada.</div>`;
 
     document.getElementById('season-modal-title').textContent = `Temporada ${w.week_number} · ${w.year}`;
     document.getElementById('season-modal-body').innerHTML = `

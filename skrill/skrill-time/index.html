@@ -431,7 +431,7 @@
 
   function renderRatingPhase() {
     const goals = deliveredGoals();
-    const bonusTotal = bonusPoolFor(allProfiles.length);
+    const bonusTotal = bonusPoolFor(deliveredGoals().length);
     const remaining = bonusTotal - myUsed;
 
     if (!goals.length) {
@@ -876,7 +876,7 @@
 
   async function incRating(goalId) {
     if (mySubmitted) return;
-    const bonusTotal = bonusPoolFor(allProfiles.length);
+    const bonusTotal = bonusPoolFor(deliveredGoals().length);
     if (myUsed >= bonusTotal) return;
     const cur = (myRatings.get(goalId) ?? 0) + 1;
     myRatings.set(goalId, cur);
@@ -904,7 +904,7 @@
 
   async function submitRatings() {
     if (mySubmitted) return;
-    const bonusTotal = bonusPoolFor(allProfiles.length);
+    const bonusTotal = bonusPoolFor(deliveredGoals().length);
     if (myUsed !== bonusTotal) return;
     const btn = document.getElementById('rating-submit');
     if (btn) { btn.disabled = true; btn.textContent = '...'; }

@@ -115,21 +115,40 @@
     completedGoals  = (goals ?? []).filter(g => g.status === 'completed');
     allProfileGoals = goals ?? [];
 
+    // Quantas pessoas concluíram cada bounty (entregas não canceladas por temporada),
+    // para calcular pontos via bountyPointsFor(n) e exibir o nº de participantes.
+    const ownBounties = (bountySubs ?? []).filter(b => !b.canceled);
+    const bountyWeekIds = [...new Set(ownBounties.map(b => b.week_id))];
+    const bountyCompleters = new Map();
+    if (bountyWeekIds.length) {
+      const { data: allBSubs } = await sb.from('bounty_submissions')
+        .select('week_id, canceled').in('week_id', bountyWeekIds);
+      for (const s of (allBSubs ?? [])) {
+        if (s.canceled) continue;
+        bountyCompleters.set(s.week_id, (bountyCompleters.get(s.week_id) ?? 0) + 1);
+      }
+    }
+
     // Bounties entregues entram na timeline/galeria como entregas especiais.
-    const bountyDeliveries = (bountySubs ?? [])
+    const bountyDeliveries = ownBounties
       .filter(b => (b.image_urls?.length ?? 0) > 0)
-      .map(b => ({
-        id:          'bounty-' + b.id,
-        title:       b.week?.bounty_title || 'Bounty',
-        description: b.week?.bounty_description || null,
-        image_urls:  b.image_urls ?? [],
-        week:        b.week,
-        week_id:     b.week_id,
-        created_at:  b.created_at,
-        status:      'completed',
-        difficulty:  null,
-        is_bounty:   true,
-      }));
+      .map(b => {
+        const completers = bountyCompleters.get(b.week_id) ?? 1;
+        return {
+          id:               'bounty-' + b.id,
+          title:            b.week?.bounty_title || 'Bounty',
+          description:      b.week?.bounty_description || null,
+          image_urls:       b.image_urls ?? [],
+          week:             b.week,
+          week_id:          b.week_id,
+          created_at:       b.created_at,
+          status:           'completed',
+          difficulty:       null,
+          is_bounty:        true,
+          bounty_completers: completers,
+          bounty_points:     bountyPointsFor(completers),
+        };
+      });
     timelineItems = [...completedGoals, ...bountyDeliveries]
       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     bountyDoneCount = bountyDeliveries.length;
@@ -227,7 +246,9 @@
         ${imagesHTML}
         <div class="goal-footer">
           ${g.is_bounty
-            ? `<span class="bounty-chip"><img src="/skrill/img/bounty.svg" alt="bounty" style="width:18px;height:18px;vertical-align:middle;margin-right:4px">Bounty</span>`
+            ? `<span class="bounty-chip"><img src="/skrill/img/bounty.svg" alt="bounty" style="width:18px;height:18px;vertical-align:middle;margin-right:4px">Bounty</span>
+               <span class="goal-bounty-meta" style="font-size:20px;color:var(--text-muted);text-transform:uppercase">${g.bounty_completers} ${g.bounty_completers === 1 ? 'concluiu' : 'concluíram'}</span>
+               <span class="xp-earned">+${g.bounty_points}pts</span>`
             : `${difficultyChip(g.difficulty)}${statusBadge(g.status, g.points_earned)}`}
         </div>
       </div>`;

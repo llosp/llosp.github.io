@@ -465,15 +465,17 @@
       },
 
       nautilus: {
-        desc: 'A concha do nautilus cresce sem mudar de forma: a cada quarto de volta, sua espiral se expande exatamente φ vezes — a espiral logarítmica perfeita.',
-        legenda: 'Espiral logarítmica · r = a·φ^(2θ/π)',
+        desc: 'Várias espirais logarítmicas partem do mesmo ponto, inclinadas em ângulos iguais. Cada uma cresce ×φ a cada quarto de volta, formando uma mandala áurea.',
+        legenda: 'Espirais múltiplas · r = a·φ^(2θ/π)',
         controles: {
-          n: { min: 200, max: 6000, step: 10, value: 2400, rotulo: 'Resolução',  formata: v => v,                  mapeia: v => v },
-          c: { min: 5,   max: 40,   step: 1,  value: 12,   rotulo: 'Escala',     formata: v => (v / 10).toFixed(1), mapeia: v => v / 10 },
-          r: { min: 1,   max: 40,   step: 1,  value: 7,    rotulo: 'Espessura',  formata: v => (v / 2).toFixed(1),  mapeia: v => v / 2 },
+          n: { min: 1,   max: 16,  step: 1,  value: 3,    rotulo: 'Espirais',   formata: v => v,                  mapeia: v => v },
+          c: { min: 5,   max: 40,  step: 1,  value: 12,   rotulo: 'Escala',     formata: v => (v / 10).toFixed(1), mapeia: v => v / 10 },
+          r: { min: 1,   max: 40,  step: 1,  value: 7,    rotulo: 'Espessura',  formata: v => (v / 2).toFixed(1),  mapeia: v => v / 2 },
         },
         render(ctx, { W, H, cx, cy, n, c, r, centro, borda }) {
-          const voltas   = 5;
+          const numArms  = n;                           // nº de braços espirais
+          const voltas   = 5;                           // voltas por braço (fixo)
+          const passos   = 1200;                        // resolução por braço
           const thetaMax = voltas * 2 * Math.PI;
           const b = Math.pow(PHI, 2 / Math.PI);         // cresce ×φ a cada 90°
           const rawMax = Math.pow(b, thetaMax);
@@ -483,19 +485,25 @@
           ctx.lineCap  = 'round';
           ctx.lineWidth = r;
 
-          let px = cx + a, py = cy;
-          for (let k = 1; k <= n; k++) {
-            const prog = k / n;
-            const t = thetaMax * prog;
-            const rad = a * Math.pow(b, t);
-            const x = cx + rad * Math.cos(t);
-            const y = cy + rad * Math.sin(t);
-            ctx.beginPath();
-            ctx.moveTo(px, py);
-            ctx.lineTo(x, y);
-            ctx.strokeStyle = corPonto(prog, centro, borda);
-            ctx.stroke();
-            px = x; py = y;
+          // Desenha N braços, cada um girado de 2π/N em relação ao anterior
+          for (let arm = 0; arm < numArms; arm++) {
+            const offset = arm * (2 * Math.PI / numArms);
+            let px = cx + a * Math.cos(offset);
+            let py = cy + a * Math.sin(offset);
+
+            for (let k = 1; k <= passos; k++) {
+              const prog = k / passos;
+              const t    = thetaMax * prog;
+              const rad  = a * Math.pow(b, t);
+              const x = cx + rad * Math.cos(t + offset);
+              const y = cy + rad * Math.sin(t + offset);
+              ctx.beginPath();
+              ctx.moveTo(px, py);
+              ctx.lineTo(x, y);
+              ctx.strokeStyle = corPonto(prog, centro, borda);
+              ctx.stroke();
+              px = x; py = y;
+            }
           }
         },
       },
@@ -504,30 +512,42 @@
         desc: 'Os galhos seguem a mesma lei: cada ramo nasce 1/φ mais curto que o anterior, equilibrando luz e matéria como fazem as plantas ao crescer.',
         legenda: 'Ramificação áurea · cada galho × 1/φ',
         controles: {
-          n: { min: 4,  max: 13,  step: 1, value: 11,  rotulo: 'Profundidade', formata: v => v, mapeia: v => v },
-          c: { min: 40, max: 220, step: 1, value: 150, rotulo: 'Comprimento',  formata: v => v, mapeia: v => v },
-          r: { min: 1,  max: 16,  step: 1, value: 9,   rotulo: 'Espessura',    formata: v => v, mapeia: v => v },
+          n: { min: 4,  max: 104,  step: 1,  value: 11,  rotulo: 'Profundidade', formata: v => v,                       mapeia: v => v },
+          c: { min: 10, max: 2000, step: 10, value: 150, rotulo: 'Escala',       formata: v => `${(v/150).toFixed(1)}×`, mapeia: v => v },
+          r: { min: 1,  max: 50,   step: 1,  value: 9,   rotulo: 'Espessura',    formata: v => v,                       mapeia: v => v },
         },
-        render(ctx, { W, H, cx, n, c, r, centro, borda }) {
+        render(ctx, { W, H, n, c, r, centro, borda }) {
           const maxDepth = n;
           const spread = 0.46;                          // abertura de cada bifurcação
-          ctx.lineCap = 'round';
 
+          // 1ª passada: coleta os segmentos e mede a caixa delimitadora
+          const segs = [];
+          let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
           (function ramo(x, y, ang, len, depth) {
             if (depth > maxDepth || len < 1) return;
             const x2 = x + Math.cos(ang) * len;
             const y2 = y + Math.sin(ang) * len;
-            const prog = depth / maxDepth;
-            ctx.beginPath();
-            ctx.lineWidth = Math.max(1, r * (1 - prog));
-            ctx.strokeStyle = corPonto(prog, centro, borda);
-            ctx.moveTo(x, y);
-            ctx.lineTo(x2, y2);
-            ctx.stroke();
+            segs.push({ x, y, x2, y2, prog: depth / maxDepth });
+            minX = Math.min(minX, x, x2); maxX = Math.max(maxX, x, x2);
+            minY = Math.min(minY, y, y2); maxY = Math.max(maxY, y, y2);
             const nl = len / PHI;
             ramo(x2, y2, ang - spread, nl, depth + 1);
             ramo(x2, y2, ang + spread, nl, depth + 1);
-          })(cx, H * 0.94, -Math.PI / 2, c, 1);
+          })(0, 0, -Math.PI / 2, c, 1);
+
+          // Centraliza a árvore no meio do canvas pela caixa delimitadora
+          const offX = W / 2 - (minX + maxX) / 2;
+          const offY = H / 2 - (minY + maxY) / 2;
+
+          ctx.lineCap = 'round';
+          for (const s of segs) {
+            ctx.beginPath();
+            ctx.lineWidth = Math.max(1, r * (1 - s.prog));
+            ctx.strokeStyle = corPonto(s.prog, centro, borda);
+            ctx.moveTo(s.x + offX, s.y + offY);
+            ctx.lineTo(s.x2 + offX, s.y2 + offY);
+            ctx.stroke();
+          }
         },
       },
     };

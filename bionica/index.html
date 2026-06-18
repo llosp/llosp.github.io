@@ -532,22 +532,24 @@
           m: { min: 1,  max: 6,    step: 1,  value: 2,   rotulo: 'Galhos',       formata: v => v,                       mapeia: v => v },
         },
         render(ctx, { W, H, n, c, r, m, centro, borda }) {
-          const numGalhos = m;                          // galhos por bifurcação
-          const totalAbre = 0.92;                       // ângulo total de abertura (rad)
-          const LIMITE_SEG = 60000;                     // orçamento máximo de segmentos
+          const numGalhos  = m;
+          // Sempre ≥ 2 filhos por nó: galhos=1 bifurca em 2 na primeira ponta
+          const childCount = Math.max(2, numGalhos);
+          // Distribuição uniforme em círculo completo → crescimento radial circular
+          const gap        = (2 * Math.PI) / childCount;
+          const LIMITE_SEG = 60000;
 
-          // Calcula profundidade efetiva para que todos os galhos caibam no orçamento
-          // (garante renderização uniforme de todos os ramos)
+          // Profundidade efetiva: orçamento de LIMITE_SEG segmentos
           let maxDepth = n;
-          if (numGalhos > 1) {
+          {
             let soma = 0;
             for (let d = 1; d <= n; d++) {
-              soma += Math.pow(numGalhos, d);
+              soma += Math.pow(childCount, d);
               if (soma > LIMITE_SEG) { maxDepth = Math.max(1, d - 1); break; }
             }
           }
 
-          // 1ª passada: coleta segmentos e mede caixa delimitadora
+          // 1ª passada: coleta segmentos + caixa delimitadora
           const segs = [];
           let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
           function ramo(x, y, ang, len, depth) {
@@ -557,24 +559,22 @@
             segs.push({ x, y, x2, y2, prog: Math.min(depth / maxDepth, 1) });
             minX = Math.min(minX, x, x2); maxX = Math.max(maxX, x, x2);
             minY = Math.min(minY, y, y2); maxY = Math.max(maxY, y, y2);
-            const nl  = len / PHI;
-            const gap = numGalhos > 1 ? totalAbre / (numGalhos - 1) : 0;
-            for (let k = 0; k < numGalhos; k++) {
-              const dAng = (k - (numGalhos - 1) / 2) * gap;
+            const nl = len / PHI;
+            for (let k = 0; k < childCount; k++) {
+              const dAng = (k - (childCount - 1) / 2) * gap;
               ramo(x2, y2, ang + dAng, nl, depth + 1);
             }
           }
-          // Gera N galhos diretamente da base (sem tronco único inicial)
-          const baseGap = numGalhos > 1 ? totalAbre / (numGalhos - 1) : 0;
-          for (let k = 0; k < numGalhos; k++) {
-            const dAng = (k - (numGalhos - 1) / 2) * baseGap;
+
+          // Galhos iniciais distribuídos em círculo a partir da base
+          for (let k = 0; k < childCount; k++) {
+            const dAng = (k - (childCount - 1) / 2) * gap;
             ramo(0, 0, -Math.PI / 2 + dAng, c, 1);
           }
 
-          // Centraliza pelo centro da caixa delimitadora
+          // 2ª passada: centraliza e desenha
           const offX = W / 2 - (minX + maxX) / 2;
           const offY = H / 2 - (minY + maxY) / 2;
-
           ctx.lineCap = 'round';
           for (const s of segs) {
             ctx.beginPath();

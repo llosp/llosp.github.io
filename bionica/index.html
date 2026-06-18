@@ -550,7 +550,7 @@
           // 1ª passada: coleta segmentos e mede caixa delimitadora
           const segs = [];
           let minX = Infinity, maxX = -Infinity, minY = Infinity, maxY = -Infinity;
-          (function ramo(x, y, ang, len, depth) {
+          function ramo(x, y, ang, len, depth) {
             if (depth > maxDepth || len < 1) return;
             const x2 = x + Math.cos(ang) * len;
             const y2 = y + Math.sin(ang) * len;
@@ -563,7 +563,13 @@
               const dAng = (k - (numGalhos - 1) / 2) * gap;
               ramo(x2, y2, ang + dAng, nl, depth + 1);
             }
-          })(0, 0, -Math.PI / 2, c, 1);
+          }
+          // Gera N galhos diretamente da base (sem tronco único inicial)
+          const baseGap = numGalhos > 1 ? totalAbre / (numGalhos - 1) : 0;
+          for (let k = 0; k < numGalhos; k++) {
+            const dAng = (k - (numGalhos - 1) / 2) * baseGap;
+            ramo(0, 0, -Math.PI / 2 + dAng, c, 1);
+          }
 
           // Centraliza pelo centro da caixa delimitadora
           const offX = W / 2 - (minX + maxX) / 2;

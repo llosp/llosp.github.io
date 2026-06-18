@@ -149,7 +149,18 @@
           bounty_points:     bountyPointsFor(completers),
         };
       });
-    timelineItems = [...completedGoals, ...bountyDeliveries]
+    // Tentativas que venceram a votação e ganharam o bônus de consolação (+1pt)
+    // também entram na timeline/galeria como entregas.
+    const attemptDeliveries = (goals ?? [])
+      .filter(g => g.status === 'attempted' && g.attempt_pts_awarded && (g.attempt_images?.length ?? 0) > 0)
+      .map(g => ({
+        ...g,
+        image_urls:    g.attempt_images ?? [],
+        description:   g.attempt_text || null,
+        points_earned: 1,
+      }));
+
+    timelineItems = [...completedGoals, ...bountyDeliveries, ...attemptDeliveries]
       .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
     bountyDoneCount = bountyDeliveries.length;
 

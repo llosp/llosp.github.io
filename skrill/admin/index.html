@@ -66,6 +66,7 @@
       <button class="tab-btn" data-tab="t-goals"    onclick="switchTab('t-goals')">Metas</button>
       <button class="tab-btn" data-tab="t-points"   onclick="switchTab('t-points')">Pontos</button>
       <button class="tab-btn" data-tab="t-ready"    onclick="switchTab('t-ready')">Ready</button>
+      <button class="tab-btn" data-tab="t-participants" onclick="switchTab('t-participants')">Participação</button>
       <button class="tab-btn" data-tab="t-danger"   onclick="switchTab('t-danger')" style="color:#ef4444">Danger</button>
     </div>
 
@@ -74,6 +75,7 @@
     <div id="t-goals"    class="tab-panel"><div class="center-screen"><div class="spinner"></div></div></div>
     <div id="t-points"   class="tab-panel"><div class="center-screen"><div class="spinner"></div></div></div>
     <div id="t-ready"    class="tab-panel"><div class="center-screen"><div class="spinner"></div></div></div>
+    <div id="t-participants" class="tab-panel"><div class="center-screen"><div class="spinner"></div></div></div>
     <div id="t-danger"   class="tab-panel"><div class="center-screen"><div class="spinner"></div></div></div>
   </div>
 
@@ -116,18 +118,20 @@
   if (isAdminAuthed()) showAdminUI();
 
   // ── Data ───────────────────────────────────────────────────────────────────────
-  let D = { profiles: [], weeks: [], goals: [], history: [], ready: [] };
+  let D = { profiles: [], weeks: [], goals: [], history: [], ready: [], participants: [] };
   let goalsWeekFilter = 'all';
+  let participantsWeekFilter = null;
   let showNewWeekForm = false;
   let editingProfileId = null;
 
   async function loadAll() {
-    const [p, w, g, h, r] = await Promise.all([
+    const [p, w, g, h, r, sp] = await Promise.all([
       sb.from('profiles').select('*').order('sort_order', { ascending: true, nullsFirst: false }).order('name'),
       sb.from('weeks').select('*').order('year', { ascending: false }).order('week_number', { ascending: false }),
       sb.from('goals').select('*, profile:profiles(name,id), week:weeks(week_number,year)').order('created_at', { ascending: false }),
       sb.from('point_history').select('*, profile:profiles(name)').order('created_at', { ascending: false }).limit(300),
       sb.from('week_ready').select('*, profile:profiles(name), week:weeks(week_number,year)').order('created_at', { ascending: false }),
+      sb.from('season_participants').select('*, profile:profiles(id,name,avatar_data), week:weeks(week_number,year,is_current)'),
     ]);
     D = {
       profiles: p.data ?? [],
@@ -135,12 +139,14 @@
       goals:    g.data ?? [],
       history:  h.data ?? [],
       ready:    r.data ?? [],
+      participants: sp.data ?? [],
     };
     renderProfiles();
     renderWeeks();
     renderGoals();
     renderPoints();
     renderReady();
+    renderParticipants();
     renderDanger();
   }
 
@@ -603,6 +609,62 @@
   async function deleteReady(id) {
     await sb.from('week_ready').delete().eq('id', id);
     toast('Entrada removida!');
+    await loadAll();
+  }
+
+  // ── SEASON PARTICIPANTS ──────────────────────────────────────────────────────────
+  function renderParticipants() {
+    const el = document.getElementById('t-participants');
+    if (participantsWeekFilter === null) participantsWeekFilter = curWeekId() ?? 'all';
+
+    const weekOpts = D.weeks.map(w =>
+      `<option value="${w.id}" ${participantsWeekFilter===w.id?'selected':''}>${w.is_current?'[atual] ':''}Temporada ${w.week_number} · ${w.year}</option>`
+    ).join('');
+    const list = participantsWeekFilter === 'all'
+      ? D.participants
+      : D.participants.filter(p => p.week_id === participantsWeekFilter);
+
+    const rows = list.map(p => `
+      <div class="card" style="margin-bottom:8px">
+        <div class="card-body" style="padding:12px;display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+          ${avatarHTML(p.profile)}
+          <div style="flex:1;min-width:0">
+            <div style="font-size:24px;font-weight:700">${p.profile?.name ?? '?'}</div>
+            <div style="font-size:20px;color:var(--text-muted)">${p.week?`Temporada ${p.week.week_number} · ${p.week.year}`:'—'}</div>
+          </div>
+          <button class="btn btn-sm btn-danger" onclick="removeParticipant('${p.id}','${(p.profile?.name??'?').replace(/'/g,"\\'")}')">Forçar Saída</button>
+        </div>
+      </div>`).join('');
+
+    el.innerHTML = `
+      <div style="display:flex;gap:10px;align-items:center;margin-bottom:14px;flex-wrap:wrap">
+        <select class="form-input" style="width:auto;font-size:22px" onchange="participantsWeekFilter=this.value;renderParticipants()">
+          <option value="all" ${participantsWeekFilter==='all'?'selected':''}>Todas as temporadas</option>
+          ${weekOpts}
+        </select>
+        <span style="font-size:22px;color:var(--text-muted)">${list.length} participante(s)</span>
+        ${list.length ? `<button class="btn btn-sm btn-danger" style="margin-left:auto" onclick="removeAllParticipants()">Forçar saída de todos</button>` : ''}
+      </div>
+      ${rows || emptyState('Nenhum participante nesta temporada')}`;
+  }
+
+  async function removeParticipant(id, name) {
+    if (!confirm(`Forçar a saída de "${name}" da temporada?\nO membro deixa de ser participante e perde acesso às telas da temporada.`)) return;
+    const { error } = await sb.from('season_participants').delete().eq('id', id);
+    if (error) return toast(error.message, '#ef4444');
+    toast('Membro removido da temporada!');
+    await loadAll();
+  }
+
+  async function removeAllParticipants() {
+    if (participantsWeekFilter === 'all') {
+      if (!confirm('Forçar a saída de TODOS os participantes de TODAS as temporadas?')) return;
+      await sb.from('season_participants').delete().not('id', 'is', null);
+    } else {
+      if (!confirm('Forçar a saída de todos os participantes desta temporada?')) return;
+      await sb.from('season_participants').delete().eq('week_id', participantsWeekFilter);
+    }
+    toast('Participantes removidos!');
     await loadAll();
   }
 

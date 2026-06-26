@@ -14,9 +14,9 @@
       "port": 8766
     },
     {
-      "name": "portifolio",
+      "name": "portfolio",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "http-server", "portifolio", "-p", "8767", "-c-1"],
+      "runtimeArgs": ["-y", "http-server", "portfolio", "-p", "8767", "-c-1"],
       "port": 8767
     }
   ]

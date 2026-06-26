@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Pedro "Lope" Lopes · Designer e ilustrador</title>
+<meta name="description" content="Sou o Lope. Faço sites que parecem caros e funcionam fácil, com ilustração exclusiva pra tua marca não ter cara de template." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Archivo+Black&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Grain overlay -->
+  <div class="grain" aria-hidden="true"></div>
+
+  <!-- Custom cursor -->
+  <div class="cursor" aria-hidden="true"></div>
+  <div class="cursor-dot" aria-hidden="true"></div>
+
+  <!-- Preloader -->
+  <div class="preloader" id="preloader">
+    <div class="preloader__count"><span id="count">0</span><i>%</i></div>
+    <div class="preloader__word">
+      <span>P</span><span>E</span><span>D</span><span>R</span><span>O</span>
+      <span class="space"></span>
+      <span>"</span><span>L</span><span>O</span><span>P</span><span>E</span><span>"</span>
+    </div>
+    <div class="preloader__bar"><div class="preloader__fill" id="fill"></div></div>
+  </div>
+
+  <!-- Nav -->
+  <header class="nav" id="nav">
+    <a href="#" class="nav__logo" data-cursor="hover">
+      <span class="nav__dot"></span>LOPE<sup>©</sup>
+    </a>
+    <nav class="nav__links">
+      <a href="#work" data-cursor="hover">Trabalhos</a>
+      <a href="#about" data-cursor="hover">Sobre</a>
+      <a href="#services" data-cursor="hover">Serviços</a>
+      <a href="#contact" class="nav__cta" data-cursor="hover">Bora conversar</a>
+    </nav>
+    <button class="nav__burger" id="burger" aria-label="Menu">
+      <span></span><span></span>
+    </button>
+  </header>
+
+  <!-- Mobile menu -->
+  <div class="mobile-menu" id="mobileMenu">
+    <a href="#work">Trabalhos</a>
+    <a href="#about">Sobre</a>
+    <a href="#services">Serviços</a>
+    <a href="#contact">Bora conversar</a>
+  </div>
+
+  <main>
+    <!-- HERO -->
+    <section class="hero" id="top">
+      <div class="hero__bg-shape" data-parallax="0.2"></div>
+      <div class="hero__inner">
+        <div class="hero__tag reveal">
+          <span class="pill">✦ Pedro "Lope" Lopes</span>
+          <span class="pill pill--ghost">Designer e ilustrador</span>
+        </div>
+        <h1 class="hero__title">
+          <span class="line"><span class="word">SITES</span></span>
+          <span class="line"><span class="word word--outline">BONITOS</span> <span class="word word--pink">&amp;</span></span>
+          <span class="line"><span class="word">RÁPIDOS</span></span>
+        </h1>
+        <div class="hero__meta">
+          <p class="reveal">Sou o <em>Lope</em>. Designer e ilustrador que também coda. Faço sites que parecem caros, funcionam fácil no celular e não têm cara de template que todo concorrente usa. Tô livre pra teu projeto.</p>
+          <a href="#work" class="btn-magnetic" data-cursor="hover">
+            <span>Ver meus trabalhos</span>
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M1 15L15 1M15 1H4M15 1V12" stroke="currentColor" stroke-width="2"/></svg>
+          </a>
+        </div>
+      </div>
+      <div class="scroll-hint" data-cursor="hover">
+        <span>Rola</span>
+        <div class="scroll-hint__line"></div>
+      </div>
+    </section>
+
+    <!-- MARQUEE -->
+    <section class="marquee" aria-hidden="true">
+      <div class="marquee__track">
+        <span>Sites</span><span class="star">✦</span>
+        <span>Identidade visual</span><span class="star">✦</span>
+        <span>Ilustração</span><span class="star">✦</span>
+        <span>Animação</span><span class="star">✦</span>
+        <span>Direção de arte</span><span class="star">✦</span>
+        <span>Sites</span><span class="star">✦</span>
+        <span>Identidade visual</span><span class="star">✦</span>
+        <span>Ilustração</span><span class="star">✦</span>
+        <span>Animação</span><span class="star">✦</span>
+        <span>Direção de arte</span><span class="star">✦</span>
+      </div>
+    </section>
+
+    <!-- WORK -->
+    <section class="work" id="work">
+      <div class="section-head">
+        <span class="section-head__no">01 / Trabalhos</span>
+        <h2 class="section-head__title reveal">Trabalhos que <span class="hl">chamam atenção</span></h2>
+      </div>
+
+      <div class="projects">
+        <a class="project" data-cursor="view" href="#">
+          <div class="project__media project__media--1">
+            <span class="project__index">01</span>
+          </div>
+          <div class="project__info">
+            <h3>Aurora Finance</h3>
+            <p>Marca nova e site pra uma fintech</p>
+            <span class="project__year">'26</span>
+          </div>
+        </a>
+
+        <a class="project" data-cursor="view" href="#">
+          <div class="project__media project__media--2">
+            <span class="project__index">02</span>
+          </div>
+          <div class="project__info">
+            <h3>Neon Atlas</h3>
+            <p>Site com 3D que dá vontade de explorar</p>
+            <span class="project__year">'25</span>
+          </div>
+        </a>
+
+        <a class="project" data-cursor="view" href="#">
+          <div class="project__media project__media--3">
+            <span class="project__index">03</span>
+          </div>
+          <div class="project__info">
+            <h3>Pulse Studio</h3>
+            <p>Portfólio cheio de movimento</p>
+            <span class="project__year">'25</span>
+          </div>
+        </a>
+
+        <a class="project" data-cursor="view" href="#">
+          <div class="project__media project__media--4">
+            <span class="project__index">04</span>
+          </div>
+          <div class="project__info">
+            <h3>Mono Mag</h3>
+            <p>Revista digital pra ler com gosto</p>
+            <span class="project__year">'24</span>
+          </div>
+        </a>
+      </div>
+    </section>
+
+    <!-- ABOUT -->
+    <section class="about" id="about">
+      <div class="section-head">
+        <span class="section-head__no">02 / Sobre</span>
+      </div>
+      <div class="about__grid">
+        <p class="about__big reveal-words">
+          Sou o Pedro Lopes, mas pode me chamar de <span class="hl-pink">Lope</span>.
+          Trabalho sozinho, sou designer e ilustrador, e também boto a mão no <span class="hl">código</span>.
+          Faço marca e site que as pessoas lembram. Bonito, fácil de usar e com a tua cara, nunca a de template.
+        </p>
+        <div class="about__stats">
+          <div class="stat"><span class="stat__num" data-count="120">0</span><span class="stat__plus">+</span><p>Projetos entregues</p></div>
+          <div class="stat"><span class="stat__num" data-count="14">0</span><span class="stat__plus">+</span><p>Anos nessa vida</p></div>
+          <div class="stat"><span class="stat__num" data-count="9">0</span><span class="stat__plus">×</span><p>Prêmios na estante</p></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- SERVICES -->
+    <section class="services" id="services">
+      <div class="section-head">
+        <span class="section-head__no">03 / Serviços</span>
+        <h2 class="section-head__title reveal">O que eu <span class="hl-pink">faço</span></h2>
+      </div>
+      <ul class="service-list">
+        <li class="service" data-cursor="hover">
+          <span class="service__no">(01)</span>
+          <h3>Direção de arte</h3>
+          <p>A ideia grande e a cara da tua marca, do começo ao fim.</p>
+        </li>
+        <li class="service" data-cursor="hover">
+          <span class="service__no">(02)</span>
+          <h3>Sites</h3>
+          <p>Bonito, fácil de usar e rápido no celular. Sem cara de template.</p>
+        </li>
+        <li class="service" data-cursor="hover">
+          <span class="service__no">(03)</span>
+          <h3>Ilustração</h3>
+          <p>Desenho exclusivo pra tua marca não parecer igual a todo mundo.</p>
+        </li>
+        <li class="service" data-cursor="hover">
+          <span class="service__no">(04)</span>
+          <h3>Animação</h3>
+          <p>Aquele movimento que deixa tudo vivo e gostoso de mexer.</p>
+        </li>
+      </ul>
+    </section>
+
+    <!-- CONTACT -->
+    <section class="contact" id="contact">
+      <div class="contact__inner">
+        <span class="section-head__no">04 / Contato</span>
+        <h2 class="contact__title">
+          <span class="line">BORA FAZER</span>
+          <span class="line">ALGO <span class="word--outline">DAQUELES</span></span>
+        </h2>
+        <a href="mailto:llosp08@gmail.com" class="contact__mail btn-magnetic" data-cursor="hover">
+          <span>llosp08@gmail.com</span>
+        </a>
+        <div class="contact__socials">
+          <a href="#" data-cursor="hover">Instagram</a>
+          <a href="#" data-cursor="hover">Dribbble</a>
+          <a href="#" data-cursor="hover">LinkedIn</a>
+          <a href="#" data-cursor="hover">X / Twitter</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <span>© 2026 Pedro Lopes</span>
+    <span>Feito à mão pelo Lope ✦</span>
+    <button id="toTop" data-cursor="hover">Voltar ao topo ↑</button>
+  </footer>
+
+  <script src="script.js"></script>
+</body>
+</html>

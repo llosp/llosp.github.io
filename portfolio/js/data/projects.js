@@ -201,6 +201,159 @@ export const projects = [
     }
   },
   {
+    id: "maguitos",
+    accent: "#FF4F87",
+    name: "Maguitos",
+    type: { en: "Turn-based party RPG (PC)", pt: "RPG de party por turnos (PC)" },
+    role: { en: "Game & Systems Designer / Gameplay Programmer", pt: "Game/Systems Designer e Gameplay Programmer" },
+    tools: ["Godot", "GDScript"],
+    cover: "./assets/img/projects/maguitos.svg",
+    coverAlt: {
+      en: "Maguitos — placeholder key art",
+      pt: "Maguitos — arte placeholder"
+    },
+    summary: {
+      en: "A turn-based party RPG built by two people — a friend made the art and interface, I designed and coded everything else. The whole party shares a single MP pool, and each turn you plan every character's move before watching them all resolve at once.",
+      pt: "Um RPG de party por turnos feito por duas pessoas — um amigo cuidou da arte e da interface, e eu projetei e programei todo o resto. A party inteira divide um único reservatório de MP, e a cada turno você planeja o movimento de cada personagem antes de ver todos resolverem de uma vez."
+    },
+    caseStudy: {
+      overview: {
+        en: "Maguitos is a turn-based party RPG prototype. You command a party of three — Isara, Celetro and Erika — through battles fought on a 3D map with single-target, AoE and party-wide skills. It was a two-person project: a friend handled art and interface while I owned the design and the entire GDScript codebase. Development is currently paused.",
+        pt: "Maguitos é um protótipo de RPG de party por turnos. Você comanda uma party de três — Isara, Celetro e Erika — em batalhas num mapa 3D com skills de alvo único, em área e para a party toda. Foi um projeto de duas pessoas: um amigo cuidou da arte e da interface enquanto eu conduzia o design e todo o código em GDScript. O desenvolvimento está pausado no momento."
+      },
+      role: {
+        en: "Solo on design and code. I built the battle system in GDScript — a state machine that plans then resolves each turn, a skill executor, and data-driven characters, enemies and skills — plus the shared-MP economy and the tag-affinity model. Art and UI were made by a collaborator.",
+        pt: "Sozinho no design e no código. Construí o sistema de batalha em GDScript — uma máquina de estados que planeja e depois resolve cada turno, um executor de skills, e personagens, inimigos e skills orientados a dados — além da economia de MP compartilhado e do modelo de afinidade por tags. Arte e UI ficaram com um colaborador."
+      },
+      responsibilities: [
+        {
+          group: { en: "Game Design", pt: "Game Design" },
+          items: [
+            { en: "Combat systems", pt: "Sistemas de combate" },
+            { en: "Skill & class design", pt: "Design de skills & classes" },
+            { en: "Balancing (stats & costs)", pt: "Balanceamento (stats & custos)" },
+            { en: "Tag-affinity model", pt: "Modelo de afinidade por tags" },
+            { en: "Turn structure", pt: "Estrutura de turno" }
+          ]
+        },
+        {
+          group: { en: "Programming", pt: "Programação" },
+          items: [
+            { en: "Battle state machine", pt: "Máquina de estados da batalha" },
+            { en: "Skill executor & effects", pt: "Executor de skills & efeitos" },
+            { en: "Data-driven resources", pt: "Recursos orientados a dados" },
+            { en: "Shared-MP economy", pt: "Economia de MP compartilhado" },
+            { en: "Battle UI logic", pt: "Lógica da UI de batalha" }
+          ]
+        }
+      ],
+      challenge: {
+        en: "Most party RPGs give each character their own resource bar. Maguitos pools all of it: every character draws from one shared MP bar, and you commit all their actions before any of them resolve. The design problem was making that scarcity legible — so players feel the trade-off of spending Erika's revive now against Celetro's big hit later, all in the same turn.",
+        pt: "A maioria dos RPGs de party dá a cada personagem sua própria barra de recurso. Maguitos junta tudo: cada personagem consome de uma única barra de MP compartilhada, e você confirma todas as ações antes de qualquer uma resolver. O problema de design era tornar essa escassez legível — fazer o player sentir o trade-off de gastar o revive da Erika agora contra o golpe pesado do Celetro depois, tudo no mesmo turno."
+      },
+      coreLoop: {
+        steps: [
+          { en: "Plan each character's skill", pt: "Planejar a skill de cada personagem" },
+          { en: "Confirm the turn", pt: "Confirmar o turno" },
+          { en: "Watch every action resolve", pt: "Ver cada ação resolver" },
+          { en: "Enemies retaliate", pt: "Inimigos revidam" }
+        ],
+        note: {
+          en: "During planning, a live MP preview subtracts each queued skill from the shared pool, so you can see whether the whole plan is affordable before committing. Only when every living character has an action can you confirm.",
+          pt: "Durante o planejamento, um preview de MP ao vivo subtrai cada skill enfileirada do reservatório compartilhado, então você vê se o plano inteiro cabe antes de confirmar. Só quando cada personagem vivo tem uma ação é que você pode confirmar."
+        }
+      },
+      systems: [
+        {
+          title: { en: "Shared party MP pool", pt: "Pool de MP compartilhado" },
+          body: {
+            en: "The party's max MP is the sum of every member's pool, and all skills spend from that single bar. Isara's high MP and regen effectively fund the whole team, turning 'who casts' into a party-wide budgeting question.",
+            pt: "O MP máximo da party é a soma do pool de cada membro, e todas as skills gastam dessa única barra. O MP alto e o regen da Isara basicamente financiam o time inteiro, transformando 'quem conjura' numa questão de orçamento da party."
+          }
+        },
+        {
+          title: { en: "Plan-and-resolve turns", pt: "Turnos planejar-e-resolver" },
+          body: {
+            en: "Each turn you assign a skill to every living character, then confirm; all actions execute in order before the enemies take theirs. Planning and consequence are separated, so a turn is a small committed plan rather than a reaction.",
+            pt: "A cada turno você atribui uma skill a cada personagem vivo e confirma; todas as ações executam em ordem antes de os inimigos agirem. Planejamento e consequência ficam separados, então um turno é um pequeno plano assumido, não uma reação."
+          }
+        },
+        {
+          title: { en: "Tag affinity", pt: "Afinidade por tags" },
+          body: {
+            en: "Enemies carry tags (size, flying, tough, frail…) and skills carry tag modifiers that shift power, hit chance or crit against them — so Zabaan punishes 'tough' targets and Gravarggo is tuned around 'flying'. Matchups, not raw numbers, decide the best skill.",
+            pt: "Inimigos carregam tags (size, flying, tough, frail…) e skills carregam modificadores de tag que alteram poder, chance de acerto ou crítico contra elas — então Zabaan pune alvos 'tough' e Gravarggo é ajustada em torno de 'flying'. Os confrontos, não os números crus, decidem a melhor skill."
+          }
+        },
+        {
+          title: { en: "Stat-driven role identity", pt: "Identidade de papel por stats" },
+          body: {
+            en: "The same eight stats produce distinct roles from data alone: Celetro's WIT 35 makes him the damage core, Erika's EMPATHY 25 and DEF 25 make her the healer-tank, and Isara's MP 50 / regen 25 make her the party's battery.",
+            pt: "Os mesmos oito atributos produzem papéis distintos só a partir dos dados: a WIT 35 do Celetro faz dele o núcleo de dano, a EMPATHY 25 e a DEF 25 da Erika fazem dela a healer-tank, e o MP 50 / regen 25 da Isara fazem dela a bateria da party."
+          }
+        }
+      ],
+      combat: {
+        formula: {
+          en: "DMG = (WIT − DEF ÷ 2) × power",
+          pt: "DANO = (WIT − DEF ÷ 2) × poder"
+        },
+        body: {
+          en: "Damage scales off the user's WIT against half the target's DEF, then multiplies by a random power band unique to each skill (Baltro rolls 0.70–0.85, Gravarggo 0.45–0.65). Hit chance is the skill's accuracy minus the target's EVADE; crit chance is simply the user's FOCUS. Heals use the same shape off EMPATHY instead of WIT, and tag modifiers bend power, hit or crit per enemy tag.",
+          pt: "O dano escala pela WIT do usuário contra metade da DEF do alvo, depois multiplica por uma faixa de poder aleatória, única de cada skill (Baltro sorteia 0,70–0,85; Gravarggo 0,45–0,65). A chance de acerto é a precisão da skill menos a EVADE do alvo; a chance de crítico é simplesmente a FOCUS do usuário. Curas usam a mesma forma a partir da EMPATHY em vez da WIT, e os modificadores de tag dobram poder, acerto ou crítico conforme a tag do inimigo."
+        }
+      },
+      balancing: {
+        body: {
+          en: "There was no separate spreadsheet — the balancing data lives directly in Godot Resource files (.tres). Characters, enemies and skills are all data, so tuning a stat or a skill cost is editing a resource in the inspector, never touching code. These are the prototype's shipped values.",
+          pt: "Não havia planilha separada — os dados de balanceamento vivem direto em arquivos de Resource do Godot (.tres). Personagens, inimigos e skills são todos dados, então ajustar um atributo ou o custo de uma skill é editar um resource no inspetor, sem nunca tocar no código. Estes são os valores do protótipo."
+        },
+        tables: [
+          {
+            caption: { en: "Party base stats", pt: "Stats base da party" },
+            headers: [
+              { en: "Character", pt: "Personagem" },
+              { en: "HP", pt: "HP" },
+              { en: "MP", pt: "MP" },
+              { en: "WIT", pt: "WIT" },
+              { en: "EMPATHY", pt: "EMPATHY" },
+              { en: "DEF", pt: "DEF" }
+            ],
+            rows: [
+              ["Isara", "40", "50", "15", "15", "10"],
+              ["Celetro", "50", "30", "35", "10", "20"],
+              ["Erika", "35", "35", "15", "25", "25"]
+            ]
+          },
+          {
+            caption: { en: "Skill economy (flat MP from the shared pool)", pt: "Economia de skills (MP fixo do reservatório compartilhado)" },
+            headers: [
+              { en: "Skill", pt: "Skill" },
+              { en: "Cost (MP)", pt: "Custo (MP)" },
+              { en: "Power", pt: "Poder" },
+              { en: "Target", pt: "Alvo" }
+            ],
+            rows: [
+              ["Baltro", "10", "0.70–0.85", { en: "Single enemy", pt: "Inimigo único" }],
+              ["Zabaan", "25", "0.65–0.80", { en: "AoE", pt: "Em área" }],
+              ["Gravarggo", "40", "0.45–0.65", { en: "All enemies", pt: "Todos os inimigos" }],
+              ["Ravolli", "25", "0.40–0.50", { en: "Heal all party", pt: "Cura toda a party" }],
+              ["Zelligo", "30", "0.30", { en: "Revive ally", pt: "Revive aliado" }]
+            ]
+          }
+        ]
+      },
+      implementation: {
+        en: "Built in Godot 4.6. The battle runs on an explicit state machine — plan, resolve, enemy turn — and every skill is a Resource subclass (damage, heal, buff, revive, over-time) sharing one execute() interface. Adding a new skill or enemy is a new .tres file plus a script, so content never requires touching the core loop.",
+        pt: "Feito em Godot 4.6. A batalha roda numa máquina de estados explícita — planejar, resolver, turno inimigo — e cada skill é uma subclasse de Resource (dano, cura, buff, revive, over-time) compartilhando uma única interface execute(). Adicionar uma skill ou inimigo novo é um arquivo .tres mais um script, então conteúdo nunca exige mexer no loop central."
+      },
+      learnings: {
+        en: "Turning MP into a shared resource changed the whole feel of a turn — individual choices became a party budget, and that's the idea I'd build the rest of the game around. Committing to a data-driven resource pipeline early is what let two people move fast: my collaborator could drop in art while I added skills as pure data.",
+        pt: "Transformar o MP num recurso compartilhado mudou toda a sensação de um turno — escolhas individuais viraram um orçamento de party, e é essa ideia que eu usaria como base para o resto do jogo. Apostar cedo num pipeline orientado a dados foi o que deixou duas pessoas andarem rápido: meu colaborador colocava arte enquanto eu adicionava skills como dados puros."
+      }
+    }
+  },
+  {
     id: "rustbound",
     accent: "#FFC400",
     name: "Rustbound",
@@ -290,51 +443,164 @@ export const projects = [
     }
   },
   {
-    id: "party-howl",
+    id: "clicachorro",
     accent: "#F5F1E8",
-    name: "Party Howl!",
-    type: { en: "Couch co-op party game (prototype)", pt: "Party game co-op local (protótipo)" },
-    role: { en: "Project Coordinator & Game Designer", pt: "Coordenador de Projeto e Game Designer" },
-    tools: ["Unity", "Figma", "Google Sheets"],
-    cover: "./assets/img/projects/party-howl.svg",
-    coverAlt: { en: "Party Howl key art", pt: "Arte principal de Party Howl" },
+    name: "ClicaChorro",
+    type: { en: "Idle/clicker game (web)", pt: "Idle/clicker (web)" },
+    role: { en: "Solo Developer & Systems Designer", pt: "Desenvolvedor Solo & Systems Designer" },
+    tools: ["JavaScript", "HTML/CSS", "Google Sheets"],
+    cover: "./assets/img/projects/clicachorro.svg",
+    coverAlt: {
+      en: "ClicaChorro key art — a dog paw, a click cursor and floating +1s",
+      pt: "Arte principal de ClicaChorro — uma patinha, um cursor de clique e +1 flutuando"
+    },
     summary: {
-      en: "Four players, one very loud dog band. I coordinated a 7-person team and designed the minigame framework — new minigames ship as data, not as code rewrites.",
-      pt: "Quatro jogadores, uma banda de cachorros muito barulhenta. Coordenei um time de 7 pessoas e projetei o framework de minigames — minigames novos entram como dados, não como reescritas de código."
+      en: "A cozy idle-clicker where you raise a stray puppy into the Best Dog in the World. A solo web project whose entire economy is derived from a single number — how long the run should take — through one closed-form balancing spreadsheet.",
+      pt: "Um idle-clicker aconchegante onde você cria um vira-lata até virar o Melhor Cachorro do Mundo. Um projeto solo pra web cuja economia inteira é derivada de um único número — quanto tempo a run deve durar — a partir de uma única planilha de balanceamento de forma fechada."
     },
     caseStudy: {
+      heroImage: {
+        src: "./assets/img/projects/clicachorro.svg",
+        alt: { en: "ClicaChorro — idle clicker key art", pt: "ClicaChorro — key art do idle clicker" }
+      },
       overview: {
-        en: "A Prisma Game Lab jam project that grew legs: a chaotic couch co-op game where a dog band tries to keep a concert going. My focus was making the team fast — one shared minigame spec, one scoring system, weekly builds.",
-        pt: "Um projeto de jam do Prisma Game Lab que ganhou pernas: um co-op local caótico onde uma banda de cachorros tenta manter o show de pé. Meu foco era deixar o time rápido — uma spec única de minigame, um sistema único de pontuação, builds semanais."
+        en: "ClicaChorro is a cozy idle-clicker for the browser. You adopt a scrappy stray and click to shower it with affection; that affection buys helpers and upgrades that idle-earn for you, and each purchase nudges your dog up a life-stage — from Stray all the way to the Best Dog in the World. A solo project, built to test one idea: that a clicker's whole economy can be derived from how long you want the run to last.",
+        pt: "ClicaChorro é um idle-clicker aconchegante pro navegador. Você adota um vira-lata e clica pra encher ele de carinho; esse carinho compra ajudantes e upgrades que rendem sozinhos, e cada compra empurra seu cachorro pra próxima fase de vida — do Vira-lata até o Melhor Cachorro do Mundo. Um projeto solo, feito pra testar uma ideia: que a economia inteira de um clicker pode ser derivada de quanto tempo você quer que a run dure."
       },
       role: {
-        en: "Coordinated design, art and code across 7 people; designed the scoring/rubber-banding system; wrote the minigame design template every new minigame had to fill before entering production.",
-        pt: "Coordenei design, arte e código entre 7 pessoas; projetei o sistema de pontuação/rubber-banding; escrevi o template de design que todo minigame novo precisava preencher antes de entrar em produção."
+        en: "Solo — I designed the game, wrote the JavaScript, drew the art and made the sound. The part I'm proudest of is the balancing model: a closed-form spreadsheet where the target time-to-beat drives every cost and output value in the economy.",
+        pt: "Solo — projetei o jogo, escrevi o JavaScript, fiz a arte e o som. A parte de que mais me orgulho é o modelo de balanceamento: uma planilha de forma fechada onde o tempo-alvo para zerar comanda cada valor de custo e produção da economia."
       },
+      responsibilities: [
+        {
+          group: { en: "Game Design", pt: "Game Design" },
+          items: [
+            { en: "Economy & systems", pt: "Economia & sistemas" },
+            { en: "Progression design", pt: "Design de progressão" },
+            { en: "Balancing spreadsheet", pt: "Planilha de balanceamento" },
+            { en: "Playtests", pt: "Playtests" }
+          ]
+        },
+        {
+          group: { en: "Code", pt: "Código" },
+          items: [
+            { en: "Vanilla JavaScript", pt: "JavaScript puro" },
+            { en: "Data-driven economy", pt: "Economia data-driven" },
+            { en: "Save system", pt: "Sistema de save" }
+          ]
+        },
+        {
+          group: { en: "Art", pt: "Arte" },
+          items: [
+            { en: "Dog & scene art", pt: "Arte do cachorro & cena" },
+            { en: "UI & icons", pt: "UI & ícones" }
+          ]
+        },
+        {
+          group: { en: "Sound", pt: "Som" },
+          items: [
+            { en: "Click & UI SFX", pt: "SFX de clique & UI" },
+            { en: "Music curation", pt: "Curadoria de músicas" }
+          ]
+        }
+      ],
       challenge: {
-        en: "Party games die when one player runs away with the score. The rubber-band system awards catch-up multipliers that are loud and diegetic (the crowd cheers for the underdog) so comebacks feel earned, not gifted.",
-        pt: "Party games morrem quando um jogador dispara no placar. O sistema de rubber-band dá multiplicadores de recuperação barulhentos e diegéticos (a plateia torce pelo azarão) para viradas parecerem merecidas, não presenteadas."
+        en: "The failure mode of a clicker is length: ship it too generous and it's over in five minutes; too greedy and it drags for hours. I didn't want to hand-tune forty costs chasing a feel. The design goal: make session length an explicit input and have the entire economy obey it.",
+        pt: "O modo de falha de um clicker é a duração: generoso demais e acaba em cinco minutos; ganancioso demais e arrasta por horas. Eu não queria ajustar quarenta custos na mão atrás de um feeling. O objetivo de design: transformar a duração da sessão num input explícito e fazer a economia inteira obedecer a ele."
+      },
+      coreLoop: {
+        steps: [
+          { en: "Click the dog", pt: "Clicar no cachorro" },
+          { en: "Earn affection", pt: "Ganhar carinho" },
+          { en: "Buy a helper / upgrade", pt: "Comprar ajudante / upgrade" },
+          { en: "Advance a life-stage", pt: "Subir de fase de vida" }
+        ],
+        note: {
+          en: "Clicking earns affection; affection buys helpers and upgrades that idle-earn for you; enough of it advances your dog to the next life-stage. Every stage costs more affection than the last, so the loop keeps pulling forward — toward the twelfth and final stage that ends the game.",
+          pt: "Clicar rende carinho; carinho compra ajudantes e upgrades que rendem sozinhos; carinho suficiente sobe seu cachorro pra próxima fase de vida. Cada fase custa mais carinho que a anterior, então o loop segue puxando pra frente — até a décima segunda e última fase que encerra o jogo."
+        }
       },
       systems: [
         {
-          title: { en: "Minigame framework", pt: "Framework de minigames" },
+          title: { en: "Time-driven economy", pt: "Economia guiada pelo tempo" },
           body: {
-            en: "Every minigame declares duration, input verbs and score weights in a config — the shell handles intros, countdowns and results uniformly.",
-            pt: "Todo minigame declara duração, verbos de input e pesos de pontuação numa config — o shell cuida de intros, contagens e resultados de forma uniforme."
+            en: "The whole cost/output curve is solved from one number — how long the run should take. Change the target and every stage rebalances automatically.",
+            pt: "A curva inteira de custo/produção é resolvida a partir de um número — quanto tempo a run deve durar. Muda o alvo e todo estágio se rebalanceia automaticamente."
           }
         },
         {
-          title: { en: "Crowd meter", pt: "Medidor de plateia" },
+          title: { en: "Geometric curve", pt: "Curva geométrica" },
           body: {
-            en: "A shared meter that all players feed; if it empties, everyone loses points — the cooperative pressure inside a competitive format.",
-            pt: "Um medidor compartilhado que todos alimentam; se esvaziar, todos perdem pontos — a pressão cooperativa dentro de um formato competitivo."
+            en: "Costs grow by a factor a and idle output by a factor b each stage. Because a > b, the run gently stretches toward the end instead of flatlining — but on a fixed, provable total.",
+            pt: "Custos crescem por um fator a e a produção por um fator b a cada estágio. Como a > b, a run se estica suavemente rumo ao fim em vez de estagnar — mas sobre um total fixo e demonstrável."
+          }
+        },
+        {
+          title: { en: "Life-stage progression", pt: "Progressão por fase de vida" },
+          body: {
+            en: "Twelve named stages give the number-go-up a narrative spine — you're not just buying multipliers, you're raising a dog from Stray to legend.",
+            pt: "Doze fases nomeadas dão à escalada de números uma espinha narrativa — você não está só comprando multiplicadores, está criando um cachorro de Vira-lata a lenda."
           }
         }
       ],
+      progression: {
+        en: "Twelve life-stages from a Stray to the Best Dog in the World. Because the cost/output ratio r = a/b is greater than 1, each stage costs a little more time than the last — about 2.1 minutes at the start, climbing to 6.1 minutes for the finale — so the run swells toward a climax instead of flatlining. Costs run 618 → 108,780 affection; idle output 5 → 298/s.",
+        pt: "Doze fases de vida, do Vira-lata ao Melhor Cachorro do Mundo. Como a razão custo/produção r = a/b é maior que 1, cada fase custa um pouco mais de tempo que a anterior — cerca de 2,1 minutos no início, subindo a 6,1 minutos no final — então a run cresce rumo a um clímax em vez de estagnar. Custos vão de 618 → 108.780 de carinho; produção passiva de 5 → 298/s."
+      },
+      balancing: {
+        formula: {
+          en: "C0 = target_time × P0 × (r − 1) ÷ (rᴺ − 1),   r = a ÷ b",
+          pt: "C0 = tempo_alvo × P0 × (r − 1) ÷ (rᴺ − 1),   r = a ÷ b"
+        },
+        body: {
+          en: "The signature: instead of picking costs by feel, I set a target time-to-beat and inverted the geometric sum that describes a clicker economy. The time spent on each stage is t_i = (C0 ÷ P0) × rⁱ, and summing those is a geometric series — so I solved it backwards for the base cost C0. That makes the target time command the whole curve. One spreadsheet, one input cell: retuning a 45-minute game into a 90-minute one is a single edit, and the per-stage times always sum back exactly to the target.",
+          pt: "A assinatura: em vez de escolher custos no feeling, defini um tempo-alvo para zerar e inverti a soma geométrica que descreve a economia de um clicker. O tempo gasto em cada estágio é t_i = (C0 ÷ P0) × rⁱ, e somar isso é uma série geométrica — então resolvi ao contrário para o custo base C0. Isso faz o tempo-alvo comandar a curva inteira. Uma planilha, uma célula de input: retunar um jogo de 45 minutos para 90 é uma única edição, e os tempos por estágio sempre somam exatamente o alvo."
+        },
+        tables: [
+          {
+            caption: { en: "Time-driven inputs → derived base cost", pt: "Inputs guiados pelo tempo → custo base derivado" },
+            headers: [
+              { en: "Input", pt: "Input" },
+              { en: "Value", pt: "Valor" }
+            ],
+            rows: [
+              [{ en: "Target time to beat", pt: "Tempo-alvo para zerar" }, { en: "45 min", pt: "45 min" }],
+              [{ en: "Stages (N)", pt: "Estágios (N)" }, "12"],
+              [{ en: "Cost growth (a)", pt: "Crescimento de custo (a)" }, "1.60"],
+              [{ en: "Output growth (b)", pt: "Crescimento de produção (b)" }, "1.45"],
+              [{ en: "Base output (P0)", pt: "Produção base (P0)" }, { en: "5 /s", pt: "5 /s" }],
+              [{ en: "→ Derived base cost (C0)", pt: "→ Custo base derivado (C0)" }, "618"]
+            ]
+          },
+          {
+            caption: { en: "Curve by life-stage (excerpt)", pt: "Curva por fase de vida (trecho)" },
+            headers: [
+              { en: "Stage", pt: "Fase" },
+              { en: "Cost (affection)", pt: "Custo (carinho)" },
+              { en: "Output /s", pt: "Produção /s" },
+              { en: "Stage time (min)", pt: "Tempo da fase (min)" },
+              { en: "Cumulative (min)", pt: "Acumulado (min)" }
+            ],
+            rows: [
+              [{ en: "1 · Stray", pt: "1 · Vira-lata" }, "618", "5.0", "2.06", "2.06"],
+              [{ en: "4 · Show Dog", pt: "4 · Cachorro Premiado" }, "2,533", "15.2", "2.77", "9.61"],
+              [{ en: "8 · Internet Star", pt: "8 · Astro da Internet" }, "16,598", "67.4", "4.11", "23.87"],
+              [{ en: "12 · Best Dog in the World", pt: "12 · Melhor Cachorro do Mundo" }, "108,780", "297.9", "6.09", "45.00"]
+            ]
+          }
+        ]
+      },
+      implementation: {
+        en: "The sheet is the source of truth; the web build reads the solved curve as data, so the JavaScript never hardcodes a cost. Because the economy is derived, playtest notes like 'the mid-game sags' became a tweak to one growth ratio rather than a manual pass over every stage.",
+        pt: "A planilha é a fonte da verdade; o build web lê a curva resolvida como dados, então o JavaScript nunca cravou um custo na mão. Como a economia é derivada, notas de playtest como 'o meio-jogo cai' viravam um ajuste em uma razão de crescimento, não uma passada manual por cada estágio."
+      },
       learnings: {
-        en: "Coordination is a design problem: the minigame template cut scope debates in half. Loud feedback systems beat fair-but-invisible math in party games.",
-        pt: "Coordenação é um problema de design: o template de minigames cortou as discussões de escopo pela metade. Sistemas de feedback barulhentos vencem matemática justa-porém-invisível em party games."
-      }
+        en: "Deriving the economy from the target session length — not from vibes — turned balancing from guesswork into a solved equation. Building solo across design, code, art and sound taught me to let one system (the sheet) keep the others honest.",
+        pt: "Derivar a economia da duração-alvo da sessão — e não do 'feeling' — transformou o balanceamento de chute em equação resolvida. Fazer tudo sozinho entre design, código, arte e som me ensinou a deixar um sistema (a planilha) manter os outros honestos."
+      },
+      links: [
+        { label: { en: "Balancing spreadsheet (.xlsx)", pt: "Planilha de balanceamento (.xlsx)" }, url: "./assets/clicachorro-balanceamento.xlsx", kind: "sheet" }
+      ]
     }
   },
   {

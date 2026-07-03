@@ -46,13 +46,8 @@ function marquee() {
 }
 
 function dogParallax() {
-  // y only: the entrance timeline owns scale/rotate on the same element
-  gsap.to('.hero-dog', {
-    y: 90,
-    ease: 'none',
-    scrollTrigger: { trigger: '.hero', start: 'top top', end: 'bottom top', scrub: 0.6 }
-  });
-
+  // The hero dog is a static centered backdrop now — no scroll parallax
+  // (the old scrub tween drifted it over the role blocks on mid-page reload).
   gsap.from('.peek', {
     yPercent: 120,
     ease: 'back.out(1.4)',

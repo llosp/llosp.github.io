@@ -3,6 +3,7 @@ import { renderProjects, renderSkills } from './render.js';
 import { initCaseStudy } from './casestudy.js';
 import { initMascots } from './mascot.js';
 import { initMotion } from './motion.js';
+import { initCursor } from './cursor.js';
 
 function renderAll() {
   renderProjects();
@@ -15,3 +16,4 @@ document.addEventListener('langchange', renderAll);
 initCaseStudy();
 initMascots();
 initMotion();
+initCursor();

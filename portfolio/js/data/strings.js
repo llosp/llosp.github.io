@@ -83,6 +83,16 @@ export const skillGroups = [
     ]
   },
   {
+    title: { en: "Sheets & Balance", pt: "Planilhas e Balance" },
+    items: [
+      { en: "Google Sheets", pt: "Google Sheets" },
+      { en: "Attribute tables", pt: "Tabelas de atributos" },
+      { en: "Progression curves", pt: "Curvas de progressão" },
+      { en: "Gameplay data organization", pt: "Organização de dados de gameplay" },
+      { en: "Value tracking & tuning", pt: "Acompanhamento e ajuste de valores" }
+    ]
+  },
+  {
     title: { en: "Game Development", pt: "Game Development" },
     items: [
       { en: "Unity", pt: "Unity" },
@@ -102,16 +112,6 @@ export const skillGroups = [
       { en: "Illustrator", pt: "Illustrator" },
       { en: "Blender", pt: "Blender" },
       { en: "Figma", pt: "Figma" }
-    ]
-  },
-  {
-    title: { en: "Sheets & Balance", pt: "Planilhas e Balance" },
-    items: [
-      { en: "Google Sheets", pt: "Google Sheets" },
-      { en: "Attribute tables", pt: "Tabelas de atributos" },
-      { en: "Progression curves", pt: "Curvas de progressão" },
-      { en: "Gameplay data organization", pt: "Organização de dados de gameplay" },
-      { en: "Value tracking & tuning", pt: "Acompanhamento e ajuste de valores" }
     ]
   }
 ];

@@ -39,6 +39,48 @@ body::after {
   z-index: var(--z-grain);
 }
 
+/* ── Cursor FX: spotlight glow + sticker trail ──────────────────────────── */
+.cursor-glow {
+  position: fixed;
+  top: 0; left: 0;
+  width: 32rem;
+  aspect-ratio: 1;
+  z-index: calc(var(--z-nav) - 5);
+  pointer-events: none;
+  border-radius: 50%;
+  background: radial-gradient(circle,
+    rgba(255, 196, 0, 0.28) 0%,
+    rgba(255, 79, 135, 0.14) 38%,
+    transparent 68%);
+  mix-blend-mode: soft-light;
+  will-change: transform;
+  transition: opacity var(--dur-med) ease;
+}
+.cursor-glow.is-hidden { opacity: 0; }
+
+.cursor-trail {
+  position: fixed;
+  inset: 0;
+  z-index: calc(var(--z-nav) - 4);
+  pointer-events: none;
+  overflow: hidden;
+}
+.cursor-sticker {
+  position: absolute;
+  font-family: var(--font-mono);
+  font-size: var(--step-0);
+  line-height: 1;
+  color: var(--yellow);
+  text-shadow: 1px 1px 0 var(--pink);
+  will-change: transform, opacity;
+}
+@keyframes cursor-sticker-fade {
+  to { opacity: 0; transform: translate(-50%, -50%) translateY(-20px) scale(0.4); }
+}
+@media (hover: none), (prefers-reduced-motion: reduce) {
+  .cursor-glow, .cursor-trail { display: none; }
+}
+
 /* ── Utilities ──────────────────────────────────────────────────────────── */
 .mono { font-family: var(--font-mono); }
 

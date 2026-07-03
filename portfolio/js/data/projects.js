@@ -6,7 +6,7 @@ export const projects = [
     id: "esqueleto-chico",
     accent: "#FF4F87",
     name: "Esqueleto Chico",
-    type: { en: "Top-down action roguelite (PC)", pt: "Ação top-down roguelite (PC)" },
+    type: { en: "Top-down action roguelike (PC)", pt: "Ação top-down roguelike (PC)" },
     role: { en: "Lead Game & Systems Designer", pt: "Game/Systems Designer Líder" },
     tools: ["Unity", "Google Sheets", "Photoshop", "Figma"],
     cover: "./assets/img/projects/esqueleto-chico-gameplay-2.webp",
@@ -19,6 +19,10 @@ export const projects = [
       pt: "Um esqueleto do mundo corporativo defende a cripta do chefe de lacaios conspiradores. Feito no Prisma Game Lab, liderei o design e conduzi combate, progressão e chefes a partir de uma grande planilha de balanceamento — além de som, UI e arte."
     },
     caseStudy: {
+      heroVideo: {
+        youtube: "Z_3GRWZEDSQ",
+        title: { en: "Esqueleto Chico — trailer", pt: "Esqueleto Chico — trailer" }
+      },
       heroImage: {
         src: "./assets/img/projects/esqueleto-chico-poster.webp",
         alt: { en: "Esqueleto Chico: Ossos do Ofício — key art poster", pt: "Esqueleto Chico: Ossos do Ofício — pôster/key art" }

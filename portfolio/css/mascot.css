@@ -59,9 +59,11 @@
 .mascot.closed .lid-top,
 .mascot.closed .lid-bottom { height: 70%; }
 
-/* Hero instance */
+/* Hero instance — backdrop centered behind the LOPE title. Capped by viewport
+   height so the roles + intro text below stay above the fold (the CTA button is
+   allowed to fall just below it). */
 .hero-dog {
-  width: clamp(180px, 24vw, 340px);
+  width: min(clamp(240px, 34vw, 440px), 42vh);
   cursor: pointer;
   filter: drop-shadow(10px 12px 0 rgba(17, 17, 17, 0.45));
   will-change: transform;

@@ -11,6 +11,7 @@
   text-align: center;
   gap: var(--space-3);
   padding-top: calc(var(--space-4) + 3rem);
+  padding-bottom: var(--space-4);
   position: relative;
 }
 
@@ -44,10 +45,8 @@
 
 .hero-dog {
   grid-area: 1 / 1;
-  z-index: 2;
-  justify-self: end;
-  align-self: start;
-  transform: translate(28%, -32%) rotate(-4deg);
+  z-index: 0; /* backdrop: sits behind both LOPE name layers */
+  transform: translateY(-6%) rotate(-4deg); /* eye peeks lightly over the LOPE title */
 }
 
 .hero-roles {
@@ -294,11 +293,10 @@
 @media (max-width: 768px) {
   .nav { gap: var(--space-2); }
   .nav-links { display: none; } /* anchors still reachable by scroll; keeps nav clean */
-  .hero-dog { transform: translate(12%, -40%) rotate(-4deg); }
   .hero-hint { display: none; }
 }
 
 @media (max-width: 480px) {
-  .hero-dog { width: clamp(120px, 34vw, 180px); transform: translate(6%, -46%) rotate(-4deg); }
+  .hero-dog { width: clamp(180px, 62vw, 320px); }
   .about-stamps { gap: var(--space-2); }
 }

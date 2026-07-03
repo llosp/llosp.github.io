@@ -50,7 +50,17 @@ function buildBody(project) {
   body.replaceChildren();
   if (!cs) return;
 
-  if (cs.heroImage) {
+  if (cs.heroVideo) {
+    const fig = el('figure', 'case-hero-video');
+    const iframe = document.createElement('iframe');
+    iframe.src = `https://www.youtube-nocookie.com/embed/${cs.heroVideo.youtube}`;
+    iframe.title = t(cs.heroVideo.title);
+    iframe.loading = 'lazy';
+    iframe.allow = 'accelerometer; clipboard-write; encrypted-media; picture-in-picture';
+    iframe.allowFullscreen = true;
+    fig.append(iframe);
+    body.append(fig);
+  } else if (cs.heroImage) {
     const fig = el('figure', 'case-hero-img');
     const img = el('img');
     img.src = cs.heroImage.src;

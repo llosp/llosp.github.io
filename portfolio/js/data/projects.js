@@ -3,107 +3,197 @@
 // (coreLoop, combat, balancing.table, …) are simply skipped when absent.
 export const projects = [
   {
-    id: "verdant-loop",
+    id: "esqueleto-chico",
     accent: "#FF4F87",
-    name: "Verdant Loop",
-    type: { en: "Roguelite deckbuilder (PC)", pt: "Deckbuilder roguelite (PC)" },
-    role: { en: "Systems Designer & Balancing Lead", pt: "Systems Designer e Líder de Balanceamento" },
-    tools: ["Unity", "C#", "Google Sheets", "Figma"],
-    cover: "./assets/img/projects/verdant-loop.svg",
-    coverAlt: { en: "Verdant Loop key art", pt: "Arte principal de Verdant Loop" },
+    name: "Esqueleto Chico",
+    type: { en: "Top-down action roguelite (PC)", pt: "Ação top-down roguelite (PC)" },
+    role: { en: "Lead Game & Systems Designer", pt: "Game/Systems Designer Líder" },
+    tools: ["Unity", "Google Sheets", "Photoshop", "Figma"],
+    cover: "./assets/img/projects/esqueleto-chico-gameplay-2.webp",
+    coverAlt: {
+      en: "Boss fight against O Zelador — laser sweeps across the crypt",
+      pt: "Luta contra O Zelador — lasers varrendo a cripta"
+    },
     summary: {
-      en: "A deckbuilder where your garden is your deck. I owned the card economy, the run progression and the balancing pipeline — 40+ cards tuned through a live Sheets model.",
-      pt: "Um deckbuilder onde o seu jardim é o seu deck. Fui responsável pela economia de cartas, pela progressão da run e pelo pipeline de balanceamento — mais de 40 cartas ajustadas num modelo vivo no Sheets."
+      en: "A skeleton office-drone defends his boss's crypt from scheming minions. Built at Prisma Game Lab, I led the design and drove combat, progression and boss fights from one big balancing sheet — plus sound, UI and art.",
+      pt: "Um esqueleto do mundo corporativo defende a cripta do chefe de lacaios conspiradores. Feito no Prisma Game Lab, liderei o design e conduzi combate, progressão e chefes a partir de uma grande planilha de balanceamento — além de som, UI e arte."
     },
     caseStudy: {
+      heroImage: {
+        src: "./assets/img/projects/esqueleto-chico-poster.webp",
+        alt: { en: "Esqueleto Chico: Ossos do Ofício — key art poster", pt: "Esqueleto Chico: Ossos do Ofício — pôster/key art" }
+      },
       overview: {
-        en: "Verdant Loop is a run-based deckbuilder prototype built at Prisma Game Lab: plant cards grow over turns, and pruning your deck is as important as growing it. The pitch was 'a deck that literally grows'.",
-        pt: "Verdant Loop é um protótipo de deckbuilder por runs feito no Prisma Game Lab: cartas-planta crescem ao longo dos turnos, e podar o deck é tão importante quanto fazê-lo crescer. O pitch era 'um deck que literalmente cresce'."
+        en: "“Esqueleto Chico: Ossos do Ofício” is a top-down action game set in an oddly corporate crypt. You play Chico, a prodigy skeleton left in charge while the boss is away on a 'business trip' — which sparks envy among the other minions, who steal the boss's favorite mug to sabotage him. A Prisma Game Lab production.",
+        pt: "“Esqueleto Chico: Ossos do Ofício” é um jogo de ação top-down numa cripta um tanto corporativa. Você joga como Chico, um esqueleto prodígio deixado no comando enquanto o chefe está numa 'viagem a trabalho' — o que desperta inveja nos outros lacaios, que roubam a caneca favorita do chefe para sabotá-lo. Uma produção do Prisma Game Lab."
       },
-      role: {
-        en: "I designed the card economy and combat math, built the balancing spreadsheet that fed values straight into Unity via ScriptableObjects, and ran weekly tuning passes after playtests.",
-        pt: "Projetei a economia de cartas e a matemática de combate, construí a planilha de balanceamento que alimentava valores direto na Unity via ScriptableObjects e rodei passes semanais de ajuste após os playtests."
-      },
+      responsibilities: [
+        {
+          group: { en: "Game Design", pt: "Game Design" },
+          items: [
+            { en: "GDD & game loop", pt: "GDD & ciclo de jogo" },
+            { en: "Level design & map", pt: "Level design & mapa" },
+            { en: "Narrative", pt: "Narrativa" },
+            { en: "Mechanics prototyping", pt: "Prototipação de mecânicas" },
+            { en: "Systems & balancing", pt: "Sistemas & balanceamento" },
+            { en: "Playtests", pt: "Playtests" }
+          ]
+        },
+        {
+          group: { en: "Sound", pt: "Som" },
+          items: [
+            { en: "All SFX", pt: "Todos os SFX" },
+            { en: "Music curation", pt: "Curadoria de músicas" },
+            { en: "Audio implementation", pt: "Implementação de áudio" }
+          ]
+        },
+        {
+          group: { en: "UI/UX", pt: "UI/UX" },
+          items: [
+            { en: "Menu wireframes & flows", pt: "Wireframes & fluxos de menu" },
+            { en: "HUD & menu art", pt: "Arte de HUD & menus" },
+            { en: "Type curation", pt: "Curadoria de tipografia" }
+          ]
+        },
+        {
+          group: { en: "Art", pt: "Arte" },
+          items: [
+            { en: "Concept art", pt: "Arte conceitual" },
+            { en: "Scenario & menu assets", pt: "Assets de cenário & menu" },
+            { en: "UI & cutscene animation", pt: "Animação de UI & cinemáticas" }
+          ]
+        }
+      ],
       challenge: {
-        en: "Growth cards get stronger every turn they stay in your deck — so how do you stop late-game snowballing without making early picks feel useless? The answer became a decay/pruning economy with tempo costs.",
-        pt: "Cartas de crescimento ficam mais fortes a cada turno no deck — como impedir a bola de neve no late game sem tornar as escolhas iniciais inúteis? A resposta virou uma economia de poda/decaimento com custos de tempo."
+        en: "The player's power swings wildly across a run — a glass-cannon ATK build and a tanky HP build reach the same boss with very different stats. The design problem: make every boss feel fair and threatening for all of them, without hand-tuning each case.",
+        pt: "O poder do player varia muito ao longo da run — uma build de ATK glass-cannon e uma build tanque de HP chegam ao mesmo chefe com stats bem diferentes. O problema de design: fazer cada chefe parecer justo e ameaçador para todas elas, sem ajustar cada caso na mão."
       },
       coreLoop: {
         steps: [
-          { en: "Draft seeds", pt: "Comprar sementes" },
-          { en: "Fight", pt: "Lutar" },
-          { en: "Grow / prune", pt: "Crescer / podar" },
-          { en: "Upgrade plot", pt: "Melhorar canteiro" }
+          { en: "Clear the room", pt: "Limpar a sala" },
+          { en: "Pick 1 upgrade", pt: "Escolher 1 upgrade" },
+          { en: "Beat the floor boss", pt: "Vencer o chefe do andar" },
+          { en: "Descend", pt: "Descer" }
         ],
         note: {
-          en: "The loop closes back on drafting: pruned cards become compost, the currency for the next draft — waste feeds growth.",
-          pt: "O loop fecha de volta no draft: cartas podadas viram composto, a moeda do próximo draft — o descarte alimenta o crescimento."
+          en: "You clear a run of rooms — each one grants an upgrade (ATK, fire rate or HP) — then face the floor boss, and only after beating it do you descend to the next floor. Every room cleared reshapes the build the balancing model has to keep honest.",
+          pt: "Você limpa uma sequência de salas — cada uma dá um upgrade (ATK, cadência ou HP) — depois encara o chefe do andar, e só depois de vencê-lo você desce para o próximo andar. Cada sala limpa remodela a build que o modelo de balanceamento precisa manter honesta."
         }
       },
       systems: [
         {
-          title: { en: "Growth economy", pt: "Economia de crescimento" },
+          title: { en: "Room-based scaling", pt: "Escalonamento por sala" },
           body: {
-            en: "Every plant card has a growth stage (0–3) that ticks up per combat. Power scales on a tuned curve, but hand size pressure makes hoarding risky.",
-            pt: "Cada carta-planta tem um estágio de crescimento (0–3) que sobe a cada combate. O poder escala numa curva ajustada, mas a pressão do tamanho da mão torna acumular arriscado."
+            en: "Enemy and reward stats scale per room cleared (0–7), so difficulty tracks how deep you are, not just which floor.",
+            pt: "Stats de inimigos e recompensas escalam por sala limpa (0–7), então a dificuldade acompanha o quão fundo você está, não só o andar."
           }
         },
         {
-          title: { en: "Compost & pruning", pt: "Composto e poda" },
+          title: { en: "Upgrade draft", pt: "Draft de upgrades" },
           body: {
-            en: "Removing a card refunds compost proportional to its growth stage — the anti-snowball valve that also smooths bad drafts.",
-            pt: "Remover uma carta devolve composto proporcional ao estágio de crescimento — a válvula anti-bola-de-neve que também suaviza drafts ruins."
+            en: "Each room offers one stat upgrade — ATK, fire rate or HP. The three axes create distinct builds (glass cannon, dual-attack, tank) from the same pool.",
+            pt: "Cada sala oferece um upgrade — ATK, cadência ou HP. Os três eixos criam builds distintas (glass cannon, duplo-ataque, tanque) a partir do mesmo pool."
           }
         },
         {
-          title: { en: "Seasonal modifiers", pt: "Modificadores sazonais" },
+          title: { en: "Boss attack kit", pt: "Kit de ataques do chefe" },
           body: {
-            en: "Every 3 fights the season shifts, multiplying growth rates per plant type. Seasons are the run's difficulty dial and the build-variety engine.",
-            pt: "A cada 3 lutas a estação muda, multiplicando as taxas de crescimento por tipo de planta. As estações são o dial de dificuldade da run e o motor de variedade de builds."
+            en: "Bosses like O Zelador (the Janitor) rotate a laser sweep, a broom melee, thrown buckets and soap — each with its own damage band tuned to threaten without one-shotting.",
+            pt: "Chefes como O Zelador giram entre varredura de laser, vassourada corpo-a-corpo, baldes arremessados e sabonete — cada um com sua faixa de dano ajustada para ameaçar sem matar de um golpe."
           }
         }
       ],
       progression: {
-        en: "Run progression uses a 12-node map with three difficulty bands. Node rewards were tuned so an average run hits deck power ~85% of the final boss check — losing should feel one decision away from winning.",
-        pt: "A progressão da run usa um mapa de 12 nós com três faixas de dificuldade. As recompensas foram ajustadas para uma run média chegar a ~85% do poder exigido pelo chefe final — perder deve parecer estar a uma decisão da vitória."
+        en: "Three floors, each a room gauntlet into a boss. Boss HP-base scales roughly 4,250 → 6,380 → 11,060 and fight length 30 → 45 → 78 seconds, so later bosses are endurance checks against a fully-upgraded Chico.",
+        pt: "Três andares, cada um um corredor de salas até um chefe. O HP-base dos chefes escala ~4.250 → 6.380 → 11.060 e o tempo de luta 30 → 45 → 78 segundos, então chefes finais viram testes de resistência contra um Chico totalmente evoluído."
       },
       combat: {
-        formula: "DMG = BASE × (1 + 0.35 × STAGE) × SEASON_MOD − TARGET_DEF",
+        formula: {
+          en: "DMG_boss(attack) = ideal_HP ÷ hits_target",
+          pt: "DMG_boss(ataque) = HP_ideal ÷ hits_alvo"
+        },
         body: {
-          en: "Damage grows linearly per growth stage (not exponentially — we tried 1.5^stage first and it broke turn 9+). Season modifiers stay inside 0.8–1.3 so no plant type is ever dead weight.",
-          pt: "O dano cresce linearmente por estágio (não exponencialmente — testamos 1.5^estágio primeiro e quebrava do turno 9 em diante). Os modificadores sazonais ficam entre 0.8–1.3 para nenhum tipo de planta virar peso morto."
+          en: "Instead of hand-picking boss damage, I derived each attack from the player's *expected* HP divided by how many hits of that attack should kill — so the laser might threaten a 5-hit kill and the broom a 3-hit kill, staying fair for every build. Numbers stay honest because they trace back to the player, not to a designer's gut.",
+          pt: "Em vez de escolher o dano do chefe na mão, derivei cada ataque do HP *esperado* do player dividido por quantos golpes daquele ataque deveriam matar — então o laser ameaça matar em 5 hits e a vassourada em 3, ficando justo para qualquer build. Os números continuam honestos porque remetem ao player, não ao 'feeling' do designer."
         }
       },
       balancing: {
-        body: {
-          en: "All 40+ cards live in one Sheets model: cost, base power, growth curve, win-rate deltas from playtest logs. Conditional formatting flags outliers; a CSV export feeds Unity ScriptableObjects, so a tuning pass never touches code.",
-          pt: "As 40+ cartas vivem num único modelo no Sheets: custo, poder base, curva de crescimento, deltas de win rate dos logs de playtest. Formatação condicional marca outliers; um export CSV alimenta ScriptableObjects na Unity, então um passe de ajuste nunca toca código."
+        formula: {
+          en: "HP_boss = base_HP × log₂.₃(rooms_cleared)",
+          pt: "HP_boss = HP_base × log₂,₃(salas_limpas)"
         },
-        table: {
-          caption: { en: "Card attribute table (excerpt)", pt: "Tabela de atributos de cartas (trecho)" },
-          headers: [
-            { en: "Card", pt: "Carta" },
-            { en: "Cost", pt: "Custo" },
-            { en: "Base", pt: "Base" },
-            { en: "Stage 3", pt: "Estágio 3" },
-            { en: "Win% Δ", pt: "Δ Win%" }
-          ],
-          rows: [
-            ["Sprout Jab", "1", "4", "8", "+1.2"],
-            ["Bramble Wall", "2", "0/6 blk", "0/12 blk", "-0.4"],
-            ["Sunburst", "3", "9", "18", "+3.1 ⚠"],
-            ["Root Network", "2", "2×2", "2×5", "+0.8"]
-          ]
-        }
+        body: {
+          en: "The whole game lived in one balancing spreadsheet — player base stats, per-room scaling, enemy and boss tables, and DPS curves for the extreme builds. My favourite piece is the boss HP: it doesn't scale with the floor, it scales with how many rooms you actually cleared, on a logarithm (base 2.3). Clear more rooms and you arrive stronger, so the boss grows to match — but logarithmically, so a full clear makes it tougher without ever becoming an impossible wall.",
+          pt: "O jogo inteiro vivia numa única planilha de balanceamento — stats base do player, escalonamento por sala, tabelas de inimigos e chefes, e curvas de DPS das builds extremas. A minha parte favorita é o HP do chefe: ele não escala com o andar, escala com quantas salas você realmente limpou, num logaritmo (base 2,3). Limpar mais salas te deixa mais forte, então o chefe cresce junto — mas logaritmicamente, ficando mais difícil sem nunca virar uma parede impossível."
+        },
+        tables: [
+          {
+            caption: { en: "Boss HP — logarithmic scaling by rooms cleared", pt: "HP do chefe — escala logarítmica por salas limpas" },
+            headers: [
+              { en: "Rooms cleared", pt: "Salas limpas" },
+              { en: "Boss HP", pt: "HP do chefe" },
+              { en: "× mult", pt: "× mult" }
+            ],
+            rows: [
+              [{ en: "0–3", pt: "0–3" }, "4,252", "×1.00"],
+              ["4", "7,078", "×1.66"],
+              ["5", "8,217", "×1.93"],
+              ["6", "9,148", "×2.15"],
+              ["7", "9,935", "×2.34"]
+            ]
+          },
+          {
+            caption: { en: "Enemy stats (base)", pt: "Stats de inimigos (base)" },
+            headers: [
+              { en: "Enemy", pt: "Inimigo" },
+              { en: "HP", pt: "HP" },
+              { en: "Atk dmg", pt: "Dano atq" },
+              { en: "Contact", pt: "Contato" }
+            ],
+            rows: [
+              [{ en: "Warrior", pt: "Guerreiro" }, "175", "33.3", "—"],
+              [{ en: "Mage", pt: "Mago" }, "100", "20", "10"],
+              [{ en: "Intern", pt: "Estagiário" }, "100", "—", "10"]
+            ]
+          },
+          {
+            caption: { en: "Boss attack damage (room 0 → 7)", pt: "Dano dos ataques do chefe (sala 0 → 7)" },
+            headers: [
+              { en: "Attack", pt: "Ataque" },
+              { en: "Room 0", pt: "Sala 0" },
+              { en: "Room 7", pt: "Sala 7" }
+            ],
+            rows: [
+              [{ en: "Laser", pt: "Laser" }, "26.5", "29.7"],
+              [{ en: "Broom (melee)", pt: "Vassourada (melee)" }, "44.2", "61.8"],
+              [{ en: "Bucket", pt: "Balde" }, "26.5", "37.1"],
+              [{ en: "Soap", pt: "Sabonete" }, "22.1", "30.9"]
+            ]
+          }
+        ]
       },
       implementation: {
-        en: "I prototyped the growth system myself in Unity (C#) before the team committed to it — a two-week greybox with debug sliders for every curve constant, which later became the tuning UI.",
-        pt: "Eu mesmo prototipei o sistema de crescimento na Unity (C#) antes de o time abraçar a ideia — um greybox de duas semanas com sliders de debug para cada constante de curva, que depois virou a UI de tuning."
+        en: "The sheet was the source of truth; values flowed into Unity and got hammered in weekly playtests. Because damage came from the player's expected survivability, rebalancing a whole floor was often a one-cell change.",
+        pt: "A planilha era a fonte da verdade; os valores iam para a Unity e apanhavam nos playtests semanais. Como o dano vinha da sobrevivência esperada do player, rebalancear um andar inteiro era muitas vezes mudar uma célula."
       },
+      gallery: [
+        {
+          src: "./assets/img/projects/esqueleto-chico-gameplay-1.webp",
+          alt: { en: "Chico scything through minions in a tiled crypt room", pt: "Chico ceifando lacaios numa sala de cripta" }
+        },
+        {
+          src: "./assets/img/projects/esqueleto-chico-gameplay-3.webp",
+          alt: { en: "An upgrade shrine offering 'Vinícius: Health +45'", pt: "Um altar de upgrade oferecendo 'Vinícius: Vida +45'" }
+        }
+      ],
       learnings: {
-        en: "Linear scaling with pressure valves beats exponential scaling with caps. And a spreadsheet the whole team can read is a design tool, not an accounting chore.",
-        pt: "Escala linear com válvulas de pressão vence escala exponencial com tetos. E uma planilha que o time inteiro consegue ler é ferramenta de design, não burocracia."
-      }
+        en: "Deriving enemy and boss damage from the player's expected survivability — not from vibes — kept difficulty honest across builds that looked nothing alike. Owning design, sound, UI and art at once taught me to make each discipline serve the same core loop.",
+        pt: "Derivar o dano de inimigos e chefes da sobrevivência esperada do player — e não do 'feeling' — manteve a dificuldade honesta entre builds completamente diferentes. Cuidar de design, som, UI e arte ao mesmo tempo me ensinou a fazer cada disciplina servir ao mesmo core loop."
+      },
+      links: [
+        { label: { en: "Play on itch.io", pt: "Jogar na itch.io" }, url: "https://prismagamelab.itch.io/esqueleto-chico-ossos-do-oficio", kind: "play" },
+        { label: { en: "Watch trailer", pt: "Ver trailer" }, url: "https://www.youtube.com/watch?v=Z_3GRWZEDSQ", kind: "video" }
+      ]
     }
   },
   {

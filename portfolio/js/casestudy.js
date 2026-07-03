@@ -21,17 +21,65 @@ function section(labelKey, ...children) {
   return wrap;
 }
 
+function renderTable(tb) {
+  const wrap = el('div', 'case-table-wrap');
+  const table = el('table', 'case-table');
+  const thead = el('thead');
+  const headRow = el('tr');
+  tb.headers.forEach(h => headRow.append(el('th', null, t(h))));
+  thead.append(headRow);
+  const tbody = el('tbody');
+  tb.rows.forEach(row => {
+    const tr = el('tr');
+    row.forEach(cell => {
+      // cells are plain strings/numbers, or { en, pt } for translatable labels
+      const value = cell && typeof cell === 'object' ? t(cell) : cell;
+      tr.append(el('td', null, value));
+    });
+    tbody.append(tr);
+  });
+  if (tb.caption) table.append(el('caption', null, t(tb.caption)));
+  table.append(thead, tbody);
+  wrap.append(table);
+  return wrap;
+}
+
 function buildBody(project) {
   const cs = project.caseStudy;
   const body = document.getElementById('case-body');
   body.replaceChildren();
   if (!cs) return;
 
+  if (cs.heroImage) {
+    const fig = el('figure', 'case-hero-img');
+    const img = el('img');
+    img.src = cs.heroImage.src;
+    img.alt = t(cs.heroImage.alt);
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    fig.append(img);
+    body.append(fig);
+  }
+
   if (cs.overview) body.append(section('case.overview', el('p', null, t(cs.overview))));
   if (cs.role) {
     const p = el('p', 'case-meta-role', t(cs.role));
     body.append(section('case.role', p));
   }
+
+  if (cs.responsibilities?.length) {
+    const grid = el('div', 'case-responsibilities');
+    cs.responsibilities.forEach(col => {
+      const c = el('div', 'case-resp-col');
+      c.append(el('h4', null, t(col.group)));
+      const ul = el('ul');
+      col.items.forEach(item => ul.append(el('li', 'chip', t(item))));
+      c.append(ul);
+      grid.append(c);
+    });
+    body.append(section('case.responsibilities', grid));
+  }
+
   if (cs.challenge) body.append(section('case.challenge', el('p', null, t(cs.challenge))));
 
   if (cs.coreLoop) {
@@ -62,37 +110,48 @@ function buildBody(project) {
 
   if (cs.combat) {
     const children = [];
-    if (cs.combat.formula) children.push(el('p', 'case-formula', cs.combat.formula));
+    if (cs.combat.formula) children.push(el('p', 'case-formula', t(cs.combat.formula)));
     if (cs.combat.body) children.push(el('p', null, t(cs.combat.body)));
     body.append(section('case.combat', ...children));
   }
 
   if (cs.balancing) {
     const children = [];
-    if (cs.balancing.table) {
-      const wrap = el('div', 'case-table-wrap');
-      const table = el('table', 'case-table');
-      const caption = el('caption', null, t(cs.balancing.table.caption));
-      const thead = el('thead');
-      const headRow = el('tr');
-      cs.balancing.table.headers.forEach(h => headRow.append(el('th', null, t(h))));
-      thead.append(headRow);
-      const tbody = el('tbody');
-      cs.balancing.table.rows.forEach(row => {
-        const tr = el('tr');
-        row.forEach(cell => tr.append(el('td', null, cell)));
-        tbody.append(tr);
-      });
-      table.append(caption, thead, tbody);
-      wrap.append(table);
-      children.push(wrap);
-    }
+    if (cs.balancing.formula) children.push(el('p', 'case-formula', t(cs.balancing.formula)));
+    const tables = cs.balancing.tables || (cs.balancing.table ? [cs.balancing.table] : []);
+    tables.forEach(tb => children.push(renderTable(tb)));
     if (cs.balancing.body) children.push(el('p', null, t(cs.balancing.body)));
     body.append(section('case.balancing', ...children));
   }
 
   if (cs.implementation) body.append(section('case.implementation', el('p', null, t(cs.implementation))));
+
+  if (cs.gallery?.length) {
+    const grid = el('div', 'case-gallery');
+    cs.gallery.forEach(g => {
+      const img = el('img');
+      img.src = g.src;
+      img.alt = t(g.alt);
+      img.loading = 'lazy';
+      img.decoding = 'async';
+      grid.append(img);
+    });
+    body.append(section('case.gallery', grid));
+  }
+
   if (cs.learnings) body.append(section('case.learnings', el('p', null, t(cs.learnings))));
+
+  if (cs.links?.length) {
+    const row = el('div', 'case-links');
+    cs.links.forEach(link => {
+      const a = el('a', 'btn case-link', t(link.label));
+      a.href = link.url;
+      a.target = '_blank';
+      a.rel = 'noopener';
+      row.append(a);
+    });
+    body.append(row);
+  }
 }
 
 function render(project) {

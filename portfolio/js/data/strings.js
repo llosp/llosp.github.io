@@ -52,9 +52,6 @@ export const strings = {
     pt: "Procurando um designer que também abre a engine? Chama."
   },
 
-  "footer.made":     { en: "made with 🐾 by Lope", pt: "feito com 🐾 pelo Lope" },
-  "footer.egg":      { en: "← pet the real dog", pt: "← faça carinho no cachorro de verdade" },
-
   "case.close":      { en: "Close case study", pt: "Fechar estudo de caso" },
   "case.overview":   { en: "Overview", pt: "Visão Geral" },
   "case.role":       { en: "My Role", pt: "Meu Papel" },
@@ -65,7 +62,9 @@ export const strings = {
   "case.combat":     { en: "Damage & Combat", pt: "Dano e Combate" },
   "case.balancing":  { en: "Balancing", pt: "Balanceamento" },
   "case.implementation": { en: "Implementation & Prototyping", pt: "Implementação e Prototipagem" },
-  "case.learnings":  { en: "Learnings", pt: "Aprendizados" }
+  "case.learnings":  { en: "Learnings", pt: "Aprendizados" },
+  "case.responsibilities": { en: "What I Owned", pt: "Do Que Cuidei" },
+  "case.gallery":    { en: "Gallery", pt: "Galeria" }
 };
 
 // Skills grid, grouped the way Lope works. Tool names are not translated.

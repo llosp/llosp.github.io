@@ -66,12 +66,15 @@ body::after {
 
 .chip {
   display: inline-block;
+  max-width: 100%;
   font-family: var(--font-mono);
   font-size: var(--step--1);
   padding: 0.15em 0.7em;
   border: 2px solid currentColor;
-  border-radius: 999px;
-  white-space: nowrap;
+  border-radius: 1em;
+  /* wrap long labels instead of overflowing the card border */
+  white-space: normal;
+  overflow-wrap: break-word;
 }
 
 .btn {
@@ -196,19 +199,3 @@ main > section > * { max-width: var(--page-max); margin-left: auto; margin-right
   max-width: 34em;
   opacity: 0.85;
 }
-
-/* ── Footer ─────────────────────────────────────────────────────────────── */
-.footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  padding: var(--space-3) var(--page-pad);
-  background: var(--black);
-  color: var(--paper);
-  border-top: 4px solid var(--yellow);
-  font-size: var(--step--1);
-}
-.footer-egg { color: var(--pink); text-decoration: none; }
-.footer-egg:hover { color: var(--yellow); }

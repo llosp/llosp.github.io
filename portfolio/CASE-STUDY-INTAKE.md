@@ -15,8 +15,8 @@ do **Esqueleto Chico** (o case de referência em `js/data/projects.js`).
 
 ## 0. Qual projeto substituir
 
-Hoje existem 3 projetos com dados de exemplo em `js/data/projects.js`:
-`rustbound`, `party-howl`, `tide-tactics`.
+Hoje existe 1 projeto com dados de exemplo em `js/data/projects.js`:
+`party-howl`.
 
 **Antes de tudo, pergunte ao Lope:**
 1. Qual desses três (ou qual projeto novo) estamos preenchendo agora?

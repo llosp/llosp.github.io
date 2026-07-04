@@ -195,31 +195,30 @@ export const projects = [
         pt: "Derivar o dano de inimigos e chefes da sobrevivência esperada do player — e não do 'feeling' — manteve a dificuldade honesta entre builds completamente diferentes. Cuidar de design, som, UI e arte ao mesmo tempo me ensinou a fazer cada disciplina servir ao mesmo core loop."
       },
       links: [
-        { label: { en: "Play on itch.io", pt: "Jogar na itch.io" }, url: "https://prismagamelab.itch.io/esqueleto-chico-ossos-do-oficio", kind: "play" },
-        { label: { en: "Watch trailer", pt: "Ver trailer" }, url: "https://www.youtube.com/watch?v=Z_3GRWZEDSQ", kind: "video" }
+        { label: { en: "Play on itch.io", pt: "Jogar na itch.io" }, url: "https://prismagamelab.itch.io/esqueleto-chico-ossos-do-oficio", kind: "play" }
       ]
     }
   },
   {
     id: "maguitos",
     accent: "#FF4F87",
-    name: "Maguitos",
+    name: "PROJETO MAGUITOS",
     type: { en: "Turn-based party RPG (PC)", pt: "RPG de party por turnos (PC)" },
     role: { en: "Game & Systems Designer / Gameplay Programmer", pt: "Game/Systems Designer e Gameplay Programmer" },
     tools: ["Godot", "GDScript"],
-    cover: "./assets/img/projects/maguitos.svg",
+    cover: "./assets/img/projects/maguitos-gameplay-1.webp",
     coverAlt: {
-      en: "Maguitos — placeholder key art",
-      pt: "Maguitos — arte placeholder"
+      en: "The party facing four Stray Humpty enemies before a mossy shrine",
+      pt: "A party enfrentando quatro Stray Humpty diante de um santuário musgoso"
     },
     summary: {
-      en: "A turn-based party RPG built by two people — a friend made the art and interface, I designed and coded everything else. The whole party shares a single MP pool, and each turn you plan every character's move before watching them all resolve at once.",
-      pt: "Um RPG de party por turnos feito por duas pessoas — um amigo cuidou da arte e da interface, e eu projetei e programei todo o resto. A party inteira divide um único reservatório de MP, e a cada turno você planeja o movimento de cada personagem antes de ver todos resolverem de uma vez."
+      en: "A turn-based party RPG built by two people — a friend made the art and interface, I designed and coded everything else. The whole party shares a single MP pool, and each turn you plan every character's move before watching them all resolve at once. Still in active development.",
+      pt: "Um RPG de party por turnos feito por duas pessoas — um amigo cuidou da arte e da interface, e eu projetei e programei todo o resto. A party inteira divide um único reservatório de MP, e a cada turno você planeja o movimento de cada personagem antes de ver todos resolverem de uma vez. Ainda em desenvolvimento ativo."
     },
     caseStudy: {
       overview: {
-        en: "Maguitos is a turn-based party RPG prototype. You command a party of three — Isara, Celetro and Erika — through battles fought on a 3D map with single-target, AoE and party-wide skills. It was a two-person project: a friend handled art and interface while I owned the design and the entire GDScript codebase. Development is currently paused.",
-        pt: "Maguitos é um protótipo de RPG de party por turnos. Você comanda uma party de três — Isara, Celetro e Erika — em batalhas num mapa 3D com skills de alvo único, em área e para a party toda. Foi um projeto de duas pessoas: um amigo cuidou da arte e da interface enquanto eu conduzia o design e todo o código em GDScript. O desenvolvimento está pausado no momento."
+        en: "PROJETO MAGUITOS is a turn-based party RPG currently in active development. You command a party of three — Isara, Celetro and Erika — through battles fought on a 3D map with single-target, AoE and party-wide skills. It's a two-person project: a friend handles art and interface while I own the design and the entire GDScript codebase.",
+        pt: "PROJETO MAGUITOS é um RPG de party por turnos atualmente em desenvolvimento ativo. Você comanda uma party de três — Isara, Celetro e Erika — em batalhas num mapa 3D com skills de alvo único, em área e para a party toda. É um projeto de duas pessoas: um amigo cuida da arte e da interface enquanto eu conduzo o design e todo o código em GDScript."
       },
       role: {
         en: "Solo on design and code. I built the battle system in GDScript — a state machine that plans then resolves each turn, a skill executor, and data-driven characters, enemies and skills — plus the shared-MP economy and the tag-affinity model. Art and UI were made by a collaborator.",
@@ -350,96 +349,21 @@ export const projects = [
       learnings: {
         en: "Turning MP into a shared resource changed the whole feel of a turn — individual choices became a party budget, and that's the idea I'd build the rest of the game around. Committing to a data-driven resource pipeline early is what let two people move fast: my collaborator could drop in art while I added skills as pure data.",
         pt: "Transformar o MP num recurso compartilhado mudou toda a sensação de um turno — escolhas individuais viraram um orçamento de party, e é essa ideia que eu usaria como base para o resto do jogo. Apostar cedo num pipeline orientado a dados foi o que deixou duas pessoas andarem rápido: meu colaborador colocava arte enquanto eu adicionava skills como dados puros."
-      }
-    }
-  },
-  {
-    id: "rustbound",
-    accent: "#FFC400",
-    name: "Rustbound",
-    type: { en: "2D action-platformer (PC)", pt: "Action-platformer 2D (PC)" },
-    role: { en: "Game Designer & Gameplay Programmer", pt: "Game Designer e Gameplay Programmer" },
-    tools: ["Godot", "GDScript", "Google Sheets", "Photoshop"],
-    cover: "./assets/img/projects/rustbound.svg",
-    coverAlt: { en: "Rustbound key art", pt: "Arte principal de Rustbound" },
-    summary: {
-      en: "A rusty robot that trades parts for power. I designed and coded the combat: damage model, hitstop, part-swap progression — all data-driven from a single stats sheet.",
-      pt: "Um robô enferrujado que troca peças por poder. Projetei e programei o combate: modelo de dano, hitstop, progressão de troca de peças — tudo data-driven a partir de uma única planilha de stats."
-    },
-    caseStudy: {
-      overview: {
-        en: "Rustbound is a tight action-platformer prototype: a scavenger robot bolts scavenged parts onto itself, and every part changes both a stat and a verb (double jump arm, shield-bash torso).",
-        pt: "Rustbound é um protótipo de action-platformer: um robô catador parafusa peças recolhidas em si mesmo, e cada peça muda um atributo e um verbo (braço de pulo duplo, torso de investida com escudo)."
       },
-      role: {
-        en: "Solo on combat design and code. I wrote the damage pipeline in GDScript, designed enemy archetypes, and kept every number in an external sheet the artists could also read.",
-        pt: "Sozinho no design e no código do combate. Escrevi o pipeline de dano em GDScript, projetei os arquétipos de inimigos e mantive todos os números numa planilha externa que os artistas também conseguiam ler."
-      },
-      challenge: {
-        en: "Parts had to feel like meaningful trade-offs, not stat sticks. Rule: every part buffs one number AND nerfs another, and swaps happen mid-level at repair benches — build questions become level-design questions.",
-        pt: "As peças precisavam parecer trocas significativas, não bastões de status. Regra: toda peça melhora um número E piora outro, e as trocas acontecem no meio da fase em bancadas de reparo — decisões de build viram decisões de level design."
-      },
-      coreLoop: {
-        steps: [
-          { en: "Explore", pt: "Explorar" },
-          { en: "Fight", pt: "Lutar" },
-          { en: "Scavenge parts", pt: "Catar peças" },
-          { en: "Rebuild", pt: "Remontar" }
-        ]
-      },
-      systems: [
+      gallery: [
         {
-          title: { en: "Part trade-off matrix", pt: "Matriz de trade-offs de peças" },
-          body: {
-            en: "12 parts across 4 slots, each with a buff/nerf pair, validated in a sheet so no combination stacked past +60% of baseline power.",
-            pt: "12 peças em 4 slots, cada uma com um par buff/nerf, validadas em planilha para nenhuma combinação passar de +60% do poder base."
-          }
+          src: "./assets/img/projects/maguitos-gameplay-1.webp",
+          alt: { en: "The party facing four Stray Humpty enemies before a mossy shrine", pt: "A party enfrentando quatro Stray Humpty diante de um santuário musgoso" }
         },
         {
-          title: { en: "Weight & mobility", pt: "Peso e mobilidade" },
-          body: {
-            en: "Total part weight scales jump height and dash cooldown — the hidden stat that makes 'strongest build' a real question.",
-            pt: "O peso total das peças escala a altura do pulo e o cooldown do dash — o atributo oculto que torna 'a build mais forte' uma pergunta de verdade."
-          }
-        }
-      ],
-      combat: {
-        formula: "DMG = (ATK − DEF × 0.6) × CRIT? 1.5 : 1 × (1 − RUST/100)",
-        body: {
-          en: "Flat-ish mitigation keeps early enemies relevant; RUST is a decay meter that punishes skipping repair benches — the combat system enforcing the exploration loop.",
-          pt: "Mitigação quase plana mantém inimigos iniciais relevantes; RUST é um medidor de desgaste que pune pular as bancadas de reparo — o sistema de combate reforçando o loop de exploração."
-        }
-      },
-      balancing: {
-        body: {
-          en: "Enemy TTK targets per zone (1.5s grunts → 25s minibosses) drove every stat. The sheet computed TTK from the damage formula live, so tuning was 'move the target, read the diff'.",
-          pt: "Metas de TTK de inimigos por zona (1,5s para capangas → 25s para minichefes) guiaram todos os stats. A planilha calculava o TTK pela fórmula de dano em tempo real, então ajustar era 'mover a meta, ler o diff'."
+          src: "./assets/img/projects/maguitos-gameplay-2.webp",
+          alt: { en: "Battle log showing a flurry of damage dealt to a Stray Humpty", pt: "Log de batalha mostrando uma sequência de dano causado a um Stray Humpty" }
         },
-        table: {
-          caption: { en: "Enemy attribute table (excerpt)", pt: "Tabela de atributos de inimigos (trecho)" },
-          headers: [
-            { en: "Enemy", pt: "Inimigo" },
-            { en: "HP", pt: "HP" },
-            { en: "ATK", pt: "ATK" },
-            { en: "DEF", pt: "DEF" },
-            { en: "TTK target", pt: "Meta de TTK" }
-          ],
-          rows: [
-            ["Scrap Rat", "18", "6", "2", "1.5s"],
-            ["Weld Drone", "34", "9", "4", "4s"],
-            ["Junk Golem", "120", "14", "10", "12s"],
-            ["Foreman MK-II", "300", "18", "12", "25s"]
-          ]
+        {
+          src: "./assets/img/projects/maguitos-gameplay-3.webp",
+          alt: { en: "Isara casting a skill on the last remaining Stray Humpty", pt: "Isara conjurando uma skill no último Stray Humpty restante" }
         }
-      },
-      implementation: {
-        en: "Built in Godot 4. Parts are Resources loaded from data, so a new part is one sheet row plus a sprite — designers (me, with another hat on) never touch combat code to add content.",
-        pt: "Feito em Godot 4. As peças são Resources carregados de dados, então uma peça nova é uma linha na planilha mais um sprite — designers (eu, de outro chapéu) nunca tocam no código de combate para adicionar conteúdo."
-      },
-      learnings: {
-        en: "Designing the data pipeline first made every later system cheaper. Hitstop and screenshake bought more perceived power than any +damage tweak.",
-        pt: "Projetar o pipeline de dados primeiro barateou todos os sistemas seguintes. Hitstop e screenshake compraram mais sensação de poder do que qualquer ajuste de +dano."
-      }
+      ]
     }
   },
   {
@@ -449,10 +373,10 @@ export const projects = [
     type: { en: "Idle/clicker game (web)", pt: "Idle/clicker (web)" },
     role: { en: "Solo Developer & Systems Designer", pt: "Desenvolvedor Solo & Systems Designer" },
     tools: ["JavaScript", "HTML/CSS", "Google Sheets"],
-    cover: "./assets/img/projects/clicachorro.svg",
+    cover: "./assets/img/projects/clicachorro-gameplay-complete.webp",
     coverAlt: {
-      en: "ClicaChorro key art — a dog paw, a click cursor and floating +1s",
-      pt: "Arte principal de ClicaChorro — uma patinha, um cursor de clique e +1 flutuando"
+      en: "A fully decorated room — band poster, boombox, car and a sleepy plush toy beside the dog",
+      pt: "Um quarto totalmente decorado — pôster de banda, boombox, carro e uma pelúcia sonolenta ao lado do cachorro"
     },
     summary: {
       en: "A cozy idle-clicker where you raise a stray puppy into the Best Dog in the World. A solo web project whose entire economy is derived from a single number — how long the run should take — through one closed-form balancing spreadsheet.",
@@ -460,8 +384,8 @@ export const projects = [
     },
     caseStudy: {
       heroImage: {
-        src: "./assets/img/projects/clicachorro.svg",
-        alt: { en: "ClicaChorro — idle clicker key art", pt: "ClicaChorro — key art do idle clicker" }
+        src: "./assets/img/projects/clicachorro-gameplay-complete.webp",
+        alt: { en: "A fully decorated room — band poster, boombox, car and a sleepy plush toy beside the dog", pt: "Um quarto totalmente decorado — pôster de banda, boombox, carro e uma pelúcia sonolenta ao lado do cachorro" }
       },
       overview: {
         en: "ClicaChorro is a cozy idle-clicker for the browser. You adopt a scrappy stray and click to shower it with affection; that affection buys helpers and upgrades that idle-earn for you, and each purchase nudges your dog up a life-stage — from Stray all the way to the Best Dog in the World. A solo project, built to test one idea: that a clicker's whole economy can be derived from how long you want the run to last.",
@@ -599,49 +523,26 @@ export const projects = [
         pt: "Derivar a economia da duração-alvo da sessão — e não do 'feeling' — transformou o balanceamento de chute em equação resolvida. Fazer tudo sozinho entre design, código, arte e som me ensinou a deixar um sistema (a planilha) manter os outros honestos."
       },
       links: [
-        { label: { en: "Balancing spreadsheet (.xlsx)", pt: "Planilha de balanceamento (.xlsx)" }, url: "./assets/clicachorro-balanceamento.xlsx", kind: "sheet" }
-      ]
-    }
-  },
-  {
-    id: "tide-tactics",
-    accent: "#FF4F87",
-    name: "Tide Tactics",
-    type: { en: "Educational strategy game (web)", pt: "Jogo educacional de estratégia (web)" },
-    role: { en: "Game Designer & 3D Artist", pt: "Game Designer e Artista 3D" },
-    tools: ["Godot", "Blender", "Illustrator", "Google Sheets"],
-    cover: "./assets/img/projects/tide-tactics.svg",
-    coverAlt: { en: "Tide Tactics key art", pt: "Arte principal de Tide Tactics" },
-    summary: {
-      en: "A turn-based strategy game about coastal ecosystems, built for an educational program. I designed the resource systems and modeled the 3D board pieces — teaching through mechanics, not through text pop-ups.",
-      pt: "Um jogo de estratégia por turnos sobre ecossistemas costeiros, feito para um programa educacional. Projetei os sistemas de recursos e modelei as peças 3D do tabuleiro — ensinando pelas mecânicas, não por pop-ups de texto."
-    },
-    caseStudy: {
-      overview: {
-        en: "Built within an educational product context (Instituto ECOA), Tide Tactics turns ecosystem trade-offs into a tactics board: every intervention helps one species and pressures another.",
-        pt: "Feito num contexto de produto educacional (Instituto ECOA), Tide Tactics transforma trade-offs de ecossistema num tabuleiro de tática: cada intervenção ajuda uma espécie e pressiona outra."
-      },
-      role: {
-        en: "Designed the resource/food-web systems, balanced scenario difficulty in Sheets, and produced the low-poly board pieces in Blender with a hand-painted texture pass.",
-        pt: "Projetei os sistemas de recursos/teia alimentar, balanceei a dificuldade dos cenários no Sheets e produzi as peças low-poly do tabuleiro no Blender com um passe de textura pintado à mão."
-      },
-      challenge: {
-        en: "The science had to stay honest while the game stayed fun — so the food web is a real simulation with tuned coefficients, and 'winning' means reaching equilibrium, not maximizing one number.",
-        pt: "A ciência precisava continuar honesta com o jogo continuando divertido — então a teia alimentar é uma simulação real com coeficientes ajustados, e 'vencer' significa alcançar equilíbrio, não maximizar um número."
-      },
-      systems: [
-        {
-          title: { en: "Food web simulation", pt: "Simulação de teia alimentar" },
-          body: {
-            en: "Five species with predation coefficients in a matrix — the balancing sheet literally was the game's design document.",
-            pt: "Cinco espécies com coeficientes de predação numa matriz — a planilha de balanceamento era literalmente o design doc do jogo."
-          }
-        }
+        { label: { en: "Play ClicaChorro", pt: "Jogar ClicaChorro" }, url: "https://lope.design", kind: "play" }
       ],
-      learnings: {
-        en: "Systems can teach better than text: playtesters explained trophic cascades back to us using game terms. Art and design in the same head shortens every iteration loop.",
-        pt: "Sistemas ensinam melhor que texto: playtesters explicavam cascatas tróficas de volta usando termos do jogo. Arte e design na mesma cabeça encurtam todo loop de iteração."
-      }
+      gallery: [
+        {
+          src: "./assets/img/projects/clicachorro-gameplay-complete.webp",
+          alt: { en: "A fully decorated room — band poster, boombox, car and a sleepy plush toy beside the dog", pt: "Um quarto totalmente decorado — pôster de banda, boombox, carro e uma pelúcia sonolenta ao lado do cachorro" }
+        },
+        {
+          src: "./assets/img/projects/clicachorro-gameplay-start.webp",
+          alt: { en: "A freshly started run — just the dog against an empty room", pt: "Uma run recém-iniciada — só o cachorro num quarto vazio" }
+        },
+        {
+          src: "./assets/img/projects/clicachorro-gameplay-furniture.webp",
+          alt: { en: "Mid-run room with a few furniture unlocks — a blank poster frame, a cabinet and a plant", pt: "Quarto no meio da run com alguns móveis desbloqueados — um quadro em branco, um armário e uma planta" }
+        },
+        {
+          src: "./assets/img/projects/clicachorro-gameplay-shop.webp",
+          alt: { en: "The upgrade shop open, showing click-power purchases", pt: "A loja de upgrades aberta, mostrando compras de poder de clique" }
+        }
+      ]
     }
   }
 ];

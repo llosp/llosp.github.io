@@ -379,8 +379,8 @@ export const projects = [
       pt: "Um quarto totalmente decorado — pôster de banda, boombox, carro e uma pelúcia sonolenta ao lado do cachorro"
     },
     summary: {
-      en: "A cozy idle-clicker where you raise a stray puppy into the Best Dog in the World. A solo web project whose entire economy is derived from a single number — how long the run should take — through one closed-form balancing spreadsheet.",
-      pt: "Um idle-clicker aconchegante onde você cria um vira-lata até virar o Melhor Cachorro do Mundo. Um projeto solo pra web cuja economia inteira é derivada de um único número — quanto tempo a run deve durar — a partir de uma única planilha de balanceamento de forma fechada."
+      en: "A cozy idle-clicker where the goal is to fully furnish the room where your dog lives — click to earn affection, spend it on furniture and upgrades, one piece at a time. A solo web project whose entire economy is derived from a single number — how long the run should take — through one closed-form balancing spreadsheet.",
+      pt: "Um idle-clicker aconchegante onde o objetivo é completar o quarto onde seu cachorro mora — clique para ganhar carinho e gaste em móveis e upgrades, peça por peça. Um projeto solo pra web cuja economia inteira é derivada de um único número — quanto tempo a run deve durar — a partir de uma única planilha de balanceamento de forma fechada."
     },
     caseStudy: {
       heroImage: {
@@ -388,8 +388,8 @@ export const projects = [
         alt: { en: "A fully decorated room — band poster, boombox, car and a sleepy plush toy beside the dog", pt: "Um quarto totalmente decorado — pôster de banda, boombox, carro e uma pelúcia sonolenta ao lado do cachorro" }
       },
       overview: {
-        en: "ClicaChorro is a cozy idle-clicker for the browser. You adopt a scrappy stray and click to shower it with affection; that affection buys helpers and upgrades that idle-earn for you, and each purchase nudges your dog up a life-stage — from Stray all the way to the Best Dog in the World. A solo project, built to test one idea: that a clicker's whole economy can be derived from how long you want the run to last.",
-        pt: "ClicaChorro é um idle-clicker aconchegante pro navegador. Você adota um vira-lata e clica pra encher ele de carinho; esse carinho compra ajudantes e upgrades que rendem sozinhos, e cada compra empurra seu cachorro pra próxima fase de vida — do Vira-lata até o Melhor Cachorro do Mundo. Um projeto solo, feito pra testar uma ideia: que a economia inteira de um clicker pode ser derivada de quanto tempo você quer que a run dure."
+        en: "ClicaChorro is a cozy idle-clicker for the browser. You click to shower a dog with affection; that affection buys helpers and upgrades that idle-earn for you, and each purchase unlocks another piece of furniture for the room the dog lives in — from an empty room all the way to a fully decorated one. A solo project, built to test one idea: that a clicker's whole economy can be derived from how long you want the run to last.",
+        pt: "ClicaChorro é um idle-clicker aconchegante pro navegador. Você clica pra encher um cachorro de carinho; esse carinho compra ajudantes e upgrades que rendem sozinhos, e cada compra libera mais uma peça de mobília para o quarto onde o cachorro mora — de um quarto vazio até um totalmente decorado. Um projeto solo, feito pra testar uma ideia: que a economia inteira de um clicker pode ser derivada de quanto tempo você quer que a run dure."
       },
       role: {
         en: "Solo — I designed the game, wrote the JavaScript, drew the art and made the sound. The part I'm proudest of is the balancing model: a closed-form spreadsheet where the target time-to-beat drives every cost and output value in the economy.",
@@ -437,11 +437,11 @@ export const projects = [
           { en: "Click the dog", pt: "Clicar no cachorro" },
           { en: "Earn affection", pt: "Ganhar carinho" },
           { en: "Buy a helper / upgrade", pt: "Comprar ajudante / upgrade" },
-          { en: "Advance a life-stage", pt: "Subir de fase de vida" }
+          { en: "Unlock a piece of furniture", pt: "Desbloquear um móvel" }
         ],
         note: {
-          en: "Clicking earns affection; affection buys helpers and upgrades that idle-earn for you; enough of it advances your dog to the next life-stage. Every stage costs more affection than the last, so the loop keeps pulling forward — toward the twelfth and final stage that ends the game.",
-          pt: "Clicar rende carinho; carinho compra ajudantes e upgrades que rendem sozinhos; carinho suficiente sobe seu cachorro pra próxima fase de vida. Cada fase custa mais carinho que a anterior, então o loop segue puxando pra frente — até a décima segunda e última fase que encerra o jogo."
+          en: "Clicking earns affection; affection buys helpers and upgrades that idle-earn for you; enough of it unlocks the next piece of furniture for the room. Every piece costs more affection than the last, so the loop keeps pulling forward — toward the twelfth and final piece that completes the room and ends the game.",
+          pt: "Clicar rende carinho; carinho compra ajudantes e upgrades que rendem sozinhos; carinho suficiente libera a próxima peça de mobília do quarto. Cada peça custa mais carinho que a anterior, então o loop segue puxando pra frente — até a décima segunda e última peça que completa o quarto e encerra o jogo."
         }
       },
       systems: [
@@ -460,16 +460,16 @@ export const projects = [
           }
         },
         {
-          title: { en: "Life-stage progression", pt: "Progressão por fase de vida" },
+          title: { en: "Room-completion progression", pt: "Progressão por complementação do quarto" },
           body: {
-            en: "Twelve named stages give the number-go-up a narrative spine — you're not just buying multipliers, you're raising a dog from Stray to legend.",
-            pt: "Doze fases nomeadas dão à escalada de números uma espinha narrativa — você não está só comprando multiplicadores, está criando um cachorro de Vira-lata a lenda."
+            en: "Twelve unlockable furniture pieces give the number-go-up a narrative spine — you're not just buying multipliers, you're filling an empty room until it's completely furnished.",
+            pt: "Doze peças de mobília desbloqueáveis dão à escalada de números uma espinha narrativa — você não está só comprando multiplicadores, está enchendo um quarto vazio até ele ficar completamente decorado."
           }
         }
       ],
       progression: {
-        en: "Twelve life-stages from a Stray to the Best Dog in the World. Because the cost/output ratio r = a/b is greater than 1, each stage costs a little more time than the last — about 2.1 minutes at the start, climbing to 6.1 minutes for the finale — so the run swells toward a climax instead of flatlining. Costs run 618 → 108,780 affection; idle output 5 → 298/s.",
-        pt: "Doze fases de vida, do Vira-lata ao Melhor Cachorro do Mundo. Como a razão custo/produção r = a/b é maior que 1, cada fase custa um pouco mais de tempo que a anterior — cerca de 2,1 minutos no início, subindo a 6,1 minutos no final — então a run cresce rumo a um clímax em vez de estagnar. Custos vão de 618 → 108.780 de carinho; produção passiva de 5 → 298/s."
+        en: "Twelve furniture unlocks take the room from empty to fully decorated. Because the cost/output ratio r = a/b is greater than 1, each piece costs a little more time than the last — about 2.1 minutes at the start, climbing to 6.1 minutes for the finale — so the run swells toward a climax instead of flatlining. Costs run 618 → 108,780 affection; idle output 5 → 298/s.",
+        pt: "Doze móveis desbloqueáveis levam o quarto de vazio a totalmente decorado. Como a razão custo/produção r = a/b é maior que 1, cada peça custa um pouco mais de tempo que a anterior — cerca de 2,1 minutos no início, subindo a 6,1 minutos no final — então a run cresce rumo a um clímax em vez de estagnar. Custos vão de 618 → 108.780 de carinho; produção passiva de 5 → 298/s."
       },
       balancing: {
         formula: {
@@ -497,19 +497,19 @@ export const projects = [
             ]
           },
           {
-            caption: { en: "Curve by life-stage (excerpt)", pt: "Curva por fase de vida (trecho)" },
+            caption: { en: "Curve by furniture piece (excerpt)", pt: "Curva por móvel desbloqueado (trecho)" },
             headers: [
-              { en: "Stage", pt: "Fase" },
+              { en: "Piece", pt: "Peça" },
               { en: "Cost (affection)", pt: "Custo (carinho)" },
               { en: "Output /s", pt: "Produção /s" },
-              { en: "Stage time (min)", pt: "Tempo da fase (min)" },
+              { en: "Piece time (min)", pt: "Tempo da peça (min)" },
               { en: "Cumulative (min)", pt: "Acumulado (min)" }
             ],
             rows: [
-              [{ en: "1 · Stray", pt: "1 · Vira-lata" }, "618", "5.0", "2.06", "2.06"],
-              [{ en: "4 · Show Dog", pt: "4 · Cachorro Premiado" }, "2,533", "15.2", "2.77", "9.61"],
-              [{ en: "8 · Internet Star", pt: "8 · Astro da Internet" }, "16,598", "67.4", "4.11", "23.87"],
-              [{ en: "12 · Best Dog in the World", pt: "12 · Melhor Cachorro do Mundo" }, "108,780", "297.9", "6.09", "45.00"]
+              [{ en: "1 · First piece", pt: "1 · Primeira peça" }, "618", "5.0", "2.06", "2.06"],
+              [{ en: "4 · Cozy corner", pt: "4 · Cantinho aconchegante" }, "2,533", "15.2", "2.77", "9.61"],
+              [{ en: "8 · Nearly there", pt: "8 · Quase completo" }, "16,598", "67.4", "4.11", "23.87"],
+              [{ en: "12 · Fully furnished", pt: "12 · Totalmente mobiliado" }, "108,780", "297.9", "6.09", "45.00"]
             ]
           }
         ]

@@ -523,7 +523,7 @@ export const projects = [
         pt: "Derivar a economia da duração-alvo da sessão — e não do 'feeling' — transformou o balanceamento de chute em equação resolvida. Fazer tudo sozinho entre design, código, arte e som me ensinou a deixar um sistema (a planilha) manter os outros honestos."
       },
       links: [
-        { label: { en: "Play ClicaChorro", pt: "Jogar ClicaChorro" }, url: "https://lope.design", kind: "play" }
+        { label: { en: "Play ClicaChorro", pt: "Jogar ClicaChorro" }, url: "https://lope.design/clicachorro", kind: "play" }
       ],
       gallery: [
         {

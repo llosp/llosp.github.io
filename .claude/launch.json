@@ -18,6 +18,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["-y", "http-server", "portfolio", "-p", "8767", "-c-1"],
       "port": 8767
+    },
+    {
+      "name": "site",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "http-server", "-p", "8768", "-c-1"],
+      "port": 8768
     }
   ]
 }

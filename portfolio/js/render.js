@@ -30,6 +30,15 @@ export function renderProjects() {
     img.height = 800;
     media.append(img, el('span', 'project-num mono', String(i + 1).padStart(2, '0')));
 
+    if (project.badge) {
+      const badge = el('img', 'project-badge');
+      badge.src = project.badge.src;
+      badge.alt = t(project.badge.alt);
+      badge.loading = 'lazy';
+      badge.decoding = 'async';
+      media.append(badge);
+    }
+
     const info = el('div', 'project-info');
     info.append(
       el('p', 'project-type', t(project.type)),

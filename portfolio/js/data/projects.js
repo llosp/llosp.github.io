@@ -14,6 +14,10 @@ export const projects = [
       en: "Boss fight against O Zelador — laser sweeps across the crypt",
       pt: "Luta contra O Zelador — lasers varrendo a cripta"
     },
+    badge: {
+      src: "./assets/img/SB-games-Seal.png",
+      alt: { en: "SB Games official selection seal", pt: "Selo de seleção oficial do SB Games" }
+    },
     summary: {
       en: "A skeleton office-drone defends his boss's crypt from scheming minions. Built at Prisma Game Lab, I led the design and drove combat, progression and boss fights from one big balancing sheet — plus sound, UI and art.",
       pt: "Um esqueleto do mundo corporativo defende a cripta do chefe de lacaios conspiradores. Feito no Prisma Game Lab, liderei o design e conduzi combate, progressão e chefes a partir de uma grande planilha de balanceamento — além de som, UI e arte."

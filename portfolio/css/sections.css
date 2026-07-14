@@ -136,6 +136,16 @@
 }
 .project-media img { width: 100%; }
 
+.project-media img.project-badge {
+  position: absolute;
+  bottom: -0.6em; right: -0.6em;
+  width: 28%;
+  height: auto;
+  transform: rotate(8deg);
+  filter: drop-shadow(3px 3px 0 var(--black));
+  pointer-events: none;
+}
+
 .project-num {
   position: absolute;
   top: -0.6em; left: -0.4em;

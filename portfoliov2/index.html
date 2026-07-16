@@ -53,15 +53,15 @@
     <section id="hero" class="hero">
       <div class="hero-media" aria-hidden="true">
         <!--
-          TODO(reel): the reel files are not in the repo yet. Expected:
-            ./assets/reel/reel.webm  (VP9,   1280x720, 30fps, no audio)
-            ./assets/reel/reel.mp4   (H.264, 1280x720, 30fps, no audio)
+          TODO(reel): reel.mp4 is in (raw drop-in, not yet run through the
+          normalize/encode pipeline in README.md "Hero reel"). Still missing:
+            ./assets/reel/reel.webm   (VP9, 1280x720, 30fps, no audio)
             ./assets/reel/poster.webp (first frame, 1280x720, under 120 KB)
-          Both videos together must stay under 4 MB. See README.md,
-          section "Hero reel". Until they exist, the poster image below is
-          the hero background; js/hero.js swallows the video load error.
-          When the real poster lands, point .hero-poster and the video's
-          poster attribute at ./assets/reel/poster.webp.
+          Both videos together must stay under 4 MB. Until the real poster
+          lands, the image below (an unrelated project shot) is the
+          fallback; js/hero.js swaps to the video once it can play. When
+          the real poster lands, point .hero-poster and the video's poster
+          attribute at ./assets/reel/poster.webp.
         -->
         <img class="hero-poster" src="./assets/img/projects/esqueleto-chico-gameplay-2.webp"
              alt="" width="1280" height="720" fetchpriority="high" decoding="async">
@@ -140,21 +140,21 @@
   </div>
 </li>
 <li class="project reveal" style="--project-accent: #FF4F87" data-playable="false">
-  <a class="project-media" href="./maguitos/" aria-label="Open case study · PROJETO MAGUITOS">
+  <a class="project-media" href="#projects" data-case-open="maguitos" aria-label="Open case study · PROJETO MAGUITOS">
     <img src="./assets/img/projects/maguitos-gameplay-1.webp" alt="The party facing four Stray Humpty enemies before a mossy shrine" loading="lazy" decoding="async" width="1200" height="800">
     <span class="project-num mono">02</span>
   </a>
   <div class="project-info">
-    <p class="project-type">Turn-based party RPG (PC)</p>
+    <p class="project-type">Roguelite dungeon crawler (PC)</p>
     <h3 class="project-name">PROJETO MAGUITOS</h3>
     <p class="project-role">Game &amp; Systems Designer / Gameplay Programmer</p>
-    <p class="project-summary">A turn-based party RPG built by two people — a friend made the art and interface, I designed and coded everything else. The whole party shares a single MP pool, and each turn you plan every character&#39;s move before watching them all resolve at once. Still in active development.</p>
+    <p class="project-summary">A roguelite dungeon crawler where you play a coward caretaker who can&#39;t cast a single spell — so you send the toddlers in your care to fight instead. Built by two people, it&#39;s driven by an enemy AI that scores every (skill, target) pair by weighted random, with intelligence and conviction as separate difficulty dials. Still in active development.</p>
     <ul class="project-tools">
       <li class="chip">Godot</li>
       <li class="chip">GDScript</li>
     </ul>
     <div class="project-actions">
-      <a class="btn" href="./maguitos/">Open case study</a>
+      <button class="btn" type="button" data-case-open="maguitos" data-requires-js>Open case study</button>
     </div>
   </div>
 </li>

@@ -6,6 +6,8 @@ export const projects = [
     id: "esqueleto-chico",
     accent: "#FF4F87",
     name: "Esqueleto Chico",
+    playable: false,
+    playUrl: "https://prismagamelab.itch.io/esqueleto-chico-ossos-do-oficio",
     type: { en: "Top-down action roguelike (PC)", pt: "Ação top-down roguelike (PC)" },
     role: { en: "Lead Game & Systems Designer", pt: "Game/Systems Designer Líder" },
     tools: ["Unity", "Google Sheets", "Photoshop", "Figma"],
@@ -207,7 +209,7 @@ export const projects = [
     id: "maguitos",
     accent: "#FF4F87",
     name: "PROJETO MAGUITOS",
-    type: { en: "Turn-based party RPG (PC)", pt: "RPG de party por turnos (PC)" },
+    type: { en: "Roguelite dungeon crawler (PC)", pt: "Roguelite de masmorra (PC)" },
     role: { en: "Game & Systems Designer / Gameplay Programmer", pt: "Game/Systems Designer e Gameplay Programmer" },
     tools: ["Godot", "GDScript"],
     cover: "./assets/img/projects/maguitos-gameplay-1.webp",
@@ -216,94 +218,120 @@ export const projects = [
       pt: "A party enfrentando quatro Stray Humpty diante de um santuário musgoso"
     },
     summary: {
-      en: "A turn-based party RPG built by two people — a friend made the art and interface, I designed and coded everything else. The whole party shares a single MP pool, and each turn you plan every character's move before watching them all resolve at once. Still in active development.",
-      pt: "Um RPG de party por turnos feito por duas pessoas — um amigo cuidou da arte e da interface, e eu projetei e programei todo o resto. A party inteira divide um único reservatório de MP, e a cada turno você planeja o movimento de cada personagem antes de ver todos resolverem de uma vez. Ainda em desenvolvimento ativo."
+      en: "A roguelite dungeon crawler where you play a coward caretaker who can't cast a single spell — so you send the toddlers in your care to fight instead. Built by two people, it's driven by an enemy AI that scores every (skill, target) pair by weighted random, with intelligence and conviction as separate difficulty dials. Still in active development.",
+      pt: "Um roguelite de masmorra em que você é um cuidador covarde que não consegue lançar nem o feitiço mais simples — então manda os bebês sob seus cuidados para a luta. Feito por duas pessoas, é conduzido por uma IA inimiga que pontua cada par (skill, alvo) por sorteio ponderado, com inteligência e convicção como diais de dificuldade separados. Ainda em desenvolvimento ativo."
     },
     caseStudy: {
+      heroImage: {
+        src: "./assets/maguitos/maguitos-hero.gif",
+        alt: {
+          en: "A turn-based fight in progress, the party of three toddlers acting while the caretaker hides behind them.",
+          pt: "Uma luta por turnos em andamento, a party de três bebês agindo enquanto o cuidador se esconde atrás deles."
+        }
+      },
       overview: {
-        en: "PROJETO MAGUITOS is a turn-based party RPG currently in active development. You command a party of three — Isara, Celetro and Erika — through battles fought on a 3D map with single-target, AoE and party-wide skills. It's a two-person project: a friend handles art and interface while I own the design and the entire GDScript codebase.",
-        pt: "PROJETO MAGUITOS é um RPG de party por turnos atualmente em desenvolvimento ativo. Você comanda uma party de três — Isara, Celetro e Erika — em batalhas num mapa 3D com skills de alvo único, em área e para a party toda. É um projeto de duas pessoas: um amigo cuida da arte e da interface enquanto eu conduzo o design e todo o código em GDScript."
+        en: "Projeto Maguitos is a roguelite dungeon crawler currently in active development, built by a two-person team. You play a caretaker at a magical daycare who can't cast even the simplest spell — on your first day almost every child in your care vanishes into the Cursed Forest, and your only way out is to let the toddlers themselves fight for you. It's a run of back-to-back encounters: survive a fixed number of battles, rescue toddlers, swap your party, and reach the boss intact.",
+        pt: "Projeto Maguitos é um roguelite de masmorra atualmente em desenvolvimento ativo, feito por uma dupla. Você é um cuidador de uma creche mágica que não consegue lançar nem o feitiço mais simples — no seu primeiro dia, quase todas as crianças sob seus cuidados desaparecem na Floresta Amaldiçoada, e sua única saída é deixar os próprios bebês lutarem por você. É uma sequência de combates um atrás do outro: sobreviva a um número fixo de batalhas, resgate bebês, troque sua party e chegue ao chefe inteiro."
       },
       role: {
-        en: "Solo on design and code. I built the battle system in GDScript — a state machine that plans then resolves each turn, a skill executor, and data-driven characters, enemies and skills — plus the shared-MP economy and the tag-affinity model. Art and UI were made by a collaborator.",
-        pt: "Sozinho no design e no código. Construí o sistema de batalha em GDScript — uma máquina de estados que planeja e depois resolve cada turno, um executor de skills, e personagens, inimigos e skills orientados a dados — além da economia de MP compartilhado e do modelo de afinidade por tags. Arte e UI ficaram com um colaborador."
+        en: "Game & Systems Designer / Gameplay Programmer on a two-person team. I own the design and the entire GDScript codebase — the roguelite run structure, the toddler-swap progression, the shared-MP economy, and the enemy AI: action scoring, charges, the intent board, personalities and the intelligence/conviction split. A collaborator handles art and interface.",
+        pt: "Game & Systems Designer / Gameplay Programmer numa dupla. Conduzo o design e todo o código em GDScript — a estrutura do run roguelite, a progressão por troca de bebês, a economia de MP compartilhado e a IA dos inimigos: pontuação de ações, cargas, o quadro de intenções, personalidades e a separação entre inteligência e convicção. Um colaborador cuida da arte e da interface."
       },
       responsibilities: [
         {
           group: { en: "Game Design", pt: "Game Design" },
           items: [
+            { en: "Enemy AI design & tuning", pt: "Design e ajuste da IA dos inimigos" },
             { en: "Combat systems", pt: "Sistemas de combate" },
             { en: "Skill & class design", pt: "Design de skills & classes" },
             { en: "Balancing (stats & costs)", pt: "Balanceamento (stats & custos)" },
             { en: "Tag-affinity model", pt: "Modelo de afinidade por tags" },
-            { en: "Turn structure", pt: "Estrutura de turno" }
+            { en: "Roguelite run structure", pt: "Estrutura do run roguelite" }
           ]
         },
         {
           group: { en: "Programming", pt: "Programação" },
           items: [
-            { en: "Battle state machine", pt: "Máquina de estados da batalha" },
-            { en: "Skill executor & effects", pt: "Executor de skills & efeitos" },
-            { en: "Data-driven resources", pt: "Recursos orientados a dados" },
-            { en: "Shared-MP economy", pt: "Economia de MP compartilhado" },
-            { en: "Battle UI logic", pt: "Lógica da UI de batalha" }
+            { en: "Weighted-random action scorer", pt: "Pontuador de ações por sorteio ponderado" },
+            { en: "Intent board & personality system", pt: "Quadro de intenções e sistema de personalidades" },
+            { en: "Battle state machine", pt: "Máquina de estados de batalha" },
+            { en: "Polymorphic skill scoring", pt: "Pontuação polimórfica de skills" },
+            { en: "Shared-MP economy", pt: "Economia de MP compartilhado" }
           ]
         }
       ],
       challenge: {
-        en: "Most party RPGs give each character their own resource bar. Maguitos pools all of it: every character draws from one shared MP bar, and you commit all their actions before any of them resolve. The design problem was making that scarcity legible — so players feel the trade-off of spending Erika's revive now against Celetro's big hit later, all in the same turn.",
-        pt: "A maioria dos RPGs de party dá a cada personagem sua própria barra de recurso. Maguitos junta tudo: cada personagem consome de uma única barra de MP compartilhada, e você confirma todas as ações antes de qualquer uma resolver. O problema de design era tornar essa escassez legível — fazer o player sentir o trade-off de gastar o revive da Erika agora contra o golpe pesado do Celetro depois, tudo no mesmo turno."
+        en: "Enemies do not run a fixed behavior tree. Each one builds its list of legal actions, scores every one, and picks by weighted random. The goal was difficulty that isn't just bigger HP and damage, but enemies that see more of the board and misplay less — while staying legible enough that a player who shields a fragile toddler can feel that choice pay off.",
+        pt: "Os inimigos não rodam uma árvore de comportamento fixa. Cada um monta sua lista de ações legais, pontua cada uma e escolhe por sorteio ponderado. O objetivo era uma dificuldade que não fosse só mais HP e dano, mas inimigos que enxergam mais do tabuleiro e erram menos — mantendo tudo legível o bastante para que um player que protege um bebê frágil sinta essa escolha valer a pena."
       },
       coreLoop: {
         steps: [
-          { en: "Plan each character's skill", pt: "Planejar a skill de cada personagem" },
-          { en: "Confirm the turn", pt: "Confirmar o turno" },
-          { en: "Watch every action resolve", pt: "Ver cada ação resolver" },
-          { en: "Enemies retaliate", pt: "Inimigos revidam" }
+          { en: "Fight a back-to-back encounter", pt: "Enfrentar um combate seguido de outro" },
+          { en: "Rescue a toddler", pt: "Resgatar um bebê" },
+          { en: "Swap your party from the rescued pool", pt: "Trocar sua party a partir do pool resgatado" },
+          { en: "Reach the boss intact", pt: "Chegar ao chefe inteiro" }
         ],
         note: {
-          en: "During planning, a live MP preview subtracts each queued skill from the shared pool, so you can see whether the whole plan is affordable before committing. Only when every living character has an action can you confirm.",
-          pt: "Durante o planejamento, um preview de MP ao vivo subtrai cada skill enfileirada do reservatório compartilhado, então você vê se o plano inteiro cabe antes de confirmar. Só quando cada personagem vivo tem uma ação é que você pode confirmar."
+          en: "Toddlers do not level up by fighting — you get stronger by swapping, not grinding. The toddler that saved you in stage two becomes currency for a stronger one in stage four, so progression is a run of painful choices instead of a number that climbs on its own.",
+          pt: "Os bebês não sobem de nível lutando — você fica mais forte trocando, não grindando. O bebê que te salvou na fase dois vira moeda de troca por um mais forte na fase quatro, então a progressão é uma sequência de escolhas dolorosas, não um número que sobe sozinho."
         }
+      },
+      progression: {
+        en: "All three toddlers share a single MP pool — there are no individual reserves. Each skill costs a flat value or a percentage of the group's max MP, with a live preview showing the remaining MP as you build the turn. A shared pool turns every turn into a negotiation between the three characters: one toddler's expensive skill starves the others, so the party has to coordinate its spending as a team, not unit by unit.",
+        pt: "Os três bebês dividem um único pool de MP — não há reservas individuais. Cada skill custa um valor fixo ou uma porcentagem do MP máximo do grupo, com um preview ao vivo mostrando o MP restante enquanto você monta o turno. Um pool compartilhado transforma cada turno numa negociação entre os três personagens: a skill cara de um bebê sufoca os outros, então a party precisa coordenar seus gastos como time, não unidade por unidade."
       },
       systems: [
         {
-          title: { en: "Shared party MP pool", pt: "Pool de MP compartilhado" },
+          title: { en: "Action = skill + target", pt: "Ação = skill + alvo" },
           body: {
-            en: "The party's max MP is the sum of every member's pool, and all skills spend from that single bar. Isara's high MP and regen effectively fund the whole team, turning 'who casts' into a party-wide budgeting question.",
-            pt: "O MP máximo da party é a soma do pool de cada membro, e todas as skills gastam dessa única barra. O MP alto e o regen da Isara basicamente financiam o time inteiro, transformando 'quem conjura' numa questão de orçamento da party."
+            en: "The unit of decision is the pair (skill, target), not the skill alone. The enemy generates every legal action, filters out the useless ones (no charge, no living target, target immune by tag, zero effect), and scores what remains — so it can reason about consequence, 'this skill on this target is a kill,' instead of choosing skill and target as separate, dumber steps.",
+            pt: "A unidade de decisão é o par (skill, alvo), não a skill sozinha. O inimigo gera todas as ações legais, filtra as inúteis (sem carga, sem alvo vivo, alvo imune pela tag, efeito zero) e pontua o que sobra — assim ele pode raciocinar sobre consequência, 'essa skill nesse alvo é uma morte', em vez de escolher skill e alvo em etapas separadas e mais burras."
           }
         },
         {
-          title: { en: "Plan-and-resolve turns", pt: "Turnos planejar-e-resolver" },
+          title: { en: "Charges, not MP", pt: "Cargas, não MP" },
           body: {
-            en: "Each turn you assign a skill to every living character, then confirm; all actions execute in order before the enemies take theirs. Planning and consequence are separated, so a turn is a small committed plan rather than a reaction.",
-            pt: "A cada turno você atribui uma skill a cada personagem vivo e confirma; todas as ações executam em ordem antes de os inimigos agirem. Planejamento e consequência ficam separados, então um turno é um pequeno plano assumido, não uma reação."
+            en: "Enemies have no MP pool — their resource is charges per skill, each with a number of uses and a recharge time (the basic attack has infinite charges). It paces the strong skills: the player learns to count the window, 'his heavy hit is back in two turns,' and the enemy can't spam its best move forever. It's a hidden resource with no UI, because the read is about the pattern, not a number on screen.",
+            pt: "Os inimigos não têm pool de MP — o recurso deles é carga por skill, cada uma com um número de usos e um tempo de recarga (o ataque básico tem cargas infinitas). Isso dá ritmo às skills fortes: o player aprende a contar a janela, 'o golpe pesado dele volta em dois turnos', e o inimigo não pode spammar o melhor movimento pra sempre. É um recurso escondido, sem UI, porque a leitura é sobre o padrão, não um número na tela."
           }
         },
         {
-          title: { en: "Tag affinity", pt: "Afinidade por tags" },
+          title: { en: "Decide early, execute late", pt: "Decidir cedo, executar tarde" },
           body: {
-            en: "Enemies carry tags (size, flying, tough, frail…) and skills carry tag modifiers that shift power, hit chance or crit against them — so Zabaan punishes 'tough' targets and Gravarggo is tuned around 'flying'. Matchups, not raw numbers, decide the best skill.",
-            pt: "Inimigos carregam tags (size, flying, tough, frail…) e skills carregam modificadores de tag que alteram poder, chance de acerto ou crítico contra elas — então Zabaan pune alvos 'tough' e Gravarggo é ajustada em torno de 'flying'. Os confrontos, não os números crus, decidem a melhor skill."
+            en: "At the start of the round each enemy locks its action with no telegraph, executing only after the player resolves the party's turn — there's no re-routing based on what the party did, except re-targeting if the locked target died or left. The AI commits to the state at the start of the round, which is what makes Defend and Heal worth using: the enemy already chose to hit your fragile toddler before you shielded it, so shielding actually saves it.",
+            pt: "No início da rodada, cada inimigo trava sua ação sem telegraph, executando só depois que o player resolve o turno da party — não há reação ao que a party fez, exceto retargeting se o alvo travado morreu ou saiu. A IA se compromete com o estado do início da rodada, e é isso que faz Defender e Curar valerem a pena: o inimigo já escolheu acertar seu bebê frágil antes de você protegê-lo, então proteger de fato o salva."
           }
         },
         {
-          title: { en: "Stat-driven role identity", pt: "Identidade de papel por stats" },
+          title: { en: "Intent board", pt: "Quadro de intenções" },
           body: {
-            en: "The same eight stats produce distinct roles from data alone: Celetro's WIT 35 makes him the damage core, Erika's EMPATHY 25 and DEF 25 make her the healer-tank, and Isara's MP 50 / regen 25 make her the party's battery.",
-            pt: "Os mesmos oito atributos produzem papéis distintos só a partir dos dados: a WIT 35 do Celetro faz dele o núcleo de dano, a EMPATHY 25 e a DEF 25 da Erika fazem dela a healer-tank, e o MP 50 / regen 25 da Isara fazem dela a bateria da party."
+            en: "A board shared per round: enemies decide in sequence, and on locking an action each one records its target and expected damage. Enemies that decide later read effective HP (current HP minus damage already allocated) before they score, so the second enemy sees an already-dead target, the 'likely kill' bonus disappears, and it redirects on its own — emergent group coordination with no team AI written, and one that still respects intelligence: a dumb enemy ignores the board and hits the corpse, a smart one doesn't.",
+            pt: "Um quadro compartilhado por rodada: os inimigos decidem em sequência, e ao travar uma ação cada um registra seu alvo e o dano esperado. Os inimigos que decidem depois leem o HP efetivo (HP atual menos o dano já alocado) antes de pontuar, então o segundo inimigo vê um alvo já morto, o bônus de 'kill provável' desaparece, e ele redireciona sozinho — coordenação de grupo emergente sem nenhuma IA de time escrita, e que ainda respeita a inteligência: um inimigo burro ignora o quadro e acerta o cadáver, um esperto não."
+          }
+        },
+        {
+          title: { en: "Personalities by archetype", pt: "Personalidades por arquétipo" },
+          body: {
+            en: "Each enemy draws a personality from its archetype's pool (Hot-headed, Clever, Gentle, Coward) — a weight bias by skill tag (aggressive, defensive, support…) that's legible: change the behavior and you change the name, icon and color. High conviction on a strong-personality enemy doesn't make it smarter, it makes it more stubborn — it commits harder to its own irrational bias. Personality is flavor, not intelligence.",
+            pt: "Cada inimigo sorteia uma personalidade do pool do seu arquétipo (Cabeça-quente, Astuto, Gentil, Covarde) — um viés de peso por tag de skill (agressiva, defensiva, de suporte…) que é legível: mudar o comportamento muda o nome, o ícone e a cor. Convicção alta num inimigo de personalidade forte não o deixa mais esperto, deixa mais teimoso — ele se compromete mais forte com seu próprio viés irracional. Personalidade é tempero, não inteligência."
+          }
+        },
+        {
+          title: { en: 'Design maturity: why "role" died', pt: 'Maturidade de design: por que o "papel" morreu' },
+          body: {
+            en: "The old system tagged every unit with a fixed role — tank, dps, or support. It was ripped out and replaced by key stats read from the real numbers (primary_stat and secondary_stat) plus a tier tiebreaker, because the role lied: Celetro was tagged tank while holding the highest Witness in the party, and Isara was dps by default when what actually defines her is MP Regen, 2.5 times the others. Removing the tag and letting the AI read what a unit actually is fixed a dead rule for free — buffs finally land on the right target.",
+            pt: "O sistema antigo etiquetava cada unidade com um papel fixo — tank, dps ou suporte. Foi arrancado e substituído por key stats lidos dos números reais (primary_stat e secondary_stat) mais um desempate por tier, porque o papel mentia: Celetro estava etiquetado como tank enquanto tinha o maior Witness da party, e Isara era dps por padrão quando o que realmente a define é o MP Regen, 2,5 vezes o dos outros. Tirar a etiqueta e deixar a IA ler o que a unidade realmente é consertou de graça uma regra morta — os buffs finalmente acertam o alvo certo."
           }
         }
       ],
       combat: {
         formula: {
-          en: "DMG = (WIT − DEF ÷ 2) × power",
-          pt: "DANO = (WIT − DEF ÷ 2) × poder"
+          en: "P(action) = weight^conviction / sum of weight^conviction",
+          pt: "P(ação) = peso^convicção / soma de peso^convicção"
         },
         body: {
-          en: "Damage scales off the user's WIT against half the target's DEF, then multiplies by a random power band unique to each skill (Baltro rolls 0.70–0.85, Gravarggo 0.45–0.65). Hit chance is the skill's accuracy minus the target's EVADE; crit chance is simply the user's FOCUS. Heals use the same shape off EMPATHY instead of WIT, and tag modifiers bend power, hit or crit per enemy tag.",
-          pt: "O dano escala pela WIT do usuário contra metade da DEF do alvo, depois multiplica por uma faixa de poder aleatória, única de cada skill (Baltro sorteia 0,70–0,85; Gravarggo 0,45–0,65). A chance de acerto é a precisão da skill menos a EVADE do alvo; a chance de crítico é simplesmente a FOCUS do usuário. Curas usam a mesma forma a partir da EMPATHY em vez da WIT, e os modificadores de tag dobram poder, acerto ou crítico conforme a tag do inimigo."
+          en: "Two orthogonal channels drive the AI. Intelligence scales the situational weight, defining what the enemy prefers — hit the vulnerable, avoid overkill, finish kills. Conviction is the exponent of the draw above, defining only how faithfully the enemy follows its own preference: conviction of zero is a uniform draw and plays erratic, high conviction almost always takes the top pick. Splitting these two was the most important design decision in the AI — a genius with conviction zero draws at random and plays like an idiot, a fool with high conviction executes the dumbest possible preference with total fidelity. Intelligence is what the enemy wants, conviction is how much it obeys itself, and conviction is the main difficulty dial.",
+          pt: "Dois canais ortogonais conduzem a IA. Inteligência escala o peso situacional, definindo o que o inimigo prefere — acertar o vulnerável, evitar overkill, finalizar kills. Convicção é o expoente do sorteio acima, definindo só o quanto o inimigo segue a própria preferência com fidelidade: convicção zero é um sorteio uniforme e joga de forma errática, convicção alta quase sempre pega a melhor opção. Separar essas duas coisas foi a decisão de design mais importante da IA — um gênio com convicção zero sorteia aleatoriamente e joga como um idiota, um bobo com convicção alta executa a pior preferência possível com fidelidade total. Inteligência é o que o inimigo quer, convicção é o quanto ele obedece a si mesmo, e convicção é o principal dial de dificuldade."
         }
       },
       balancing: {
@@ -347,12 +375,12 @@ export const projects = [
         ]
       },
       implementation: {
-        en: "Built in Godot 4.6. The battle runs on an explicit state machine — plan, resolve, enemy turn — and every skill is a Resource subclass (damage, heal, buff, revive, over-time) sharing one execute() interface. Adding a new skill or enemy is a new .tres file plus a script, so content never requires touching the core loop.",
-        pt: "Feito em Godot 4.6. A batalha roda numa máquina de estados explícita — planejar, resolver, turno inimigo — e cada skill é uma subclasse de Resource (dano, cura, buff, revive, over-time) compartilhando uma única interface execute(). Adicionar uma skill ou inimigo novo é um arquivo .tres mais um script, então conteúdo nunca exige mexer no loop central."
+        en: "Built in Godot 4.7. Each skill type carries its own estimator and score (ai_estimate and ai_score), with a damage default on the base class; heal, buff and DoT override it. A new skill or exception never touches the central scorer — the same pattern the game's resolve() uses elsewhere — which keeps the AI extensible without becoming one giant if-statement. Adding a combat mechanic means adding a subclass, not editing the AI's brain.",
+        pt: "Feito em Godot 4.7. Cada tipo de skill carrega seu próprio estimador e pontuação (ai_estimate e ai_score), com um padrão de dano na classe base; cura, buff e DoT sobrescrevem isso. Uma skill nova ou uma exceção nunca toca o pontuador central — o mesmo padrão que o resolve() do jogo usa em outros lugares — o que mantém a IA extensível sem virar um if gigante. Adicionar uma mecânica de combate significa adicionar uma subclasse, não editar o cérebro da IA."
       },
       learnings: {
-        en: "Turning MP into a shared resource changed the whole feel of a turn — individual choices became a party budget, and that's the idea I'd build the rest of the game around. Committing to a data-driven resource pipeline early is what let two people move fast: my collaborator could drop in art while I added skills as pure data.",
-        pt: "Transformar o MP num recurso compartilhado mudou toda a sensação de um turno — escolhas individuais viraram um orçamento de party, e é essa ideia que eu usaria como base para o resto do jogo. Apostar cedo num pipeline orientado a dados foi o que deixou duas pessoas andarem rápido: meu colaborador colocava arte enquanto eu adicionava skills como dados puros."
+        en: "Phase 1 (the AI MVP) and Phase 2 (the intent board, personalities, and the two intelligence channels) are implemented and verified in-editor. Splitting intelligence from conviction early is what made every later system, personalities, the intent board, click into place instead of fighting each other. Phase 3 is open: archetypes beyond the first roster, a tuning overlay to lock values in playtest, and bosses with triggers and phases layered over the same weight system.",
+        pt: "A Fase 1 (o MVP da IA) e a Fase 2 (o quadro de intenções, as personalidades e os dois canais de inteligência) estão implementadas e verificadas no editor. Separar inteligência de convicção cedo foi o que fez cada sistema seguinte, personalidades, quadro de intenções, encaixar em vez de brigar entre si. A Fase 3 está aberta: arquétipos além do elenco inicial, um overlay de ajuste para travar valores no playtest, e chefes com gatilhos e fases sobre o mesmo sistema de pesos."
       },
       gallery: [
         {
@@ -374,6 +402,8 @@ export const projects = [
     id: "clicachorro",
     accent: "#F5F1E8",
     name: "ClicaChorro",
+    playable: true,
+    playUrl: "https://lope.design/clicachorro",
     type: { en: "Idle/clicker game (web)", pt: "Idle/clicker (web)" },
     role: { en: "Solo Developer & Systems Designer", pt: "Desenvolvedor Solo & Systems Designer" },
     tools: ["JavaScript", "HTML/CSS", "Google Sheets"],

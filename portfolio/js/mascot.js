@@ -31,7 +31,10 @@ export function initMascots() {
   // Pupil tracking: pointer devices only, single rAF-throttled listener.
   if (reduced || !canHover) return;
 
+  // Mascots with data-eye-track="false" (the demoted hero corner dog)
+  // keep blinking but do not follow the cursor.
   const eyes = mascots
+    .filter(mascot => mascot.dataset.eyeTrack !== 'false')
     .map(mascot => ({
       eye: mascot.querySelector('.eye'),
       pupil: mascot.querySelector('.pupil')

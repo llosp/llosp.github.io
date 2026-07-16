@@ -1,18 +1,68 @@
-/* ═══ HERO ═══════════════════════════════════════════════════════════════ */
+/* ═══ HERO: fullscreen gameplay reel, pinned under the sheet ═════════════
+   The hero is position: sticky so the .sheet wrapper slides up over it.
+   Do not add overflow/transform/filter to <main> or the pin breaks. */
 .hero {
   --bg: var(--navy);
   --ink: var(--paper);
   --accent: var(--yellow);
-  min-height: 100svh;
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  height: 100svh;
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
   text-align: center;
-  gap: var(--space-3);
-  padding-top: calc(var(--space-4) + 3rem);
-  padding-bottom: var(--space-4);
+  padding: calc(var(--space-4) + 3rem) var(--page-pad) var(--space-4);
+  overflow: clip;
+}
+
+/* Reel layer: blurred, darkened, slightly scaled so blur edges never show.
+   The filter and transform live on this wrapper so the scroll-driven recede
+   (scroll.css) can deepen them by animating a single element. */
+.hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+  max-width: none;
+  transform: scale(1.05);
+  filter: blur(6px) brightness(0.45) saturate(1.1);
+}
+.hero-poster,
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero-video { opacity: 0; transition: opacity 0.6s ease; }
+.hero.is-playing .hero-video { opacity: 1; }
+
+/* Legibility scrim: kept outside .hero-media so it stays solid while the
+   reel dims and blurs away during the recede. */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  margin: 0;
+  max-width: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(15, 27, 60, 0.30) 0%,
+    rgba(17, 17, 17, 0.22) 55%,
+    rgba(17, 17, 17, 0.82) 100%
+  );
+}
+
+.hero-content {
   position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
 }
 
 .hero-stage {
@@ -43,56 +93,37 @@
   z-index: 3;
 }
 
-.hero-dog {
-  grid-area: 1 / 1;
-  z-index: 0; /* backdrop: sits behind both LOPE name layers */
-  transform: translateY(-6%) rotate(-4deg); /* eye peeks lightly over the LOPE title */
-}
-
-.hero-roles {
-  display: flex;
-  gap: var(--space-2);
-  flex-wrap: wrap;
-  justify-content: center;
-  margin-top: var(--space-2);
-}
-.role-block { font-size: var(--step-0); text-transform: uppercase; }
-
 .hero-intro {
   max-width: 34em;
   font-size: var(--step-0);
-  opacity: 0.9;
+  opacity: 0.95;
 }
 
-.hero-hint {
+/* Demoted mascot: small, corner placement, blink only (no cursor tracking).
+   The wrapper carries positioning + the scroll recede; the inner .hero-dog
+   carries the tilt (independent rotate property, so animations that touch
+   transform never clobber it). */
+.hero-dog-wrap {
   position: absolute;
-  bottom: var(--space-2);
-  font-size: var(--step--1);
-  color: var(--pink);
-  transform: rotate(-2deg);
-  opacity: 0.8;
+  right: clamp(0.75rem, 3vw, 2.5rem);
+  bottom: clamp(0.75rem, 3vw, 2rem);
+  z-index: 2;
+  margin: 0;
+  max-width: none;
 }
+.hero-dog--corner { rotate: -7deg; }
 
-/* ═══ MARQUEE ════════════════════════════════════════════════════════════ */
-.marquee {
-  background: var(--pink);
-  color: var(--black);
-  border-top: 4px solid var(--black);
-  border-bottom: 4px solid var(--black);
-  overflow: hidden;
-  transform: rotate(-1.2deg) scale(1.02);
-  padding: 0.55em 0;
-}
-.marquee-track {
-  display: flex;
-  width: max-content;
-  will-change: transform;
-}
-.marquee-strip {
-  font-family: var(--font-display);
-  font-size: var(--step-1);
-  text-transform: uppercase;
-  white-space: nowrap;
+/* ═══ SHEET: rises over the pinned hero ══════════════════════════════════
+   Pure stacking, no animation tech: the hero is sticky at z-index 0, this
+   wrapper scrolls over it. overflow: clip keeps the section backgrounds
+   inside the rounded top corners. */
+.sheet {
+  position: relative;
+  z-index: 2;
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  background: var(--black);
+  box-shadow: 0 -18px 48px rgba(0, 0, 0, 0.55);
+  overflow: clip;
 }
 
 /* ═══ PROJECTS ═══════════════════════════════════════════════════════════ */
@@ -128,6 +159,7 @@
   padding: 0;
   display: block;
   width: 100%;
+  text-decoration: none;
 }
 .project:nth-child(even) .project-media { --media-tilt: 1.5deg; }
 .project-media:hover {
@@ -183,6 +215,42 @@
   flex-wrap: wrap;
   margin-bottom: var(--space-3);
   color: var(--project-accent, var(--yellow));
+}
+
+.project-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  align-items: center;
+}
+.project-actions .btn { font-size: var(--step-0); }
+.project-actions .btn-play { background: var(--yellow); }
+
+/* Visible "Play" tag stamped on the card media */
+.play-tag {
+  position: absolute;
+  bottom: 0.75em;
+  left: 0.75em;
+  font-size: var(--step--1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.3em 0.75em;
+  background: var(--paper);
+  color: var(--black);
+  border: 2px solid var(--black);
+  box-shadow: 3px 3px 0 var(--black);
+  transform: rotate(-2deg);
+}
+
+/* Browser-playable games get visual priority: yellow tag + yellow frame */
+.project[data-playable="true"] .play-tag { background: var(--yellow); }
+.project[data-playable="true"] .project-media {
+  border-color: var(--yellow);
+  box-shadow: 12px 12px 0 var(--yellow);
+}
+.project[data-playable="true"] .project-media:hover {
+  box-shadow: 16px 16px 0 var(--yellow);
 }
 
 /* ═══ ABOUT ══════════════════════════════════════════════════════════════ */
@@ -303,10 +371,8 @@
 @media (max-width: 768px) {
   .nav { gap: var(--space-2); }
   .nav-links { display: none; } /* anchors still reachable by scroll; keeps nav clean */
-  .hero-hint { display: none; }
 }
 
 @media (max-width: 480px) {
-  .hero-dog { width: clamp(180px, 62vw, 320px); }
   .about-stamps { gap: var(--space-2); }
 }

@@ -59,14 +59,12 @@
 .mascot.closed .lid-top,
 .mascot.closed .lid-bottom { height: 70%; }
 
-/* Hero instance — backdrop centered behind the LOPE title. Capped by viewport
-   height so the roles + intro text below stay above the fold (the CTA button is
-   allowed to fall just below it). */
+/* Hero instance: demoted to a small corner stamp so it never competes
+   with the reel. Positioning lives on .hero-dog-wrap in sections.css. */
 .hero-dog {
-  width: min(clamp(240px, 34vw, 440px), 42vh);
+  width: clamp(72px, 8vw, 120px);
   cursor: pointer;
-  filter: drop-shadow(10px 12px 0 rgba(17, 17, 17, 0.45));
-  will-change: transform;
+  filter: drop-shadow(4px 5px 0 rgba(17, 17, 17, 0.45));
 }
 
 /* Peek instance (top edge of Skills section) */

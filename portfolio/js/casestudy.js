@@ -171,16 +171,8 @@ function render(project) {
   buildBody(project);
 }
 
-function animateIn() {
-  const panel = overlay().querySelector('.case-panel');
-  if (window.gsap && !document.documentElement.classList.contains('no-motion')) {
-    gsap.fromTo(overlay().querySelector('.case-backdrop'),
-      { opacity: 0 }, { opacity: 1, duration: 0.25, ease: 'power2.out' });
-    gsap.fromTo(panel,
-      { yPercent: 6, opacity: 0, rotate: -1 },
-      { yPercent: 0, opacity: 1, rotate: 0, duration: 0.4, ease: 'back.out(1.4)' });
-  }
-}
+// Entrance animation is pure CSS now (casestudy.css, .case-overlay:not([hidden]))
+// and restarts each time the overlay flips from hidden to shown.
 
 export function openCase(id, { fromHash = false } = {}) {
   const project = projects.find(p => p.id === id);
@@ -195,7 +187,6 @@ export function openCase(id, { fromHash = false } = {}) {
   if (!fromHash) {
     history.pushState({ case: id }, '', HASH_PREFIX + id);
     pushedHash = true;
-    animateIn();
   }
   document.getElementById('case-body').scrollTop = 0;
   document.getElementById('case-close').focus();
@@ -247,11 +238,17 @@ function idFromHash() {
 }
 
 export function initCaseStudy() {
-  // Delegated open (cards + buttons are rendered dynamically)
+  // Delegated open (cards + buttons are rendered dynamically).
+  // Card media are real <a> links (no-JS fallback goes to the playable
+  // build), so with JS on we prevent navigation and open the case instead.
   document.addEventListener('click', e => {
     const trigger = e.target.closest('[data-case-open]');
-    if (trigger) openCase(trigger.dataset.caseOpen);
-    else if (e.target.closest('[data-case-close]')) closeCase();
+    if (trigger) {
+      e.preventDefault();
+      openCase(trigger.dataset.caseOpen);
+    } else if (e.target.closest('[data-case-close]')) {
+      closeCase();
+    }
   });
 
   overlay().addEventListener('keydown', trapFocus);

@@ -6,15 +6,11 @@ export const strings = {
   "nav.skills":      { en: "Toolbox", pt: "Ferramentas" },
   "nav.contact":     { en: "Contact", pt: "Contato" },
 
-  "hero.role1":      { en: "Game Designer", pt: "Game Designer" },
-  "hero.role2":      { en: "Systems Designer", pt: "Systems Designer" },
-  "hero.role3":      { en: "Game Developer", pt: "Game Developer" },
   "hero.intro": {
     en: "I design game systems and then I build them — progression curves, damage formulas, balancing spreadsheets and playable prototypes in Unity & Godot.",
     pt: "Eu projeto sistemas de jogo e depois construo eles — curvas de progressão, fórmulas de dano, planilhas de balanceamento e protótipos jogáveis em Unity e Godot."
   },
   "hero.cta":        { en: "See the work ↓", pt: "Ver projetos ↓" },
-  "hero.hint":       { en: "psst — the dog is watching your cursor", pt: "psiu — o cachorro está de olho no seu cursor" },
 
   "projects.title":  { en: "Featured Projects", pt: "Projetos em Destaque" },
   "projects.sub": {
@@ -22,6 +18,8 @@ export const strings = {
     pt: "Cada um abre num raio-x completo de sistemas — loops, fórmulas, tabelas."
   },
   "projects.open":   { en: "Open case study", pt: "Abrir estudo de caso" },
+  "projects.playBrowser": { en: "Play in browser", pt: "Jogar no navegador" },
+  "projects.playItch":    { en: "Play on itch.io", pt: "Jogar na itch.io" },
 
   "about.title":     { en: "About", pt: "Sobre" },
   "about.lead": {

@@ -32,21 +32,12 @@ export function initCursor() {
     s.textContent = TRAIL_GLYPHS[(Math.random() * TRAIL_GLYPHS.length) | 0];
     s.style.left = `${x}px`;
     s.style.top = `${y}px`;
-    const rot = (Math.random() * 60 - 30).toFixed(1);
-    const drift = (Math.random() * 24 - 12).toFixed(1);
     trail.append(s);
     live++;
     const remove = () => { s.remove(); live--; };
-    if (window.gsap && !document.documentElement.classList.contains('no-motion')) {
-      gsap.fromTo(s,
-        { opacity: 1, scale: 1, rotation: 0, xPercent: -50, yPercent: -50 },
-        { opacity: 0, scale: 0.4, rotation: +rot, x: drift, y: -20,
-          duration: 0.7, ease: 'power2.out', onComplete: remove });
-    } else {
-      s.style.transform = 'translate(-50%, -50%)';
-      s.style.animation = 'cursor-sticker-fade 0.7s ease-out forwards';
-      setTimeout(remove, 720);
-    }
+    s.style.transform = 'translate(-50%, -50%)';
+    s.style.animation = 'cursor-sticker-fade 0.7s ease-out forwards';
+    setTimeout(remove, 720);
   }
 
   document.addEventListener('mousemove', e => {

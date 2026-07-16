@@ -1,7 +1,26 @@
-# Portfolio (`/portfolio`) — build & content guide
+# Portfolio v2 (`/portfoliov2`) — build & content guide
 
-Static site (no build step), served from `lope.github.io/portfolio/`. Vanilla HTML/CSS/JS
-+ GSAP via CDN. One page, one case-study overlay. Everything lives inside `/portfolio`.
+Static site (no build step), served from `lope.design/portfoliov2/`. Vanilla HTML/CSS/JS,
+**no GSAP** (v1's GSAP was replaced by CSS scroll-driven animations + a small
+IntersectionObserver in `js/reveal.js`). One page, one case-study overlay. Everything
+lives inside `/portfoliov2`. See `README.md` for the hero reel pipeline and scope notes.
+
+## v2 architecture rules
+
+- **Baked static cards:** the project cards and skills grid exist as static HTML in
+  `index.html` between `<!-- baked:...:start/end -->` markers, generated from
+  `js/templates.js` by `node tools/bake-static.mjs`. Never hand-edit those blocks;
+  regenerate after changing project data, skill data or templates. The runtime renderer
+  (`js/render.js`) uses the same template functions, only on language switch.
+- **Sticky hero:** `.hero` is `position: sticky` and the `.sheet` wrapper slides over it.
+  Never add `overflow`, `transform`, `filter` or `contain` to `<main>` or any other
+  ancestor of `.hero`, or the pin breaks.
+- **Motion gates:** scroll recede lives in `css/scroll.css` behind
+  `@supports (animation-timeline: scroll())` and `prefers-reduced-motion: no-preference`.
+  Reveal hidden states only exist under `html.js-reveal`. Content must stay visible with
+  JS off, reduced motion on, or in browsers without scroll-driven animations.
+- **Hero reel:** `assets/reel/` files may not exist yet; `js/hero.js` keeps the poster on
+  load failure. Video is `preload="none"` with no autoplay attribute by design.
 
 ## Bilingual content — EN primary, PT toggle
 

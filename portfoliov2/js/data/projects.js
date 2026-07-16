@@ -209,6 +209,7 @@ export const projects = [
     id: "maguitos",
     accent: "#FF4F87",
     name: "PROJETO MAGUITOS",
+    caseUrl: "./maguitos/",
     type: { en: "Turn-based party RPG (PC)", pt: "RPG de party por turnos (PC)" },
     role: { en: "Game & Systems Designer / Gameplay Programmer", pt: "Game/Systems Designer e Gameplay Programmer" },
     tools: ["Godot", "GDScript"],

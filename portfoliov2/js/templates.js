@@ -19,8 +19,11 @@ export function projectCardHTML(project, i) {
   // The media is a real link so the card works with JavaScript disabled:
   // it goes straight to the playable build when one exists. With JS on,
   // casestudy.js intercepts the click and opens the case study instead.
-  const mediaHref = project.playUrl || '#projects';
-  const external = project.playUrl ? ' target="_blank" rel="noopener"' : '';
+  // Projects with a dedicated case-study page (project.caseUrl) skip the
+  // overlay entirely and link straight there, in both states.
+  const mediaHref = project.caseUrl || project.playUrl || '#projects';
+  const external = project.playUrl && !project.caseUrl ? ' target="_blank" rel="noopener"' : '';
+  const caseOpenAttr = project.caseUrl ? '' : ` data-case-open="${esc(project.id)}"`;
 
   const badge = project.badge ? `
       <img class="project-badge" src="${esc(project.badge.src)}" alt="${esc(t(project.badge.alt))}" loading="lazy" decoding="async">` : '';
@@ -31,8 +34,14 @@ export function projectCardHTML(project, i) {
   const playAction = project.playUrl ? `
       <a class="btn btn-play" href="${esc(project.playUrl)}" target="_blank" rel="noopener">${esc(tk(playTagKey))}</a>` : '';
 
+  const openCaseAction = project.caseUrl
+    ? `
+      <a class="btn" href="${esc(project.caseUrl)}">${esc(tk('projects.open'))}</a>`
+    : `
+      <button class="btn" type="button" data-case-open="${esc(project.id)}" data-requires-js>${esc(tk('projects.open'))}</button>`;
+
   return `<li class="project reveal" style="--project-accent: ${esc(project.accent)}" data-playable="${project.playable ? 'true' : 'false'}">
-  <a class="project-media" href="${esc(mediaHref)}"${external} data-case-open="${esc(project.id)}" aria-label="${esc(tk('projects.open'))} · ${esc(project.name)}">
+  <a class="project-media" href="${esc(mediaHref)}"${external}${caseOpenAttr} aria-label="${esc(tk('projects.open'))} · ${esc(project.name)}">
     <img src="${esc(project.cover)}" alt="${esc(t(project.coverAlt))}" loading="lazy" decoding="async" width="1200" height="800">
     <span class="project-num mono">${num}</span>${badge}${playTag}
   </a>
@@ -44,8 +53,7 @@ export function projectCardHTML(project, i) {
     <ul class="project-tools">${project.tools.map(tool => `
       <li class="chip">${esc(tool)}</li>`).join('')}
     </ul>
-    <div class="project-actions">${playAction}
-      <button class="btn" type="button" data-case-open="${esc(project.id)}" data-requires-js>${esc(tk('projects.open'))}</button>
+    <div class="project-actions">${playAction}${openCaseAction}
     </div>
   </div>
 </li>`;

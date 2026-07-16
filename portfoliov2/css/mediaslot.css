@@ -1,0 +1,107 @@
+/* ═══ MEDIA SLOT ═════════════════════════════════════════════════════════
+   Reusable video/placeholder component for case-study clips.
+
+   Markup contract:
+     <figure class="media-slot" data-ready="true|false" style="--aspect: 16 / 9">
+       <video class="media-slot-video" muted loop playsinline preload="none"
+              poster="poster.webp" data-src="clip.mp4"></video>
+       <div class="media-slot-pending" aria-hidden="true">
+         <!-- TODO: drop clip here -->
+         <p class="media-slot-filename mono">clip.mp4</p>
+         <p class="media-slot-pending-label mono">Clip pending</p>
+       </div>
+       <figcaption class="media-slot-caption">Caption text.</figcaption>
+     </figure>
+
+   Flip data-ready to "true" once the file exists at the video's data-src;
+   js/mediaslot.js lazy-loads and plays it while it's in view. Reduced
+   motion always shows the <video>'s poster attribute (js/mediaslot.js
+   never engages the IntersectionObserver in that case, so no clip bytes
+   are even requested). */
+.media-slot {
+  --aspect: 16 / 9;
+  position: relative;
+  border: 4px solid var(--paper);
+  box-shadow: 8px 8px 0 var(--pink);
+}
+
+.media-slot-video,
+.media-slot-image,
+.media-slot-pending {
+  aspect-ratio: var(--aspect);
+  width: 100%;
+  display: block;
+}
+.media-slot-video,
+.media-slot-image { object-fit: cover; background: var(--black); }
+
+.media-slot[data-ready="false"] .media-slot-video,
+.media-slot[data-ready="false"] .media-slot-image { display: none; }
+.media-slot:not([data-ready="false"]) .media-slot-pending { display: none; }
+
+.media-slot-pending {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  background:
+    repeating-linear-gradient(135deg,
+      rgba(245, 241, 232, 0.06), rgba(245, 241, 232, 0.06) 10px,
+      transparent 10px, transparent 20px),
+    var(--navy);
+  border: 2px dashed rgba(245, 241, 232, 0.4);
+  text-align: center;
+  padding: var(--space-2);
+}
+
+.media-slot-filename {
+  font-size: var(--step-0);
+  color: var(--yellow);
+  word-break: break-all;
+}
+
+.media-slot-pending-label {
+  font-size: var(--step--1);
+  color: var(--pink);
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.media-slot-caption {
+  padding: 0.6em 0.9em;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--paper);
+  opacity: 0.75;
+  background: var(--black);
+  border-top: 3px solid var(--paper);
+}
+
+/* Optional label, e.g. a "Featured" tag on a hero clip */
+.media-slot-priority {
+  position: absolute;
+  top: -0.6em;
+  left: 0.75em;
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.25em 0.7em;
+  background: var(--yellow);
+  color: var(--black);
+  border: 2px solid var(--black);
+  box-shadow: 3px 3px 0 var(--black);
+  transform: rotate(-2deg);
+}
+
+/* Two-up comparison variant (side-by-side clips) */
+.media-slot-two-up {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--space-2);
+}
+@media (max-width: 700px) {
+  .media-slot-two-up { grid-template-columns: 1fr; }
+}

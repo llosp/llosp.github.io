@@ -7,15 +7,15 @@ export const strings = {
   "nav.contact":     { en: "Contact", pt: "Contato" },
 
   "hero.intro": {
-    en: "I design game systems and then I build them — progression curves, damage formulas, balancing spreadsheets and playable prototypes in Unity & Godot.",
-    pt: "Eu projeto sistemas de jogo e depois construo eles — curvas de progressão, fórmulas de dano, planilhas de balanceamento e protótipos jogáveis em Unity e Godot."
+    en: "I design game systems and then I build them: progression curves, damage formulas, balancing spreadsheets and playable prototypes in Unity & Godot.",
+    pt: "Eu projeto sistemas de jogo e depois construo eles: curvas de progressão, fórmulas de dano, planilhas de balanceamento e protótipos jogáveis em Unity e Godot."
   },
   "hero.cta":        { en: "See the work ↓", pt: "Ver projetos ↓" },
 
   "projects.title":  { en: "Featured Projects", pt: "Projetos em Destaque" },
   "projects.sub": {
-    en: "Each one opens into a full systems breakdown — loops, formulas, tables.",
-    pt: "Cada um abre num raio-x completo de sistemas — loops, fórmulas, tabelas."
+    en: "Each one opens into a full systems breakdown: loops, formulas, tables.",
+    pt: "Cada um abre num raio-x completo de sistemas: loops, fórmulas, tabelas."
   },
   "projects.open":   { en: "Open case study", pt: "Abrir estudo de caso" },
   "projects.playBrowser": { en: "Play in browser", pt: "Jogar no navegador" },
@@ -23,16 +23,16 @@ export const strings = {
 
   "about.title":     { en: "About", pt: "Sobre" },
   "about.lead": {
-    en: "I'm a game designer with a systems brain — happiest somewhere between a design doc, a spreadsheet and an engine.",
-    pt: "Sou um game designer com cabeça de systems — mais feliz em algum ponto entre o design doc, a planilha e a engine."
+    en: "I'm a game designer with a systems brain, happiest somewhere between a design doc, a spreadsheet and an engine.",
+    pt: "Sou um game designer com cabeça de systems, mais feliz em algum ponto entre o design doc, a planilha e a engine."
   },
   "about.p1": {
-    en: "Design student at PUC-Rio. At Prisma Game Lab I've worked both as a game designer and coordinating project teams — shipping prototypes, running playtests and keeping design and implementation talking to each other.",
-    pt: "Estudante de Design na PUC-Rio. No Prisma Game Lab atuei como game designer e coordenando equipes de projeto — entregando protótipos, rodando playtests e mantendo design e implementação conversando."
+    en: "Design student at PUC-Rio. At Prisma Game Lab I've worked both as a game designer and coordinating project teams, shipping prototypes, running playtests and keeping design and implementation talking to each other.",
+    pt: "Estudante de Design na PUC-Rio. No Prisma Game Lab atuei como game designer e coordenando equipes de projeto, entregando protótipos, rodando playtests e mantendo design e implementação conversando."
   },
   "about.p2": {
-    en: "I'm a generalist by choice: I prototype in Unity and Godot, write gameplay code, make 2D art and 3D models, design UI — and I keep every system honest with attribute tables, progression curves and balancing sheets.",
-    pt: "Sou generalista por escolha: prototipo em Unity e Godot, escrevo código de gameplay, faço arte 2D e modelos 3D, desenho UI — e mantenho cada sistema honesto com tabelas de atributos, curvas de progressão e planilhas de balanceamento."
+    en: "I'm a generalist by choice: I prototype in Unity and Godot, write gameplay code, make 2D art and 3D models, design UI, and I keep every system honest with attribute tables, progression curves and balancing sheets.",
+    pt: "Sou generalista por escolha: prototipo em Unity e Godot, escrevo código de gameplay, faço arte 2D e modelos 3D, desenho UI, e mantenho cada sistema honesto com tabelas de atributos, curvas de progressão e planilhas de balanceamento."
   },
   "about.stamp1":    { en: "PUC-Rio · Design", pt: "PUC-Rio · Design" },
   "about.stamp2":    { en: "Prisma Game Lab", pt: "Prisma Game Lab" },

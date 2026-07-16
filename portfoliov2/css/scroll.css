@@ -1,0 +1,111 @@
+/* ── Scroll choreography ─────────────────────────────────────────────────
+   One signature moment: over the first viewport of scroll the pinned hero
+   recedes into depth (scales down, dims, blurs deeper) while the .sheet
+   slides up over it. Implemented with CSS scroll-driven animations only;
+   browsers without animation-timeline simply skip the recede and still get
+   the sheet overlap (plain sticky stacking). No GSAP anywhere.
+
+   Everything here is gated on prefers-reduced-motion: no-preference.
+   Reduced motion gets a static page: no pin, no video, no animations. */
+
+/* ── Hero entrance (load-time, once) ────────────────────────────────────
+   backwards fill only: after the animation ends no animated value sticks
+   around, so hover transforms (the CTA) behave normally. */
+@media (prefers-reduced-motion: no-preference) {
+  html:not(.no-js) .hero-content > * {
+    animation: hero-rise-in 0.55s cubic-bezier(0.22, 1, 0.36, 1) backwards;
+  }
+  html:not(.no-js) .hero-content > :nth-child(2) { animation-delay: 0.12s; }
+  html:not(.no-js) .hero-content > :nth-child(3) { animation-delay: 0.22s; }
+  html:not(.no-js) .hero-dog--corner {
+    animation: hero-fade-in 0.5s ease-out 0.45s backwards;
+  }
+}
+
+@keyframes hero-rise-in {
+  from { opacity: 0; transform: translateY(24px); }
+}
+@keyframes hero-fade-in {
+  from { opacity: 0; }
+}
+
+/* ── Hero recede (scroll-driven) ────────────────────────────────────── */
+@supports (animation-timeline: scroll()) {
+  @media (prefers-reduced-motion: no-preference) {
+    .hero-content {
+      animation: hero-recede linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+    .hero-media {
+      animation: media-recede linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+    .hero-dog-wrap {
+      animation: dog-recede linear both;
+      animation-timeline: scroll(root);
+      animation-range: 0 100vh;
+    }
+
+    /* Mobile: shorter scroll distance, lighter effect, no blur ramp.
+       Separate keyframes because keyframes cannot be redefined per
+       media query. */
+    @media (max-width: 600px) {
+      .hero-content  { animation-name: hero-recede-m;  animation-range: 0 60vh; }
+      .hero-media    { animation-name: media-recede-m; animation-range: 0 60vh; }
+      .hero-dog-wrap { animation-name: dog-recede-m;   animation-range: 0 60vh; }
+    }
+  }
+}
+
+@keyframes hero-recede {
+  to { transform: scale(0.92); opacity: 0.4; }
+}
+/* Blur ramp note: filter cannot run on the compositor. If scroll jank
+   shows up on low-end devices, delete the filter line below; the deepening
+   opacity plus the constant scrim reads nearly the same. */
+@keyframes media-recede {
+  to {
+    opacity: 0.25;
+    filter: blur(12px) brightness(0.35) saturate(1.1);
+    transform: scale(1.05);
+  }
+}
+@keyframes dog-recede {
+  to { transform: scale(0.85); opacity: 0.3; }
+}
+
+@keyframes hero-recede-m {
+  to { transform: scale(0.96); opacity: 0.55; }
+}
+@keyframes media-recede-m {
+  to { opacity: 0.35; }
+}
+@keyframes dog-recede-m {
+  to { opacity: 0.4; }
+}
+
+/* ── Card / section reveals ─────────────────────────────────────────────
+   Timed 380ms ease-out on viewport entry (IntersectionObserver adds
+   .is-in once, see js/reveal.js). Uses the independent translate property
+   so tilted elements (skill cards) keep their rotation. The hidden state
+   only exists under html.js-reveal: with JS off nothing is hidden. */
+@media (prefers-reduced-motion: no-preference) {
+  html.js-reveal .reveal {
+    opacity: 0;
+    translate: 0 28px;
+    transition: opacity 380ms ease-out, translate 380ms ease-out;
+    transition-delay: calc(var(--reveal-i, 0) * 60ms);
+  }
+  html.js-reveal .reveal.is-in {
+    opacity: 1;
+    translate: 0 0;
+  }
+}
+
+/* ── Reduced motion: static page ──────────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  .hero { position: static; }
+  .hero-video { display: none; }
+}

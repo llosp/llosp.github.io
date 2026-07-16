@@ -1,0 +1,378 @@
+/* ═══ HERO: fullscreen gameplay reel, pinned under the sheet ═════════════
+   The hero is position: sticky so the .sheet wrapper slides up over it.
+   Do not add overflow/transform/filter to <main> or the pin breaks. */
+.hero {
+  --bg: var(--navy);
+  --ink: var(--paper);
+  --accent: var(--yellow);
+  position: sticky;
+  top: 0;
+  z-index: 0;
+  height: 100svh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: calc(var(--space-4) + 3rem) var(--page-pad) var(--space-4);
+  overflow: clip;
+}
+
+/* Reel layer: blurred, darkened, slightly scaled so blur edges never show.
+   The filter and transform live on this wrapper so the scroll-driven recede
+   (scroll.css) can deepen them by animating a single element. */
+.hero-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  margin: 0;
+  max-width: none;
+  transform: scale(1.05);
+  filter: blur(6px) brightness(0.45) saturate(1.1);
+}
+.hero-poster,
+.hero-video {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.hero-video { opacity: 0; transition: opacity 0.6s ease; }
+.hero.is-playing .hero-video { opacity: 1; }
+
+/* Legibility scrim: kept outside .hero-media so it stays solid while the
+   reel dims and blurs away during the recede. */
+.hero-scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  margin: 0;
+  max-width: none;
+  background: linear-gradient(
+    to bottom,
+    rgba(15, 27, 60, 0.30) 0%,
+    rgba(17, 17, 17, 0.22) 55%,
+    rgba(17, 17, 17, 0.82) 100%
+  );
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+
+.hero-stage {
+  position: relative;
+  display: grid;
+  place-items: center;
+  line-height: 0.85;
+}
+
+.hero-name {
+  font-family: var(--font-display);
+  font-size: var(--step-4);
+  text-transform: uppercase;
+  letter-spacing: -0.03em;
+  grid-area: 1 / 1;
+}
+
+.hero-name-back {
+  -webkit-text-stroke: 2px var(--pink);
+  color: transparent;
+  transform: translate(0.06em, -0.08em) rotate(-2deg);
+  z-index: 1;
+}
+
+.hero-name-front {
+  color: var(--yellow);
+  text-shadow: 5px 5px 0 var(--black);
+  z-index: 3;
+}
+
+.hero-intro {
+  max-width: 34em;
+  font-size: var(--step-0);
+  opacity: 0.95;
+}
+
+/* Demoted mascot: small, corner placement, blink only (no cursor tracking).
+   The wrapper carries positioning + the scroll recede; the inner .hero-dog
+   carries the tilt (independent rotate property, so animations that touch
+   transform never clobber it). */
+.hero-dog-wrap {
+  position: absolute;
+  right: clamp(0.75rem, 3vw, 2.5rem);
+  bottom: clamp(0.75rem, 3vw, 2rem);
+  z-index: 2;
+  margin: 0;
+  max-width: none;
+}
+.hero-dog--corner { rotate: -7deg; }
+
+/* ═══ SHEET: rises over the pinned hero ══════════════════════════════════
+   Pure stacking, no animation tech: the hero is sticky at z-index 0, this
+   wrapper scrolls over it. overflow: clip keeps the section backgrounds
+   inside the rounded top corners. */
+.sheet {
+  position: relative;
+  z-index: 2;
+  border-radius: var(--radius-sheet) var(--radius-sheet) 0 0;
+  background: var(--black);
+  box-shadow: 0 -18px 48px rgba(0, 0, 0, 0.55);
+  overflow: clip;
+}
+
+/* ═══ PROJECTS ═══════════════════════════════════════════════════════════ */
+.projects {
+  --bg: var(--black);
+  --ink: var(--paper);
+  --accent: var(--pink);
+}
+
+.project-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-5);
+  counter-reset: project;
+}
+
+.project {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: var(--space-3);
+  align-items: center;
+}
+.project:nth-child(even) .project-media { order: 2; }
+.project:nth-child(even) .project-info  { order: 1; }
+
+.project-media {
+  position: relative;
+  border: 4px solid var(--paper);
+  box-shadow: 10px 10px 0 var(--project-accent, var(--yellow));
+  transform: rotate(var(--media-tilt, -1.5deg));
+  transition: transform var(--dur-med) var(--ease-pop), box-shadow var(--dur-med) ease;
+  cursor: pointer;
+  padding: 0;
+  display: block;
+  width: 100%;
+  text-decoration: none;
+}
+.project:nth-child(even) .project-media { --media-tilt: 1.5deg; }
+.project-media:hover {
+  transform: rotate(0deg) scale(1.015);
+  box-shadow: 14px 14px 0 var(--project-accent, var(--yellow));
+}
+.project-media img { width: 100%; }
+
+.project-media img.project-badge {
+  position: absolute;
+  bottom: -0.6em; right: -0.6em;
+  width: 28%;
+  height: auto;
+  transform: rotate(8deg);
+  filter: drop-shadow(3px 3px 0 var(--black));
+  pointer-events: none;
+}
+
+.project-num {
+  position: absolute;
+  top: -0.6em; left: -0.4em;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  color: var(--project-accent, var(--yellow));
+  text-shadow: 3px 3px 0 var(--black);
+  transform: rotate(-6deg);
+}
+
+.project-info { min-width: 0; }
+
+.project-type {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  color: var(--project-accent, var(--yellow));
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.project-name {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  text-transform: uppercase;
+  line-height: 1;
+  margin: 0.2em 0 0.4em;
+}
+
+.project-role { font-weight: 700; margin-bottom: var(--space-1); }
+.project-summary { opacity: 0.85; margin-bottom: var(--space-2); }
+
+.project-tools {
+  display: flex;
+  gap: var(--space-1);
+  flex-wrap: wrap;
+  margin-bottom: var(--space-3);
+  color: var(--project-accent, var(--yellow));
+}
+
+.project-actions {
+  display: flex;
+  gap: var(--space-2);
+  flex-wrap: wrap;
+  align-items: center;
+}
+.project-actions .btn { font-size: var(--step-0); }
+.project-actions .btn-play { background: var(--yellow); }
+
+/* Visible "Play" tag stamped on the card media */
+.play-tag {
+  position: absolute;
+  bottom: 0.75em;
+  left: 0.75em;
+  font-size: var(--step--1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  padding: 0.3em 0.75em;
+  background: var(--paper);
+  color: var(--black);
+  border: 2px solid var(--black);
+  box-shadow: 3px 3px 0 var(--black);
+  transform: rotate(-2deg);
+}
+
+/* Browser-playable games get visual priority: yellow tag + yellow frame */
+.project[data-playable="true"] .play-tag { background: var(--yellow); }
+.project[data-playable="true"] .project-media {
+  border-color: var(--yellow);
+  box-shadow: 12px 12px 0 var(--yellow);
+}
+.project[data-playable="true"] .project-media:hover {
+  box-shadow: 16px 16px 0 var(--yellow);
+}
+
+/* ═══ ABOUT ══════════════════════════════════════════════════════════════ */
+.about {
+  --bg: var(--navy);
+  --ink: var(--paper);
+  --accent: var(--pink);
+}
+
+.about-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: var(--space-3) var(--space-4);
+}
+
+.about-lead {
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  line-height: 1.15;
+  text-transform: uppercase;
+  color: var(--yellow);
+}
+
+.about-body { display: flex; flex-direction: column; gap: var(--space-2); }
+
+.about-stamps {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: var(--space-3);
+  flex-wrap: wrap;
+  margin-top: var(--space-2);
+}
+.about-stamps li { font-size: var(--step--1); }
+
+/* ═══ SKILLS ═════════════════════════════════════════════════════════════ */
+.skills {
+  --bg: var(--yellow);
+  --ink: var(--black);
+  --accent: var(--navy);
+  position: relative;
+  border-top: 4px solid var(--black);
+}
+.skills .section-sub { opacity: 1; }
+
+.skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
+  gap: var(--space-3);
+}
+
+.skill-group {
+  background: var(--paper);
+  border: 3px solid var(--black);
+  box-shadow: var(--hard-shadow);
+  padding: var(--space-3);
+  transform: rotate(var(--card-tilt, 0deg));
+  transition: transform var(--dur-med) var(--ease-pop);
+}
+.skill-group:nth-child(odd)  { --card-tilt: -1deg; }
+.skill-group:nth-child(even) { --card-tilt: 1deg; }
+.skill-group:hover { transform: rotate(0deg) translateY(-4px); }
+
+.skill-group-title {
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  text-transform: uppercase;
+  line-height: 1.05;
+  margin-bottom: var(--space-1);
+}
+.skill-group:nth-child(1) .skill-group-title { color: var(--pink); }
+.skill-group:nth-child(2) .skill-group-title { color: var(--navy); }
+.skill-group:nth-child(3) .skill-group-title { color: var(--pink); }
+.skill-group:nth-child(4) .skill-group-title { color: var(--navy); }
+
+.skill-group ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  margin-top: var(--space-2);
+}
+
+/* ═══ CONTACT ════════════════════════════════════════════════════════════ */
+.contact {
+  --bg: var(--black);
+  --ink: var(--paper);
+  --accent: var(--yellow);
+  text-align: center;
+  padding-bottom: var(--space-5);
+}
+.contact .section-head { margin-bottom: var(--space-3); }
+.contact .section-sub, .contact-lead { margin-left: auto; margin-right: auto; }
+.contact-lead { max-width: 30em; margin-bottom: var(--space-3); }
+
+.contact-actions {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+}
+.contact-actions .btn { font-size: var(--step-1); text-transform: none; }
+
+.contact-links { display: flex; gap: var(--space-3); flex-wrap: wrap; justify-content: center; }
+.contact-links a {
+  text-decoration: none;
+  color: var(--pink);
+  transition: color var(--dur-fast) ease;
+}
+.contact-links a:hover { color: var(--yellow); }
+
+/* ═══ RESPONSIVE ═════════════════════════════════════════════════════════ */
+@media (max-width: 900px) {
+  .project { grid-template-columns: 1fr; }
+  .project:nth-child(even) .project-media { order: 0; }
+  .project:nth-child(even) .project-info  { order: 0; }
+  .about-grid { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  .nav { gap: var(--space-2); }
+  .nav-links { display: none; } /* anchors still reachable by scroll; keeps nav clean */
+}
+
+@media (max-width: 480px) {
+  .about-stamps { gap: var(--space-2); }
+}

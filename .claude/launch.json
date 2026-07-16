@@ -24,6 +24,12 @@
       "runtimeExecutable": "npx",
       "runtimeArgs": ["-y", "http-server", "-p", "8768", "-c-1"],
       "port": 8768
+    },
+    {
+      "name": "portfoliov2",
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "http-server", "-p", "8769", "-c-1"],
+      "port": 8769
     }
   ]
 }

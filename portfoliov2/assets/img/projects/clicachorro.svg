@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" font-family="Arial Black, Archivo Black, sans-serif">
+  <defs>
+    <filter id="g"><feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" stitchTiles="stitch"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 0.10 0"/></filter>
+  </defs>
+  <rect width="1200" height="800" fill="#F5F1E8"/>
+  <g stroke="#111111" stroke-width="10" fill="#FF4F87">
+    <ellipse cx="930" cy="330" rx="70" ry="86"/>
+    <circle cx="838" cy="232" r="34"/>
+    <circle cx="912" cy="196" r="34"/>
+    <circle cx="990" cy="204" r="34"/>
+    <circle cx="1052" cy="268" r="34"/>
+  </g>
+  <g fill="#0F1B3C" font-family="Courier New, monospace" font-size="52" font-weight="bold">
+    <text x="700" y="470">+1</text>
+    <text x="840" y="540">+1</text>
+    <text x="770" y="610">+5</text>
+  </g>
+  <g stroke="#111111" stroke-width="8" fill="#FFC400">
+    <path d="M620 470 L620 610 L655 578 L678 632 L700 622 L676 570 L722 566 Z"/>
+  </g>
+  <g fill="#111111">
+    <text x="80" y="470" font-size="130" letter-spacing="-4">CLICA</text>
+    <text x="80" y="600" font-size="130" letter-spacing="-4">CHORRO</text>
+  </g>
+  <text x="84" y="200" font-size="34" fill="#0F1B3C" font-family="Courier New, monospace">IDLE CLICKER // DOG</text>
+  <rect width="1200" height="800" filter="url(#g)"/>
+</svg>

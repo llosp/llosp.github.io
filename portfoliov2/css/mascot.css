@@ -1,0 +1,83 @@
+/* ── Dog mascot: image + living eye overlay ─────────────────────────────
+   The webp has a TRANSPARENT eye socket; the eye layer sits BEHIND the
+   image (like the root game) and shows through the hole. Measured on the
+   970x1210 asset: socket center at left 70.4% / top 41.2%, 27.7% wide.
+   The white disc is 35.5% of the image width so it always covers the
+   socket. Do not change these ratios — they are calibrated to the asset. */
+
+.mascot {
+  position: relative;
+  display: inline-block;
+  user-select: none;
+}
+
+.mascot img {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: auto;
+  -webkit-user-drag: none;
+}
+
+.mascot .eye {
+  position: absolute;
+  z-index: 1;
+  top: 41.2%;
+  left: 70.4%;
+  width: 35.5%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.mascot .pupil {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 57%;
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: var(--black);
+  border-radius: 50%;
+}
+
+.mascot .lid {
+  position: absolute;
+  width: 140%;
+  height: 0%;
+  left: -20%;
+  background: #454db9; /* blink blue, same as the root game's eyelid */
+  z-index: 4;
+  transform: rotate(-35deg);
+  transition: height 0.2s ease;
+}
+.mascot .lid-top    { top: -20%; }
+.mascot .lid-bottom { bottom: -20%; }
+
+.mascot.closed .lid-top,
+.mascot.closed .lid-bottom { height: 70%; }
+
+/* Hero instance: demoted to a small corner stamp so it never competes
+   with the reel. Positioning lives on .hero-dog-wrap in sections.css. */
+.hero-dog {
+  width: clamp(72px, 8vw, 120px);
+  cursor: pointer;
+  filter: drop-shadow(4px 5px 0 rgba(17, 17, 17, 0.45));
+}
+
+/* Peek instance (top edge of Skills section) */
+.peek-wrap {
+  position: absolute;
+  top: 0; right: clamp(1rem, 8vw, 6rem);
+  height: 0;
+  overflow: visible;
+  pointer-events: none;
+}
+.peek {
+  width: clamp(90px, 10vw, 150px);
+  transform: translateY(-54%) rotate(6deg);
+  pointer-events: auto;
+  cursor: pointer;
+}

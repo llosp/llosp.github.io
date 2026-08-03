@@ -7,10 +7,18 @@ export const strings = {
   "nav.contact":     { en: "Contact", pt: "Contato" },
 
   "hero.intro": {
-    en: "I design game systems and then I build them: progression curves, damage formulas, balancing spreadsheets and playable prototypes in Unity & Godot.",
-    pt: "Eu projeto sistemas de jogo e depois construo eles: curvas de progressão, fórmulas de dano, planilhas de balanceamento e protótipos jogáveis em Unity e Godot."
+    en: "I design game systems and then I build them. The last one placed 21st out of 10,587 games in GMTK Jam 2026 — designed, coded and scored in four days.",
+    pt: "Eu projeto sistemas de jogo e depois construo eles. O último ficou em 21º entre 10.587 jogos na GMTK Jam 2026 — desenhado, programado e sonorizado em quatro dias."
   },
   "hero.cta":        { en: "See the work ↓", pt: "Ver projetos ↓" },
+
+  "stats.title":     { en: "Recognition", pt: "Reconhecimento" },
+  "stats.rank.value":    { en: "21st / 10,587", pt: "21º / 10.587" },
+  "stats.rank.label":    { en: "GMTK Jam 2026 — top 0.2%", pt: "GMTK Jam 2026 — top 0,2%" },
+  "stats.ratings.value": { en: "218 ratings", pt: "218 avaliações" },
+  "stats.ratings.label": { en: "10× the jam average of 21", pt: "10× a média da jam, de 21" },
+  "stats.days.value":    { en: "4 days", pt: "4 dias" },
+  "stats.days.label":    { en: "Concept to shipped build", pt: "Do conceito à build publicada" },
 
   "projects.title":  { en: "Featured Projects", pt: "Projetos em Destaque" },
   "projects.sub": {
@@ -23,12 +31,12 @@ export const strings = {
 
   "about.title":     { en: "About", pt: "Sobre" },
   "about.lead": {
-    en: "I'm a game designer with a systems brain, happiest somewhere between a design doc, a spreadsheet and an engine.",
-    pt: "Sou um game designer com cabeça de systems, mais feliz em algum ponto entre o design doc, a planilha e a engine."
+    en: "I'm a game designer who ships the systems he designs — the spreadsheet and the engine are the same job to me.",
+    pt: "Sou um game designer que entrega os sistemas que projeta — a planilha e a engine são o mesmo trabalho pra mim."
   },
   "about.p1": {
-    en: "Design student at PUC-Rio. At Prisma Game Lab I've worked both as a game designer and coordinating project teams, shipping prototypes, running playtests and keeping design and implementation talking to each other.",
-    pt: "Estudante de Design na PUC-Rio. No Prisma Game Lab atuei como game designer e coordenando equipes de projeto, entregando protótipos, rodando playtests e mantendo design e implementação conversando."
+    en: "At Prisma Game Lab I've worked as a game designer and coordinated project teams, shipping prototypes, running playtests and keeping design and implementation talking to each other. I'm finishing a Design degree at PUC-Rio.",
+    pt: "No Prisma Game Lab atuei como game designer e coordenei equipes de projeto, entregando protótipos, rodando playtests e mantendo design e implementação conversando. Estou concluindo Design na PUC-Rio."
   },
   "about.p2": {
     en: "I'm a generalist by choice: I prototype in Unity and Godot, write gameplay code, make 2D art and 3D models, design UI, and I keep every system honest with attribute tables, progression curves and balancing sheets.",
@@ -46,8 +54,8 @@ export const strings = {
 
   "contact.title":   { en: "Let's make games", pt: "Bora fazer jogos" },
   "contact.lead": {
-    en: "Looking for a designer who can also open the engine? Say hi.",
-    pt: "Procurando um designer que também abre a engine? Chama."
+    en: "I design the system, build it, and tune it until it's fun. If that's a gap on your team, let's talk.",
+    pt: "Eu projeto o sistema, construo e ajusto até ficar divertido. Se isso é uma lacuna no seu time, vamos conversar."
   },
 
   "case.close":      { en: "Close case study", pt: "Fechar estudo de caso" },

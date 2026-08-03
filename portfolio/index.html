@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lope: Game Designer · Systems Designer · Game Developer</title>
-  <meta name="description" content="Portfolio of Lope, game designer with a systems brain: gameplay, balancing, spreadsheets, progression and hands-on prototyping in Unity & Godot.">
+  <title>Lope — Game Designer &amp; Developer · Top 0.2% of GMTK Jam 2026</title>
+  <meta name="description" content="Lope designs game systems and builds them. Count Me Dead placed 21st of 10,587 games in GMTK Jam 2026, made in four days. Systems design, balancing and gameplay code in Unity & Godot.">
   <link rel="icon" type="image/x-icon" href="./assets/favicon.ico">
 
   <!-- Signals JS availability before first paint; see .no-js rules in base.css -->
@@ -81,8 +81,8 @@
         </div>
 
         <p class="hero-intro" data-i18n="hero.intro">
-          I design game systems and then I build them: progression curves, damage formulas,
-          balancing spreadsheets and playable prototypes in Unity &amp; Godot.
+          I design game systems and then I build them. The last one placed 21st out of 10,587
+          games in GMTK Jam 2026 — designed, coded and scored in four days.
         </p>
 
         <a class="btn btn-cta hero-cta" href="#projects" data-i18n="hero.cta">See the work ↓</a>
@@ -103,6 +103,25 @@
 
     <!-- ═══ SHEET: rises over the pinned hero on scroll ═══ -->
     <div class="sheet">
+      <!-- ═══ RECOGNITION: third-party proof, above the project list ═══ -->
+      <section class="stats" aria-labelledby="stats-h">
+        <h2 id="stats-h" class="stats-title" data-i18n="stats.title">Recognition</h2>
+        <ul class="stat-strip">
+          <li class="stat reveal">
+            <span class="stat-value" data-i18n="stats.rank.value">21st / 10,587</span>
+            <span class="stat-label mono" data-i18n="stats.rank.label">GMTK Jam 2026 — top 0.2%</span>
+          </li>
+          <li class="stat reveal">
+            <span class="stat-value" data-i18n="stats.ratings.value">218 ratings</span>
+            <span class="stat-label mono" data-i18n="stats.ratings.label">10× the jam average of 21</span>
+          </li>
+          <li class="stat reveal">
+            <span class="stat-value" data-i18n="stats.days.value">4 days</span>
+            <span class="stat-label mono" data-i18n="stats.days.label">Concept to shipped build</span>
+          </li>
+        </ul>
+      </section>
+
       <!-- ═══ PROJECTS ═══ -->
       <section id="projects" class="projects" aria-labelledby="projects-h">
         <header class="section-head reveal">
@@ -115,10 +134,31 @@
                Generated from js/data/projects.js by tools/bake-static.mjs.
                Do not hand-edit; run "node tools/bake-static.mjs" after
                changing project data or js/templates.js. -->
+<li class="project reveal" style="--project-accent: #F0563F" data-playable="true">
+  <a class="project-media" href="https://lopen.itch.io/count-me-dead" target="_blank" rel="noopener" data-case-open="count-me-dead" aria-label="Open case study · Count Me Dead">
+    <img src="./assets/img/projects/count-me-dead-gameplay-1.webp" alt="A duel against Hoarse Ryder: the timer still reads 9 when the player fires, and TOO EARLY! flashes across the screen" loading="lazy" decoding="async" width="1200" height="800">
+    <span class="project-num mono">01</span>
+      <span class="play-tag mono">Play in browser</span>
+  </a>
+  <div class="project-info">
+    <p class="project-type">Boss-rush western duel (web)</p>
+    <h3 class="project-name">Count Me Dead</h3>
+    <p class="project-role">Game Design, Programming &amp; Audio</p>
+    <p class="project-summary">A western boss-rush where the entire game is one button: wait for the count to reach zero, then draw. Built in 4 days for GMTK Jam 2026 and placed 21st. Five outlaws, and not one of them shoots faster than you — they cheat by attacking the timer you&#39;re reading.</p>
+    <ul class="project-tools">
+      <li class="chip">Godot</li>
+      <li class="chip">GDScript</li>
+    </ul>
+    <div class="project-actions">
+      <a class="btn btn-play" href="https://lopen.itch.io/count-me-dead" target="_blank" rel="noopener">Play in browser</a>
+      <button class="btn" type="button" data-case-open="count-me-dead" data-requires-js>Open case study</button>
+    </div>
+  </div>
+</li>
 <li class="project reveal" style="--project-accent: #FF4F87" data-playable="false">
   <a class="project-media" href="https://prismagamelab.itch.io/esqueleto-chico-ossos-do-oficio" target="_blank" rel="noopener" data-case-open="esqueleto-chico" aria-label="Open case study · Esqueleto Chico">
     <img src="./assets/img/projects/esqueleto-chico-gameplay-2.webp" alt="Boss fight against O Zelador: laser sweeps across the crypt" loading="lazy" decoding="async" width="1200" height="800">
-    <span class="project-num mono">01</span>
+    <span class="project-num mono">02</span>
       <img class="project-badge" src="./assets/img/SB-games-Seal.png" alt="SB Games official selection seal" loading="lazy" decoding="async">
       <span class="play-tag mono">Play on itch.io</span>
   </a>
@@ -142,7 +182,7 @@
 <li class="project reveal" style="--project-accent: #FF4F87" data-playable="false">
   <a class="project-media" href="#projects" data-case-open="maguitos" aria-label="Open case study · PROJETO MAGUITOS">
     <img src="./assets/maguitos/maguitos-hero.gif" alt="A turn-based fight in progress, the party of three toddlers acting while the caretaker hides behind them." loading="lazy" decoding="async" width="1200" height="800">
-    <span class="project-num mono">02</span>
+    <span class="project-num mono">03</span>
   </a>
   <div class="project-info">
     <p class="project-type">Roguelite dungeon crawler (PC)</p>
@@ -161,7 +201,7 @@
 <li class="project reveal" style="--project-accent: #F5F1E8" data-playable="true">
   <a class="project-media" href="https://lope.design/clicachorro" target="_blank" rel="noopener" data-case-open="clicachorro" aria-label="Open case study · ClicaChorro">
     <img src="./assets/img/projects/clicachorro-gameplay-complete.webp" alt="A fully decorated room: band poster, boombox, car and a sleepy plush toy beside the dog" loading="lazy" decoding="async" width="1200" height="800">
-    <span class="project-num mono">03</span>
+    <span class="project-num mono">04</span>
       <span class="play-tag mono">Play in browser</span>
   </a>
   <div class="project-info">
@@ -192,14 +232,14 @@
         </header>
         <div class="about-grid">
           <p class="about-lead reveal" data-i18n="about.lead">
-            I'm a game designer with a systems brain, happiest somewhere between
-            a design doc, a spreadsheet and an engine.
+            I'm a game designer who ships the systems he designs — the spreadsheet
+            and the engine are the same job to me.
           </p>
           <div class="about-body reveal">
             <p data-i18n="about.p1">
-              Design student at PUC-Rio. At Prisma Game Lab I've worked both as a game designer
-              and coordinating project teams, shipping prototypes, running playtests and keeping
-              design and implementation talking to each other.
+              At Prisma Game Lab I've worked as a game designer and coordinated project teams,
+              shipping prototypes, running playtests and keeping design and implementation
+              talking to each other. I'm finishing a Design degree at PUC-Rio.
             </p>
             <p data-i18n="about.p2">
               I'm a generalist by choice: I prototype in Unity and Godot, write gameplay code,
@@ -293,7 +333,8 @@
           <h2 id="contact-h" class="section-title" data-i18n="contact.title">Let's make games</h2>
         </header>
         <p class="contact-lead reveal" data-i18n="contact.lead">
-          Looking for a designer who can also open the engine? Say hi.
+          I design the system, build it, and tune it until it's fun.
+          If that's a gap on your team, let's talk.
         </p>
         <div class="contact-actions reveal">
           <a class="btn btn-cta" href="mailto:work@lope.design">work@lope.design</a>

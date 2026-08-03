@@ -3,6 +3,214 @@
 // (coreLoop, combat, balancing.table, …) are simply skipped when absent.
 export const projects = [
   {
+    id: "count-me-dead",
+    accent: "#F0563F",
+    name: "Count Me Dead",
+    playable: true,
+    playUrl: "https://lopen.itch.io/count-me-dead",
+    type: { en: "Boss-rush western duel (web)", pt: "Duelo western boss-rush (web)" },
+    role: { en: "Game Design, Programming & Audio", pt: "Game Design, Programação & Áudio" },
+    tools: ["Godot", "GDScript"],
+    cover: "./assets/img/projects/count-me-dead-gameplay-1.webp",
+    coverAlt: {
+      en: "A duel against Hoarse Ryder: the timer still reads 9 when the player fires, and TOO EARLY! flashes across the screen",
+      pt: "Um duelo contra Hoarse Ryder: o timer ainda marca 9 quando o jogador atira, e TOO EARLY! pisca na tela"
+    },
+    summary: {
+      en: "A western boss-rush where the entire game is one button: wait for the count to reach zero, then draw. Built in 4 days for GMTK Jam 2026 and placed 21st. Five outlaws, and not one of them shoots faster than you — they cheat by attacking the timer you're reading.",
+      pt: "Um boss-rush western em que o jogo inteiro é um botão: espere a contagem chegar a zero e saque. Feito em 4 dias para a GMTK Jam 2026 e ficou em 21º. Cinco fora da lei, e nenhum deles saca mais rápido que você — eles trapaceiam atacando o timer que você está lendo."
+    },
+    caseStudy: {
+      heroImage: {
+        src: "./assets/img/projects/count-me-dead-gameplay-1.webp",
+        alt: {
+          en: "A duel against Hoarse Ryder: the timer still reads 9 when the player fires, and TOO EARLY! flashes across the screen",
+          pt: "Um duelo contra Hoarse Ryder: o timer ainda marca 9 quando o jogador atira, e TOO EARLY! pisca na tela"
+        }
+      },
+      overview: {
+        en: "Count Me Dead is a western duel game made in 4 days for GMTK Jam 2026, where it finished 21st with 218 ratings and over 150 comments. You ride into a frontier town and face five outlaws, one location at a time. The duel itself never changes: a counter ticks down, and you draw on zero. What changes is the counter. Every outlaw finds a new way to make you doubt the number in front of you.",
+        pt: "Count Me Dead é um jogo de duelo western feito em 4 dias para a GMTK Jam 2026, onde ficou em 21º com 218 avaliações e mais de 150 comentários. Você chega numa cidade de fronteira e enfrenta cinco fora da lei, um local por vez. O duelo em si nunca muda: um contador regressivo roda e você saca no zero. O que muda é o contador. Cada fora da lei acha um jeito novo de te fazer duvidar do número na sua frente."
+      },
+      role: {
+        en: "A three-person team at Wolfish Studios. I did the game design, all of the programming and the audio; Frovio and Zumate made the art. The work I care most about is the boss architecture: one duel, five ways to corrupt it, and a difficulty system that reads how fast you're drawing and tightens the screws without ever showing you a difficulty setting.",
+        pt: "Um time de três pessoas na Wolfish Studios. Fiz o game design, toda a programação e o áudio; Frovio e Zumate fizeram a arte. O trabalho de que mais gosto é a arquitetura dos chefes: um duelo, cinco formas de corrompê-lo, e um sistema de dificuldade que lê a velocidade do seu saque e aperta o cerco sem nunca te mostrar um menu de dificuldade."
+      },
+      responsibilities: [
+        {
+          group: { en: "Game Design", pt: "Game Design" },
+          items: [
+            { en: "Core loop & boss design", pt: "Core loop & design dos chefes" },
+            { en: "Difficulty tuning", pt: "Tuning de dificuldade" },
+            { en: "Adaptive pressure model", pt: "Modelo de pressão adaptativa" },
+            { en: "Jam scoping", pt: "Escopo de jam" }
+          ]
+        },
+        {
+          group: { en: "Code", pt: "Código" },
+          items: [
+            { en: "GDScript (Godot 4)", pt: "GDScript (Godot 4)" },
+            { en: "Duel state machine", pt: "Máquina de estados do duelo" },
+            { en: "Data-driven boss hooks", pt: "Hooks de chefe data-driven" },
+            { en: "UI, VFX & shaders", pt: "UI, VFX & shaders" }
+          ]
+        },
+        {
+          group: { en: "Audio", pt: "Áudio" },
+          items: [
+            { en: "Original soundtrack", pt: "Trilha original" },
+            { en: "Gunfire & skill SFX", pt: "SFX de tiro & habilidades" },
+            { en: "Character voice banks", pt: "Bancos de voz dos personagens" }
+          ]
+        }
+      ],
+      challenge: {
+        en: "One input, one verb: shoot. Four days, and five boss fights that all have to feel different. The obvious fix is to add verbs — dodge, reload, aim — and the obvious fix would not have shipped on time. So instead of expanding what the player does, I attacked what the player knows. A duel on a countdown is a reading problem, not a reflex problem, so every boss became an attack on the reading: on your attention, your clock, your legibility, your arithmetic, and finally on the rules themselves.",
+        pt: "Um input, um verbo: atirar. Quatro dias, e cinco lutas de chefe que precisam parecer diferentes. A solução óbvia é adicionar verbos — esquivar, recarregar, mirar — e a solução óbvia não teria ficado pronta a tempo. Então, em vez de expandir o que o jogador faz, ataquei o que o jogador sabe. Um duelo em cima de uma contagem é um problema de leitura, não de reflexo, então cada chefe virou um ataque à leitura: à sua atenção, ao seu relógio, à sua legibilidade, à sua aritmética e, por fim, às próprias regras."
+      },
+      coreLoop: {
+        steps: [
+          { en: "Read the count", pt: "Ler a contagem" },
+          { en: "Hold your nerve", pt: "Segurar o nervo" },
+          { en: "Draw on zero", pt: "Sacar no zero" },
+          { en: "Hit, or lose a heart", pt: "Acertar, ou perder um coração" },
+          { en: "The boss rewrites zero", pt: "O chefe reescreve o zero" }
+        ],
+        note: {
+          en: "Three hearts each — five for the final boss. A clean draw takes one of theirs; firing too early or too slow takes one of yours. The base tempo is one tick per second with a 0.7s draw window, and every boss overrides both.",
+          pt: "Três corações de cada lado — cinco no chefe final. Um saque limpo tira um deles; atirar cedo ou lento demais tira um seu. O tempo base é um tick por segundo com uma janela de saque de 0,7s, e todo chefe sobrescreve os dois."
+        }
+      },
+      systems: [
+        {
+          title: { en: "One duel, shared by five fights", pt: "Um duelo, compartilhado por cinco lutas" },
+          body: {
+            en: "A single six-state machine runs every fight: round intro, countdown, draw, resolve, game over. It owns the hearts, the hit resolution and the feedback, and it never learns anything about which outlaw is standing across from you. Everything a boss does has to be expressible as a change to the countdown, which is exactly the constraint that kept the game coherent.",
+            pt: "Uma única máquina de seis estados roda todas as lutas: intro do round, contagem, saque, resolução, fim de jogo. Ela cuida dos corações, da resolução do acerto e do feedback, e nunca sabe qual fora da lei está do outro lado. Tudo que um chefe faz precisa ser expressável como uma mudança na contagem, que é exatamente a restrição que manteve o jogo coerente."
+          }
+        },
+        {
+          title: { en: "A boss is a set of hooks", pt: "Um chefe é um conjunto de hooks" },
+          body: {
+            en: "Every outlaw is a subclass of one base class exposing twelve hooks: how many seconds this round runs, how wide the draw window is, what happens on each tick, what happens when the round resolves. Bosses override, never fork. Writing that interface on day one cost a few hours and is the only reason five genuinely different fights existed by day four.",
+            pt: "Cada fora da lei é uma subclasse de uma classe base que expõe doze hooks: quantos segundos o round dura, qual a largura da janela de saque, o que acontece a cada tick, o que acontece quando o round resolve. Chefes sobrescrevem, nunca bifurcam. Escrever essa interface no primeiro dia custou algumas horas e é a única razão de existirem cinco lutas realmente diferentes no quarto dia."
+          }
+        },
+        {
+          title: { en: "Three ways to take a number away", pt: "Três formas de tirar um número de você" },
+          body: {
+            en: "The first three outlaws each steal a different part of the read. Hoarse Ryder never touches the timer — he buries it under a running stream of crosstalk until you lose the thread. Danny D. Vile skims seconds off the clock on a cooldown, then in his last phase detonates the timer outright and leaves you counting in your head. Tunga Tatu stretches the count by three to five seconds, snaps it straight to zero on the cusp, and mirrors the entire display horizontally so the digits read backwards.",
+            pt: "Os três primeiros fora da lei roubam partes diferentes da leitura. Hoarse Ryder nunca toca no timer — ele o soterra sob um fluxo constante de conversa cruzada até você perder o fio. Danny D. Vile raspa segundos do relógio num cooldown e, na última fase, detona o timer de vez e te deixa contando de cabeça. Tunga Tatu estica a contagem em três a cinco segundos, corta direto pro zero na virada, e espelha o display inteiro na horizontal pros dígitos ficarem ao contrário."
+          }
+        },
+        {
+          title: { en: "The timer becomes an equation", pt: "O timer vira uma equação" },
+          body: {
+            en: "Conny Calzone splits the counter in two and stamps an operator between them: you now draw when the sum reaches zero, with the left face always starting at twice the right. Her second phase runs the right counter at double speed so the two halves desync, and adds feints (briefly showing false values) and shifts (both rates re-solved mid-round so the numbers converge on ±3 while the true zero stays exactly where it was). Her third phase rotates the plus sign 45° into a multiplication: 972 × 5.",
+            pt: "Conny Calzone parte o contador em dois e carimba um operador entre eles: agora você saca quando a soma chega a zero, com a face esquerda sempre começando no dobro da direita. A segunda fase dela roda o contador da direita no dobro da velocidade pras metades dessincronizarem, e adiciona fintas (mostrando valores falsos por um instante) e shifts (as duas taxas recalculadas no meio do round pros números convergirem em ±3 enquanto o zero verdadeiro fica exatamente onde estava). A terceira fase gira o sinal de mais 45° e vira uma multiplicação: 972 × 5."
+          }
+        },
+        {
+          title: { en: "Difficulty that reads you back", pt: "Dificuldade que te lê de volta" },
+          body: {
+            en: "Conny also carries the hidden layer I'm proudest of: a single pressure float. Draw cleanly in under 0.35s and it climbs; lose a heart and it drops. Pressure narrows her draw window, pushes her feint chance toward certainty, and unlocks the shift attack once it crosses a threshold. The fight silently converges on the player's actual skill, and nothing in the UI ever admits it.",
+            pt: "Conny também carrega a camada escondida de que mais me orgulho: um único float de pressão. Saque limpo em menos de 0,35s e ele sobe; perca um coração e ele cai. A pressão estreita a janela de saque dela, empurra a chance de finta rumo à certeza, e libera o ataque de shift quando cruza um limiar. A luta converge silenciosamente pra habilidade real do jogador, e nada na UI admite isso."
+          }
+        },
+        {
+          title: { en: "Rewriting the rules mid-fight", pt: "Reescrevendo as regras no meio da luta" },
+          body: {
+            en: "El To Angus racks up five near-identical timers — TINER, TIDER, TIMER, TYLER, TIGER — and shuffles them. Only one is real, and an authored event track keeps changing which: the real face moves from TIMER to TIDER to TIGER, the number that ends the count moves from 0 to 7, and the real counter runs a hand-written sequence with decoy zeros baked into it. His finale drops the trickery, resets to a fair duel at roughly two and a half ticks per second, then cycles the alphabet through the timer window, decelerating as it goes. You win by drawing on the letter O, because it reads as a zero.",
+            pt: "El To Angus enfileira cinco timers quase idênticos — TINER, TIDER, TIMER, TYLER, TIGER — e os embaralha. Só um é real, e uma trilha de eventos autoral fica mudando qual: a face real vai de TIMER pra TIDER pra TIGER, o número que encerra a contagem vai de 0 pra 7, e o contador real roda uma sequência escrita à mão com zeros-isca embutidos. O final dele larga a trapaça, reseta pra um duelo justo a cerca de dois tiques e meio por segundo, e então roda o alfabeto na janela do timer, desacelerando. Você vence sacando na letra O, porque ela se lê como um zero."
+          }
+        }
+      ],
+      progression: {
+        en: "The five outlaws are ordered by what they take from you. Hoarse Ryder takes your attention. Danny D. Vile takes your time. Tunga Tatu takes your legibility. Conny Calzone takes your arithmetic. El To Angus takes the rules. Each fight also runs three internal phases tied to the boss's remaining hearts, so the gimmick escalates within the fight as well as across the town — Danny's cooldown drops from 8s to 2s before he removes the timer entirely, and Tunga's draw window closes from 0.70s to 0.38s.",
+        pt: "Os cinco fora da lei são ordenados pelo que tiram de você. Hoarse Ryder tira sua atenção. Danny D. Vile tira seu tempo. Tunga Tatu tira sua legibilidade. Conny Calzone tira sua aritmética. El To Angus tira as regras. Cada luta ainda roda três fases internas ligadas aos corações restantes do chefe, então o truque escala dentro da luta e também ao longo da cidade — o cooldown do Danny cai de 8s pra 2s antes de ele remover o timer de vez, e a janela de saque do Tunga fecha de 0,70s pra 0,38s."
+      },
+      combat: {
+        formula: {
+          en: "draw within [0, draw_window] → HIT · draw before 0 → TOO EARLY · no draw → TOO SLOW",
+          pt: "saque dentro de [0, janela_de_saque] → ACERTO · saque antes do 0 → CEDO DEMAIS · sem saque → LENTO DEMAIS"
+        },
+        body: {
+          en: "The whole combat model is one window. The base draw window is 0.7s and bosses override it from 0.85s down to 0.38s. Danny D. Vile is the only one with a 0.30s early-grace window, which forgives a draw fired just before zero — he is the boss who steals seconds off your clock, so a hair-early read is his fault, not yours. That one exception is the difference between a boss who feels unfair and a boss who feels like a cheat you can beat.",
+          pt: "O modelo de combate inteiro é uma janela. A janela de saque base é 0,7s e os chefes sobrescrevem de 0,85s até 0,38s. Danny D. Vile é o único com uma janela de perdão de 0,30s, que releva um saque disparado logo antes do zero — ele é o chefe que rouba segundos do seu relógio, então uma leitura um fio adiantada é culpa dele, não sua. Essa única exceção é a diferença entre um chefe que parece injusto e um chefe que parece uma trapaça vencível."
+        }
+      },
+      balancing: {
+        formula: {
+          en: "draw_window = lerp(0.55, 0.40, pressure)",
+          pt: "janela_de_saque = lerp(0,55; 0,40; pressão)"
+        },
+        body: {
+          en: "Boss tuning lives entirely in exported arrays, one entry per phase, so every fight was tuned in the inspector between playtests rather than in code. The adaptive layer sits on top: a pressure value in [0, 1] that rises 0.25 per fast, clean draw and falls 0.30 per heart lost, then drives the draw window, the feint rate and the shift unlock. It is one float, and it does the work a difficulty menu would have done worse.",
+          pt: "O tuning dos chefes vive inteiramente em arrays exportados, uma entrada por fase, então cada luta foi ajustada no inspector entre playtests, não no código. A camada adaptativa fica por cima: um valor de pressão em [0, 1] que sobe 0,25 por saque rápido e limpo e cai 0,30 por coração perdido, e então comanda a janela de saque, a taxa de fintas e a liberação do shift. É um float, e faz o trabalho que um menu de dificuldade faria pior."
+        },
+        tables: [
+          {
+            caption: { en: "Boss tuning by phase", pt: "Tuning dos chefes por fase" },
+            headers: [
+              { en: "Outlaw", pt: "Fora da lei" },
+              { en: "Countdown (s)", pt: "Contagem (s)" },
+              { en: "Draw window (s)", pt: "Janela de saque (s)" },
+              { en: "Signature attack", pt: "Ataque característico" }
+            ],
+            rows: [
+              ["Hoarse Ryder", "15 · 10 · 10", "0.70", { en: "Buries the count in crosstalk", pt: "Soterra a contagem em conversa cruzada" }],
+              ["Danny D. Vile", "18 · 24 · 18", "0.85 · 0.70 · 0.70", { en: "Steals seconds, then detonates the timer", pt: "Rouba segundos, depois detona o timer" }],
+              ["Tunga Tatu", "8 · 10 · 10", "0.70 · 0.50 · 0.38", { en: "Stretches or snaps the count; mirrors the display", pt: "Estica ou corta a contagem; espelha o display" }],
+              ["Conny Calzone", "6", "0.55 → 0.40", { en: "Splits the timer into an equation", pt: "Divide o timer numa equação" }],
+              ["El To Angus", "8 · 10 · 8 · 15 · 5", "0.70", { en: "Five timers, one real, rules change mid-round", pt: "Cinco timers, um real, regras mudam no meio do round" }]
+            ]
+          },
+          {
+            caption: { en: "Adaptive pressure model (Conny Calzone)", pt: "Modelo de pressão adaptativa (Conny Calzone)" },
+            headers: [
+              { en: "Parameter", pt: "Parâmetro" },
+              { en: "Value", pt: "Valor" },
+              { en: "Effect", pt: "Efeito" }
+            ],
+            rows: [
+              [{ en: "Comfortable latency", pt: "Latência confortável" }, "0.35 s", { en: "Draw faster than this and pressure rises", pt: "Saque mais rápido que isso e a pressão sobe" }],
+              [{ en: "Pressure gain", pt: "Ganho de pressão" }, "+0.25", { en: "Per clean, fast draw", pt: "Por saque limpo e rápido" }],
+              [{ en: "Pressure relief", pt: "Alívio de pressão" }, "−0.30", { en: "Per heart lost", pt: "Por coração perdido" }],
+              [{ en: "Draw window", pt: "Janela de saque" }, "0.55 → 0.40 s", { en: "Narrows as pressure climbs", pt: "Estreita conforme a pressão sobe" }],
+              [{ en: "Feint chance", pt: "Chance de finta" }, "0.35 → 1.00", { en: "Approaches certainty under pressure", pt: "Se aproxima da certeza sob pressão" }],
+              [{ en: "Shift threshold", pt: "Limiar de shift" }, "0.34", { en: "Pressure needed to unlock the rate-shift attack", pt: "Pressão necessária pra liberar o ataque de shift" }]
+            ]
+          }
+        ]
+      },
+      implementation: {
+        en: "Godot 4 and GDScript, no external tooling. One duel state machine, five boss subclasses, and boss content authored as exported resources — Angus's entire event track (which timer is real, when the rack shuffles, which number ends the count, what he says while doing it) is inspector data rather than code. In a four-day jam that meant retuning a fight was a field edit between playtests instead of a rewrite. One of the commits is literally named 'danny easier by 0.40'.",
+        pt: "Godot 4 e GDScript, sem ferramental externo. Uma máquina de estados do duelo, cinco subclasses de chefe, e o conteúdo dos chefes escrito como recursos exportados — a trilha de eventos inteira do Angus (qual timer é real, quando a estante embaralha, qual número encerra a contagem, o que ele fala enquanto faz isso) é dado do inspector, não código. Numa jam de quatro dias isso significou que retunar uma luta era editar um campo entre playtests, não reescrever. Um dos commits se chama literalmente 'danny easier by 0.40'."
+      },
+      learnings: {
+        en: "The constraint made the game. One button meant I could not add mechanics, so I had to add doubt — and doubt turned out to be far more interesting than a second verb would have been. The architectural lesson was the same shape: the hook interface cost hours on day one and bought five distinct boss fights by day four. And the adaptive pressure model is the piece I would take to any future project, because reading the player's draw latency and quietly retuning the fight beat a difficulty menu, out of a single float.",
+        pt: "A restrição fez o jogo. Um botão significava que eu não podia adicionar mecânicas, então tive que adicionar dúvida — e a dúvida acabou sendo muito mais interessante do que um segundo verbo seria. A lição de arquitetura tem o mesmo formato: a interface de hooks custou horas no primeiro dia e comprou cinco lutas de chefe distintas no quarto. E o modelo de pressão adaptativa é a peça que eu levaria pra qualquer projeto futuro, porque ler a latência de saque do jogador e retunar a luta em silêncio ganhou de um menu de dificuldade, a partir de um único float."
+      },
+      links: [
+        { label: { en: "Play on itch.io", pt: "Jogar na itch.io" }, url: "https://lopen.itch.io/count-me-dead", kind: "play" }
+      ],
+      gallery: [
+        {
+          src: "./assets/img/projects/count-me-dead-gameplay-2.webp",
+          alt: { en: "Danny D. Vile taunting mid-duel — \"Let's see you count without me\" — moments before he starts stealing seconds off the timer", pt: "Danny D. Vile provocando no meio do duelo — \"Let's see you count without me\" — momentos antes de começar a roubar segundos do timer" }
+        },
+        {
+          src: "./assets/img/projects/count-me-dead-gameplay-3.webp",
+          alt: { en: "Dialogue in the sheriff's office: Hoarse Ryder holds the room hostage before the first duel", pt: "Diálogo no escritório do xerife: Hoarse Ryder domina a sala antes do primeiro duelo" }
+        },
+        {
+          src: "./assets/img/projects/count-me-dead-gameplay-4.webp",
+          alt: { en: "The town map, where each location unlocks the next outlaw", pt: "O mapa da cidade, onde cada local libera o próximo fora da lei" }
+        }
+      ]
+    }
+  },
+  {
     id: "esqueleto-chico",
     accent: "#FF4F87",
     name: "Esqueleto Chico",

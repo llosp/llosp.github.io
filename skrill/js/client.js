@@ -1172,6 +1172,7 @@ const BOI_CHANCE_COMPLEX = 0.10;  // dentre as criadas, chance de ser complexa
 const BOI_COMPLETE_STEP  = 0.20;  // +20% de chance de cumprir por dia aberta
 const BOI_ACTIVITIES = [
   { title: 'aprender blender',      img: '/skrill/img/boi/boi_3Dmodelo.webp' },
+  { title: 'fazer bico de baba',    img: '/skrill/img/boi/boi_babysitting.png' },
   { title: 'cumprir proposito',     img: '/skrill/img/boi/boi_bife_carne_no_prato.webp' },
   { title: 'treino de intimidacao', img: '/skrill/img/boi/boi_bravo.webp' },
   { title: 'trabalho bracal',       img: '/skrill/img/boi/boi_carrossa.webp' },

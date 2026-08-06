@@ -34,32 +34,37 @@ button { font: inherit; color: inherit; background: none; border: none; cursor: 
 
 ::selection { background: var(--pink); color: var(--paper); }
 
-/* Film grain over everything */
+/* Film grain over everything.
+   PERF: deliberately NO mix-blend-mode. A full-viewport blend layer forces
+   the browser to re-composite everything underneath it on every scroll
+   frame, which is one of the things that made this page crawl. Plain alpha
+   over the dark palette reads the same and composites as a static texture. */
 body::after {
   content: "";
   position: fixed;
   inset: 0;
   background: url(../assets/img/noise.svg);
-  opacity: 0.06;
-  mix-blend-mode: overlay;
+  opacity: 0.05;
   pointer-events: none;
   z-index: var(--z-grain);
 }
 
 /* ── Cursor FX: spotlight glow + sticker trail ──────────────────────────── */
+/* PERF: same reasoning as the grain — a blended element that MOVES is the
+   worst case, since the backdrop under it has to be re-read and re-blended
+   every frame. Plain alpha on a promoted layer is a pure GPU composite. */
 .cursor-glow {
   position: fixed;
   top: 0; left: 0;
-  width: 32rem;
+  width: 26rem;
   aspect-ratio: 1;
   z-index: calc(var(--z-nav) - 5);
   pointer-events: none;
   border-radius: 50%;
   background: radial-gradient(circle,
-    rgba(255, 196, 0, 0.28) 0%,
-    rgba(255, 79, 135, 0.14) 38%,
+    rgba(255, 196, 0, 0.14) 0%,
+    rgba(255, 79, 135, 0.07) 38%,
     transparent 68%);
-  mix-blend-mode: soft-light;
   will-change: transform;
   transition: opacity var(--dur-med) ease;
 }
@@ -72,6 +77,8 @@ body::after {
   pointer-events: none;
   overflow: hidden;
 }
+/* No will-change here: up to MAX_STICKERS of these exist at once and each
+   hint would promote its own compositor layer for 0.7s. */
 .cursor-sticker {
   position: absolute;
   font-family: var(--font-mono);
@@ -79,7 +86,6 @@ body::after {
   line-height: 1;
   color: var(--yellow);
   text-shadow: 1px 1px 0 var(--pink);
-  will-change: transform, opacity;
 }
 @keyframes cursor-sticker-fade {
   to { opacity: 0; transform: translate(-50%, -50%) translateY(-20px) scale(0.4); }
@@ -175,8 +181,9 @@ body::after {
   align-items: center;
   gap: var(--space-3);
   padding: 0.7rem var(--page-pad);
-  background: color-mix(in srgb, var(--navy) 82%, transparent);
-  backdrop-filter: blur(8px);
+  /* PERF: no backdrop-filter. It re-snapshots and re-blurs the strip of page
+     under the bar on every scroll frame; a near-opaque bar costs nothing. */
+  background: color-mix(in srgb, var(--navy) 94%, transparent);
   border-bottom: 2px solid rgba(245, 241, 232, 0.12);
 }
 

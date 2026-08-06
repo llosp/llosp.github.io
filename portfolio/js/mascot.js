@@ -37,9 +37,30 @@ export function initMascots() {
     .filter(mascot => mascot.dataset.eyeTrack !== 'false')
     .map(mascot => ({
       eye: mascot.querySelector('.eye'),
-      pupil: mascot.querySelector('.pupil')
+      pupil: mascot.querySelector('.pupil'),
+      rect: null,
+      visible: false
     }))
     .filter(pair => pair.eye && pair.pupil);
+
+  // PERF: getBoundingClientRect() forces a layout flush, and doing it per eye
+  // per mousemove frame — on a page full of scroll-driven animations — is
+  // exactly the kind of read that stalls the frame. The rects only change on
+  // scroll or resize, so cache them and mark dirty from passive listeners.
+  // Off-screen mascots (the Skills peek dog) are skipped entirely.
+  let dirty = true;
+  const markDirty = () => { dirty = true; };
+  addEventListener('scroll', markDirty, { passive: true });
+  addEventListener('resize', markDirty, { passive: true });
+
+  const io = new IntersectionObserver(entries => {
+    for (const entry of entries) {
+      const pair = eyes.find(p => p.eye === entry.target);
+      if (pair) pair.visible = entry.isIntersecting;
+    }
+    dirty = true;
+  });
+  eyes.forEach(pair => io.observe(pair.eye));
 
   let mx = 0;
   let my = 0;
@@ -52,9 +73,11 @@ export function initMascots() {
     ticking = true;
     requestAnimationFrame(() => {
       ticking = false;
-      eyes.forEach(({ eye, pupil }) => {
-        const rect = eye.getBoundingClientRect();
-        if (!rect.width) return;
+      for (const pair of eyes) {
+        if (!pair.visible) continue;
+        if (dirty || !pair.rect) pair.rect = pair.eye.getBoundingClientRect();
+        const rect = pair.rect;
+        if (!rect.width) continue;
         const cx = rect.left + rect.width / 2;
         const cy = rect.top + rect.height / 2;
         let dx = mx - cx;
@@ -66,8 +89,9 @@ export function initMascots() {
           dx = (dx / dist) * max;
           dy = (dy / dist) * max;
         }
-        pupil.style.transform = `translate(-50%, -50%) translate(${dx}px, ${dy}px)`;
-      });
+        pair.pupil.style.transform = `translate(-50%, -50%) translate(${dx}px, ${dy}px)`;
+      }
+      dirty = false;
     });
   });
 }

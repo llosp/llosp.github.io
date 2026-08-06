@@ -420,10 +420,13 @@ export const projects = [
     type: { en: "Roguelite dungeon crawler (PC)", pt: "Roguelite de masmorra (PC)" },
     role: { en: "Game & Systems Designer / Gameplay Programmer", pt: "Game/Systems Designer e Gameplay Programmer" },
     tools: ["Godot", "GDScript"],
-    cover: "./assets/maguitos/maguitos-hero.gif",
+    // Static frame on purpose: the animated maguitos-hero.gif is 6.5 MB and
+    // decoding it on the home page stalled scrolling. The GIF stays in
+    // assets/maguitos/ until it is re-encoded as a small looping video.
+    cover: "./assets/img/projects/maguitos-gameplay-1.webp",
     coverAlt: {
-      en: "A turn-based fight in progress, the party of three toddlers acting while the caretaker hides behind them.",
-      pt: "Uma luta por turnos em andamento, a party de três bebês agindo enquanto o cuidador se esconde atrás deles."
+      en: "A turn-based fight in progress: the party of three toddlers facing four Stray Humpty enemies before a mossy shrine.",
+      pt: "Uma luta por turnos em andamento: a party de três bebês enfrentando quatro Stray Humpty diante de um santuário musgoso."
     },
     summary: {
       en: "A roguelite dungeon crawler where you play a coward caretaker who can't cast a single spell, so you send the toddlers in your care to fight instead. Built by two people, it's driven by an enemy AI that scores every (skill, target) pair by weighted random, with intelligence and conviction as separate difficulty dials. Still in active development.",

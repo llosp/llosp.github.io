@@ -24,6 +24,7 @@ export function initCursor() {
   let lastY = 0;
   let seeded = false;
   let live = 0;
+  let raf = 0;
 
   function spawnSticker(x, y) {
     if (live >= MAX_STICKERS) return;
@@ -49,17 +50,30 @@ export function initCursor() {
       lastY = my;
       spawnSticker(mx, my);
     }
+    start();
   }, { passive: true });
 
   document.addEventListener('mouseleave', () => glow.classList.add('is-hidden'));
   document.addEventListener('mouseenter', () => glow.classList.remove('is-hidden'));
 
+  // The loop used to run forever, burning a frame of main-thread work even
+  // with the pointer parked — which is exactly the budget scrolling needs.
+  // Now it only runs while the glow still has ground to cover, and mousemove
+  // wakes it back up.
   function frame() {
     // eased follow for the glow so it lags a touch behind the cursor
     gx += (mx - gx) * 0.15;
     gy += (my - gy) * 0.15;
-    glow.style.transform = `translate(${gx}px, ${gy}px) translate(-50%, -50%)`;
-    requestAnimationFrame(frame);
+    // translate3d keeps this on the compositor instead of repainting.
+    glow.style.transform = `translate3d(${gx}px, ${gy}px, 0) translate(-50%, -50%)`;
+    if (Math.abs(mx - gx) < 0.5 && Math.abs(my - gy) < 0.5) {
+      raf = 0; // settled on the cursor: nothing left to animate
+      return;
+    }
+    raf = requestAnimationFrame(frame);
   }
-  requestAnimationFrame(frame);
+
+  function start() {
+    if (!raf) raf = requestAnimationFrame(frame);
+  }
 }

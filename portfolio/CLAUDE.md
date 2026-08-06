@@ -20,7 +20,28 @@ lives inside `/portfoliov2`. See `README.md` for the hero reel pipeline and scop
   Reveal hidden states only exist under `html.js-reveal`. Content must stay visible with
   JS off, reduced motion on, or in browsers without scroll-driven animations.
 - **Hero reel:** `assets/reel/` files may not exist yet; `js/hero.js` keeps the poster on
-  load failure. Video is `preload="none"` with no autoplay attribute by design.
+  load failure. Video is `preload="none"` with no autoplay attribute by design, and
+  `js/hero.js` only starts it after `load`, on a capable client, while the hero is
+  uncovered and the tab is visible.
+
+## Performance rules (this page was once unusably janky — keep it that way fixed)
+
+- **No `mix-blend-mode` on anything full-viewport or moving.** The grain (`body::after`)
+  and the cursor glow both used one; a blended layer can't be composited on its own, so
+  the browser re-reads and re-blends the backdrop every frame. Plain alpha instead.
+- **No `backdrop-filter` on the fixed nav.** It re-snapshots and re-blurs the strip of
+  page under the bar on every scroll frame. The bar is near-opaque navy instead.
+- **Keep `.hero-media`'s blur radius small.** It's a full-viewport filter that the scroll
+  recede keeps re-scaling, so the blurred raster is rebuilt as you scroll. It stays
+  promoted via `will-change`; don't raise the radius back up.
+- **No animated GIFs as card covers.** A GIF decodes frame by frame on the main thread
+  the whole time it's on screen. Use a static `.webp`, or a muted looping `<video>`.
+- **rAF loops must stop.** `js/cursor.js` runs only until the glow catches the pointer.
+- **No `getBoundingClientRect()` per frame.** `js/mascot.js` caches eye rects and
+  invalidates them from passive `scroll`/`resize` listeners; reading layout mid-frame
+  while scroll-driven animations are running stalls the frame.
+- **`will-change` is for the one or two elements that really animate**, never for
+  short-lived clones (the cursor stickers would promote a layer each).
 
 ## Bilingual content — EN primary, PT toggle
 

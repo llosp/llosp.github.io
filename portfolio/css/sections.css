@@ -19,7 +19,12 @@
 
 /* Reel layer: blurred, darkened, slightly scaled so blur edges never show.
    The filter and transform live on this wrapper so the scroll-driven recede
-   (scroll.css) can deepen them by animating a single element. */
+   (scroll.css) can deepen them by animating a single element.
+
+   PERF: this is a full-viewport blur that the recede keeps re-scaling, so
+   the blurred result has to be re-rasterized as you scroll. Keep the radius
+   small (the cost scales with it) and keep the layer promoted so the
+   compositor can reuse the raster instead of repainting into the page. */
 .hero-media {
   position: absolute;
   inset: 0;
@@ -27,7 +32,8 @@
   margin: 0;
   max-width: none;
   transform: scale(1.05);
-  filter: blur(6px) brightness(0.45) saturate(1.1);
+  filter: blur(3px) brightness(0.45) saturate(1.1);
+  will-change: transform, opacity;
 }
 .hero-poster,
 .hero-video {

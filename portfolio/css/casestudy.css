@@ -283,3 +283,222 @@
   gap: var(--space-2);
 }
 .case-link { font-size: var(--step-0); }
+
+/* ═══ RESULT-FIRST TOPLINE ═══════════════════════════════════════════════ */
+/* The first thing inside the overlay: what happened, then the facts a
+   recruiter scans for. Prose starts below this block. */
+.case-topline {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+
+.case-results {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr));
+  gap: var(--space-2);
+}
+.case-result {
+  padding: var(--space-2);
+  background: rgba(245, 241, 232, 0.06);
+  border: 2px solid rgba(245, 241, 232, 0.25);
+  border-left: 6px solid var(--yellow);
+}
+.case-result:nth-child(even) { border-left-color: var(--pink); }
+.case-result-value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  line-height: 1.05;
+  color: var(--yellow);
+  text-wrap: balance;
+}
+.case-result:nth-child(even) .case-result-value { color: var(--pink); }
+.case-result-label {
+  display: block;
+  margin-top: 0.4em;
+  font-size: var(--step--1);
+  line-height: 1.35;
+  opacity: 0.8;
+}
+
+.case-metabar {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(13rem, 100%), 1fr));
+  gap: var(--space-2);
+  margin: 0;
+  padding: var(--space-2) 0;
+  border-top: 2px solid rgba(245, 241, 232, 0.25);
+  border-bottom: 2px solid rgba(245, 241, 232, 0.25);
+  font-size: var(--step--1);
+}
+.case-metabar dt {
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--pink);
+  opacity: 0.85;
+  font-size: 0.72rem;
+}
+.case-metabar dd {
+  margin: 0.3em 0 0;
+  line-height: 1.35;
+}
+
+/* ═══ CHARTS ═════════════════════════════════════════════════════════════ */
+/* Static SVG built once per case-study open — see js/chart.js. */
+.case-chart { margin: 0; }
+.case-chart-svg {
+  width: 100%;
+  height: auto;
+  display: block;
+  background: rgba(17, 17, 17, 0.35);
+  border: 2px solid rgba(245, 241, 232, 0.25);
+}
+.case-chart figcaption {
+  margin-top: var(--space-1);
+  max-width: 60ch;
+  font-size: var(--step--1);
+  opacity: 0.8;
+}
+
+.chart-grid line { stroke: rgba(245, 241, 232, 0.13); stroke-width: 1; }
+.chart-axis { stroke: rgba(245, 241, 232, 0.5); stroke-width: 2; }
+.chart-tick {
+  fill: var(--paper);
+  opacity: 0.7;
+  font-family: var(--font-mono);
+  font-size: 13px;
+}
+.chart-axis-label {
+  fill: var(--pink);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.chart-line { stroke-width: 3; stroke-linejoin: round; stroke-linecap: round; }
+.chart-dot { stroke: var(--navy); stroke-width: 2; }
+.chart-annotation {
+  fill: var(--paper);
+  font-family: var(--font-mono);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-2);
+  margin-top: var(--space-1);
+  font-size: var(--step--1);
+}
+.chart-legend li { display: flex; align-items: center; gap: 0.5em; }
+.chart-swatch {
+  width: 1.4em;
+  height: 0.45em;
+  flex: none;
+  border: 1px solid rgba(17, 17, 17, 0.6);
+}
+.chart-swatch--dashed {
+  background-image: linear-gradient(90deg, rgba(17, 17, 17, 0.85) 35%, transparent 35%);
+  background-size: 0.5em 100%;
+}
+
+/* ═══ ARTIFACTS ══════════════════════════════════════════════════════════ */
+/* Says what's inside the file before asking for the click. */
+.case-artifacts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(20rem, 100%), 1fr));
+  gap: var(--space-2);
+}
+.case-artifact {
+  display: block;
+  text-decoration: none;
+  padding: var(--space-2);
+  background: var(--paper);
+  color: var(--black);
+  border: 3px solid var(--black);
+  box-shadow: 6px 6px 0 var(--pink);
+  transition: transform var(--dur-fast) var(--ease-pop), box-shadow var(--dur-fast) var(--ease-pop);
+}
+.case-artifact:hover,
+.case-artifact:focus-visible {
+  transform: translate(-2px, -2px);
+  box-shadow: 9px 9px 0 var(--pink);
+}
+.case-artifact-kind {
+  display: block;
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: #8a2049;
+}
+.case-artifact-label {
+  display: block;
+  margin: 0.35em 0;
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  text-transform: uppercase;
+  line-height: 1.1;
+}
+.case-artifact-note {
+  display: block;
+  font-size: var(--step--1);
+  line-height: 1.45;
+}
+
+/* ═══ ECONOMY TUNER ══════════════════════════════════════════════════════ */
+/* The spreadsheet, running on the page. Event-driven only — one rAF per
+   input event, never a loop (see js/econtuner.js). */
+.case-econ-tuner {
+  padding: var(--space-2);
+  background: rgba(245, 241, 232, 0.06);
+  border: 2px solid var(--yellow);
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+}
+.tuner-head h4 {
+  font-family: var(--font-display);
+  font-size: var(--step-0);
+  text-transform: uppercase;
+  color: var(--yellow);
+}
+.tuner-control {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-1);
+  font-size: var(--step--1);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  color: var(--pink);
+}
+.tuner-range {
+  width: 100%;
+  accent-color: var(--yellow);
+  cursor: ew-resize;
+}
+.tuner-readouts {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(11rem, 100%), 1fr));
+  gap: var(--space-2);
+  margin: 0;
+}
+.tuner-readouts dt {
+  font-size: 0.72rem;
+  text-transform: uppercase;
+  letter-spacing: 0.14em;
+  opacity: 0.75;
+}
+.tuner-readouts dd {
+  margin: 0.1em 0 0;
+  font-size: var(--step-1);
+  font-weight: 700;
+  color: var(--yellow);
+  line-height: 1.1;
+}
+.tuner-note {
+  font-size: var(--step--1);
+  opacity: 0.8;
+  max-width: 60ch;
+}

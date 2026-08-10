@@ -1,5 +1,7 @@
 import { projects } from './data/projects.js';
 import { t, tk } from './i18n.js';
+import { lineChart, chartLegend } from './chart.js';
+import { economyTuner } from './econtuner.js';
 
 const overlay = () => document.getElementById('case-overlay');
 const HASH_PREFIX = '#case/';
@@ -44,6 +46,65 @@ function renderTable(tb) {
   return wrap;
 }
 
+// Outcome chips: the case study leads with what happened, not with narrative.
+function renderResults(results) {
+  const row = el('ul', 'case-results');
+  results.forEach(result => {
+    const li = el('li', 'case-result');
+    li.append(
+      el('span', 'case-result-value', t(result.value)),
+      el('span', 'case-result-label mono', t(result.label))
+    );
+    row.append(li);
+  });
+  return row;
+}
+
+// Role / timeline / team / studio / engine / platform, in a fixed order so the
+// same fact sits in the same place across every case study.
+const META_FIELDS = [
+  ['timeline', 'case.timeline'],
+  ['team', 'case.team'],
+  ['studio', 'case.studio'],
+  ['engine', 'case.engine'],
+  ['platform', 'case.platform']
+];
+
+function renderMetabar(meta) {
+  const dl = el('dl', 'case-metabar mono');
+  META_FIELDS.forEach(([key, labelKey]) => {
+    if (!meta[key]) return;
+    // Each pair is wrapped so the grid can't split a label from its value.
+    const pair = el('div', 'case-metafield');
+    pair.append(el('dt', null, tk(labelKey)), el('dd', null, t(meta[key])));
+    dl.append(pair);
+  });
+  return dl;
+}
+
+function renderChart(spec) {
+  const fig = el('figure', 'case-chart');
+  fig.append(lineChart(spec));
+  if (spec.series.some(s => s.label)) fig.append(chartLegend(spec.series));
+  if (spec.caption) {
+    // Plain-language "what this shows", so the chart reads without the prose.
+    fig.append(el('figcaption', null, t(spec.caption)));
+  }
+  return fig;
+}
+
+function renderArtifact(artifact) {
+  const card = el('a', 'case-artifact');
+  card.href = artifact.file;
+  if (artifact.download !== false) card.setAttribute('download', '');
+  card.append(
+    el('span', 'case-artifact-kind mono', t(artifact.kind)),
+    el('span', 'case-artifact-label', t(artifact.label)),
+    el('span', 'case-artifact-note', t(artifact.note))
+  );
+  return card;
+}
+
 function buildBody(project) {
   const cs = project.caseStudy;
   const body = document.getElementById('case-body');
@@ -69,6 +130,14 @@ function buildBody(project) {
     img.decoding = 'async';
     fig.append(img);
     body.append(fig);
+  }
+
+  // Result first, then the facts a recruiter scans for, then the narrative.
+  if (cs.results?.length || cs.meta) {
+    const block = el('div', 'case-topline');
+    if (cs.results?.length) block.append(renderResults(cs.results));
+    if (cs.meta) block.append(renderMetabar(cs.meta));
+    body.append(block);
   }
 
   if (cs.overview) body.append(section('case.overview', el('p', null, t(cs.overview))));
@@ -128,10 +197,18 @@ function buildBody(project) {
   if (cs.balancing) {
     const children = [];
     if (cs.balancing.formula) children.push(el('p', 'case-formula', t(cs.balancing.formula)));
+    if (cs.balancing.body) children.push(el('p', null, t(cs.balancing.body)));
     const tables = cs.balancing.tables || (cs.balancing.table ? [cs.balancing.table] : []);
     tables.forEach(tb => children.push(renderTable(tb)));
-    if (cs.balancing.body) children.push(el('p', null, t(cs.balancing.body)));
+    (cs.charts || []).forEach(spec => children.push(renderChart(spec)));
+    if (cs.tuner) children.push(economyTuner(cs.tuner.targetMinutes));
     body.append(section('case.balancing', ...children));
+  }
+
+  if (cs.artifacts?.length) {
+    const grid = el('div', 'case-artifacts');
+    cs.artifacts.forEach(artifact => grid.append(renderArtifact(artifact)));
+    body.append(section('case.artifacts', grid));
   }
 
   if (cs.implementation) body.append(section('case.implementation', el('p', null, t(cs.implementation))));

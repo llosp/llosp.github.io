@@ -89,14 +89,39 @@ core loop → core loop · atributos → attributes
 
 ## Case-study schema (all `caseStudy.*` fields optional; renderer skips what's absent)
 
-`heroImage {src, alt}` · `overview` · `role` · `responsibilities [{group, items[]}]` ·
-`challenge` · `coreLoop {steps[], note}` · `systems [{title, body}]` · `progression` ·
-`combat {formula, body}` · `balancing {formula?, tables[]|table, body}` ·
-`implementation` · `gallery [{src, alt}]` · `learnings` · `links [{label, url, kind}]`
+`heroImage {src, alt}` · `heroVideo {youtube, title}` · `results [{value, label}]` ·
+`meta {timeline, team, studio, engine, platform}` · `overview` · `role` ·
+`responsibilities [{group, items[]}]` · `challenge` · `coreLoop {steps[], note}` ·
+`systems [{title, body}]` · `progression` · `combat {formula, body}` ·
+`balancing {formula?, tables[]|table, body}` · `charts [chartSpec]` · `tuner {targetMinutes}` ·
+`artifacts [{kind, label, note, file, download?}]` · `implementation` ·
+`gallery [{src, alt}]` · `learnings` · `links [{label, url, kind}]`
 
 `combat.formula` and `balancing.formula` accept a string or `{ en, pt }` (rendered in the
 `.case-formula` panel). `balancing.tables` renders multiple tables; `balancing.table`
 (single) still works.
+
+**Result-first order.** `results` (2–3 outcome chips) and `meta` render immediately after
+the hero media, above `overview`. A recruiter should read what happened, then the facts
+they scan for, before any narrative. `meta` fields render in the fixed order listed above
+so the same fact sits in the same place across every case study; omit a field rather than
+guessing a date or a team size.
+
+**Charts** (`js/chart.js`, rendered inside the `balancing` section under the tables) are
+inline SVG built once when a case study opens, then a static tree — no canvas, no rAF, no
+animation. Do not make them interactive or resize-aware; they scale via `viewBox`. Every
+spec needs `title` + `desc` (screen readers) and a plain-language `caption` so the chart
+reads without the prose. Series colours may be CSS custom properties (`"var(--yellow)"`).
+
+**The tuner** (`js/econtuner.js`, ClicaChorro only) reproduces the balancing spreadsheet
+live: it re-solves `C0 = T·P0·(r−1)/(rᴺ−1)` from the slider and rebuilds the readouts and
+chart. Its rAF is a coalescer for drag events, not a loop — each `input` schedules at most
+one frame and nothing reschedules itself. Keep it that way.
+
+`assets/clicachorro-balancing.xlsx` is generated, bilingual, and the one linked from the
+site. The older PT-only `clicachorro-balanceamento.xlsx` has its input cells in column C
+while its formulas reference column D, so its model never actually recalculates — don't
+link it.
 
 ## Mascot dog
 

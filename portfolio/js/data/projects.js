@@ -28,6 +28,21 @@ export const projects = [
           pt: "Um duelo contra Hoarse Ryder: o timer ainda marca 9 quando o jogador atira, e TOO EARLY! pisca na tela"
         }
       },
+      results: [
+        { value: { en: "21st / 10,587", pt: "21º / 10.587" },
+          label: { en: "GMTK Jam 2026 — top 0.2%", pt: "GMTK Jam 2026 — top 0,2%" } },
+        { value: { en: "218 ratings", pt: "218 avaliações" },
+          label: { en: "10× the jam average of 21", pt: "10× a média da jam, de 21" } },
+        { value: { en: "5 bosses", pt: "5 chefes" },
+          label: { en: "One button, four days", pt: "Um botão, quatro dias" } }
+      ],
+      meta: {
+        timeline: { en: "4 days · GMTK Jam 2026", pt: "4 dias · GMTK Jam 2026" },
+        team: { en: "3 — design, code and audio mine", pt: "3 — design, código e áudio meus" },
+        studio: "Wolfish Studios",
+        engine: "Godot 4 · GDScript",
+        platform: { en: "Web", pt: "Web" }
+      },
       overview: {
         en: "The game opens on a letter: \"Dear Accountant — this city is drowning in criminals who leave nothing behind but unpaid debts. Do not mistake this for a call for heroism. Balance the ledger, and make sure every criminal pays what they owe.\" So you ride in and work through five names, one location at a time, and the ledger you're balancing is a countdown. The duel never changes — a counter ticks down, you draw on zero — but every outlaw cooks the books differently, and the last one turns out to have written the letter. Made in 4 days for GMTK Jam 2026, where it finished 21st with 218 ratings and over 150 comments.",
         pt: "O jogo abre numa carta: \"Caro Contador — esta cidade está afogada em criminosos que não deixam nada além de dívidas não pagas. Não confunda isto com um chamado ao heroísmo. Equilibre o livro-caixa e garanta que todo criminoso pague o que deve.\" Então você chega e percorre cinco nomes, um local por vez, e o livro que você está equilibrando é uma contagem regressiva. O duelo nunca muda — um contador roda, você saca no zero — mas cada fora da lei frauda os livros de um jeito, e o último acaba sendo quem escreveu a carta. Feito em 4 dias para a GMTK Jam 2026, onde ficou em 21º com 218 avaliações e mais de 150 comentários."
@@ -204,6 +219,39 @@ export const projects = [
           }
         ]
       },
+      charts: [
+        {
+          title: { en: "Draw window and feint chance against pressure", pt: "Janela de saque e chance de finta contra a pressão" },
+          desc: {
+            en: "As pressure rises from 0 to 1 the draw window narrows linearly from 0.55 to 0.40 seconds while the feint chance climbs from 0.35 to 1.00.",
+            pt: "Conforme a pressão sobe de 0 a 1, a janela de saque estreita linearmente de 0,55 para 0,40 segundos enquanto a chance de finta sobe de 0,35 para 1,00."
+          },
+          caption: {
+            en: "One float moves two dials in opposite directions: the window you have to react in shrinks while the odds of being lied to rise. Play well and the fight tightens; lose a heart and it opens back up — no difficulty menu required.",
+            pt: "Um float move dois botões em direções opostas: a janela pra reagir encolhe enquanto a chance de ser enganado sobe. Jogue bem e a luta aperta; perca um coração e ela abre de novo — sem menu de dificuldade."
+          },
+          xLabel: { en: "Pressure", pt: "Pressão" },
+          yLabel: { en: "Draw window (s)", pt: "Janela de saque (s)" },
+          yRightLabel: { en: "Feint chance", pt: "Chance de finta" },
+          series: [
+            {
+              label: { en: "Draw window (s)", pt: "Janela de saque (s)" },
+              color: "var(--yellow)",
+              points: [[0, 0.55], [0.25, 0.5125], [0.5, 0.475], [0.75, 0.4375], [1, 0.4]]
+            },
+            {
+              label: { en: "Feint chance", pt: "Chance de finta" },
+              color: "var(--pink)",
+              axis: "right",
+              dashed: true,
+              points: [[0, 0.35], [0.25, 0.5125], [0.5, 0.675], [0.75, 0.8375], [1, 1]]
+            }
+          ],
+          annotations: [
+            { x: 0.36, y: 0.499, text: { en: "0.34 — shift unlocks", pt: "0,34 — shift libera" }, dy: -14, anchor: "start" }
+          ]
+        }
+      ],
       implementation: {
         en: "Godot 4 and GDScript, no external tooling. One duel state machine, five boss subclasses, and both the fights and the writing authored as data: Angus's entire event track — which timer is real, when the rack shuffles, which number ends the count, what he says while doing it — is inspector data rather than code, and the town's dialogue is a set of script files with speaker, portrait and expression tags. Ryder's crosstalk is seven three-line resources drawn from a shuffle bag. In a four-day jam that meant rewriting a boss's personality or difficulty was a field edit between playtests instead of a code change. One of the commits is literally named 'danny easier by 0.40'.",
         pt: "Godot 4 e GDScript, sem ferramental externo. Uma máquina de estados do duelo, cinco subclasses de chefe, e tanto as lutas quanto a escrita escritas como dado: a trilha de eventos inteira do Angus — qual timer é real, quando a estante embaralha, qual número encerra a contagem, o que ele fala enquanto faz isso — é dado do inspector, não código, e o diálogo da cidade é um conjunto de arquivos de script com tags de falante, retrato e expressão. A conversa do Ryder são sete recursos de três falas sorteados de um saco embaralhado. Numa jam de quatro dias isso significou que reescrever a personalidade ou a dificuldade de um chefe era editar um campo entre playtests, não mexer no código. Um dos commits se chama literalmente 'danny easier by 0.40'."
@@ -261,6 +309,26 @@ export const projects = [
       heroImage: {
         src: "./assets/img/projects/esqueleto-chico-poster.webp",
         alt: { en: "Esqueleto Chico: Ossos do Ofício, key art poster", pt: "Esqueleto Chico: Ossos do Ofício, pôster/key art" }
+      },
+      results: [
+        {
+          value: { en: "Official selection", pt: "Seleção oficial" },
+          label: { en: "SB Games — Brazil's academic game showcase", pt: "SB Games — mostra acadêmica de jogos do Brasil" }
+        },
+        {
+          value: { en: "1 sheet", pt: "1 planilha" },
+          label: { en: "Drove every enemy, boss and upgrade number", pt: "Conduziu cada número de inimigo, chefe e upgrade" }
+        },
+        {
+          value: { en: "×1.00 → ×2.34", pt: "×1,00 → ×2,34" },
+          label: { en: "Boss HP, scaled to how much you cleared", pt: "HP do chefe, escalado pelo quanto você limpou" }
+        }
+      ],
+      meta: {
+        team: { en: "Prisma Game Lab team — design, sound, UI and art mine", pt: "Equipe do Prisma Game Lab — design, som, UI e arte meus" },
+        studio: "Prisma Game Lab",
+        engine: "Unity · C#",
+        platform: { en: "PC", pt: "PC" }
       },
       overview: {
         en: "“Esqueleto Chico: Ossos do Ofício” is a top-down action game set in an oddly corporate crypt. You play Chico, a prodigy skeleton left in charge while the boss is away on a 'business trip', which sparks envy among the other minions, who steal the boss's favorite mug to sabotage him. A Prisma Game Lab production.",
@@ -411,6 +479,32 @@ export const projects = [
           }
         ]
       },
+      charts: [
+        {
+          title: { en: "Boss HP against rooms cleared", pt: "HP do chefe contra salas limpas" },
+          desc: {
+            en: "Boss HP is flat until the fourth room is cleared, then rises on a base-2.3 logarithm, flattening again by the seventh.",
+            pt: "O HP do chefe é plano até a quarta sala limpa, depois sobe num logaritmo de base 2,3, achatando de novo na sétima."
+          },
+          caption: {
+            en: "The curve bends early and then flattens: clearing every room makes the boss 2.34× tougher, never 8× tougher. That flattening is the whole point of a logarithm here.",
+            pt: "A curva dobra cedo e depois achata: limpar todas as salas deixa o chefe 2,34× mais duro, nunca 8× mais duro. Esse achatamento é justamente o ponto do logaritmo aqui."
+          },
+          xLabel: { en: "Rooms cleared", pt: "Salas limpas" },
+          yLabel: { en: "Boss HP", pt: "HP do chefe" },
+          series: [
+            {
+              label: { en: "Boss HP", pt: "HP do chefe" },
+              color: "var(--pink)",
+              points: [[0, 4252], [1, 4252], [2, 4252], [3, 4252], [4, 7078], [5, 8217], [6, 9148], [7, 9935]]
+            }
+          ],
+          annotations: [
+            { x: 1.5, y: 4252, text: { en: "×1.00", pt: "×1,00" } },
+            { x: 6.6, y: 9935, text: { en: "×2.34", pt: "×2,34" } }
+          ]
+        }
+      ],
       implementation: {
         en: "The sheet was the source of truth; values flowed into Unity and got hammered in weekly playtests. Because damage came from the player's expected survivability, rebalancing a whole floor was often a one-cell change.",
         pt: "A planilha era a fonte da verdade; os valores iam para a Unity e apanhavam nos playtests semanais. Como o dano vinha da sobrevivência esperada do player, rebalancear um andar inteiro era muitas vezes mudar uma célula."
@@ -454,6 +548,26 @@ export const projects = [
       pt: "Um roguelite de masmorra em que você é um cuidador covarde que não consegue lançar nem o feitiço mais simples, então manda os bebês sob seus cuidados para a luta. Feito por duas pessoas, é conduzido por uma IA inimiga que pontua cada par (skill, alvo) por sorteio ponderado, com inteligência e convicção como diais de dificuldade separados. Ainda em desenvolvimento ativo."
     },
     caseStudy: {
+      results: [
+        {
+          value: { en: "2 dials", pt: "2 diais" },
+          label: { en: "Intelligence and conviction, tuned separately", pt: "Inteligência e convicção, ajustadas em separado" }
+        },
+        {
+          value: { en: "0 team AI", pt: "0 IA de time" },
+          label: { en: "Group coordination emerges from a shared intent board", pt: "Coordenação de grupo emerge de um quadro de intenções" }
+        },
+        {
+          value: { en: "1 shared pool", pt: "1 pool compartilhado" },
+          label: { en: "Every turn is a negotiation between three characters", pt: "Cada turno é uma negociação entre três personagens" }
+        }
+      ],
+      meta: {
+        timeline: { en: "In development — phases 1 and 2 shipped", pt: "Em desenvolvimento — fases 1 e 2 entregues" },
+        team: { en: "2 — design and all GDScript mine, art and UI by a collaborator", pt: "2 — design e todo o GDScript meus, arte e UI de um colaborador" },
+        engine: "Godot 4.7 · GDScript",
+        platform: { en: "PC", pt: "PC" }
+      },
       overview: {
         en: "Projeto Maguitos is a roguelite dungeon crawler currently in active development, built by a two-person team. You play a caretaker at a magical daycare who can't cast even the simplest spell. On your first day almost every child in your care vanishes into the Cursed Forest, and your only way out is to let the toddlers themselves fight for you. It's a run of back-to-back encounters: survive a fixed number of battles, rescue toddlers, swap your party, and reach the boss intact.",
         pt: "Projeto Maguitos é um roguelite de masmorra atualmente em desenvolvimento ativo, feito por uma dupla. Você é um cuidador de uma creche mágica que não consegue lançar nem o feitiço mais simples. No seu primeiro dia, quase todas as crianças sob seus cuidados desaparecem na Floresta Amaldiçoada, e sua única saída é deixar os próprios bebês lutarem por você. É uma sequência de combates um atrás do outro: sobreviva a um número fixo de batalhas, resgate bebês, troque sua party e chegue ao chefe inteiro."
@@ -599,6 +713,39 @@ export const projects = [
           }
         ]
       },
+      charts: [
+        {
+          title: { en: "Conviction sharpening the action draw", pt: "Convicção afiando o sorteio de ações" },
+          desc: {
+            en: "With five candidate actions weighted 10, 7, 5, 3 and 1, conviction 0 gives every action a 20% chance; conviction 1 gives the best action 38%; conviction 3 gives it 67%.",
+            pt: "Com cinco ações candidatas de pesos 10, 7, 5, 3 e 1, convicção 0 dá 20% a cada ação; convicção 1 dá 38% à melhor; convicção 3 dá 67%."
+          },
+          caption: {
+            en: "The same weights, three difficulties. Conviction never changes what the enemy wants — it changes how faithfully it obeys itself. That's why a high-conviction enemy with a bad personality plays worse, not better.",
+            pt: "Os mesmos pesos, três dificuldades. A convicção nunca muda o que o inimigo quer — muda o quanto ele obedece a si mesmo. Por isso um inimigo de convicção alta com personalidade ruim joga pior, não melhor."
+          },
+          xLabel: { en: "Action, best to worst (weights 10 · 7 · 5 · 3 · 1)", pt: "Ação, da melhor à pior (pesos 10 · 7 · 5 · 3 · 1)" },
+          yLabel: { en: "Chance of being picked", pt: "Chance de ser escolhida" },
+          series: [
+            {
+              label: { en: "Conviction 0 — erratic", pt: "Convicção 0 — errático" },
+              color: "var(--paper)",
+              dashed: true,
+              points: [[1, 0.2], [2, 0.2], [3, 0.2], [4, 0.2], [5, 0.2]]
+            },
+            {
+              label: { en: "Conviction 1 — plays its odds", pt: "Convicção 1 — joga suas chances" },
+              color: "var(--yellow)",
+              points: [[1, 0.3846], [2, 0.2692], [3, 0.1923], [4, 0.1154], [5, 0.0385]]
+            },
+            {
+              label: { en: "Conviction 3 — near-deterministic", pt: "Convicção 3 — quase determinístico" },
+              color: "var(--pink)",
+              points: [[1, 0.6684], [2, 0.2293], [3, 0.0835], [4, 0.018], [5, 0.0007]]
+            }
+          ]
+        }
+      ],
       implementation: {
         en: "Built in Godot 4.7. Each skill type carries its own estimator and score (ai_estimate and ai_score), with a damage default on the base class; heal, buff and DoT override it. A new skill or exception never touches the central scorer (the same pattern the game's resolve() uses elsewhere), which keeps the AI extensible without becoming one giant if-statement. Adding a combat mechanic means adding a subclass, not editing the AI's brain.",
         pt: "Feito em Godot 4.7. Cada tipo de skill carrega seu próprio estimador e pontuação (ai_estimate e ai_score), com um padrão de dano na classe base; cura, buff e DoT sobrescrevem isso. Uma skill nova ou uma exceção nunca toca o pontuador central (o mesmo padrão que o resolve() do jogo usa em outros lugares), o que mantém a IA extensível sem virar um if gigante. Adicionar uma mecânica de combate significa adicionar uma subclasse, não editar o cérebro da IA."
@@ -645,6 +792,25 @@ export const projects = [
       heroImage: {
         src: "./assets/img/projects/clicachorro-gameplay-complete.webp",
         alt: { en: "A fully decorated room: band poster, boombox, car and a sleepy plush toy beside the dog", pt: "Um quarto totalmente decorado: pôster de banda, boombox, carro e uma pelúcia sonolenta ao lado do cachorro" }
+      },
+      results: [
+        {
+          value: { en: "45.0 min", pt: "45,0 min" },
+          label: { en: "Target session length, hit exactly", pt: "Duração-alvo da sessão, acertada na mosca" }
+        },
+        {
+          value: { en: "1 input cell", pt: "1 célula de input" },
+          label: { en: "Retunes all 12 stages", pt: "Retuna os 12 estágios" }
+        },
+        {
+          value: { en: "618 → 108,780", pt: "618 → 108.780" },
+          label: { en: "Cost curve, derived not authored", pt: "Curva de custo, derivada e não escrita à mão" }
+        }
+      ],
+      meta: {
+        team: { en: "Solo — design, code, art and audio", pt: "Solo — design, código, arte e áudio" },
+        engine: { en: "JavaScript · Google Sheets", pt: "JavaScript · Google Sheets" },
+        platform: { en: "Web", pt: "Web" }
       },
       overview: {
         en: "ClicaChorro is a cozy idle-clicker for the browser. You click to shower a dog with affection; that affection buys helpers and upgrades that idle-earn for you, and each purchase unlocks another piece of furniture for the room the dog lives in, from an empty room all the way to a fully decorated one. A solo project, built to test one idea: that a clicker's whole economy can be derived from how long you want the run to last.",
@@ -773,6 +939,18 @@ export const projects = [
           }
         ]
       },
+      tuner: { targetMinutes: 45 },
+      artifacts: [
+        {
+          kind: { en: "Spreadsheet · xlsx", pt: "Planilha · xlsx" },
+          label: { en: "The ClicaChorro balancing sheet", pt: "A planilha de balanceamento do ClicaChorro" },
+          note: {
+            en: "The live workbook, bilingual. Sheet 1 is the model: blue cells are the six inputs, every black cell is a formula, and the 12-stage curve recalculates as you type. Sheet 2 is the written derivation of C0. 10 KB.",
+            pt: "A pasta de trabalho viva, bilíngue. A aba 1 é o modelo: células azuis são os seis inputs, toda célula preta é fórmula, e a curva de 12 estágios recalcula enquanto você digita. A aba 2 é a derivação escrita do C0. 10 KB."
+          },
+          file: "./assets/clicachorro-balancing.xlsx"
+        }
+      ],
       implementation: {
         en: "The sheet is the source of truth; the web build reads the solved curve as data, so the JavaScript never hardcodes a cost. Because the economy is derived, playtest notes like 'the mid-game sags' became a tweak to one growth ratio rather than a manual pass over every stage.",
         pt: "A planilha é a fonte da verdade; o build web lê a curva resolvida como dados, então o JavaScript nunca cravou um custo na mão. Como a economia é derivada, notas de playtest como 'o meio-jogo cai' viravam um ajuste em uma razão de crescimento, não uma passada manual por cada estágio."

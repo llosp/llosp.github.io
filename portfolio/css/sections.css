@@ -99,6 +99,22 @@
   z-index: 3;
 }
 
+/* The specialty line a recruiter reads before anything else. Pulled up tight
+   under the wordmark (.hero-content's gap is sized for the intro paragraph). */
+.hero-role {
+  margin: calc(var(--space-3) * -0.55) 0 0;
+  padding: 0.3em 0.9em;
+  background: var(--paper);
+  color: var(--black);
+  border: 3px solid var(--black);
+  box-shadow: var(--hard-shadow);
+  font-size: var(--step-0);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  rotate: -1.5deg;
+}
+
 .hero-intro {
   max-width: 34em;
   font-size: var(--step-0);

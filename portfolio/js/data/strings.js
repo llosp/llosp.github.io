@@ -8,14 +8,14 @@ export const strings = {
 
   "hero.role":  { en: "Systems & Balance Designer", pt: "Systems & Balance Designer" },
   "hero.intro": {
-    en: "I derive systems instead of guessing at them — boss damage from the player's expected HP, a 45-minute economy solved backwards from the clock — and then I write the code that runs them. The last one placed 21st of 10,587 at GMTK Jam 2026, in four days.",
-    pt: "Eu derivo sistemas em vez de chutá-los — dano de chefe a partir do HP esperado do player, uma economia de 45 minutos resolvida de trás pra frente a partir do relógio — e depois escrevo o código que os roda. O último ficou em 21º entre 10.587 na GMTK Jam 2026, em quatro dias."
+    en: "I derive systems instead of guessing at them, boss damage from the player's expected HP, a 45-minute economy solved backwards from the clock, and then I write the code that runs them. The last one placed 21st of 10,587 at GMTK Jam 2026, in four days.",
+    pt: "Eu derivo sistemas em vez de chutá-los, dano de chefe a partir do HP esperado do player, uma economia de 45 minutos resolvida de trás pra frente a partir do relógio, e depois escrevo o código que os roda. O último ficou em 21º entre 10.587 na GMTK Jam 2026, em quatro dias."
   },
   "hero.cta":        { en: "See the work ↓", pt: "Ver projetos ↓" },
 
   "stats.title":     { en: "Recognition", pt: "Reconhecimento" },
   "stats.rank.value":    { en: "21st / 10,587", pt: "21º / 10.587" },
-  "stats.rank.label":    { en: "GMTK Jam 2026 — top 0.2%", pt: "GMTK Jam 2026 — top 0,2%" },
+  "stats.rank.label":    { en: "GMTK Jam 2026, top 0.2%", pt: "GMTK Jam 2026, top 0,2%" },
   "stats.ratings.value": { en: "218 ratings", pt: "218 avaliações" },
   "stats.ratings.label": { en: "10× the jam average of 21", pt: "10× a média da jam, de 21" },
   "stats.days.value":    { en: "4 days", pt: "4 dias" },
@@ -40,8 +40,8 @@ export const strings = {
     pt: "No Prisma Game Lab atuei como game designer e coordenei equipes de projeto, entregando protótipos, rodando playtests e mantendo design e implementação conversando. Estou concluindo Design na PUC-Rio."
   },
   "about.p2": {
-    en: "Balance is the spine; the range around it is deliberate. I prototype in Unity and Godot, write the gameplay code, compose the audio, make 2D art and 3D models, and design the UI — so a tuning change is never blocked on someone else's sprint.",
-    pt: "O balanceamento é a espinha; a amplitude ao redor é deliberada. Prototipo em Unity e Godot, escrevo o código de gameplay, componho o áudio, faço arte 2D e modelos 3D, e desenho a UI — então um ajuste de tuning nunca fica travado na sprint de outra pessoa."
+    en: "Balance is the spine; the range around it is deliberate. I prototype in Unity and Godot, write the gameplay code, compose the audio, make 2D art and 3D models, and design the UI, so a tuning change is never blocked on someone else's sprint.",
+    pt: "O balanceamento é a espinha; a amplitude ao redor é deliberada. Prototipo em Unity e Godot, escrevo o código de gameplay, componho o áudio, faço arte 2D e modelos 3D, e desenho a UI, então um ajuste de tuning nunca fica travado na sprint de outra pessoa."
   },
   "about.stamp1":    { en: "PUC-Rio · Design", pt: "PUC-Rio · Design" },
   "about.stamp2":    { en: "Prisma Game Lab", pt: "Prisma Game Lab" },
@@ -55,8 +55,8 @@ export const strings = {
 
   "contact.title":   { en: "Let's make games", pt: "Bora fazer jogos" },
   "contact.lead": {
-    en: "I design the system, derive the numbers, build it, and tune it until it's fun — without handing it off four times. If that's a gap on your team, let's talk.",
-    pt: "Eu projeto o sistema, derivo os números, construo e ajusto até ficar divertido — sem repassar pra quatro pessoas no caminho. Se isso é uma lacuna no seu time, vamos conversar."
+    en: "I design the system, derive the numbers, build it, and tune it until it's fun, without handing it off four times. If that's a gap on your team, let's talk.",
+    pt: "Eu projeto o sistema, derivo os números, construo e ajusto até ficar divertido, sem repassar pra quatro pessoas no caminho. Se isso é uma lacuna no seu time, vamos conversar."
   },
 
   "case.close":      { en: "Close case study", pt: "Fechar estudo de caso" },
@@ -86,8 +86,8 @@ export const strings = {
   "tuner.derived": { en: "Derived base cost (C₀)", pt: "Custo base derivado (C₀)" },
   "tuner.check":   { en: "Stage times sum to", pt: "Soma dos tempos por estágio" },
   "tuner.note": {
-    en: "This is the spreadsheet, running live. Drag the target and every cost, output and stage time re-solves from it — nothing here is hand-picked.",
-    pt: "Esta é a planilha, rodando ao vivo. Arraste o alvo e cada custo, produção e tempo de estágio é resolvido de novo a partir dele — nada aqui é escolhido na mão."
+    en: "This is the spreadsheet, running live. Drag the target and every cost, output and stage time re-solves from it, nothing here is hand-picked.",
+    pt: "Esta é a planilha, rodando ao vivo. Arraste o alvo e cada custo, produção e tempo de estágio é resolvido de novo a partir dele, nada aqui é escolhido na mão."
   },
   "tuner.stage":   { en: "Stage", pt: "Estágio" },
   "tuner.cost":    { en: "Cost", pt: "Custo" },

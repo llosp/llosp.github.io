@@ -17,8 +17,8 @@ export const projects = [
       pt: "Um duelo contra Hoarse Ryder: o timer ainda marca 9 quando o jogador atira, e TOO EARLY! pisca na tela"
     },
     summary: {
-      en: "You're an accountant hired by letter to collect on a town full of outlaws — one bullet per debt. The whole game is one button: wait for the count to hit zero, then draw. Nobody shoots faster than you, so every outlaw cheats the count instead, each one in the way their character would. Made in 4 days for GMTK Jam 2026; placed 21st.",
-      pt: "Você é um contador contratado por carta para cobrar uma cidade cheia de fora da lei — uma bala por dívida. O jogo inteiro é um botão: espere a contagem chegar a zero e saque. Ninguém saca mais rápido que você, então cada fora da lei falsifica a contagem — cada um do jeito que o personagem dele falsificaria. Feito em 4 dias para a GMTK Jam 2026; ficou em 21º."
+      en: "You're an accountant hired by letter to collect on a town full of outlaws, one bullet per debt. The whole game is one button: wait for the count to hit zero, then draw. Nobody shoots faster than you, so every outlaw cheats the count instead, each one in the way their character would. Made in 4 days for GMTK Jam 2026; placed 21st.",
+      pt: "Você é um contador contratado por carta para cobrar uma cidade cheia de fora da lei, uma bala por dívida. O jogo inteiro é um botão: espere a contagem chegar a zero e saque. Ninguém saca mais rápido que você, então cada fora da lei falsifica a contagem, cada um do jeito que o personagem dele falsificaria. Feito em 4 dias para a GMTK Jam 2026; ficou em 21º."
     },
     caseStudy: {
       heroImage: {
@@ -30,7 +30,7 @@ export const projects = [
       },
       results: [
         { value: { en: "21st / 10,587", pt: "21º / 10.587" },
-          label: { en: "GMTK Jam 2026 — top 0.2%", pt: "GMTK Jam 2026 — top 0,2%" } },
+          label: { en: "GMTK Jam 2026, top 0.2%", pt: "GMTK Jam 2026, top 0,2%" } },
         { value: { en: "218 ratings", pt: "218 avaliações" },
           label: { en: "10× the jam average of 21", pt: "10× a média da jam, de 21" } },
         { value: { en: "5 bosses", pt: "5 chefes" },
@@ -38,14 +38,14 @@ export const projects = [
       ],
       meta: {
         timeline: { en: "4 days · GMTK Jam 2026", pt: "4 dias · GMTK Jam 2026" },
-        team: { en: "3 — design, code and audio mine", pt: "3 — design, código e áudio meus" },
+        team: { en: "3, design, code and audio mine", pt: "3, design, código e áudio meus" },
         studio: "Wolfish Studios",
         engine: "Godot 4 · GDScript",
         platform: { en: "Web", pt: "Web" }
       },
       overview: {
-        en: "The game opens on a letter: \"Dear Accountant — this city is drowning in criminals who leave nothing behind but unpaid debts. Do not mistake this for a call for heroism. Balance the ledger, and make sure every criminal pays what they owe.\" So you ride in and work through five names, one location at a time, and the ledger you're balancing is a countdown. The duel never changes — a counter ticks down, you draw on zero — but every outlaw cooks the books differently, and the last one turns out to have written the letter. Made in 4 days for GMTK Jam 2026, where it finished 21st with 218 ratings and over 150 comments.",
-        pt: "O jogo abre numa carta: \"Caro Contador — esta cidade está afogada em criminosos que não deixam nada além de dívidas não pagas. Não confunda isto com um chamado ao heroísmo. Equilibre o livro-caixa e garanta que todo criminoso pague o que deve.\" Então você chega e percorre cinco nomes, um local por vez, e o livro que você está equilibrando é uma contagem regressiva. O duelo nunca muda — um contador roda, você saca no zero — mas cada fora da lei frauda os livros de um jeito, e o último acaba sendo quem escreveu a carta. Feito em 4 dias para a GMTK Jam 2026, onde ficou em 21º com 218 avaliações e mais de 150 comentários."
+        en: "The game opens on a letter: \"Dear Accountant, this city is drowning in criminals who leave nothing behind but unpaid debts. Do not mistake this for a call for heroism. Balance the ledger, and make sure every criminal pays what they owe.\" So you ride in and work through five names, one location at a time, and the ledger you're balancing is a countdown. The duel never changes, a counter ticks down, you draw on zero, but every outlaw cooks the books differently, and the last one turns out to have written the letter. Made in 4 days for GMTK Jam 2026, where it finished 21st with 218 ratings and over 150 comments.",
+        pt: "O jogo abre numa carta: \"Caro Contador, esta cidade está afogada em criminosos que não deixam nada além de dívidas não pagas. Não confunda isto com um chamado ao heroísmo. Equilibre o livro-caixa e garanta que todo criminoso pague o que deve.\" Então você chega e percorre cinco nomes, um local por vez, e o livro que você está equilibrando é uma contagem regressiva. O duelo nunca muda, um contador roda, você saca no zero, mas cada fora da lei frauda os livros de um jeito, e o último acaba sendo quem escreveu a carta. Feito em 4 dias para a GMTK Jam 2026, onde ficou em 21º com 218 avaliações e mais de 150 comentários."
       },
       role: {
         en: "A three-person team at Wolfish Studios. I did the game design, all of the programming and the audio; Frovio and Zumate made the art. The rule I designed everything against: a boss's mechanic has to be a joke about who they are. The loan shark lends you time at interest. The villain whose running gag is forgetting things makes you forget the count. Follow that rule and the systems work and the writing works, from the same decision.",
@@ -80,8 +80,8 @@ export const projects = [
         }
       ],
       challenge: {
-        en: "One input, one verb: shoot. Four days, and five boss fights that all have to feel different. The obvious fix is to add verbs — dodge, reload, aim — and the obvious fix would not have shipped on time. So instead of expanding what the player does, I attacked what the player knows. A duel on a countdown is a reading problem, not a reflex problem, and the premise already told me who was doing the attacking: I was writing a game about debt collection, so the enemies should falsify the count the way a debtor falsifies a ledger. Every boss stopped being a difficulty tier and became a specific kind of liar.",
-        pt: "Um input, um verbo: atirar. Quatro dias, e cinco lutas de chefe que precisam parecer diferentes. A solução óbvia é adicionar verbos — esquivar, recarregar, mirar — e a solução óbvia não teria ficado pronta a tempo. Então, em vez de expandir o que o jogador faz, ataquei o que o jogador sabe. Um duelo em cima de uma contagem é um problema de leitura, não de reflexo, e a premissa já dizia quem estava atacando: eu estava escrevendo um jogo sobre cobrança de dívida, então os inimigos deveriam falsificar a contagem como um devedor falsifica um livro-caixa. Cada chefe deixou de ser um nível de dificuldade e virou um tipo específico de mentiroso."
+        en: "One input, one verb: shoot. Four days, and five boss fights that all have to feel different. The obvious fix is to add verbs, dodge, reload, aim, and the obvious fix would not have shipped on time. So instead of expanding what the player does, I attacked what the player knows. A duel on a countdown is a reading problem, not a reflex problem, and the premise already told me who was doing the attacking: I was writing a game about debt collection, so the enemies should falsify the count the way a debtor falsifies a ledger. Every boss stopped being a difficulty tier and became a specific kind of liar.",
+        pt: "Um input, um verbo: atirar. Quatro dias, e cinco lutas de chefe que precisam parecer diferentes. A solução óbvia é adicionar verbos, esquivar, recarregar, mirar, e a solução óbvia não teria ficado pronta a tempo. Então, em vez de expandir o que o jogador faz, ataquei o que o jogador sabe. Um duelo em cima de uma contagem é um problema de leitura, não de reflexo, e a premissa já dizia quem estava atacando: eu estava escrevendo um jogo sobre cobrança de dívida, então os inimigos deveriam falsificar a contagem como um devedor falsifica um livro-caixa. Cada chefe deixou de ser um nível de dificuldade e virou um tipo específico de mentiroso."
       },
       coreLoop: {
         steps: [
@@ -92,8 +92,8 @@ export const projects = [
           { en: "The outlaw cooks the books", pt: "O fora da lei frauda os livros" }
         ],
         note: {
-          en: "Three hearts each — five for the final boss. A clean draw takes one of theirs; firing too early or too slow takes one of yours. The base tempo is one tick per second with a 0.7s draw window, and every boss overrides both.",
-          pt: "Três corações de cada lado — cinco no chefe final. Um saque limpo tira um deles; atirar cedo ou lento demais tira um seu. O tempo base é um tick por segundo com uma janela de saque de 0,7s, e todo chefe sobrescreve os dois."
+          en: "Three hearts each, five for the final boss. A clean draw takes one of theirs; firing too early or too slow takes one of yours. The base tempo is one tick per second with a 0.7s draw window, and every boss overrides both.",
+          pt: "Três corações de cada lado, cinco no chefe final. Um saque limpo tira um deles; atirar cedo ou lento demais tira um seu. O tempo base é um tick por segundo com uma janela de saque de 0,7s, e todo chefe sobrescreve os dois."
         }
       },
       systems: [
@@ -112,31 +112,31 @@ export const projects = [
           }
         },
         {
-          title: { en: "Hoarse Ryder — the man who can't stop talking", pt: "Hoarse Ryder — o homem que não para de falar" },
+          title: { en: "Hoarse Ryder, the man who can't stop talking", pt: "Hoarse Ryder, o homem que não para de falar" },
           body: {
-            en: "A loudmouth who keeps mangling his own one-liners: \"I'm the camel that breaks straws!\" … \"Uh. I messed up the line.\" He never touches the timer. He just talks over it — and because the bit is that he always needs three lines to walk back a threat, the fight escalates by talking more. His first two hearts fire three scripted lines at fixed ticks; his last two flood the screen from a shuffled bag of seven three-line triads, two bubbles visible at a time, one per second, for the whole round. The number is right there. You stop reading it because he won't shut up.",
-            pt: "Um bocudo que vive estragando as próprias tiradas: \"Eu sou o camelo que quebra os canudos!\" … \"Ahn. Errei a fala.\" Ele nunca toca no timer. Ele só fala por cima — e como a piada é que ele sempre precisa de três falas pra desdizer uma ameaça, a luta escala falando mais. Nos dois primeiros corações ele dispara três falas roteirizadas em ticks fixos; nos dois últimos ele inunda a tela a partir de um saco embaralhado de sete tríades, dois balões visíveis por vez, um por segundo, o round inteiro. O número está bem ali. Você para de lê-lo porque ele não cala a boca."
+            en: "A loudmouth who keeps mangling his own one-liners: \"I'm the camel that breaks straws!\" … \"Uh. I messed up the line.\" He never touches the timer. He just talks over it, and because the bit is that he always needs three lines to walk back a threat, the fight escalates by talking more. His first two hearts fire three scripted lines at fixed ticks; his last two flood the screen from a shuffled bag of seven three-line triads, two bubbles visible at a time, one per second, for the whole round. The number is right there. You stop reading it because he won't shut up.",
+            pt: "Um bocudo que vive estragando as próprias tiradas: \"Eu sou o camelo que quebra os canudos!\" … \"Ahn. Errei a fala.\" Ele nunca toca no timer. Ele só fala por cima, e como a piada é que ele sempre precisa de três falas pra desdizer uma ameaça, a luta escala falando mais. Nos dois primeiros corações ele dispara três falas roteirizadas em ticks fixos; nos dois últimos ele inunda a tela a partir de um saco embaralhado de sete tríades, dois balões visíveis por vez, um por segundo, o round inteiro. O número está bem ali. Você para de lê-lo porque ele não cala a boca."
           }
         },
         {
-          title: { en: "Danny D. Vile — the villain who forgets", pt: "Danny D. Vile — o vilão que esquece" },
+          title: { en: "Danny D. Vile, the villain who forgets", pt: "Danny D. Vile, o vilão que esquece" },
           body: {
-            en: "Danny's running gag is that he can't remember anything — he loses his own fiancée's name mid-monologue (\"…Esmeralda? CURSES! Foiled by my own memory!\"). So his mechanic makes you forget: he lights a fuse and blows seconds off the count on a cooldown that tightens from 8s to 2s. His first cast of the fight is deliberately non-lethal, capped to leave at least one second on the clock, so you learn what he does before it can kill you. By his last heart he detonates the timer entirely and you finish the round counting in your head.",
-            pt: "A piada recorrente do Danny é que ele não lembra de nada — ele perde o nome da própria noiva no meio do monólogo (\"…Esmeralda? MALDIÇÃO! Derrotado pela minha própria memória!\"). Então a mecânica dele te faz esquecer: ele acende um pavio e explode segundos da contagem num cooldown que aperta de 8s pra 2s. O primeiro cast da luta é deliberadamente não-letal, limitado a deixar pelo menos um segundo no relógio, pra você aprender o que ele faz antes que isso te mate. No último coração ele detona o timer inteiro e você termina o round contando de cabeça."
+            en: "Danny's running gag is that he can't remember anything, he loses his own fiancée's name mid-monologue (\"…Esmeralda? CURSES! Foiled by my own memory!\"). So his mechanic makes you forget: he lights a fuse and blows seconds off the count on a cooldown that tightens from 8s to 2s. His first cast of the fight is deliberately non-lethal, capped to leave at least one second on the clock, so you learn what he does before it can kill you. By his last heart he detonates the timer entirely and you finish the round counting in your head.",
+            pt: "A piada recorrente do Danny é que ele não lembra de nada, ele perde o nome da própria noiva no meio do monólogo (\"…Esmeralda? MALDIÇÃO! Derrotado pela minha própria memória!\"). Então a mecânica dele te faz esquecer: ele acende um pavio e explode segundos da contagem num cooldown que aperta de 8s pra 2s. O primeiro cast da luta é deliberadamente não-letal, limitado a deixar pelo menos um segundo no relógio, pra você aprender o que ele faz antes que isso te mate. No último coração ele detona o timer inteiro e você termina o round contando de cabeça."
           }
         },
         {
-          title: { en: "Tunga Tatu — the loan shark", pt: "Tunga Tatu — o agiota" },
+          title: { en: "Tunga Tatu, the loan shark", pt: "Tunga Tatu, o agiota" },
           body: {
-            en: "\"Time is expensive. Luckily, I know a place that sells it… with interest.\" Tunga doesn't steal time, he trades it, and the UI says so: he adds 3–5 seconds as a green buy and slashes the count to zero as an orange sell, both spawned as floating market numbers. The stall chance decays round over round toward a floor, and once selling unlocks he starts stalling and then instantly calling the debt in — stretch, let you relax for half a second, snap. Phase 2 mirrors the whole display horizontally; phase 3 stops printing the numbers at all, so you can see him trading but not how much.",
-            pt: "\"Tempo é caro. Por sorte, conheço um lugar que vende… com juros.\" Tunga não rouba tempo, ele negocia, e a UI diz isso: ele soma 3–5 segundos como uma compra verde e corta a contagem a zero como uma venda laranja, ambas cuspidas como números flutuantes de mercado. A chance de enrolar decai round a round até um piso, e quando a venda libera ele passa a enrolar e cobrar a dívida na hora — estica, te deixa relaxar meio segundo, corta. A fase 2 espelha o display inteiro na horizontal; a fase 3 para de imprimir os números, então você vê ele negociando mas não quanto."
+            en: "\"Time is expensive. Luckily, I know a place that sells it… with interest.\" Tunga doesn't steal time, he trades it, and the UI says so: he adds 3–5 seconds as a green buy and slashes the count to zero as an orange sell, both spawned as floating market numbers. The stall chance decays round over round toward a floor, and once selling unlocks he starts stalling and then instantly calling the debt in, stretch, let you relax for half a second, snap. Phase 2 mirrors the whole display horizontally; phase 3 stops printing the numbers at all, so you can see him trading but not how much.",
+            pt: "\"Tempo é caro. Por sorte, conheço um lugar que vende… com juros.\" Tunga não rouba tempo, ele negocia, e a UI diz isso: ele soma 3–5 segundos como uma compra verde e corta a contagem a zero como uma venda laranja, ambas cuspidas como números flutuantes de mercado. A chance de enrolar decai round a round até um piso, e quando a venda libera ele passa a enrolar e cobrar a dívida na hora, estica, te deixa relaxar meio segundo, corta. A fase 2 espelha o display inteiro na horizontal; a fase 3 para de imprimir os números, então você vê ele negociando mas não quanto."
           }
         },
         {
-          title: { en: "Conny Calzone — the timer becomes homework", pt: "Conny Calzone — o timer vira dever de casa" },
+          title: { en: "Conny Calzone, the timer becomes homework", pt: "Conny Calzone, o timer vira dever de casa" },
           body: {
-            en: "Conny is the little girl you rescue from Hoarse Ryder in fight one; she decides she's the sheriff now, and her whole threat is \"you know what's scarier than guns? MATH!\" So she splits the counter in two with an operator between them and you draw when the sum hits zero, left always starting at twice the right. Phase 2 runs the right side at double speed and adds feints (both faces briefly rewritten so the sum reads 1) and shifts (both rates re-solved mid-round so the numbers converge on ±3 while the true zero stays exactly where it was — it looks like cheating and isn't). Phase 3 rotates the plus 45° into a multiplication: 972 × 5. It's a bluff. She says so: \"I don't know what this symbol means… but it sure looks complicated.\" The left number is a meaningless blur and the real count is the 5 on the right, unchanged.",
-            pt: "Conny é a garotinha que você resgata do Hoarse Ryder na primeira luta; ela decide que agora é a xerife, e a ameaça dela é \"sabe o que é mais assustador que armas? MATEMÁTICA!\" Então ela parte o contador em dois com um operador no meio e você saca quando a soma chega a zero, a esquerda sempre começando no dobro da direita. A fase 2 roda o lado direito no dobro da velocidade e adiciona fintas (as duas faces reescritas por um instante pra soma ler 1) e shifts (as duas taxas recalculadas no meio do round pros números convergirem em ±3 enquanto o zero verdadeiro fica exatamente onde estava — parece trapaça e não é). A fase 3 gira o mais 45° e vira multiplicação: 972 × 5. É blefe. Ela mesma diz: \"Não sei o que esse símbolo significa… mas parece bem complicado.\" O número da esquerda é um borrão sem sentido e a contagem real é o 5 da direita, intacta."
+            en: "Conny is the little girl you rescue from Hoarse Ryder in fight one; she decides she's the sheriff now, and her whole threat is \"you know what's scarier than guns? MATH!\" So she splits the counter in two with an operator between them and you draw when the sum hits zero, left always starting at twice the right. Phase 2 runs the right side at double speed and adds feints (both faces briefly rewritten so the sum reads 1) and shifts (both rates re-solved mid-round so the numbers converge on ±3 while the true zero stays exactly where it was, it looks like cheating and isn't). Phase 3 rotates the plus 45° into a multiplication: 972 × 5. It's a bluff. She says so: \"I don't know what this symbol means… but it sure looks complicated.\" The left number is a meaningless blur and the real count is the 5 on the right, unchanged.",
+            pt: "Conny é a garotinha que você resgata do Hoarse Ryder na primeira luta; ela decide que agora é a xerife, e a ameaça dela é \"sabe o que é mais assustador que armas? MATEMÁTICA!\" Então ela parte o contador em dois com um operador no meio e você saca quando a soma chega a zero, a esquerda sempre começando no dobro da direita. A fase 2 roda o lado direito no dobro da velocidade e adiciona fintas (as duas faces reescritas por um instante pra soma ler 1) e shifts (as duas taxas recalculadas no meio do round pros números convergirem em ±3 enquanto o zero verdadeiro fica exatamente onde estava, parece trapaça e não é). A fase 3 gira o mais 45° e vira multiplicação: 972 × 5. É blefe. Ela mesma diz: \"Não sei o que esse símbolo significa… mas parece bem complicado.\" O número da esquerda é um borrão sem sentido e a contagem real é o 5 da direita, intacta."
           }
         },
         {
@@ -147,23 +147,23 @@ export const projects = [
           }
         },
         {
-          title: { en: "El To Angus — the man who wrote the letter", pt: "El To Angus — o homem que escreveu a carta" },
+          title: { en: "El To Angus, the man who wrote the letter", pt: "El To Angus, o homem que escreveu a carta" },
           body: {
-            en: "\"You really thought that letter came from a desperate sheriff? Every name you crossed off your ledger… I put them there. You spent all this time collecting debts, but never wondered who was keeping the books.\" He owns the town, so he owns the rules, and he says so — \"I run this town, so I make the rules. For instance, I have 5 lives.\" He racks up five near-identical timers, TINER TIDER TIMER TYLER TIGER, shuffles them, and only one is real. An authored event track keeps moving the goalposts mid-round: the real face slides TIMER → TIDER → TIGER, the number that ends the count moves from 0 to 7, and the real counter runs a hand-written sequence with decoy zeros baked in — 10, 9, 8, 0, 6, 5, 4, 3, 2, 1, 7. He even baits a decoy by name: \"I once had a friend named Tyler…\", and TYLER starts counting down to 2.",
-            pt: "\"Você achou mesmo que aquela carta veio de um xerife desesperado? Cada nome que você riscou do seu livro… fui eu que coloquei lá. Você passou todo esse tempo cobrando dívidas, mas nunca se perguntou quem fazia a contabilidade.\" Ele é dono da cidade, então é dono das regras, e ele avisa — \"Eu mando nesta cidade, então eu faço as regras. Por exemplo, eu tenho 5 vidas.\" Ele enfileira cinco timers quase idênticos, TINER TIDER TIMER TYLER TIGER, embaralha, e só um é real. Uma trilha de eventos autoral fica mudando o alvo no meio do round: a face real desliza TIMER → TIDER → TIGER, o número que encerra a contagem vai de 0 pra 7, e o contador real roda uma sequência escrita à mão com zeros-isca embutidos — 10, 9, 8, 0, 6, 5, 4, 3, 2, 1, 7. Ele até isca um decoy pelo nome: \"Eu tinha um amigo chamado Tyler…\", e TYLER começa a contar até 2."
+            en: "\"You really thought that letter came from a desperate sheriff? Every name you crossed off your ledger… I put them there. You spent all this time collecting debts, but never wondered who was keeping the books.\" He owns the town, so he owns the rules, and he says so, \"I run this town, so I make the rules. For instance, I have 5 lives.\" He racks up five near-identical timers, TINER TIDER TIMER TYLER TIGER, shuffles them, and only one is real. An authored event track keeps moving the goalposts mid-round: the real face slides TIMER → TIDER → TIGER, the number that ends the count moves from 0 to 7, and the real counter runs a hand-written sequence with decoy zeros baked in, 10, 9, 8, 0, 6, 5, 4, 3, 2, 1, 7. He even baits a decoy by name: \"I once had a friend named Tyler…\", and TYLER starts counting down to 2.",
+            pt: "\"Você achou mesmo que aquela carta veio de um xerife desesperado? Cada nome que você riscou do seu livro… fui eu que coloquei lá. Você passou todo esse tempo cobrando dívidas, mas nunca se perguntou quem fazia a contabilidade.\" Ele é dono da cidade, então é dono das regras, e ele avisa, \"Eu mando nesta cidade, então eu faço as regras. Por exemplo, eu tenho 5 vidas.\" Ele enfileira cinco timers quase idênticos, TINER TIDER TIMER TYLER TIGER, embaralha, e só um é real. Uma trilha de eventos autoral fica mudando o alvo no meio do round: a face real desliza TIMER → TIDER → TIGER, o número que encerra a contagem vai de 0 pra 7, e o contador real roda uma sequência escrita à mão com zeros-isca embutidos, 10, 9, 8, 0, 6, 5, 4, 3, 2, 1, 7. Ele até isca um decoy pelo nome: \"Eu tinha um amigo chamado Tyler…\", e TYLER começa a contar até 2."
           }
         },
         {
           title: { en: "The ending: beating a cheater at cheating", pt: "O final: ganhar de um trapaceiro na trapaça" },
           body: {
-            en: "One hit from death, Angus gives up on tricks and offers a clean duel — \"Enough with these stupid rules. We shoot at zero. No pauses. Best cowboy wins.\" — at 0.384615s per tick, about two and a half times normal speed. Then, one hit from losing it fairly, he panics and takes the last thing he has left: \"Maybe I can't beat you. But if there are no numbers, you can't beat me either. We'll stay here forever.\" The timer stops showing digits and starts cycling the alphabet, decelerating from 0.0625s to 0.375s a letter while he tells you to give up. Shooting any letter costs you a heart. But one letter reads as a zero, and when the rack reaches O the game quietly swaps the glyph for an actual 0 — draw there and Angus shoots himself. The whole game teaches you that the count can be falsified; the ending is the one time you're the one falsifying it.",
-            pt: "A um acerto da morte, Angus desiste dos truques e oferece um duelo limpo — \"Chega dessas regras idiotas. A gente atira no zero. Sem pausas. Ganha o melhor cowboy.\" — a 0,384615s por tick, cerca de duas vezes e meia a velocidade normal. Aí, a um acerto de perder de forma justa, ele entra em pânico e tira a última coisa que lhe resta: \"Talvez eu não consiga te vencer. Mas se não existem números, você também não me vence. A gente fica aqui pra sempre.\" O timer para de mostrar dígitos e começa a rodar o alfabeto, desacelerando de 0,0625s pra 0,375s por letra enquanto ele manda você desistir. Atirar em qualquer letra custa um coração. Mas uma letra se lê como zero, e quando a roda chega no O o jogo troca o glifo por um 0 de verdade — saque ali e o Angus atira em si mesmo. O jogo inteiro te ensina que a contagem pode ser falsificada; o final é a única vez em que quem falsifica é você."
+            en: "One hit from death, Angus gives up on tricks and offers a clean duel, \"Enough with these stupid rules. We shoot at zero. No pauses. Best cowboy wins.\", at 0.384615s per tick, about two and a half times normal speed. Then, one hit from losing it fairly, he panics and takes the last thing he has left: \"Maybe I can't beat you. But if there are no numbers, you can't beat me either. We'll stay here forever.\" The timer stops showing digits and starts cycling the alphabet, decelerating from 0.0625s to 0.375s a letter while he tells you to give up. Shooting any letter costs you a heart. But one letter reads as a zero, and when the rack reaches O the game quietly swaps the glyph for an actual 0, draw there and Angus shoots himself. The whole game teaches you that the count can be falsified; the ending is the one time you're the one falsifying it.",
+            pt: "A um acerto da morte, Angus desiste dos truques e oferece um duelo limpo, \"Chega dessas regras idiotas. A gente atira no zero. Sem pausas. Ganha o melhor cowboy.\", a 0,384615s por tick, cerca de duas vezes e meia a velocidade normal. Aí, a um acerto de perder de forma justa, ele entra em pânico e tira a última coisa que lhe resta: \"Talvez eu não consiga te vencer. Mas se não existem números, você também não me vence. A gente fica aqui pra sempre.\" O timer para de mostrar dígitos e começa a rodar o alfabeto, desacelerando de 0,0625s pra 0,375s por letra enquanto ele manda você desistir. Atirar em qualquer letra custa um coração. Mas uma letra se lê como zero, e quando a roda chega no O o jogo troca o glifo por um 0 de verdade, saque ali e o Angus atira em si mesmo. O jogo inteiro te ensina que a contagem pode ser falsificada; o final é a única vez em que quem falsifica é você."
           }
         }
       ],
       progression: {
-        en: "The town is ordered by what each debtor takes from you. Hoarse Ryder takes your attention — he never touches the number. Danny D. Vile takes the seconds themselves. Tunga Tatu takes your ability to read them. Conny Calzone takes the arithmetic. El To Angus takes the rules, and then the numbers. Each fight also runs its phases off the boss's remaining hearts, so the gimmick escalates inside the fight as well as across the map: Danny's cooldown tightens from 8s to 2s before he blows the timer up, Tunga's draw window closes from 0.70s to 0.38s while his kill chance climbs from 0 to 0.75, and Ryder's crosstalk goes from three scripted lines to a continuous flood.",
-        pt: "A cidade é ordenada pelo que cada devedor tira de você. Hoarse Ryder tira sua atenção — ele nunca toca no número. Danny D. Vile tira os segundos em si. Tunga Tatu tira sua capacidade de lê-los. Conny Calzone tira a aritmética. El To Angus tira as regras, e depois os números. Cada luta também roda suas fases a partir dos corações restantes do chefe, então o truque escala dentro da luta e ao longo do mapa: o cooldown do Danny aperta de 8s pra 2s antes de ele explodir o timer, a janela de saque do Tunga fecha de 0,70s pra 0,38s enquanto a chance de corte sobe de 0 pra 0,75, e a conversa do Ryder vai de três falas roteirizadas pra uma enxurrada contínua."
+        en: "The town is ordered by what each debtor takes from you. Hoarse Ryder takes your attention, he never touches the number. Danny D. Vile takes the seconds themselves. Tunga Tatu takes your ability to read them. Conny Calzone takes the arithmetic. El To Angus takes the rules, and then the numbers. Each fight also runs its phases off the boss's remaining hearts, so the gimmick escalates inside the fight as well as across the map: Danny's cooldown tightens from 8s to 2s before he blows the timer up, Tunga's draw window closes from 0.70s to 0.38s while his kill chance climbs from 0 to 0.75, and Ryder's crosstalk goes from three scripted lines to a continuous flood.",
+        pt: "A cidade é ordenada pelo que cada devedor tira de você. Hoarse Ryder tira sua atenção, ele nunca toca no número. Danny D. Vile tira os segundos em si. Tunga Tatu tira sua capacidade de lê-los. Conny Calzone tira a aritmética. El To Angus tira as regras, e depois os números. Cada luta também roda suas fases a partir dos corações restantes do chefe, então o truque escala dentro da luta e ao longo do mapa: o cooldown do Danny aperta de 8s pra 2s antes de ele explodir o timer, a janela de saque do Tunga fecha de 0,70s pra 0,38s enquanto a chance de corte sobe de 0 pra 0,75, e a conversa do Ryder vai de três falas roteirizadas pra uma enxurrada contínua."
       },
       combat: {
         formula: {
@@ -171,8 +171,8 @@ export const projects = [
           pt: "saque dentro de [0, janela_de_saque] → ACERTO · saque antes do 0 → CEDO DEMAIS · sem saque → LENTO DEMAIS"
         },
         body: {
-          en: "The whole combat model is one window. The base draw window is 0.7s and bosses override it from 0.85s down to 0.38s. Danny D. Vile is the only one with a 0.30s early-grace window, which forgives a draw fired just before zero — he is the boss who steals seconds off your clock, so a hair-early read is his fault, not yours. That one exception is the difference between a boss who feels unfair and a boss who feels like a cheat you can beat.",
-          pt: "O modelo de combate inteiro é uma janela. A janela de saque base é 0,7s e os chefes sobrescrevem de 0,85s até 0,38s. Danny D. Vile é o único com uma janela de perdão de 0,30s, que releva um saque disparado logo antes do zero — ele é o chefe que rouba segundos do seu relógio, então uma leitura um fio adiantada é culpa dele, não sua. Essa única exceção é a diferença entre um chefe que parece injusto e um chefe que parece uma trapaça vencível."
+          en: "The whole combat model is one window. The base draw window is 0.7s and bosses override it from 0.85s down to 0.38s. Danny D. Vile is the only one with a 0.30s early-grace window, which forgives a draw fired just before zero, he is the boss who steals seconds off your clock, so a hair-early read is his fault, not yours. That one exception is the difference between a boss who feels unfair and a boss who feels like a cheat you can beat.",
+          pt: "O modelo de combate inteiro é uma janela. A janela de saque base é 0,7s e os chefes sobrescrevem de 0,85s até 0,38s. Danny D. Vile é o único com uma janela de perdão de 0,30s, que releva um saque disparado logo antes do zero, ele é o chefe que rouba segundos do seu relógio, então uma leitura um fio adiantada é culpa dele, não sua. Essa única exceção é a diferença entre um chefe que parece injusto e um chefe que parece uma trapaça vencível."
         }
       },
       balancing: {
@@ -181,8 +181,8 @@ export const projects = [
           pt: "janela_de_saque = lerp(0,55; 0,40; pressão)"
         },
         body: {
-          en: "Boss tuning lives entirely in exported arrays, one entry per phase, so every fight was tuned in the inspector between playtests rather than in code. Conny's countdown isn't authored at all — it's solved from the two counters, so the round lasts exactly as long as the equation takes to reach zero. The adaptive layer sits on top: a pressure value in [0, 1] that rises 0.25 per fast, clean draw and falls 0.30 per heart lost, then drives the draw window, the feint rate and the shift unlock. It is one float, and it does the work a difficulty menu would have done worse.",
-          pt: "O tuning dos chefes vive inteiramente em arrays exportados, uma entrada por fase, então cada luta foi ajustada no inspector entre playtests, não no código. A contagem da Conny nem é autoral — ela é resolvida a partir dos dois contadores, então o round dura exatamente o tempo que a equação leva pra chegar a zero. A camada adaptativa fica por cima: um valor de pressão em [0, 1] que sobe 0,25 por saque rápido e limpo e cai 0,30 por coração perdido, e então comanda a janela de saque, a taxa de fintas e a liberação do shift. É um float, e faz o trabalho que um menu de dificuldade faria pior."
+          en: "Boss tuning lives entirely in exported arrays, one entry per phase, so every fight was tuned in the inspector between playtests rather than in code. Conny's countdown isn't authored at all, it's solved from the two counters, so the round lasts exactly as long as the equation takes to reach zero. The adaptive layer sits on top: a pressure value in [0, 1] that rises 0.25 per fast, clean draw and falls 0.30 per heart lost, then drives the draw window, the feint rate and the shift unlock. It is one float, and it does the work a difficulty menu would have done worse.",
+          pt: "O tuning dos chefes vive inteiramente em arrays exportados, uma entrada por fase, então cada luta foi ajustada no inspector entre playtests, não no código. A contagem da Conny nem é autoral, ela é resolvida a partir dos dois contadores, então o round dura exatamente o tempo que a equação leva pra chegar a zero. A camada adaptativa fica por cima: um valor de pressão em [0, 1] que sobe 0,25 por saque rápido e limpo e cai 0,30 por coração perdido, e então comanda a janela de saque, a taxa de fintas e a liberação do shift. É um float, e faz o trabalho que um menu de dificuldade faria pior."
         },
         tables: [
           {
@@ -227,8 +227,8 @@ export const projects = [
             pt: "Conforme a pressão sobe de 0 a 1, a janela de saque estreita linearmente de 0,55 para 0,40 segundos enquanto a chance de finta sobe de 0,35 para 1,00."
           },
           caption: {
-            en: "One float moves two dials in opposite directions: the window you have to react in shrinks while the odds of being lied to rise. Play well and the fight tightens; lose a heart and it opens back up — no difficulty menu required.",
-            pt: "Um float move dois botões em direções opostas: a janela pra reagir encolhe enquanto a chance de ser enganado sobe. Jogue bem e a luta aperta; perca um coração e ela abre de novo — sem menu de dificuldade."
+            en: "One float moves two dials in opposite directions: the window you have to react in shrinks while the odds of being lied to rise. Play well and the fight tightens; lose a heart and it opens back up, no difficulty menu required.",
+            pt: "Um float move dois botões em direções opostas: a janela pra reagir encolhe enquanto a chance de ser enganado sobe. Jogue bem e a luta aperta; perca um coração e ela abre de novo, sem menu de dificuldade."
           },
           xLabel: { en: "Pressure", pt: "Pressão" },
           yLabel: { en: "Draw window (s)", pt: "Janela de saque (s)" },
@@ -248,13 +248,13 @@ export const projects = [
             }
           ],
           annotations: [
-            { x: 0.36, y: 0.499, text: { en: "0.34 — shift unlocks", pt: "0,34 — shift libera" }, dy: -14, anchor: "start" }
+            { x: 0.36, y: 0.499, text: { en: "0.34, shift unlocks", pt: "0,34, shift libera" }, dy: -14, anchor: "start" }
           ]
         }
       ],
       implementation: {
-        en: "Godot 4 and GDScript, no external tooling. One duel state machine, five boss subclasses, and both the fights and the writing authored as data: Angus's entire event track — which timer is real, when the rack shuffles, which number ends the count, what he says while doing it — is inspector data rather than code, and the town's dialogue is a set of script files with speaker, portrait and expression tags. Ryder's crosstalk is seven three-line resources drawn from a shuffle bag. In a four-day jam that meant rewriting a boss's personality or difficulty was a field edit between playtests instead of a code change. One of the commits is literally named 'danny easier by 0.40'.",
-        pt: "Godot 4 e GDScript, sem ferramental externo. Uma máquina de estados do duelo, cinco subclasses de chefe, e tanto as lutas quanto a escrita escritas como dado: a trilha de eventos inteira do Angus — qual timer é real, quando a estante embaralha, qual número encerra a contagem, o que ele fala enquanto faz isso — é dado do inspector, não código, e o diálogo da cidade é um conjunto de arquivos de script com tags de falante, retrato e expressão. A conversa do Ryder são sete recursos de três falas sorteados de um saco embaralhado. Numa jam de quatro dias isso significou que reescrever a personalidade ou a dificuldade de um chefe era editar um campo entre playtests, não mexer no código. Um dos commits se chama literalmente 'danny easier by 0.40'."
+        en: "Godot 4 and GDScript, no external tooling. One duel state machine, five boss subclasses, and both the fights and the writing authored as data: Angus's entire event track, which timer is real, when the rack shuffles, which number ends the count, what he says while doing it, is inspector data rather than code, and the town's dialogue is a set of script files with speaker, portrait and expression tags. Ryder's crosstalk is seven three-line resources drawn from a shuffle bag. In a four-day jam that meant rewriting a boss's personality or difficulty was a field edit between playtests instead of a code change. One of the commits is literally named 'danny easier by 0.40'.",
+        pt: "Godot 4 e GDScript, sem ferramental externo. Uma máquina de estados do duelo, cinco subclasses de chefe, e tanto as lutas quanto a escrita escritas como dado: a trilha de eventos inteira do Angus, qual timer é real, quando a estante embaralha, qual número encerra a contagem, o que ele fala enquanto faz isso, é dado do inspector, não código, e o diálogo da cidade é um conjunto de arquivos de script com tags de falante, retrato e expressão. A conversa do Ryder são sete recursos de três falas sorteados de um saco embaralhado. Numa jam de quatro dias isso significou que reescrever a personalidade ou a dificuldade de um chefe era editar um campo entre playtests, não mexer no código. Um dos commits se chama literalmente 'danny easier by 0.40'."
       },
       learnings: {
         en: "The best thing I did on this project was refuse to design mechanics and characters separately. Once the premise was debt collection, \"what does this boss do to the timer\" and \"who is this boss\" became the same question, and the answers arrived together: the loan shark sells you seconds at interest, the forgetful villain erases them, the kid who thinks math is scary turns the clock into homework, and the man keeping the books rewrites the rules because he wrote them. Players remember the alphabet ending, but that ending only lands because it's the one time the player gets to falsify the count instead of the outlaw. Technically, the lesson was cheaper: a thirteen-hook base class written on day one is what made five genuinely different fights possible by day four, and one adaptive pressure float beat the difficulty menu I didn't have time to build.",
@@ -266,7 +266,7 @@ export const projects = [
       gallery: [
         {
           src: "./assets/img/projects/count-me-dead-gameplay-2.webp",
-          alt: { en: "Mid-duel against Danny D. Vile, the timer at 18 — \"Let's see you count without me.\" The player's health bar is labelled THE ACCOUNTANT", pt: "Duelo contra Danny D. Vile, o timer em 18 — \"Let's see you count without me.\" A barra de vida do jogador é rotulada THE ACCOUNTANT" }
+          alt: { en: "Mid-duel against Danny D. Vile, the timer at 18, \"Let's see you count without me.\" The player's health bar is labelled THE ACCOUNTANT", pt: "Duelo contra Danny D. Vile, o timer em 18, \"Let's see you count without me.\" A barra de vida do jogador é rotulada THE ACCOUNTANT" }
         },
         {
           src: "./assets/img/projects/count-me-dead-gameplay-3.webp",
@@ -313,7 +313,7 @@ export const projects = [
       results: [
         {
           value: { en: "Official selection", pt: "Seleção oficial" },
-          label: { en: "SB Games — Brazil's academic game showcase", pt: "SB Games — mostra acadêmica de jogos do Brasil" }
+          label: { en: "SB Games, Brazil's academic game showcase", pt: "SB Games, mostra acadêmica de jogos do Brasil" }
         },
         {
           value: { en: "1 sheet", pt: "1 planilha" },
@@ -325,7 +325,7 @@ export const projects = [
         }
       ],
       meta: {
-        team: { en: "Prisma Game Lab team — design, sound, UI and art mine", pt: "Equipe do Prisma Game Lab — design, som, UI e arte meus" },
+        team: { en: "Prisma Game Lab team, design, sound, UI and art mine", pt: "Equipe do Prisma Game Lab, design, som, UI e arte meus" },
         studio: "Prisma Game Lab",
         engine: "Unity · C#",
         platform: { en: "PC", pt: "PC" }
@@ -563,8 +563,8 @@ export const projects = [
         }
       ],
       meta: {
-        timeline: { en: "In development — phases 1 and 2 shipped", pt: "Em desenvolvimento — fases 1 e 2 entregues" },
-        team: { en: "2 — design and all GDScript mine, art and UI by a collaborator", pt: "2 — design e todo o GDScript meus, arte e UI de um colaborador" },
+        timeline: { en: "In development, phases 1 and 2 shipped", pt: "Em desenvolvimento, fases 1 e 2 entregues" },
+        team: { en: "2, design and all GDScript mine, art and UI by a collaborator", pt: "2, design e todo o GDScript meus, arte e UI de um colaborador" },
         engine: "Godot 4.7 · GDScript",
         platform: { en: "PC", pt: "PC" }
       },
@@ -721,25 +721,25 @@ export const projects = [
             pt: "Com cinco ações candidatas de pesos 10, 7, 5, 3 e 1, convicção 0 dá 20% a cada ação; convicção 1 dá 38% à melhor; convicção 3 dá 67%."
           },
           caption: {
-            en: "The same weights, three difficulties. Conviction never changes what the enemy wants — it changes how faithfully it obeys itself. That's why a high-conviction enemy with a bad personality plays worse, not better.",
-            pt: "Os mesmos pesos, três dificuldades. A convicção nunca muda o que o inimigo quer — muda o quanto ele obedece a si mesmo. Por isso um inimigo de convicção alta com personalidade ruim joga pior, não melhor."
+            en: "The same weights, three difficulties. Conviction never changes what the enemy wants, it changes how faithfully it obeys itself. That's why a high-conviction enemy with a bad personality plays worse, not better.",
+            pt: "Os mesmos pesos, três dificuldades. A convicção nunca muda o que o inimigo quer, muda o quanto ele obedece a si mesmo. Por isso um inimigo de convicção alta com personalidade ruim joga pior, não melhor."
           },
           xLabel: { en: "Action, best to worst (weights 10 · 7 · 5 · 3 · 1)", pt: "Ação, da melhor à pior (pesos 10 · 7 · 5 · 3 · 1)" },
           yLabel: { en: "Chance of being picked", pt: "Chance de ser escolhida" },
           series: [
             {
-              label: { en: "Conviction 0 — erratic", pt: "Convicção 0 — errático" },
+              label: { en: "Conviction 0, erratic", pt: "Convicção 0, errático" },
               color: "var(--paper)",
               dashed: true,
               points: [[1, 0.2], [2, 0.2], [3, 0.2], [4, 0.2], [5, 0.2]]
             },
             {
-              label: { en: "Conviction 1 — plays its odds", pt: "Convicção 1 — joga suas chances" },
+              label: { en: "Conviction 1, plays its odds", pt: "Convicção 1, joga suas chances" },
               color: "var(--yellow)",
               points: [[1, 0.3846], [2, 0.2692], [3, 0.1923], [4, 0.1154], [5, 0.0385]]
             },
             {
-              label: { en: "Conviction 3 — near-deterministic", pt: "Convicção 3 — quase determinístico" },
+              label: { en: "Conviction 3, near-deterministic", pt: "Convicção 3, quase determinístico" },
               color: "var(--pink)",
               points: [[1, 0.6684], [2, 0.2293], [3, 0.0835], [4, 0.018], [5, 0.0007]]
             }
@@ -808,7 +808,7 @@ export const projects = [
         }
       ],
       meta: {
-        team: { en: "Solo — design, code, art and audio", pt: "Solo — design, código, arte e áudio" },
+        team: { en: "Solo, design, code, art and audio", pt: "Solo, design, código, arte e áudio" },
         engine: { en: "JavaScript · Google Sheets", pt: "JavaScript · Google Sheets" },
         platform: { en: "Web", pt: "Web" }
       },

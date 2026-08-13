@@ -32,16 +32,16 @@ export const strings = {
 
   "about.title":     { en: "About", pt: "Sobre" },
   "about.lead": {
-    en: "I'm a systems and balance designer: I decide what the numbers should be, prove it in a sheet, then write the code that runs them. The spreadsheet and the engine are the same job to me.",
-    pt: "Sou um designer de sistemas e balanceamento: decido quais devem ser os números, provo isso numa planilha e depois escrevo o código que os roda. A planilha e a engine são o mesmo trabalho pra mim."
+    en: "I'm a systems and balance designer: I decide what the numbers should be, prove it in a sheet, then write the code that runs them.",
+    pt: "Sou um designer de sistemas e balanceamento: decido quais devem ser os números, provo isso numa planilha e depois escrevo o código que os roda."
   },
   "about.p1": {
     en: "At Prisma Game Lab I've worked as a game designer and coordinated project teams, shipping prototypes, running playtests and keeping design and implementation talking to each other. I'm finishing a Design degree at PUC-Rio.",
     pt: "No Prisma Game Lab atuei como game designer e coordenei equipes de projeto, entregando protótipos, rodando playtests e mantendo design e implementação conversando. Estou concluindo Design na PUC-Rio."
   },
   "about.p2": {
-    en: "Balance is the spine; the range around it is deliberate. I prototype in Unity and Godot, write the gameplay code, compose the audio, make 2D art and 3D models, and design the UI, so a tuning change is never blocked on someone else's sprint.",
-    pt: "O balanceamento é a espinha; a amplitude ao redor é deliberada. Prototipo em Unity e Godot, escrevo o código de gameplay, componho o áudio, faço arte 2D e modelos 3D, e desenho a UI, então um ajuste de tuning nunca fica travado na sprint de outra pessoa."
+    en: "Balance is the core of what I do, and the breadth around it is deliberate. I prototype in Unity and Godot, write the gameplay code, compose the audio, make 2D art and 3D models, and design the UI.",
+    pt: "O balanceamento é o núcleo do que faço, e a amplitude ao redor é deliberada. Prototipo em Unity e Godot, escrevo o código de gameplay, componho o áudio, faço arte 2D e modelos 3D, e desenho a UI."
   },
   "about.stamp1":    { en: "PUC-Rio · Design", pt: "PUC-Rio · Design" },
   "about.stamp2":    { en: "Prisma Game Lab", pt: "Prisma Game Lab" },
@@ -53,10 +53,10 @@ export const strings = {
     pt: "O que eu realmente uso, agrupado do jeito que eu trabalho."
   },
 
-  "contact.title":   { en: "Let's make games", pt: "Bora fazer jogos" },
+  "contact.title":   { en: "Get in touch", pt: "Fale comigo" },
   "contact.lead": {
-    en: "I design the system, derive the numbers, build it, and tune it until it's fun, without handing it off four times. If that's a gap on your team, let's talk.",
-    pt: "Eu projeto o sistema, derivo os números, construo e ajusto até ficar divertido, sem repassar pra quatro pessoas no caminho. Se isso é uma lacuna no seu time, vamos conversar."
+    en: "I design the system, derive the numbers, build it, and tune it, without handing it off between disciplines. Open to new work, get in touch.",
+    pt: "Eu projeto o sistema, derivo os números, construo e ajusto, sem repassar entre quatro pessoas no caminho. Aberto a novos trabalhos, é só chamar."
   },
 
   "case.close":      { en: "Close case study", pt: "Fechar estudo de caso" },

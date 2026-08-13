@@ -142,8 +142,8 @@ export const projects = [
         {
           title: { en: "Difficulty that reads you back", pt: "Dificuldade que te lê de volta" },
           body: {
-            en: "Conny also carries the hidden layer I'm proudest of: a single pressure float. Draw cleanly in under 0.35s and it climbs; lose a heart and it drops. Pressure narrows her draw window, pushes her feint chance toward certainty, and unlocks the shift attack once it crosses a threshold. The fight silently converges on the player's actual skill, and nothing in the UI ever admits it.",
-            pt: "Conny também carrega a camada escondida de que mais me orgulho: um único float de pressão. Saque limpo em menos de 0,35s e ele sobe; perca um coração e ele cai. A pressão estreita a janela de saque dela, empurra a chance de finta rumo à certeza, e libera o ataque de shift quando cruza um limiar. A luta converge silenciosamente pra habilidade real do jogador, e nada na UI admite isso."
+            en: "Conny also carries a hidden layer: a single pressure float. Draw cleanly in under 0.35s and it climbs; lose a heart and it drops. Pressure narrows her draw window, pushes her feint chance toward certainty, and unlocks the shift attack once it crosses a threshold. The fight silently converges on the player's actual skill, and nothing in the UI ever admits it.",
+            pt: "Conny também carrega uma camada escondida: um único float de pressão. Saque limpo em menos de 0,35s e ele sobe; perca um coração e ele cai. A pressão estreita a janela de saque dela, empurra a chance de finta rumo à certeza, e libera o ataque de shift quando cruza um limiar. A luta converge silenciosamente pra habilidade real do jogador, e nada na UI admite isso."
           }
         },
         {
@@ -181,8 +181,8 @@ export const projects = [
           pt: "janela_de_saque = lerp(0,55; 0,40; pressão)"
         },
         body: {
-          en: "Boss tuning lives entirely in exported arrays, one entry per phase, so every fight was tuned in the inspector between playtests rather than in code. Conny's countdown isn't authored at all, it's solved from the two counters, so the round lasts exactly as long as the equation takes to reach zero. The adaptive layer sits on top: a pressure value in [0, 1] that rises 0.25 per fast, clean draw and falls 0.30 per heart lost, then drives the draw window, the feint rate and the shift unlock. It is one float, and it does the work a difficulty menu would have done worse.",
-          pt: "O tuning dos chefes vive inteiramente em arrays exportados, uma entrada por fase, então cada luta foi ajustada no inspector entre playtests, não no código. A contagem da Conny nem é autoral, ela é resolvida a partir dos dois contadores, então o round dura exatamente o tempo que a equação leva pra chegar a zero. A camada adaptativa fica por cima: um valor de pressão em [0, 1] que sobe 0,25 por saque rápido e limpo e cai 0,30 por coração perdido, e então comanda a janela de saque, a taxa de fintas e a liberação do shift. É um float, e faz o trabalho que um menu de dificuldade faria pior."
+          en: "Boss tuning lives entirely in exported arrays, one entry per phase, so every fight was tuned in the inspector between playtests rather than in code. Conny's countdown isn't authored at all, it's solved from the two counters, so the round lasts exactly as long as the equation takes to reach zero. The adaptive layer sits on top: a pressure value in [0, 1] that rises 0.25 per fast, clean draw and falls 0.30 per heart lost, then drives the draw window, the feint rate and the shift unlock. One float in place of a difficulty menu.",
+          pt: "O tuning dos chefes vive inteiramente em arrays exportados, uma entrada por fase, então cada luta foi ajustada no inspector entre playtests, não no código. A contagem da Conny nem é autoral, ela é resolvida a partir dos dois contadores, então o round dura exatamente o tempo que a equação leva pra chegar a zero. A camada adaptativa fica por cima: um valor de pressão em [0, 1] que sobe 0,25 por saque rápido e limpo e cai 0,30 por coração perdido, e então comanda a janela de saque, a taxa de fintas e a liberação do shift. Um float no lugar de um menu de dificuldade."
         },
         tables: [
           {
@@ -257,8 +257,8 @@ export const projects = [
         pt: "Godot 4 e GDScript, sem ferramental externo. Uma máquina de estados do duelo, cinco subclasses de chefe, e tanto as lutas quanto a escrita escritas como dado: a trilha de eventos inteira do Angus, qual timer é real, quando a estante embaralha, qual número encerra a contagem, o que ele fala enquanto faz isso, é dado do inspector, não código, e o diálogo da cidade é um conjunto de arquivos de script com tags de falante, retrato e expressão. A conversa do Ryder são sete recursos de três falas sorteados de um saco embaralhado. Numa jam de quatro dias isso significou que reescrever a personalidade ou a dificuldade de um chefe era editar um campo entre playtests, não mexer no código. Um dos commits se chama literalmente 'danny easier by 0.40'."
       },
       learnings: {
-        en: "The best thing I did on this project was refuse to design mechanics and characters separately. Once the premise was debt collection, \"what does this boss do to the timer\" and \"who is this boss\" became the same question, and the answers arrived together: the loan shark sells you seconds at interest, the forgetful villain erases them, the kid who thinks math is scary turns the clock into homework, and the man keeping the books rewrites the rules because he wrote them. Players remember the alphabet ending, but that ending only lands because it's the one time the player gets to falsify the count instead of the outlaw. Technically, the lesson was cheaper: a thirteen-hook base class written on day one is what made five genuinely different fights possible by day four, and one adaptive pressure float beat the difficulty menu I didn't have time to build.",
-        pt: "A melhor coisa que fiz neste projeto foi me recusar a projetar mecânica e personagem separadamente. Quando a premissa virou cobrança de dívida, \"o que esse chefe faz com o timer\" e \"quem é esse chefe\" viraram a mesma pergunta, e as respostas chegaram juntas: o agiota te vende segundos a juros, o vilão esquecido os apaga, a criança que acha matemática assustadora transforma o relógio em dever de casa, e o homem que faz a contabilidade reescreve as regras porque foi ele quem as escreveu. Os jogadores lembram do final do alfabeto, mas esse final só funciona porque é a única vez em que quem falsifica a contagem é o jogador, não o fora da lei. Tecnicamente, a lição foi mais barata: uma classe base de treze hooks escrita no primeiro dia é o que tornou possíveis cinco lutas realmente diferentes no quarto, e um único float de pressão adaptativa ganhou do menu de dificuldade que eu não tive tempo de construir."
+        en: "The core decision here was to not design mechanics and characters separately. Once the premise was debt collection, \"what does this boss do to the timer\" and \"who is this boss\" became the same question, and the answers arrived together: the loan shark sells you seconds at interest, the forgetful villain erases them, the kid who thinks math is scary turns the clock into homework, and the man keeping the books rewrites the rules because he wrote them. Players remember the alphabet ending, but it only lands because it's the one time the player falsifies the count instead of the outlaw. On the technical side: a thirteen-hook base class written on day one is what made five different fights possible by day four, and one adaptive pressure float replaced the difficulty menu I didn't have time to build.",
+        pt: "A decisão central aqui foi não projetar mecânica e personagem separadamente. Quando a premissa virou cobrança de dívida, \"o que esse chefe faz com o timer\" e \"quem é esse chefe\" viraram a mesma pergunta, e as respostas chegaram juntas: o agiota te vende segundos a juros, o vilão esquecido os apaga, a criança que acha matemática assustadora transforma o relógio em dever de casa, e o homem que faz a contabilidade reescreve as regras porque foi ele quem as escreveu. Os jogadores lembram do final do alfabeto, mas ele só funciona porque é a única vez em que quem falsifica a contagem é o jogador, não o fora da lei. No lado técnico: uma classe base de treze hooks escrita no primeiro dia é o que tornou possíveis cinco lutas diferentes no quarto dia, e um único float de pressão adaptativa substituiu o menu de dificuldade que eu não tive tempo de construir."
       },
       links: [
         { label: { en: "Play on itch.io", pt: "Jogar na itch.io" }, url: "https://lopen.itch.io/count-me-dead", kind: "play" }
@@ -420,8 +420,8 @@ export const projects = [
           pt: "DMG_boss(ataque) = HP_ideal ÷ hits_alvo"
         },
         body: {
-          en: "Instead of hand-picking boss damage, I derived each attack from the player's *expected* HP divided by how many hits of that attack should kill, so the laser might threaten a 5-hit kill and the broom a 3-hit kill, staying fair for every build. Numbers stay honest because they trace back to the player, not to a designer's gut.",
-          pt: "Em vez de escolher o dano do chefe na mão, derivei cada ataque do HP *esperado* do player dividido por quantos golpes daquele ataque deveriam matar, então o laser ameaça matar em 5 hits e a vassourada em 3, ficando justo para qualquer build. Os números continuam honestos porque remetem ao player, não ao 'feeling' do designer."
+          en: "Instead of hand-picking boss damage, I derived each attack from the player's *expected* HP divided by how many hits of that attack should kill, so the laser might threaten a 5-hit kill and the broom a 3-hit kill, staying fair for every build.",
+          pt: "Em vez de escolher o dano do chefe na mão, derivei cada ataque do HP *esperado* do player dividido por quantos golpes daquele ataque deveriam matar, então o laser ameaça matar em 5 hits e a vassourada em 3, ficando justo para qualquer build."
         }
       },
       balancing: {
@@ -430,8 +430,8 @@ export const projects = [
           pt: "HP_boss = HP_base × log₂,₃(salas_limpas)"
         },
         body: {
-          en: "The whole game lived in one balancing spreadsheet: player base stats, per-room scaling, enemy and boss tables, and DPS curves for the extreme builds. My favourite piece is the boss HP: it doesn't scale with the floor, it scales with how many rooms you actually cleared, on a logarithm (base 2.3). Clear more rooms and you arrive stronger, so the boss grows to match, but logarithmically, so a full clear makes it tougher without ever becoming an impossible wall.",
-          pt: "O jogo inteiro vivia numa única planilha de balanceamento: stats base do player, escalonamento por sala, tabelas de inimigos e chefes, e curvas de DPS das builds extremas. A minha parte favorita é o HP do chefe: ele não escala com o andar, escala com quantas salas você realmente limpou, num logaritmo (base 2,3). Limpar mais salas te deixa mais forte, então o chefe cresce junto, mas logaritmicamente, ficando mais difícil sem nunca virar uma parede impossível."
+          en: "The whole game lived in one balancing spreadsheet: player base stats, per-room scaling, enemy and boss tables, and DPS curves for the extreme builds. The interesting piece is the boss HP: it doesn't scale with the floor, it scales with how many rooms you actually cleared, on a logarithm (base 2.3). Clear more rooms and you arrive stronger, so the boss grows to match, but logarithmically, so a full clear makes it tougher without ever becoming an impossible wall.",
+          pt: "O jogo inteiro vivia numa única planilha de balanceamento: stats base do player, escalonamento por sala, tabelas de inimigos e chefes, e curvas de DPS das builds extremas. A parte interessante é o HP do chefe: ele não escala com o andar, escala com quantas salas você realmente limpou, num logaritmo (base 2,3). Limpar mais salas te deixa mais forte, então o chefe cresce junto, mas logaritmicamente, ficando mais difícil sem nunca virar uma parede impossível."
         },
         tables: [
           {
@@ -520,8 +520,8 @@ export const projects = [
         }
       ],
       learnings: {
-        en: "Deriving enemy and boss damage from the player's expected survivability, not from vibes, kept difficulty honest across builds that looked nothing alike. Owning design, sound, UI and art at once taught me to make each discipline serve the same core loop.",
-        pt: "Derivar o dano de inimigos e chefes da sobrevivência esperada do player, e não do 'feeling', manteve a dificuldade honesta entre builds completamente diferentes. Cuidar de design, som, UI e arte ao mesmo tempo me ensinou a fazer cada disciplina servir ao mesmo core loop."
+        en: "Deriving enemy and boss damage from the player's expected survivability kept difficulty consistent across builds that looked nothing alike. Owning design, sound, UI and art at once taught me to make each discipline serve the same core loop.",
+        pt: "Derivar o dano de inimigos e chefes da sobrevivência esperada do player manteve a dificuldade consistente entre builds completamente diferentes. Cuidar de design, som, UI e arte ao mesmo tempo me ensinou a fazer cada disciplina servir ao mesmo core loop."
       },
       links: [
         { label: { en: "Play on itch.io", pt: "Jogar na itch.io" }, url: "https://prismagamelab.itch.io/esqueleto-chico-ossos-do-oficio", kind: "play" }
@@ -656,7 +656,7 @@ export const projects = [
           }
         },
         {
-          title: { en: 'Design maturity: why "role" died', pt: 'Maturidade de design: por que o "papel" morreu' },
+          title: { en: 'Why the fixed "role" tag was dropped', pt: 'Por que o "papel" fixo foi removido' },
           body: {
             en: "The old system tagged every unit with a fixed role: tank, dps, or support. It was ripped out and replaced by key stats read from the real numbers (primary_stat and secondary_stat) plus a tier tiebreaker, because the role lied: Celetro was tagged tank while holding the highest Witness in the party, and Isara was dps by default when what actually defines her is MP Regen, 2.5 times the others. Removing the tag and letting the AI read what a unit actually is fixed a dead rule for free, buffs finally land on the right target.",
             pt: "O sistema antigo etiquetava cada unidade com um papel fixo: tank, dps ou suporte. Foi arrancado e substituído por key stats lidos dos números reais (primary_stat e secondary_stat) mais um desempate por tier, porque o papel mentia: Celetro estava etiquetado como tank enquanto tinha o maior Witness da party, e Isara era dps por padrão quando o que realmente a define é o MP Regen, 2,5 vezes o dos outros. Tirar a etiqueta e deixar a IA ler o que a unidade realmente é consertou de graça uma regra morta, os buffs finalmente acertam o alvo certo."
@@ -669,8 +669,8 @@ export const projects = [
           pt: "P(ação) = peso^convicção / soma de peso^convicção"
         },
         body: {
-          en: "Two orthogonal channels drive the AI. Intelligence scales the situational weight, defining what the enemy prefers: hit the vulnerable, avoid overkill, finish kills. Conviction is the exponent of the draw above, defining only how faithfully the enemy follows its own preference: conviction of zero is a uniform draw and plays erratic, high conviction almost always takes the top pick. Splitting these two was the most important design decision in the AI: a genius with conviction zero draws at random and plays like an idiot, a fool with high conviction executes the dumbest possible preference with total fidelity. Intelligence is what the enemy wants, conviction is how much it obeys itself, and conviction is the main difficulty dial.",
-          pt: "Dois canais ortogonais conduzem a IA. Inteligência escala o peso situacional, definindo o que o inimigo prefere: acertar o vulnerável, evitar overkill, finalizar kills. Convicção é o expoente do sorteio acima, definindo só o quanto o inimigo segue a própria preferência com fidelidade: convicção zero é um sorteio uniforme e joga de forma errática, convicção alta quase sempre pega a melhor opção. Separar essas duas coisas foi a decisão de design mais importante da IA: um gênio com convicção zero sorteia aleatoriamente e joga como um idiota, um bobo com convicção alta executa a pior preferência possível com fidelidade total. Inteligência é o que o inimigo quer, convicção é o quanto ele obedece a si mesmo, e convicção é o principal dial de dificuldade."
+          en: "Two orthogonal channels drive the AI. Intelligence scales the situational weight, defining what the enemy prefers: hit the vulnerable, avoid overkill, finish kills. Conviction is the exponent of the draw above, defining only how faithfully the enemy follows its own preference: conviction of zero is a uniform draw and plays erratic, high conviction almost always takes the top pick. Splitting these two channels is the core of the AI's design: a genius with conviction zero draws at random and plays like an idiot, a fool with high conviction executes the dumbest possible preference with total fidelity. Intelligence is what the enemy wants, conviction is how much it obeys itself, and conviction is the main difficulty dial.",
+          pt: "Dois canais ortogonais conduzem a IA. Inteligência escala o peso situacional, definindo o que o inimigo prefere: acertar o vulnerável, evitar overkill, finalizar kills. Convicção é o expoente do sorteio acima, definindo só o quanto o inimigo segue a própria preferência com fidelidade: convicção zero é um sorteio uniforme e joga de forma errática, convicção alta quase sempre pega a melhor opção. Separar esses dois canais é o núcleo do design da IA: um gênio com convicção zero sorteia aleatoriamente e joga como um idiota, um bobo com convicção alta executa a pior preferência possível com fidelidade total. Inteligência é o que o inimigo quer, convicção é o quanto ele obedece a si mesmo, e convicção é o principal dial de dificuldade."
         }
       },
       balancing: {
@@ -796,7 +796,7 @@ export const projects = [
       results: [
         {
           value: { en: "45.0 min", pt: "45,0 min" },
-          label: { en: "Target session length, hit exactly", pt: "Duração-alvo da sessão, acertada na mosca" }
+          label: { en: "Target session length, hit exactly", pt: "Duração-alvo da sessão, atingida com exatidão" }
         },
         {
           value: { en: "1 input cell", pt: "1 célula de input" },
@@ -817,8 +817,8 @@ export const projects = [
         pt: "ClicaChorro é um idle-clicker aconchegante pro navegador. Você clica pra encher um cachorro de carinho; esse carinho compra ajudantes e upgrades que rendem sozinhos, e cada compra libera mais uma peça de mobília para o quarto onde o cachorro mora, de um quarto vazio até um totalmente decorado. Um projeto solo, feito pra testar uma ideia: que a economia inteira de um clicker pode ser derivada de quanto tempo você quer que a run dure."
       },
       role: {
-        en: "Solo: I designed the game, wrote the JavaScript, drew the art and made the sound. The part I'm proudest of is the balancing model: a closed-form spreadsheet where the target time-to-beat drives every cost and output value in the economy.",
-        pt: "Solo: projetei o jogo, escrevi o JavaScript, fiz a arte e o som. A parte de que mais me orgulho é o modelo de balanceamento: uma planilha de forma fechada onde o tempo-alvo para zerar comanda cada valor de custo e produção da economia."
+        en: "Solo: I designed the game, wrote the JavaScript, drew the art and made the sound. The core of it is the balancing model: a closed-form spreadsheet where the target time-to-beat drives every cost and output value in the economy.",
+        pt: "Solo: projetei o jogo, escrevi o JavaScript, fiz a arte e o som. O núcleo dele é o modelo de balanceamento: uma planilha de forma fechada onde o tempo-alvo para zerar comanda cada valor de custo e produção da economia."
       },
       responsibilities: [
         {
@@ -902,8 +902,8 @@ export const projects = [
           pt: "C0 = tempo_alvo × P0 × (r − 1) ÷ (rᴺ − 1),   r = a ÷ b"
         },
         body: {
-          en: "The signature: instead of picking costs by feel, I set a target time-to-beat and inverted the geometric sum that describes a clicker economy. The time spent on each stage is t_i = (C0 ÷ P0) × rⁱ, and summing those is a geometric series, so I solved it backwards for the base cost C0. That makes the target time command the whole curve. One spreadsheet, one input cell: retuning a 45-minute game into a 90-minute one is a single edit, and the per-stage times always sum back exactly to the target.",
-          pt: "A assinatura: em vez de escolher custos no feeling, defini um tempo-alvo para zerar e inverti a soma geométrica que descreve a economia de um clicker. O tempo gasto em cada estágio é t_i = (C0 ÷ P0) × rⁱ, e somar isso é uma série geométrica, então resolvi ao contrário para o custo base C0. Isso faz o tempo-alvo comandar a curva inteira. Uma planilha, uma célula de input: retunar um jogo de 45 minutos para 90 é uma única edição, e os tempos por estágio sempre somam exatamente o alvo."
+          en: "The approach: instead of picking costs by feel, I set a target time-to-beat and inverted the geometric sum that describes a clicker economy. The time spent on each stage is t_i = (C0 ÷ P0) × rⁱ, and summing those is a geometric series, so I solved it backwards for the base cost C0. That makes the target time command the whole curve. One spreadsheet, one input cell: retuning a 45-minute game into a 90-minute one is a single edit, and the per-stage times always sum back exactly to the target.",
+          pt: "A abordagem: em vez de escolher custos no feeling, defini um tempo-alvo para zerar e inverti a soma geométrica que descreve a economia de um clicker. O tempo gasto em cada estágio é t_i = (C0 ÷ P0) × rⁱ, e somar isso é uma série geométrica, então resolvi ao contrário para o custo base C0. Isso faz o tempo-alvo comandar a curva inteira. Uma planilha, uma célula de input: retunar um jogo de 45 minutos para 90 é uma única edição, e os tempos por estágio sempre somam exatamente o alvo."
         },
         tables: [
           {
@@ -956,8 +956,8 @@ export const projects = [
         pt: "A planilha é a fonte da verdade; o build web lê a curva resolvida como dados, então o JavaScript nunca cravou um custo na mão. Como a economia é derivada, notas de playtest como 'o meio-jogo cai' viravam um ajuste em uma razão de crescimento, não uma passada manual por cada estágio."
       },
       learnings: {
-        en: "Deriving the economy from the target session length, not from vibes, turned balancing from guesswork into a solved equation. Building solo across design, code, art and sound taught me to let one system (the sheet) keep the others honest.",
-        pt: "Derivar a economia da duração-alvo da sessão, e não do 'feeling', transformou o balanceamento de chute em equação resolvida. Fazer tudo sozinho entre design, código, arte e som me ensinou a deixar um sistema (a planilha) manter os outros honestos."
+        en: "Deriving the economy from the target session length turned balancing from guesswork into a solved equation. Building solo across design, code, art and sound taught me to let one system (the sheet) keep the others in line.",
+        pt: "Derivar a economia da duração-alvo da sessão transformou o balanceamento de chute em equação resolvida. Fazer tudo sozinho entre design, código, arte e som me ensinou a deixar um sistema (a planilha) manter os outros alinhados."
       },
       links: [
         { label: { en: "Play ClicaChorro", pt: "Jogar ClicaChorro" }, url: "https://lope.design/clicachorro", kind: "play" }

@@ -32,13 +32,13 @@ export function projectCardHTML(project, i) {
       <a class="btn btn-play" href="${esc(project.playUrl)}" target="_blank" rel="noopener">${esc(tk(playTagKey))}</a>` : '';
 
   return `<li class="project reveal" style="--project-accent: ${esc(project.accent)}" data-playable="${project.playable ? 'true' : 'false'}">
-  <a class="project-media" href="${esc(mediaHref)}"${external} data-case-open="${esc(project.id)}" aria-label="${esc(tk('projects.open'))} · ${esc(project.name)}">
+  <a class="project-media" href="${esc(mediaHref)}"${external} data-case-open="${esc(project.id)}" aria-label="${esc(tk('projects.open'))} · ${esc(t(project.name))}">
     <img src="${esc(project.cover)}" alt="${esc(t(project.coverAlt))}" loading="lazy" decoding="async" width="1200" height="800">
     <span class="project-num mono">${num}</span>${badge}${playTag}
   </a>
   <div class="project-info">
     <p class="project-type">${esc(t(project.type))}</p>
-    <h3 class="project-name">${esc(project.name)}</h3>
+    <h3 class="project-name">${esc(t(project.name))}</h3>
     <p class="project-role">${esc(t(project.role))}</p>
     <p class="project-summary">${esc(t(project.summary))}</p>
     <ul class="project-tools">${project.tools.map(tool => `

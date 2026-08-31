@@ -242,7 +242,7 @@ function buildBody(project) {
 }
 
 function render(project) {
-  document.getElementById('case-title').textContent = project.name;
+  document.getElementById('case-title').textContent = t(project.name);
   document.getElementById('case-type').textContent = `${t(project.type)} · ${t(project.role)}`;
   document.getElementById('case-close').setAttribute('aria-label', tk('case.close'));
   buildBody(project);

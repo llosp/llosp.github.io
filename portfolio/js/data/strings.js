@@ -8,8 +8,8 @@ export const strings = {
 
   "hero.role":  { en: "Systems & Balance Designer", pt: "Systems & Balance Designer" },
   "hero.intro": {
-    en: "I derive systems instead of guessing at them, boss damage from the player's expected HP, a 45-minute economy solved backwards from the clock, and then I write the code that runs them. The last one placed 21st of 10,587 at GMTK Jam 2026, in four days.",
-    pt: "Eu derivo sistemas em vez de chutá-los, dano de chefe a partir do HP esperado do player, uma economia de 45 minutos resolvida de trás pra frente a partir do relógio, e depois escrevo o código que os roda. O último ficou em 21º entre 10.587 na GMTK Jam 2026, em quatro dias."
+    en: "I design combat, progression and economy systems and the numbers behind them: enemy scaling, upgrade drafts, difficulty curves, session length. I also write the code that runs them.",
+    pt: "Eu projeto sistemas de combate, progressão e economia e os números por trás deles: escalonamento de inimigos, draft de upgrades, curvas de dificuldade, duração de sessão. E escrevo o código que roda isso."
   },
   "hero.cta":        { en: "See the work ↓", pt: "Ver projetos ↓" },
 

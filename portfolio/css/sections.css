@@ -148,29 +148,98 @@
   overflow: clip;
 }
 
-/* ═══ RECOGNITION STRIP ══════════════════════════════════════════════════ */
-.stats {
-  --bg: var(--yellow);
-  --ink: var(--black);
-  padding-block: var(--space-4);
+/* ═══ PROJECTS ═══════════════════════════════════════════════════════════ */
+.projects {
+  --bg: var(--black);
+  --ink: var(--paper);
+  --accent: var(--pink);
 }
 
-.stats-title {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  overflow: hidden;
-  clip-path: inset(50%);
-  white-space: nowrap;
+/* ── Featured showcase ──────────────────────────────────────────────────
+   The old Recognition strip lived above the project list as three floating
+   numbers. It is now this card: the jam stats sit inside the game they
+   describe, on the yellow panel that strip used to own. */
+/* Four rows. The ribbon and the jam numbers open the card at full width, so the
+   result is the first thing read and it out-ranks the game title. Below the
+   rule the media and copy sit side by side, with the CTAs tucked into the space
+   under the media rather than stacking in the narrow copy column. */
+.showcase {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  grid-template-rows: auto auto auto 1fr;
+  gap: var(--space-3);
+  align-items: start;
+  margin-bottom: var(--space-5);
+  padding: var(--space-3);
+  background: var(--yellow);
+  color: var(--black);
+  border: 4px solid var(--black);
+  box-shadow: 14px 14px 0 var(--pink);
 }
 
-.stat-strip {
+.showcase-media {
+  grid-column: 1;
+  grid-row: 3;
+  position: relative;
+  display: block;
+  border: 4px solid var(--black);
+  box-shadow: 10px 10px 0 var(--project-accent, var(--pink));
+  transform: rotate(-1.5deg);
+  transition: transform var(--dur-med) var(--ease-pop), box-shadow var(--dur-med) ease;
+}
+.showcase-media:hover {
+  transform: rotate(0deg) scale(1.015);
+  box-shadow: 14px 14px 0 var(--project-accent, var(--pink));
+}
+.showcase-media img { width: 100%; }
+
+/* The copy spans both lower rows on the right; the buttons sit under the media
+   on the left. The media is shorter than the copy, so the buttons land in air
+   that was empty either way. */
+.showcase-info { grid-column: 2; grid-row: 3 / span 2; }
+.showcase-actions {
+  grid-column: 1;
+  grid-row: 4;
+  align-self: start;
+}
+
+.showcase-ribbon {
+  grid-column: 1 / -1;
+  grid-row: 1;
+  justify-self: start;
+  padding: 0.3em 0.9em;
+  background: var(--black);
+  color: var(--yellow);
+  font-size: var(--step--1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  transform: rotate(-1.5deg);
+}
+
+/* On the yellow panel the accent colour has no contrast, so the mono line,
+   the tool chips and the summary all fall back to black. */
+.showcase .project-type,
+.showcase .project-tools { color: var(--black); }
+.showcase .project-summary { opacity: 0.8; }
+.showcase .btn-play { background: var(--paper); }
+
+.showcase-stats {
+  grid-column: 1 / -1;
+  grid-row: 2;
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: var(--space-3);
+  padding-bottom: var(--space-3);
+  border-bottom: 4px solid var(--black);
 }
 
-.stat {
+/* Larger than the 2.8rem game title on purpose. Equal sizes made the two
+   compete and position decided the winner, which put the result second. */
+.showcase-stats .stat-value { font-size: clamp(2.3rem, 1.8rem + 2.2vw, 3.5rem); }
+.showcase-stats .stat-label { opacity: 0.85; }
+
+.showcase-stat {
   display: flex;
   flex-direction: column;
   gap: var(--space-1);
@@ -193,17 +262,6 @@
   opacity: 0.75;
 }
 
-@media (max-width: 48rem) {
-  .stat-strip { grid-template-columns: 1fr; gap: var(--space-2); }
-}
-
-/* ═══ PROJECTS ═══════════════════════════════════════════════════════════ */
-.projects {
-  --bg: var(--black);
-  --ink: var(--paper);
-  --accent: var(--pink);
-}
-
 .project-list {
   display: flex;
   flex-direction: column;
@@ -217,11 +275,21 @@
   gap: var(--space-3);
   align-items: center;
 }
+/* order alone swaps which cell each block lands in but not the track sizes, so
+   on even rows the media used to get the narrow 5fr column and shrink. Mirror
+   the tracks too: the media is always the wide one. */
+.project:nth-child(even) { grid-template-columns: minmax(0, 5fr) minmax(0, 7fr); }
 .project:nth-child(even) .project-media { order: 2; }
 .project:nth-child(even) .project-info  { order: 1; }
 
+/* A fixed 3:2 frame, not the natural 16:9. The covers are wide and short, so
+   centring one beside a tall copy column left a band of empty page above and
+   below it. 3:2 is a deterministic ~15% trim off the left and right edges of
+   every cover, which closes most of that gap. Cropping to the copy height
+   instead (stretch + cover) would eat a third of some images. */
 .project-media {
   position: relative;
+  aspect-ratio: 3 / 2;
   border: 4px solid var(--paper);
   box-shadow: 10px 10px 0 var(--project-accent, var(--yellow));
   transform: rotate(var(--media-tilt, -1.5deg));
@@ -237,7 +305,12 @@
   transform: rotate(0deg) scale(1.015);
   box-shadow: 14px 14px 0 var(--project-accent, var(--yellow));
 }
-.project-media img { width: 100%; }
+.project-media img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
 
 .project-media img.project-badge {
   position: absolute;
@@ -366,10 +439,14 @@
 }
 .skills .section-sub { opacity: 1; }
 
+/* start, not stretch: the three cards hold different numbers of chips, and
+   equal-height cards padded the two short ones with a lot of blank paper. Each
+   card ends where its list ends. */
 .skills-grid {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(min(16rem, 100%), 1fr));
   gap: var(--space-3);
+  align-items: start;
 }
 
 .skill-group {
@@ -433,6 +510,14 @@
 
 /* ═══ RESPONSIVE ═════════════════════════════════════════════════════════ */
 @media (max-width: 900px) {
+  /* One column: drop the explicit row/column placement so the four blocks fall
+     back to source order (media, copy, buttons, stats). */
+  .showcase { grid-template-columns: 1fr; grid-template-rows: none; }
+  .showcase-media,
+  .showcase-info,
+  .showcase-actions,
+  .showcase-stats { grid-column: auto; grid-row: auto; }
+  .showcase-stats { grid-template-columns: 1fr; gap: var(--space-2); }
   .project { grid-template-columns: 1fr; }
   .project:nth-child(even) .project-media { order: 0; }
   .project:nth-child(even) .project-info  { order: 0; }

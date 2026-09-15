@@ -17,9 +17,11 @@ globalThis.localStorage = { getItem: () => null, setItem: () => {} };
 const root = join(dirname(fileURLToPath(import.meta.url)), '..');
 const { projects } = await import('../js/data/projects.js');
 const { skillGroups } = await import('../js/data/strings.js');
-const { projectCardHTML, skillGroupHTML } = await import('../js/templates.js');
+const { projectCardHTML, showcaseCardHTML, skillGroupHTML } = await import('../js/templates.js');
 
-const projectsHTML = projects.map((project, i) => projectCardHTML(project, i)).join('\n');
+// projects[0] is the featured showcase; the rest keep the list numbering from 02.
+const showcaseHTML = showcaseCardHTML(projects[0]);
+const projectsHTML = projects.slice(1).map((project, i) => projectCardHTML(project, i + 1)).join('\n');
 const skillsHTML = skillGroups.map(skillGroupHTML).join('\n');
 
 function bake(html, name, content) {
@@ -36,8 +38,9 @@ function bake(html, name, content) {
 
 const indexPath = join(root, 'index.html');
 let html = readFileSync(indexPath, 'utf8');
+html = bake(html, 'showcase', showcaseHTML);
 html = bake(html, 'projects', projectsHTML);
 html = bake(html, 'skills', skillsHTML);
 writeFileSync(indexPath, html);
 
-console.log(`Baked ${projects.length} project cards and ${skillGroups.length} skill groups into index.html`);
+console.log(`Baked 1 showcase, ${projects.length - 1} project cards and ${skillGroups.length} skill groups into index.html`);

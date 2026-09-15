@@ -143,24 +143,245 @@
 }
 .case-loop-back { color: var(--yellow); }
 
-/* Systems blocks */
-.case-systems {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(15rem, 100%), 1fr));
-  gap: var(--space-2);
+/* ═══ VISUALS ════════════════════════════════════════════════════════════ */
+/* Every figure in a case body: screenshot, number callout or diagram. The
+   caption carries the point, so scanning the figures is enough. */
+.case-visual { margin: 0; }
+.case-visual img {
+  width: 100%;
+  display: block;
+  border: 3px solid var(--paper);
+  box-shadow: 6px 6px 0 var(--navy);
 }
-.case-system {
+.case-visual figcaption {
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  line-height: 1.5;
+  color: rgba(245, 241, 232, 0.7);
+  margin-top: 0.9em;
+  border-left: 3px solid var(--yellow);
+  padding-left: 0.8em;
+}
+
+/* ═══ BEATS ══════════════════════════════════════════════════════════════ */
+/* One system per row: figure on one side, a short paragraph on the other,
+   sides alternating down the stack. */
+.case-beats {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-4);
+}
+.case-beat {
+  display: grid;
+  grid-template-columns: 6fr 5fr;
+  gap: var(--space-3);
+  align-items: center;
+}
+.case-beat.is-flipped > .case-visual { order: 2; }
+/* Diagram beats stack so the diagram gets the full width it needs to lay a rack
+   of timer faces out in one row. Visual first either way, like every other beat. */
+.case-beat.is-wide { grid-template-columns: 1fr; gap: var(--space-2); }
+.case-beat.is-wide > .case-visual,
+.case-beat.is-wide.is-flipped > .case-visual { order: 0; }
+.case-beat-copy h4 {
+  font-family: var(--font-display);
+  text-transform: uppercase;
+  font-size: var(--step-1);
+  line-height: 1.1;
+  margin-bottom: 0.5em;
+  color: var(--yellow);
+}
+.case-beat.is-flipped .case-beat-copy h4 { color: var(--pink); }
+.case-beat.is-flipped .case-visual figcaption { border-left-color: var(--pink); }
+
+/* ═══ DIAGRAMS ═══════════════════════════════════════════════════════════ */
+/* Static markup built from case data — see js/diagram.js. */
+.dgm-note {
+  font-size: var(--step--1);
+  color: rgba(245, 241, 232, 0.75);
+  margin-top: 0.9em;
+}
+
+/* A rack of countdown faces, one of them the real count. */
+.dgm-rack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-1);
+  list-style: none;
+}
+.dgm-face {
+  flex: 1 1 5.5rem;
+  text-align: center;
+  padding: var(--space-2) 0.6em;
+  background: var(--black);
+  border: 3px solid rgba(245, 241, 232, 0.3);
+  color: rgba(245, 241, 232, 0.55);
+}
+.dgm-face.is-real {
+  border-color: var(--yellow);
+  color: var(--yellow);
+  box-shadow: 4px 4px 0 var(--pink);
+}
+.dgm-face-text {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--step-1);
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+.dgm-face-solve {
+  display: block;
+  font-size: var(--step-0);
+  color: var(--paper);
+  margin-top: 0.2em;
+}
+.dgm-face-tag {
+  display: block;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  margin-top: 0.6em;
+}
+
+/* The draw window as a banded timeline. */
+.dgm-bar {
+  display: flex;
+  border: 3px solid var(--black);
+  box-shadow: 5px 5px 0 var(--navy);
+}
+.dgm-band {
+  flex-basis: 0;
+  padding: var(--space-2) 0.5em;
+  text-align: center;
+  overflow: hidden;
+}
+.dgm-band + .dgm-band { border-left: 3px solid var(--black); }
+.dgm-band-early { background: rgba(245, 241, 232, 0.22); color: var(--paper); }
+.dgm-band-hit { background: var(--yellow); color: var(--black); }
+.dgm-band-late { background: var(--pink); color: var(--black); }
+.dgm-band-label {
+  font-size: var(--step--1);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  white-space: nowrap;
+}
+.dgm-scale {
+  display: flex;
+  list-style: none;
+  margin-top: 0.5em;
+  font-size: var(--step--1);
+  color: rgba(245, 241, 232, 0.65);
+}
+.dgm-tick {
+  flex-basis: 0;
+  text-align: right;
+}
+
+/* Before/after number callouts. */
+.dgm-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(11rem, 1fr));
+  gap: var(--space-2);
+  list-style: none;
+}
+.dgm-stat {
   background: rgba(245, 241, 232, 0.06);
-  border: 2px solid rgba(245, 241, 232, 0.25);
   border-left: 6px solid var(--yellow);
   padding: var(--space-2);
 }
-.case-system:nth-child(even) { border-left-color: var(--pink); }
-.case-system h4 {
+.dgm-stat:nth-child(even) { border-left-color: var(--pink); }
+/* Stacked, not inline: a long value like "2.06 min" wraps mid-pair otherwise, and
+   then two pairs in the same block stop looking like the same shape. */
+.dgm-stat-row {
+  display: grid;
+  justify-items: start;
+  gap: 0.1em;
+  font-family: var(--font-display);
+  font-size: var(--step-2);
+  line-height: 1.1;
+}
+.dgm-stat-from {
+  color: rgba(245, 241, 232, 0.45);
+  text-decoration: line-through;
+}
+.dgm-stat-arrow { color: var(--pink); }
+.dgm-stat-to { color: var(--yellow); }
+.dgm-stat-label {
+  display: block;
+  font-size: var(--step--1);
+  line-height: 1.4;
+  color: rgba(245, 241, 232, 0.75);
+  margin-top: 0.7em;
+}
+
+/* ═══ PROCESS ════════════════════════════════════════════════════════════ */
+/* Numbered before/after cards: what shipped, what the playtest showed, what
+   changed, with the numbers on both sides. */
+.case-process {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  list-style: none;
+  counter-reset: process;
+}
+.case-process-step {
+  counter-increment: process;
+  border-left: 3px solid rgba(245, 241, 232, 0.25);
+  padding-left: var(--space-3);
+  position: relative;
+}
+.case-process-step::before {
+  content: counter(process, decimal-leading-zero);
+  position: absolute;
+  left: 0;
+  top: 0;
+  transform: translateX(-50%);
+  font-family: var(--font-mono);
+  font-size: var(--step--1);
+  font-weight: 700;
+  background: var(--yellow);
+  color: var(--black);
+  border: 3px solid var(--black);
+  padding: 0.1em 0.4em;
+}
+.case-process-title {
   font-family: var(--font-display);
   text-transform: uppercase;
-  font-size: var(--step-0);
-  margin-bottom: 0.4em;
+  font-size: var(--step-1);
+  margin-bottom: var(--space-2);
+}
+.case-process-pair {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
+  gap: var(--space-2);
+}
+.case-process-side {
+  background: rgba(245, 241, 232, 0.06);
+  border: 2px solid rgba(245, 241, 232, 0.2);
+  padding: var(--space-2);
+}
+.case-process-side.is-after { border-color: var(--yellow); }
+.case-process-tag {
+  display: block;
+  font-size: 0.62rem;
+  text-transform: uppercase;
+  letter-spacing: 0.18em;
+  color: var(--pink);
+}
+.case-process-side.is-after .case-process-tag { color: var(--yellow); }
+.case-process-value {
+  display: block;
+  font-family: var(--font-display);
+  font-size: var(--step-1);
+  line-height: 1.1;
+  margin: 0.4em 0 0.5em;
+}
+.case-process-side p { font-size: var(--step--1); }
+.case-process-note {
+  font-size: var(--step--1);
+  color: rgba(245, 241, 232, 0.7);
+  margin-top: var(--space-2);
 }
 
 /* Damage formula panel */
@@ -263,18 +484,6 @@
   gap: 0.4em;
 }
 .case-resp-col .chip { font-size: 0.72rem; }
-
-/* Gallery */
-.case-gallery {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(18rem, 100%), 1fr));
-  gap: var(--space-2);
-}
-.case-gallery img {
-  width: 100%;
-  border: 3px solid var(--paper);
-  box-shadow: 5px 5px 0 var(--navy);
-}
 
 /* External links row (itch.io, trailer) */
 .case-links {
@@ -501,4 +710,15 @@
   font-size: var(--step--1);
   opacity: 0.8;
   max-width: 60ch;
+}
+
+/* Narrow screens: beats stack figure-then-copy. The alternating sides would read
+   as random once there is only one column. Lives at the end of the file so it
+   wins over the base .case-beat rules above. */
+@media (max-width: 700px) {
+  .case-beat,
+  .case-beat.is-wide { grid-template-columns: 1fr; }
+  .case-beat > .case-visual,
+  .case-beat.is-flipped > .case-visual { order: 0; }
+  .case-process-pair { grid-template-columns: 1fr; }
 }

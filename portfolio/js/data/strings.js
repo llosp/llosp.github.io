@@ -9,19 +9,15 @@ export const strings = {
   "hero.role":  { en: "Systems & Balance Designer", pt: "Systems & Balance Designer" },
   "hero.intro": {
     en: "I design combat, progression and economy systems and the numbers behind them: enemy scaling, upgrade drafts, difficulty curves, session length. I also write the code that runs them.",
-    pt: "Eu projeto sistemas de combate, progressão e economia e os números por trás deles: escalonamento de inimigos, draft de upgrades, curvas de dificuldade, duração de sessão. E escrevo o código que roda isso."
+    pt: "Eu projeto sistemas de combate, progressão e economia, e os números por trás deles: escalonamento de inimigos, draft de upgrades, curvas de dificuldade, duração de sessão. E escrevo o código que roda isso."
   },
   "hero.cta":        { en: "See the work ↓", pt: "Ver projetos ↓" },
 
+  // Label for the stat row inside the showcase card (screen readers only).
   "stats.title":     { en: "Recognition", pt: "Reconhecimento" },
-  "stats.rank.value":    { en: "21st / 10,587", pt: "21º / 10.587" },
-  "stats.rank.label":    { en: "GMTK Jam 2026, top 0.2%", pt: "GMTK Jam 2026, top 0,2%" },
-  "stats.ratings.value": { en: "218 ratings", pt: "218 avaliações" },
-  "stats.ratings.label": { en: "10× the jam average of 21", pt: "10× a média da jam, de 21" },
-  "stats.days.value":    { en: "4 days", pt: "4 dias" },
-  "stats.days.label":    { en: "Concept to shipped build", pt: "Do conceito à build publicada" },
 
   "projects.title":  { en: "Featured Projects", pt: "Projetos em Destaque" },
+  "projects.featured": { en: "Featured · GMTK Jam 2026", pt: "Destaque · GMTK Jam 2026" },
   "projects.sub": {
     en: "Each one opens into a full systems breakdown: loops, formulas, tables.",
     pt: "Cada um abre num raio-x completo de sistemas: loops, fórmulas, tabelas."
@@ -41,7 +37,7 @@ export const strings = {
   },
   "about.p2": {
     en: "Balance is the core of what I do, and the breadth around it is deliberate. I prototype in Unity and Godot, write the gameplay code, compose the audio, make 2D art and 3D models, and design the UI.",
-    pt: "O balanceamento é o núcleo do que faço, e a amplitude ao redor é deliberada. Prototipo em Unity e Godot, escrevo o código de gameplay, componho o áudio, faço arte 2D e modelos 3D, e desenho a UI."
+    pt: "O balanceamento é o núcleo do que faço, e a variedade ao redor é proposital. Prototipo em Unity e Godot, escrevo o código de gameplay, componho o áudio, faço arte 2D e modelos 3D, e desenho a UI."
   },
   "about.stamp1":    { en: "PUC-Rio · Design", pt: "PUC-Rio · Design" },
   "about.stamp2":    { en: "Prisma Game Lab", pt: "Prisma Game Lab" },
@@ -56,7 +52,7 @@ export const strings = {
   "contact.title":   { en: "Get in touch", pt: "Fale comigo" },
   "contact.lead": {
     en: "I design the system, derive the numbers, build it, and tune it, without handing it off between disciplines. Open to new work, get in touch.",
-    pt: "Eu projeto o sistema, derivo os números, construo e ajusto, sem repassar entre quatro pessoas no caminho. Aberto a novos trabalhos, é só chamar."
+    pt: "Eu projeto o sistema, derivo os números, construo e ajusto, sem passar por quatro pessoas no caminho. Aberto a novos trabalhos, é só chamar."
   },
 
   "case.close":      { en: "Close case study", pt: "Fechar estudo de caso" },
@@ -71,7 +67,9 @@ export const strings = {
   "case.implementation": { en: "Implementation & Prototyping", pt: "Implementação e Prototipagem" },
   "case.learnings":  { en: "Learnings", pt: "Aprendizados" },
   "case.responsibilities": { en: "What I Owned", pt: "Do Que Cuidei" },
-  "case.gallery":    { en: "Gallery", pt: "Galeria" },
+  "case.process":    { en: "What Changed", pt: "O Que Mudou" },
+  "process.before":  { en: "Before", pt: "Antes" },
+  "process.after":   { en: "After", pt: "Depois" },
 
   "case.results":    { en: "Results", pt: "Resultados" },
   "case.timeline":   { en: "Timeline", pt: "Período" },
@@ -81,7 +79,7 @@ export const strings = {
   "case.platform":   { en: "Platform", pt: "Plataforma" },
   "case.artifacts":  { en: "Inspect the Work", pt: "Inspecione o Trabalho" },
 
-  "tuner.title":   { en: "Retune the economy", pt: "Retune a economia" },
+  "tuner.title":   { en: "Retune the economy", pt: "Reajuste a economia" },
   "tuner.label":   { en: "Target time to beat", pt: "Tempo-alvo para zerar" },
   "tuner.derived": { en: "Derived base cost (C₀)", pt: "Custo base derivado (C₀)" },
   "tuner.check":   { en: "Stage times sum to", pt: "Soma dos tempos por estágio" },
@@ -118,7 +116,7 @@ export const skillGroups = [
       { en: "Cost/reward curves", pt: "Curvas de custo/recompensa" },
       { en: "Closed-form derivation", pt: "Derivação de forma fechada" },
       { en: "Progression curves", pt: "Curvas de progressão" },
-      { en: "Difficulty tuning", pt: "Tuning de dificuldade" },
+      { en: "Difficulty tuning", pt: "Ajuste de dificuldade" },
       { en: "Data-driven balancing", pt: "Balanceamento data-driven" },
       { en: "Attribute tables", pt: "Tabelas de atributos" },
       { en: "Playtest instrumentation", pt: "Instrumentação de playtest" },

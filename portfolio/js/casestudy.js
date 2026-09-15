@@ -1,6 +1,7 @@
 import { projects } from './data/projects.js';
 import { t, tk } from './i18n.js';
 import { lineChart, chartLegend } from './chart.js';
+import { diagram, statBlock } from './diagram.js';
 import { economyTuner } from './econtuner.js';
 
 const overlay = () => document.getElementById('case-overlay');
@@ -105,6 +106,67 @@ function renderArtifact(artifact) {
   return card;
 }
 
+// Every visual is a <figure>, whatever it holds: a screenshot, a before/after
+// number callout, or one of the two diagrams. The caption says what to look at,
+// so a reader who only scans the figures still gets the argument.
+function renderVisual(visual) {
+  const fig = el('figure', `case-visual case-visual-${visual.kind}`);
+  if (visual.kind === 'image') {
+    const img = el('img');
+    img.src = visual.src;
+    img.alt = t(visual.alt);
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    fig.append(img);
+  } else if (visual.kind === 'stat') {
+    fig.append(statBlock(visual));
+  } else if (visual.kind === 'diagram') {
+    fig.append(diagram(visual));
+  }
+  if (visual.caption) fig.append(el('figcaption', null, t(visual.caption)));
+  return fig;
+}
+
+// Systems read as beats: one visual and a short paragraph per idea, alternating
+// sides down the page. Every beat carries a visual, so the rhythm never breaks.
+// Diagrams go full width: a rack of five timer faces cannot fit a half column.
+function renderBeats(beats) {
+  const stack = el('div', 'case-beats');
+  beats.forEach((beat, i) => {
+    const wide = beat.visual.kind === 'diagram' ? ' is-wide' : '';
+    const row = el('article', 'case-beat' + (i % 2 ? ' is-flipped' : '') + wide);
+    const copy = el('div', 'case-beat-copy');
+    copy.append(el('h4', null, t(beat.title)), el('p', null, t(beat.body)));
+    row.append(renderVisual(beat.visual), copy);
+    stack.append(row);
+  });
+  return stack;
+}
+
+// The process section: what shipped first, what the playtest showed, what
+// changed. Numbers on both sides, so the iteration is visible and not claimed.
+function renderProcess(steps) {
+  const list = el('ol', 'case-process');
+  steps.forEach(step => {
+    const li = el('li', 'case-process-step');
+    li.append(el('h4', 'case-process-title', t(step.title)));
+    const pair = el('div', 'case-process-pair');
+    [['before', step.before], ['after', step.after]].forEach(([side, data]) => {
+      const cell = el('div', `case-process-side is-${side}`);
+      cell.append(
+        el('span', 'case-process-tag mono', tk(`process.${side}`)),
+        el('span', 'case-process-value', t(data.value)),
+        el('p', null, t(data.body))
+      );
+      pair.append(cell);
+    });
+    li.append(pair);
+    if (step.note) li.append(el('p', 'case-process-note', t(step.note)));
+    list.append(li);
+  });
+  return list;
+}
+
 function buildBody(project) {
   const cs = project.caseStudy;
   const body = document.getElementById('case-body');
@@ -159,7 +221,11 @@ function buildBody(project) {
     body.append(section('case.responsibilities', grid));
   }
 
-  if (cs.challenge) body.append(section('case.challenge', el('p', null, t(cs.challenge))));
+  if (cs.challenge) {
+    const children = [el('p', null, t(cs.challenge))];
+    if (cs.challengeVisual) children.push(renderVisual(cs.challengeVisual));
+    body.append(section('case.challenge', ...children));
+  }
 
   if (cs.coreLoop) {
     const loop = el('div', 'case-loop');
@@ -175,21 +241,17 @@ function buildBody(project) {
     body.append(section('case.coreLoop', ...children));
   }
 
-  if (cs.systems?.length) {
-    const grid = el('div', 'case-systems');
-    cs.systems.forEach(system => {
-      const card = el('article', 'case-system');
-      card.append(el('h4', null, t(system.title)), el('p', null, t(system.body)));
-      grid.append(card);
-    });
-    body.append(section('case.systems', grid));
-  }
+  if (cs.systems?.length) body.append(section('case.systems', renderBeats(cs.systems)));
+
+  if (cs.process?.length) body.append(section('case.process', renderProcess(cs.process)));
 
   if (cs.progression) body.append(section('case.progression', el('p', null, t(cs.progression))));
 
   if (cs.combat) {
     const children = [];
-    if (cs.combat.formula) children.push(el('p', 'case-formula', t(cs.combat.formula)));
+    // A visual of the window beats a formula string describing the window.
+    if (cs.combat.visual) children.push(renderVisual(cs.combat.visual));
+    else if (cs.combat.formula) children.push(el('p', 'case-formula', t(cs.combat.formula)));
     if (cs.combat.body) children.push(el('p', null, t(cs.combat.body)));
     body.append(section('case.combat', ...children));
   }
@@ -212,19 +274,6 @@ function buildBody(project) {
   }
 
   if (cs.implementation) body.append(section('case.implementation', el('p', null, t(cs.implementation))));
-
-  if (cs.gallery?.length) {
-    const grid = el('div', 'case-gallery');
-    cs.gallery.forEach(g => {
-      const img = el('img');
-      img.src = g.src;
-      img.alt = t(g.alt);
-      img.loading = 'lazy';
-      img.decoding = 'async';
-      grid.append(img);
-    });
-    body.append(section('case.gallery', grid));
-  }
 
   if (cs.learnings) body.append(section('case.learnings', el('p', null, t(cs.learnings))));
 

@@ -78,6 +78,14 @@ renderer only translates object cells.
    in both `en` and `pt` so columns line up; prose may use PT comma decimals (`26,5`).
 5. **Tone:** concise, confident, systems-focused. Prefer active voice and concrete design
    verbs (designed, tuned, derived, prototyped). Avoid filler and literal PT idioms.
+6. **Check that the PT string still fits.** PT words run long ("AVALIAÇÕES",
+   "BALANCEAMENTO") and Archivo Black is wide, so a heading that fits in EN can cross its
+   column in PT. Display text that sits in a column (`.stat-value`, `.skill-group-title`,
+   `.case-result-value`, `.section-title`) is therefore sized in `cqi` against a
+   `container-type: inline-size` parent, not in `vw` — a viewport step is wrong in both
+   directions, too big for three narrow columns at ~1000px and too small for the same
+   block once it goes full width on mobile. Keep the plain `var(--step-N)` declaration
+   above the container-relative one as the fallback.
 
 ### Glossary (PT → EN)
 sala → room · salas limpas → rooms cleared · dano → damage / DMG · vida → HP ·

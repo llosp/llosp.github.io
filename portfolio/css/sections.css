@@ -235,8 +235,13 @@
 }
 
 /* Larger than the 2.8rem game title on purpose. Equal sizes made the two
-   compete and position decided the winner, which put the result second. */
+   compete and position decided the winner, which put the result second.
+   Sized on the column, not the viewport: three columns at ~1000px are narrow
+   enough that a viewport-based step pushed PT "AVALIAÇÕES" over the divider,
+   and at the one-column mobile layout the reverse happened. 13cqi keeps the
+   longest word inside the column at every width. */
 .showcase-stats .stat-value { font-size: clamp(2.3rem, 1.8rem + 2.2vw, 3.5rem); }
+.showcase-stats .stat-value { font-size: clamp(1.6rem, 13cqi, 3.5rem); }
 .showcase-stats .stat-label { opacity: 0.85; }
 
 .showcase-stat {
@@ -245,6 +250,7 @@
   gap: var(--space-1);
   padding-left: var(--space-2);
   border-left: 3px solid var(--black);
+  container-type: inline-size;
 }
 
 .stat-value {
@@ -410,9 +416,12 @@
   gap: var(--space-3) var(--space-4);
 }
 
+/* Flatter than --step-2 through the two-column band (900–1300px), where the
+   lead sits in a ~400px column and PT "BALANCEAMENTO:" ran past it. Same
+   2.8rem ceiling, so the desktop size is unchanged. */
 .about-lead {
   font-family: var(--font-display);
-  font-size: var(--step-2);
+  font-size: clamp(1.9rem, 1.05rem + 2.05vw, 2.8rem);
   line-height: 1.15;
   text-transform: uppercase;
   color: var(--yellow);
@@ -456,14 +465,20 @@
   padding: var(--space-3);
   transform: rotate(var(--card-tilt, 0deg));
   transition: transform var(--dur-med) var(--ease-pop);
+  container-type: inline-size;
 }
 .skill-group:nth-child(odd)  { --card-tilt: -1deg; }
 .skill-group:nth-child(even) { --card-tilt: 1deg; }
 .skill-group:hover { transform: rotate(0deg) translateY(-4px); }
 
+/* Four cards at desktop leave ~200px of paper per title, and the longest word
+   in either language ("BALANCEAMENTO", "DEVELOPMENT") is wider than that at
+   --step-1. Sized on the card so it fits without hyphenating; the step is the
+   ceiling, reached again once a card is wide (single-column mobile). */
 .skill-group-title {
   font-family: var(--font-display);
   font-size: var(--step-1);
+  font-size: clamp(1.05rem, 9.4cqi, var(--step-1));
   text-transform: uppercase;
   line-height: 1.05;
   margin-bottom: var(--space-1);
@@ -518,7 +533,10 @@
   .showcase-actions,
   .showcase-stats { grid-column: auto; grid-row: auto; }
   .showcase-stats { grid-template-columns: 1fr; gap: var(--space-2); }
-  .project { grid-template-columns: 1fr; }
+  /* nth-child(even) outranks a bare .project, so the flipped cards kept their
+     two columns here and squeezed the title into half a phone screen. */
+  .project,
+  .project:nth-child(even) { grid-template-columns: 1fr; }
   .project:nth-child(even) .project-media { order: 0; }
   .project:nth-child(even) .project-info  { order: 0; }
   .about-grid { grid-template-columns: 1fr; }

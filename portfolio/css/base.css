@@ -249,7 +249,7 @@ main section {
 }
 main section > * { max-width: var(--page-max); margin-left: auto; margin-right: auto; }
 
-.section-head { margin-bottom: var(--space-4); position: relative; }
+.section-head { margin-bottom: var(--space-4); position: relative; container-type: inline-size; }
 
 .section-index {
   font-size: var(--step-0);
@@ -257,9 +257,12 @@ main section > * { max-width: var(--page-max); margin-left: auto; margin-right: 
   letter-spacing: 0.3em;
 }
 
+/* The cqi cap only bites on narrow screens, where a single long PT word
+   ("FERRAMENTAS") is wider than the viewport-based step. */
 .section-title {
   font-family: var(--font-display);
   font-size: var(--step-3);
+  font-size: min(var(--step-3), 10cqi);
   line-height: 1.02;
   text-transform: uppercase;
   letter-spacing: -0.02em;

@@ -512,12 +512,16 @@
   background: rgba(245, 241, 232, 0.06);
   border: 2px solid rgba(245, 241, 232, 0.25);
   border-left: 6px solid var(--yellow);
+  container-type: inline-size;
 }
 .case-result:nth-child(even) { border-left-color: var(--pink); }
+/* Sized on the chip so long PT values ("1 pool compartilhado") stay inside it
+   at the 13rem minimum column width. */
 .case-result-value {
   display: block;
   font-family: var(--font-display);
   font-size: var(--step-1);
+  font-size: clamp(0.95rem, 12cqi, var(--step-1));
   line-height: 1.05;
   color: var(--yellow);
   text-wrap: balance;

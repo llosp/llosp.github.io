@@ -80,12 +80,24 @@ renderer only translates object cells.
    verbs (designed, tuned, derived, prototyped). Avoid filler and literal PT idioms.
 6. **Check that the PT string still fits.** PT words run long ("AVALIAÇÕES",
    "BALANCEAMENTO") and Archivo Black is wide, so a heading that fits in EN can cross its
-   column in PT. Display text that sits in a column (`.stat-value`, `.skill-group-title`,
-   `.case-result-value`, `.section-title`) is therefore sized in `cqi` against a
-   `container-type: inline-size` parent, not in `vw` — a viewport step is wrong in both
-   directions, too big for three narrow columns at ~1000px and too small for the same
-   block once it goes full width on mobile. Keep the plain `var(--step-N)` declaration
-   above the container-relative one as the fallback.
+   column in PT. Two different fixes depending on what the element is:
+   - **Headings that are allowed to wrap** (`.section-title`, `.skill-group-title`,
+     `.about-lead`) are sized in `cqi` against a `container-type: inline-size` parent, not
+     `vw` — a viewport step is wrong in both directions, too big for narrow columns
+     around 900–1300px and too small once the same block goes full width on mobile. Keep
+     the plain `var(--step-N)` declaration above the container-relative one as the no-JS
+     fallback. Wrapping to 2–3 lines here is fine; each card/heading sizes independently.
+   - **Single data-point chips in a strict equal-width row** (`.showcase-stats
+     .stat-value`, `.case-result-value`) can't wrap at all without breaking the row: one
+     chip going to 2 lines while its siblings stay on 1 throws off the shared
+     border/baseline they're all aligned to. These are handled by `js/fit-text.js`, which
+     measures the actual text with a canvas and shrinks the inline `font-size` to whatever
+     fits on one line, then adds `.fit-text-ready` (→ `white-space: nowrap`, in
+     `base.css`). The CSS `cqi` clamp on these two selectors is only the no-JS fallback
+     (keeps them from overflowing their box; wrapping without JS is an accepted
+     degradation). Call `fitAll()` after anything that changes this text or reveals a
+     hidden container — see the call sites in `main.js` and `casestudy.js` (`openCase`
+     reads 0 width if called before `overlay().hidden = false`).
 
 ### Glossary (PT → EN)
 sala → room · salas limpas → rooms cleared · dano → damage / DMG · vida → HP ·

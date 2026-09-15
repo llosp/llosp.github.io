@@ -3,6 +3,7 @@ import { t, tk } from './i18n.js';
 import { lineChart, chartLegend } from './chart.js';
 import { diagram, statBlock } from './diagram.js';
 import { economyTuner } from './econtuner.js';
+import { fitAll } from './fit-text.js';
 
 const overlay = () => document.getElementById('case-overlay');
 const HASH_PREFIX = '#case/';
@@ -309,6 +310,7 @@ export function openCase(id, { fromHash = false } = {}) {
   render(project);
 
   overlay().hidden = false;
+  fitAll(); // after unhiding: result chips read 0 width while [hidden]
   document.documentElement.classList.add('no-scroll');
   if (!fromHash) {
     history.pushState({ case: id }, '', HASH_PREFIX + id);
@@ -389,7 +391,10 @@ export function initCaseStudy() {
   // Re-render open case on language switch
   document.addEventListener('langchange', () => {
     const project = projects.find(p => p.id === currentId);
-    if (project) render(project);
+    if (project) {
+      render(project);
+      fitAll();
+    }
   });
 
   // Cold deep link: #case/<id>

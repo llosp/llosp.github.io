@@ -5,16 +5,19 @@ import { initMascots } from './mascot.js';
 import { initHero } from './hero.js';
 import { initReveals, refreshReveals } from './reveal.js';
 import { initCursor } from './cursor.js';
+import { fitAll } from './fit-text.js';
 
 function renderAll() {
   renderProjects();
   renderSkills();
+  fitAll();
 }
 
 initI18n();
 // The baked markup in index.html is English; only re-render when the
 // stored language differs, or when the user toggles it.
 if (getLang() !== 'en') renderAll();
+else fitAll();
 document.addEventListener('langchange', () => {
   renderAll();
   refreshReveals();

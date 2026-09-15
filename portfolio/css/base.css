@@ -97,6 +97,19 @@ body::after {
 /* ── Utilities ──────────────────────────────────────────────────────────── */
 .mono { font-family: var(--font-mono); }
 
+/* Set by js/fit-text.js once it has measured the element and shrunk its
+   inline font-size to fit on one line. Without JS these elements fall back
+   to wrapping inside the clamp()/cqi ceiling their own stylesheet sets
+   (still no overflow, just not guaranteed single-line) -- see the
+   .showcase-stats .stat-value and .case-result-value rules.
+   !important: `white-space` and `text-wrap` share the text-wrap-mode
+   longhand. .case-result-value sets `text-wrap: balance` (its no-JS wrap
+   fallback) in a stylesheet that loads after this one, which would silently
+   flip the mode back to "wrap" and defeat the single-line guarantee -- the
+   div would still look fine most of the time (the shrunk font usually fits)
+   but no longer be guaranteed to. */
+.fit-text-ready { white-space: nowrap !important; }
+
 .tilt-1  { transform: rotate(1.5deg); }
 .tilt--1 { transform: rotate(-1.5deg); }
 .tilt-2  { transform: rotate(3deg); }

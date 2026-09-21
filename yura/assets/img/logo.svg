@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" role="img" aria-label="YURA">
+  <defs>
+    <linearGradient id="y" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#ff64ac"/>
+      <stop offset=".55" stop-color="#ee2a80"/>
+      <stop offset="1" stop-color="#e30d6d"/>
+    </linearGradient>
+  </defs>
+  <path fill="url(#y)" d="M72.3 45.6 L65.9 51.6 L91.3 100 L51 66.2 L39.7 55 L0 75.6 L4.6 60 L15 45.6 L40.1 0 L48.3 30.9 L51 30 L69.5 14.2 L99.9 10.2 Z"/>
+</svg>

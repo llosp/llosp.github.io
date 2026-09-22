@@ -31,6 +31,23 @@
   const deck = document.querySelector('.deck');
   if (!deck) return;
 
+  // Stagger the cards into view the first time the deck is reached (mirrors the
+  // header's slide-in). Start state lives behind .reveal so it degrades to
+  // fully-visible without JS.
+  deck.classList.add('reveal');
+  const deckIO = new IntersectionObserver(
+    (entries, obs) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          deck.classList.add('is-in');
+          obs.disconnect();
+        }
+      });
+    },
+    { threshold: 0.2 }
+  );
+  deckIO.observe(deck);
+
   const cards = Array.from(deck.querySelectorAll('.card'));
   const dots = Array.from(document.querySelectorAll('.dot'));
   if (!cards.length || !dots.length) return;

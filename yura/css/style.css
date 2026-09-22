@@ -34,9 +34,32 @@ img {
   user-select: none;
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 html,
 body {
   height: 100%;
+}
+
+/* Brand-tinted text selection instead of the default browser blue. */
+::selection {
+  background: var(--pink);
+  color: #fff;
+}
+
+/* Consistent, on-brand keyboard focus ring for every interactive element. */
+:focus-visible {
+  outline: 2px solid var(--lime);
+  outline-offset: 3px;
+  border-radius: 4px;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
 }
 
 body {
@@ -203,7 +226,10 @@ body::after {
   padding: 0 clamp(18px, 2.03vw, 34px);
   border: 2px solid rgba(255, 255, 255, .95);
   border-radius: 999px;
-  background: rgba(8, 2, 6, .5);
+  background: rgba(8, 2, 6, .38);
+  -webkit-backdrop-filter: blur(16px) saturate(1.3);
+  backdrop-filter: blur(16px) saturate(1.3);
+  box-shadow: 0 10px 34px rgba(0, 0, 0, .38), inset 0 1px 0 rgba(255, 255, 255, .12);
 }
 
 .brand {
@@ -407,7 +433,7 @@ body::after {
 .hero-tagline {
   margin: 3.38cqw 0 0;
   font-family: var(--font-mono);
-  font-size: clamp(11px, 1.353cqw, 22px);
+  font-size: clamp(13px, 1.353cqw, 22px);
   line-height: 1.2;
   letter-spacing: .02em;
   color: var(--muted);
@@ -424,18 +450,25 @@ body::after {
   line-height: 1;
   letter-spacing: .01em;
   text-decoration: none;
-  transition: background .18s ease, transform .18s ease;
+  box-shadow: 0 8px 22px rgba(236, 30, 121, .32);
+  transition: background .18s ease, transform .18s ease, box-shadow .18s ease;
 }
 
 .hero-cta:hover {
   background: var(--pink-hover);
-  transform: translateY(-1px);
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(255, 61, 144, .5);
+}
+
+.hero-cta:active {
+  transform: translateY(0);
+  box-shadow: 0 6px 16px rgba(236, 30, 121, .34);
 }
 
 .hero-finance {
   margin: 1.6cqw 0 0;
   font-family: var(--font-mono);
-  font-size: clamp(9px, .913cqw, 15px);
+  font-size: clamp(12px, .913cqw, 15px);
   line-height: 1.2;
   color: var(--muted);
 }
@@ -617,6 +650,37 @@ body::after {
   position: relative;
 }
 
+/* Cards fade and rise into place, staggered, when the deck first scrolls in.
+   Hidden start state is only applied once JS flags the deck (.reveal), so the
+   deck stays fully visible without JS. */
+.deck.reveal .card {
+  opacity: 0;
+  transform: translateY(42px);
+}
+
+.deck.reveal.is-in .card {
+  animation: card-rise .7s cubic-bezier(.22, .68, .28, 1) both;
+}
+
+.deck.reveal.is-in .card:nth-child(1) {
+  animation-delay: .05s;
+}
+
+.deck.reveal.is-in .card:nth-child(2) {
+  animation-delay: .16s;
+}
+
+.deck.reveal.is-in .card:nth-child(3) {
+  animation-delay: .27s;
+}
+
+@keyframes card-rise {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
 /* ---- light cards (photo + specs) ---- */
 
 .card-photo,
@@ -642,10 +706,18 @@ body::after {
 .photo-man {
   position: absolute;
   z-index: 0;
-  right: -8%;
-  bottom: -6%;
-  height: 176%;
+  right: -13%;
+  bottom: -3%;
+  top: auto;
+  left: auto;
+  height: 158%;
   width: auto;
+}
+
+/* Cards 2 & 3 sit their copy further in from the left than the feature card. */
+.card-photo .card-body,
+.card-specs .card-body {
+  padding-left: clamp(64px, 14%, 172px);
 }
 
 /* Card 3 — specs */
@@ -702,17 +774,17 @@ body::after {
 
 /* Body view: full guitar rotated upright, body resting at the bottom. */
 .spec-guitar-body {
-  width: 150cqh;
-  left: 54cqw;
-  top: 44cqh;
+  width: 192cqh;
+  left: 60cqw;
+  top: 50cqh;
   transform: translate(-50%, -50%) rotate(-90deg);
 }
 
 /* Headstock view: same image raised so the tuners sit at the top-right. */
 .spec-guitar-head {
-  width: 152cqh;
-  left: 90cqw;
-  top: 76cqh;
+  width: 192cqh;
+  left: 92cqw;
+  top: 84cqh;
   transform: translate(-50%, -50%) rotate(-90deg);
 }
 
@@ -970,7 +1042,12 @@ body::after {
   border-radius: 999px;
   background: rgba(255, 255, 255, .22);
   cursor: pointer;
-  transition: background .25s ease, width .25s ease;
+  transition: background .25s ease, width .25s ease, transform .2s ease;
+}
+
+.dot:hover {
+  background: rgba(255, 255, 255, .5);
+  transform: scaleY(1.25);
 }
 
 .dot.is-active {
@@ -983,13 +1060,21 @@ body::after {
     flex-basis: 88vw;
     aspect-ratio: auto;
     min-height: 78vh;
+    /* The 125px desktop radius eats into copy on a tall, narrow card and
+       clipped the first glyph — a tighter radius keeps text clear. */
+    border-radius: 44px;
   }
 
   .card-body {
     position: relative;
     width: 100%;
     justify-content: flex-start;
-    padding: 30px 24px 0;
+    padding: 40px 28px 0;
+  }
+
+  .card-photo .card-body,
+  .card-specs .card-body {
+    padding-left: 28px;
   }
 
   .card-media {
@@ -1021,6 +1106,13 @@ body::after {
 @media (prefers-reduced-motion: reduce) {
   .deck {
     scroll-behavior: auto;
+  }
+
+  .deck.reveal .card,
+  .deck.reveal.is-in .card {
+    opacity: 1;
+    transform: none;
+    animation: none;
   }
 
   .card-feature:has(.glow-check:checked) .card-glow {

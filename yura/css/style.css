@@ -27,6 +27,13 @@
   box-sizing: border-box;
 }
 
+/* Images are decorative here — never let them be dragged out of the page. */
+img {
+  -webkit-user-drag: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
 html,
 body {
   height: 100%;
@@ -522,6 +529,13 @@ body::after {
     transform: none;
   }
 
+  .showcase-head.reveal .showcase-title,
+  .showcase-head.reveal .showcase-model {
+    animation: none;
+    opacity: 1;
+    transform: none;
+  }
+
   .smoke span {
     animation: none;
     opacity: .16;
@@ -558,6 +572,23 @@ body::after {
   font-size: clamp(13px, 1.25vw, 18px);
   letter-spacing: .04em;
   color: var(--muted);
+}
+
+/* Header slides in from the right (same motion as the hero title) once the
+   deck scrolls into view. The hidden start state is only applied when JS has
+   flagged the head with .reveal, so it stays visible without JS. */
+.showcase-head.reveal .showcase-title,
+.showcase-head.reveal .showcase-model {
+  opacity: 0;
+  transform: translateX(34%);
+}
+
+.showcase-head.reveal.is-in .showcase-title {
+  animation: title-slide-in .55s cubic-bezier(.22, .68, .28, 1) .05s both;
+}
+
+.showcase-head.reveal.is-in .showcase-model {
+  animation: title-slide-in .55s cubic-bezier(.22, .68, .28, 1) .16s both;
 }
 
 /* Horizontal scroller: cards snap one at a time, the next one peeks in. */

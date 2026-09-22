@@ -104,6 +104,10 @@ body::after {
 }
 
 .nav-links a {
+  display: inline-flex;
+  align-items: center;
+  padding: 12px 6px;
+  margin: -12px -6px;
   color: var(--ink);
   text-decoration: none;
   font-size: clamp(13px, .95vw, 16px);
@@ -124,6 +128,8 @@ body::after {
 .nav-icon {
   display: grid;
   place-items: center;
+  padding: 11px;
+  margin: -11px;
   color: var(--ink);
   transition: color .18s ease;
 }
@@ -147,6 +153,15 @@ body::after {
   height: 100svh;
   min-height: 540px;
   overflow: hidden;
+}
+
+/* Scales the whole composition toward the viewport centre — every internal
+   ratio stays fixed, it just eases the title in from the right edge. */
+.hero-stage {
+  position: absolute;
+  inset: 0;
+  transform: scale(.93);
+  transform-origin: 50% 50%;
 }
 
 .hero-guitar {

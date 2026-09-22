@@ -4,7 +4,7 @@
   --splash-a: #e4ffbe;
   --splash-b: #3a1223;
   --lime: #cbf23a;
-  --lime-glow: #b6f24a;
+  --lime-glow: #cbff2e;
   --toggle-glow: #b02a62;
   --surface: #101010;
   --ink: #ffffff;
@@ -15,6 +15,10 @@
   --font-kanji: "M PLUS 1p", "Hiragino Sans", "Yu Gothic", sans-serif;
   --font-mono: "Martian Mono", ui-monospace, monospace;
   --font-sans: "Inter", system-ui, sans-serif;
+
+  /* The site's signature ease — hero title, card reveals, and now the
+     feature-card state change all share it so motion reads as one language. */
+  --ease-out: cubic-bezier(.22, .68, .28, 1);
 
   /* Width of the hero composition. Whichever of width/height is the tighter
      constraint wins, so guitar + copy always fit on screen together. Shared
@@ -325,6 +329,7 @@ body::after {
   width: var(--stage-w);
   aspect-ratio: 1478 / 958;
   container-type: size;
+  perspective: 1400px;
 }
 
 /* Green paint splash decal sitting behind the guitar. The SVG is an alpha
@@ -371,7 +376,9 @@ body::after {
   height: auto;
   margin-top: .6cqw;
   z-index: 1;
-  transform: translateY(-50%);
+  transform: translateY(-50%) rotateX(var(--gx, 0deg)) rotateY(var(--gy, 0deg));
+  transform-style: preserve-3d;
+  transition: transform .4s var(--ease-out);
   filter: drop-shadow(0 2.4cqw 3cqw rgba(0, 0, 0, .5));
 }
 
@@ -413,7 +420,24 @@ body::after {
   font-size: 14.35cqw;
   line-height: .82;
   margin-top: 8.6cqw;
-  animation: title-slide-in .55s cubic-bezier(.22, .68, .28, 1) .26s both;
+  animation:
+    title-slide-in .55s cubic-bezier(.22, .68, .28, 1) .26s both,
+    kanji-breath 5.6s ease-in-out 1s infinite;
+}
+
+/* "発光体" = luminous body. A slow text-shadow pulse makes the wordmark read
+   as literally glowing, echoing the card 1 glow toggle. Only text-shadow
+   animates, so it never touches the slide-in's transform/opacity. */
+@keyframes kanji-breath {
+  0%, 100% {
+    text-shadow: 0 0 0 rgba(236, 30, 121, 0);
+  }
+
+  50% {
+    text-shadow:
+      0 0 .5cqw rgba(236, 30, 121, .5),
+      0 0 1.6cqw rgba(236, 30, 121, .32);
+  }
 }
 
 /* Title lines fly in from the right in step with the splash. Only transform
@@ -797,7 +821,7 @@ body::after {
 
 .card-feature {
   background: #0b0b0b;
-  transition: background .4s ease;
+  transition: background .45s var(--ease-out);
 }
 
 .card-feature.is-lit {
@@ -811,6 +835,20 @@ body::after {
   z-index: 0;
 }
 
+/* Wrapper holding the lime panel and its ink splatter. Toggling to glow slides
+   this whole graphic off to the right, so the black card is revealed left to
+   right like a wipe (rather than a flat cross-fade). The guitar and glow blob
+   sit outside this wrapper, so they stay put and swap independently. Leads the
+   guitar swap slightly, so the black is already sweeping in as the glow blooms.
+   overflow:hidden on .card clips it cleanly once it clears the edge. */
+.card-lime {
+  position: absolute;
+  inset: 0;
+  transform: translateX(0);
+  transition: transform .55s var(--ease-out);
+  will-change: transform;
+}
+
 /* Lime backdrop panel behind the guitar (lit state only). */
 .card-panel {
   position: absolute;
@@ -820,7 +858,6 @@ body::after {
   left: 46%;
   background: var(--lime);
   opacity: 1;
-  transition: opacity .45s ease;
 }
 
 /* Black ink splatter scattered over the top of the lime panel. */
@@ -831,7 +868,7 @@ body::after {
   width: 104%;
   height: auto;
   opacity: 1;
-  transition: opacity .45s ease;
+  transition: opacity .38s var(--ease-out);
   pointer-events: none;
 }
 
@@ -846,38 +883,73 @@ body::after {
   transform: scale(-1, -1);
 }
 
-/* Blurred lime blob that drifts behind the guitar (glow state only). */
+/* Blurred fluorescent blob that drifts behind the guitar (glow state only).
+   A near-white-green core with a hot neon mid makes it read as emitted light —
+   the photoluminescent "glows in the dark" idea. screen blend adds the light
+   onto the dark card so it truly glows rather than sitting as a flat shape.
+   z-index keeps both blobs behind the guitar, which occludes their cores. */
 .card-glow {
   position: absolute;
   right: 16%;
   top: 50%;
+  z-index: 1;
   width: 46%;
   aspect-ratio: 1 / 1;
   transform: translate(0, -50%);
   border-radius: 50%;
   background: radial-gradient(circle at 50% 50%,
-      var(--lime-glow) 0%,
-      rgba(182, 242, 74, .35) 42%,
-      transparent 70%);
-  filter: blur(28px);
+      rgba(233, 255, 150, .95) 0%,
+      var(--lime-glow) 26%,
+      rgba(150, 240, 40, .42) 52%,
+      transparent 72%);
+  filter: blur(30px);
+  mix-blend-mode: screen;
   opacity: 0;
-  transition: opacity .45s ease;
+  transition: opacity .58s var(--ease-out) .04s;
   will-change: transform;
+}
+
+/* Second, smaller light that wanders on its own loop for a livelier glow. */
+.card-glow-2 {
+  right: 33%;
+  top: 40%;
+  width: 27%;
+  background: radial-gradient(circle at 50% 50%,
+      rgba(214, 255, 138, .9) 0%,
+      #c9ff33 30%,
+      rgba(120, 235, 30, .38) 56%,
+      transparent 74%);
+  filter: blur(22px);
 }
 
 .card-guitar {
   position: absolute;
   right: 1%;
   top: 51%;
+  z-index: 2;
   width: 48%;
   height: auto;
   transform: translateY(-50%) rotate(-3deg);
   filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .45));
-  transition: opacity .45s ease;
+  transition: opacity .5s var(--ease-out), transform .6s var(--ease-out);
 }
 
+/* The glow guitar rests a touch larger while hidden and settles to 1:1 as it
+   fades in — a subtle bloom, as if lighting up. The lit guitar eases back
+   slightly as it leaves. Kept small so it reads as depth, not distortion. */
 .card-guitar-glow {
   opacity: 0;
+  transform: translateY(-50%) rotate(-3deg) scale(1.035);
+}
+
+.card-feature:has(.glow-check:checked) .card-guitar-lit {
+  opacity: 0;
+  transform: translateY(-50%) rotate(-3deg) scale(.99);
+}
+
+.card-feature:has(.glow-check:checked) .card-guitar-glow {
+  opacity: 1;
+  transform: translateY(-50%) rotate(-3deg) scale(1);
 }
 
 /* text column */
@@ -910,8 +982,50 @@ body::after {
   color: var(--muted);
 }
 
+/* Both copies share one grid cell so the taller (lit) copy reserves the height
+   in every state — the toggle below no longer jumps when the text swaps, and
+   the two blocks can cross-fade in place instead of hard-cutting via display. */
+.copy-stack {
+  display: grid;
+}
+
+.copy {
+  grid-area: 1 / 1;
+}
+
+/* Shown state: settled and opaque. Imagery leads, so the incoming copy waits a
+   beat (.06s) then rises into place — the outgoing copy fades immediately. */
+.copy-lit,
+.card-feature:has(.glow-check:checked) .copy-glow {
+  opacity: 1;
+  transform: none;
+  visibility: visible;
+  transition:
+    opacity .42s var(--ease-out) .06s,
+    transform .52s var(--ease-out) .06s,
+    visibility 0s;
+}
+
+/* Hidden state: faded, nudged along the vertical axis, and pulled from the a11y
+   tree once the fade completes (visibility flips after the .42s delay). */
+.copy-glow,
+.card-feature:has(.glow-check:checked) .copy-lit {
+  opacity: 0;
+  visibility: hidden;
+  transition:
+    opacity .42s var(--ease-out),
+    transform .52s var(--ease-out),
+    visibility 0s linear .42s;
+}
+
+/* Direction of travel: the outgoing copy lifts up and out, the incoming copy
+   rises up into place — a small, consistent upward flow. */
 .copy-glow {
-  display: none;
+  transform: translateY(20px);
+}
+
+.card-feature:has(.glow-check:checked) .copy-lit {
+  transform: translateY(-20px);
 }
 
 /* ---- toggle switch ---- */
@@ -964,30 +1078,21 @@ body::after {
   background: #080808;
 }
 
-.card-feature:has(.glow-check:checked) .card-panel,
-.card-feature:has(.glow-check:checked) .card-ink {
-  opacity: 0;
+.card-feature:has(.glow-check:checked) .card-lime {
+  transform: translateX(100%);
 }
 
 .card-feature:has(.glow-check:checked) .card-glow {
   opacity: 1;
+}
+
+.card-feature:has(.glow-check:checked) .card-glow:not(.card-glow-2) {
   animation: glow-drift 7s ease-in-out infinite alternate;
 }
 
-.card-feature:has(.glow-check:checked) .card-guitar-lit {
-  opacity: 0;
-}
-
-.card-feature:has(.glow-check:checked) .card-guitar-glow {
-  opacity: 1;
-}
-
-.card-feature:has(.glow-check:checked) .copy-lit {
-  display: none;
-}
-
-.card-feature:has(.glow-check:checked) .copy-glow {
-  display: block;
+.card-feature:has(.glow-check:checked) .card-glow-2 {
+  opacity: .85;
+  animation: glow-drift-2 11s ease-in-out infinite;
 }
 
 .card-feature:has(.glow-check:checked) .switch-track {
@@ -1022,6 +1127,30 @@ body::after {
 
   100% {
     transform: translate(10%, -42%) scale(1.08);
+  }
+}
+
+/* Second blob traces a loose loop (non-alternating) so it wanders continuously
+   rather than pinging back and forth. */
+@keyframes glow-drift-2 {
+  0% {
+    transform: translate(0%, -60%) scale(.82);
+  }
+
+  25% {
+    transform: translate(-26%, -34%) scale(.96);
+  }
+
+  50% {
+    transform: translate(-4%, -14%) scale(.86);
+  }
+
+  75% {
+    transform: translate(20%, -40%) scale(1.02);
+  }
+
+  100% {
+    transform: translate(0%, -60%) scale(.82);
   }
 }
 
@@ -1101,6 +1230,11 @@ body::after {
     width: 70%;
     right: 8%;
   }
+
+  .card-glow-2 {
+    width: 42%;
+    right: 40%;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1117,6 +1251,26 @@ body::after {
 
   .card-feature:has(.glow-check:checked) .card-glow {
     animation: none;
+  }
+
+  /* Feature-card state change stays instant and jump-free, just without the
+     cross-fade/scale motion. Transforms are reset so nothing rests offset. */
+  .copy,
+  .card-guitar,
+  .card-lime,
+  .card-glow {
+    transition: none;
+  }
+
+  .copy-glow,
+  .card-feature:has(.glow-check:checked) .copy-lit {
+    transform: none;
+  }
+
+  .card-guitar-glow,
+  .card-feature:has(.glow-check:checked) .card-guitar-lit,
+  .card-feature:has(.glow-check:checked) .card-guitar-glow {
+    transform: translateY(-50%) rotate(-3deg);
   }
 }
 
@@ -1205,6 +1359,44 @@ body::after {
 .closer-cta:active {
   transform: translateY(0);
   box-shadow: 0 6px 16px rgba(236, 30, 121, .34);
+}
+
+/* Staggered reveal for the closing copy, echoing the deck's rise-and-fade so
+   the section lands with the same rhythm as the rest of the page. Driven by
+   transitions (not a filled keyframe) so the CTA keeps its hover lift once it
+   has settled. Start state lives behind .reveal, degrading to fully-visible
+   without JS. */
+.closer.reveal .closer-eyebrow,
+.closer.reveal .closer-title,
+.closer.reveal .closer-sub {
+  opacity: 0;
+  transform: translateY(34px);
+  transition: opacity .7s var(--ease-out), transform .7s var(--ease-out);
+}
+
+.closer.reveal.is-in .closer-eyebrow,
+.closer.reveal.is-in .closer-title,
+.closer.reveal.is-in .closer-sub {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.closer.reveal.is-in .closer-title {
+  transition-delay: .08s;
+}
+
+.closer.reveal.is-in .closer-sub {
+  transition-delay: .16s;
+}
+
+/* CTA reveals via opacity only, leaving transform free for its hover lift. */
+.closer.reveal .closer-cta {
+  opacity: 0;
+}
+
+.closer.reveal.is-in .closer-cta {
+  opacity: 1;
+  transition: opacity .7s var(--ease-out) .24s, background .18s ease, transform .18s ease, box-shadow .18s ease;
 }
 
 /* ---------- footer ---------- */
@@ -1359,6 +1551,20 @@ body::after {
   .closer-cta,
   .back-chevron,
   .footer-social a {
+    transition: none;
+  }
+
+  .hero-guitar {
+    transition: none;
+    transform: translateY(-50%);
+  }
+
+  .closer.reveal .closer-eyebrow,
+  .closer.reveal .closer-title,
+  .closer.reveal .closer-sub,
+  .closer.reveal .closer-cta {
+    opacity: 1;
+    transform: none;
     transition: none;
   }
 }

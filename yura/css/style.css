@@ -233,15 +233,20 @@ body::after {
   height: 100svh;
   min-height: 540px;
   overflow: hidden;
+  display: grid;
+  place-items: center;
 }
 
-/* Scales the whole composition toward the viewport centre — every internal
-   ratio stays fixed, it just eases the title in from the right edge. */
+/* The composition is a fixed-aspect stage sized by whichever of width/height
+   is the tighter constraint, so the guitar + all copy always fit on screen
+   together. Children are driven by container-query units (cqw = 1% of the
+   stage width), so every internal ratio stays locked as the stage scales.
+   The 94/145 pair leaves a small margin and matches the reference framing. */
 .hero-stage {
-  position: absolute;
-  inset: 0;
-  transform: scale(.93);
-  transform-origin: 50% 50%;
+  position: relative;
+  width: min(94vw, 145vh);
+  aspect-ratio: 1478 / 958;
+  container-type: size;
 }
 
 .hero-guitar {
@@ -250,9 +255,9 @@ body::after {
   top: 50%;
   width: 88.34%;
   height: auto;
-  margin-top: .6vw;
+  margin-top: .6cqw;
   transform: translateY(-50%);
-  filter: drop-shadow(0 2.4vw 3vw rgba(0, 0, 0, .5));
+  filter: drop-shadow(0 2.4cqw 3cqw rgba(0, 0, 0, .5));
 }
 
 .hero-copy {
@@ -260,7 +265,7 @@ body::after {
   left: 71.92%;
   top: 50%;
   z-index: 2;
-  margin-top: 6.9vw;
+  margin-top: 6.9cqw;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
@@ -280,7 +285,7 @@ body::after {
 /* line-height .82 puts the cap line exactly on the element's top edge */
 .hero-title-latin {
   font-family: var(--font-display);
-  font-size: 14.95vw;
+  font-size: 14.95cqw;
   line-height: .82;
   letter-spacing: .045em;
   text-transform: uppercase;
@@ -289,27 +294,27 @@ body::after {
 .hero-title-kanji {
   font-family: var(--font-kanji);
   font-weight: 700;
-  font-size: 14.35vw;
+  font-size: 14.35cqw;
   line-height: .82;
-  margin-top: 8.6vw;
+  margin-top: 8.6cqw;
 }
 
 .hero-tagline {
-  margin: 3.38vw 0 0;
+  margin: 3.38cqw 0 0;
   font-family: var(--font-mono);
-  font-size: clamp(11px, 1.353vw, 22px);
+  font-size: clamp(11px, 1.353cqw, 22px);
   line-height: 1.2;
   letter-spacing: .02em;
   color: var(--muted);
 }
 
 .hero-cta {
-  margin-top: 1.69vw;
+  margin-top: 1.69cqw;
   padding: .58em 1.55em;
   border-radius: 999px;
   background: var(--pink);
   color: var(--ink);
-  font-size: clamp(13px, 1.286vw, 21px);
+  font-size: clamp(13px, 1.286cqw, 21px);
   font-weight: 600;
   line-height: 1;
   letter-spacing: .01em;
@@ -323,9 +328,9 @@ body::after {
 }
 
 .hero-finance {
-  margin: 1.6vw 0 0;
+  margin: 1.6cqw 0 0;
   font-family: var(--font-mono);
-  font-size: clamp(9px, .913vw, 15px);
+  font-size: clamp(9px, .913cqw, 15px);
   line-height: 1.2;
   color: var(--muted);
 }
@@ -341,6 +346,11 @@ body::after {
     justify-content: center;
     gap: 5vh;
     padding: 18vh 20px 10vh;
+  }
+
+  /* stage steps out of the layout so guitar + copy stack in the hero flow */
+  .hero-stage {
+    display: contents;
   }
 
   .hero-guitar {

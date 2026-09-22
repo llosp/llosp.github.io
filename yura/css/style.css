@@ -3,6 +3,10 @@
   --pink-hover: #ff3d90;
   --splash-a: #e4ffbe;
   --splash-b: #3a1223;
+  --lime: #c8f13e;
+  --lime-glow: #b6f24a;
+  --toggle-glow: #b02a62;
+  --surface: #101010;
   --ink: #ffffff;
   --muted: #9b9295;
   --bg: #060104;
@@ -11,6 +15,12 @@
   --font-kanji: "M PLUS 1p", "Hiragino Sans", "Yu Gothic", sans-serif;
   --font-mono: "Martian Mono", ui-monospace, monospace;
   --font-sans: "Inter", system-ui, sans-serif;
+
+  /* Width of the hero composition. Whichever of width/height is the tighter
+     constraint wins, so guitar + copy always fit on screen together. Shared
+     so the splash (anchored to the page, not the stage) can scale in lockstep
+     with the guitar. */
+  --stage-w: min(94vw, 145vh);
 }
 
 * {
@@ -111,6 +121,38 @@ body::after {
   --dur: 19s;
   --delay: -5s;
   --dx: -7vw;
+}
+
+.smoke span:nth-child(5) {
+  --x: 14%;
+  --s: 38vw;
+  --dur: 20s;
+  --delay: -16s;
+  --dx: -5vw;
+}
+
+.smoke span:nth-child(6) {
+  --x: 41%;
+  --s: 46vw;
+  --dur: 18s;
+  --delay: -6s;
+  --dx: 7vw;
+}
+
+.smoke span:nth-child(7) {
+  --x: 64%;
+  --s: 52vw;
+  --dur: 24s;
+  --delay: -11s;
+  --dx: -6vw;
+}
+
+.smoke span:nth-child(8) {
+  --x: 88%;
+  --s: 42vw;
+  --dur: 16s;
+  --delay: -19s;
+  --dx: 5vw;
 }
 
 @keyframes smoke-rise {
@@ -246,7 +288,8 @@ body::after {
    The 94/145 pair leaves a small margin and matches the reference framing. */
 .hero-stage {
   position: relative;
-  width: min(94vw, 145vh);
+  z-index: 1;
+  width: var(--stage-w);
   aspect-ratio: 1478 / 958;
   container-type: size;
 }
@@ -258,12 +301,11 @@ body::after {
    repaint is cheap. */
 .splash {
   position: absolute;
-  left: -6%;
+  left: -3vw;
   top: 50%;
-  width: 92%;
-  aspect-ratio: 1689 / 877;
-  margin-top: 2.4cqw;
-  transform: translateY(-50%);
+  width: calc(var(--stage-w) * .92);
+  height: calc(var(--stage-w) * .4777);
+  transform: translateY(calc(-50% + var(--stage-w) * .024));
   z-index: 0;
   opacity: .5;
   -webkit-mask: url(../assets/img/splash.svg) no-repeat center / contain;
@@ -485,5 +527,339 @@ body::after {
     opacity: .16;
     transform: translate3d(0, -16vh, 0) scale(1.3);
     will-change: auto;
+  }
+}
+
+/* ---------- showcase / horizontal card deck ---------- */
+
+.showcase {
+  position: relative;
+  z-index: 1;
+  padding: clamp(40px, 8vh, 96px) 0 clamp(56px, 10vh, 112px);
+}
+
+/* Horizontal scroller: cards snap one at a time, the next one peeks in. */
+.deck {
+  display: flex;
+  gap: clamp(16px, 2vw, 32px);
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  padding-inline: max(20px, 6vw);
+  scroll-padding-inline: max(20px, 6vw);
+  scrollbar-width: none;
+}
+
+.deck::-webkit-scrollbar {
+  display: none;
+}
+
+.card {
+  flex: 0 0 min(1180px, 88vw);
+  scroll-snap-align: center;
+  aspect-ratio: 1180 / 560;
+  border-radius: clamp(20px, 2vw, 34px);
+  overflow: hidden;
+  position: relative;
+}
+
+.card-blank {
+  background: var(--surface);
+  border: 1px solid rgba(255, 255, 255, .06);
+}
+
+/* ---- feature card ---- */
+
+.card-feature {
+  background: #0b0b0b;
+  transition: background .4s ease;
+}
+
+.card-feature.is-lit {
+  /* stays dark; the lime lives in the media panel */
+  background: #0b0b0b;
+}
+
+.card-media {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+}
+
+/* Lime backdrop panel behind the guitar (lit state only). */
+.card-panel {
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  left: 34%;
+  background: var(--lime);
+  opacity: 1;
+  transition: opacity .45s ease;
+}
+
+/* Black ink splatter scattered over the top of the lime panel. */
+.card-ink {
+  position: absolute;
+  right: -3%;
+  top: -12%;
+  width: 78%;
+  height: auto;
+  opacity: 1;
+  transition: opacity .45s ease;
+  pointer-events: none;
+}
+
+/* Blurred lime blob that drifts behind the guitar (glow state only). */
+.card-glow {
+  position: absolute;
+  right: 16%;
+  top: 50%;
+  width: 46%;
+  aspect-ratio: 1 / 1;
+  transform: translate(0, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle at 50% 50%,
+      var(--lime-glow) 0%,
+      rgba(182, 242, 74, .35) 42%,
+      transparent 70%);
+  filter: blur(28px);
+  opacity: 0;
+  transition: opacity .45s ease;
+  will-change: transform;
+}
+
+.card-guitar {
+  position: absolute;
+  right: -4%;
+  top: 50%;
+  width: 62%;
+  height: auto;
+  transform: translateY(-50%) rotate(-4deg);
+  filter: drop-shadow(0 18px 30px rgba(0, 0, 0, .45));
+  transition: opacity .45s ease;
+}
+
+.card-guitar-glow {
+  opacity: 0;
+}
+
+/* text column */
+.card-body {
+  position: absolute;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  bottom: 0;
+  width: 46%;
+  padding: clamp(24px, 4.2%, 60px) clamp(20px, 3.4%, 52px);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.card-title {
+  margin: 0 0 clamp(14px, 1.6vw, 24px);
+  font-family: var(--font-sans);
+  font-weight: 800;
+  font-size: clamp(22px, 2.5vw, 40px);
+  letter-spacing: -.01em;
+}
+
+.card-body p {
+  margin: 0 0 1em;
+  max-width: 30em;
+  font-size: clamp(13px, 1.05vw, 16px);
+  line-height: 1.5;
+  color: var(--muted);
+}
+
+.copy-glow {
+  display: none;
+}
+
+/* ---- toggle switch ---- */
+
+.switch {
+  margin-top: clamp(16px, 2vw, 30px);
+  display: inline-flex;
+  cursor: pointer;
+  width: max-content;
+}
+
+.switch-track {
+  position: relative;
+  width: 84px;
+  height: 40px;
+  border-radius: 999px;
+  background: var(--lime);
+  transition: background .3s ease;
+}
+
+.switch-knob {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: #fff;
+  display: grid;
+  place-items: center;
+  color: #1a1a1a;
+  transition: transform .32s cubic-bezier(.4, .1, .3, 1);
+}
+
+.switch-knob .ico {
+  grid-area: 1 / 1;
+  width: 18px;
+  height: 18px;
+  transition: opacity .25s ease, transform .25s ease;
+}
+
+.ico-moon {
+  opacity: 0;
+  transform: rotate(-40deg) scale(.6);
+}
+
+/* ---- glow state (checkbox checked) ---- */
+
+.card-feature:has(.glow-check:checked) {
+  background: #080808;
+}
+
+.card-feature:has(.glow-check:checked) .card-panel,
+.card-feature:has(.glow-check:checked) .card-ink {
+  opacity: 0;
+}
+
+.card-feature:has(.glow-check:checked) .card-glow {
+  opacity: 1;
+  animation: glow-drift 7s ease-in-out infinite alternate;
+}
+
+.card-feature:has(.glow-check:checked) .card-guitar-lit {
+  opacity: 0;
+}
+
+.card-feature:has(.glow-check:checked) .card-guitar-glow {
+  opacity: 1;
+}
+
+.card-feature:has(.glow-check:checked) .copy-lit {
+  display: none;
+}
+
+.card-feature:has(.glow-check:checked) .copy-glow {
+  display: block;
+}
+
+.card-feature:has(.glow-check:checked) .switch-track {
+  background: var(--toggle-glow);
+}
+
+.card-feature:has(.glow-check:checked) .switch-knob {
+  transform: translateX(44px);
+}
+
+.card-feature:has(.glow-check:checked) .ico-sun {
+  opacity: 0;
+  transform: rotate(40deg) scale(.6);
+}
+
+.card-feature:has(.glow-check:checked) .ico-moon {
+  opacity: 1;
+  transform: rotate(0) scale(1);
+}
+
+/* focus ring for keyboard users */
+.glow-check:focus-visible+.card-media+.card-body .switch-track,
+.switch:focus-within .switch-track {
+  outline: 2px solid #fff;
+  outline-offset: 3px;
+}
+
+@keyframes glow-drift {
+  0% {
+    transform: translate(-8%, -58%) scale(.92);
+  }
+
+  100% {
+    transform: translate(10%, -42%) scale(1.08);
+  }
+}
+
+/* ---- dots ---- */
+
+.dots {
+  display: flex;
+  justify-content: center;
+  gap: 10px;
+  margin-top: clamp(22px, 3vh, 40px);
+}
+
+.dot {
+  width: 26px;
+  height: 7px;
+  padding: 0;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .22);
+  cursor: pointer;
+  transition: background .25s ease, width .25s ease;
+}
+
+.dot.is-active {
+  width: 42px;
+  background: #fff;
+}
+
+@media (max-width: 860px) {
+  .card {
+    flex-basis: 88vw;
+    aspect-ratio: auto;
+    min-height: 78vh;
+  }
+
+  .card-body {
+    position: relative;
+    width: 100%;
+    justify-content: flex-start;
+    padding: 30px 24px 0;
+  }
+
+  .card-media {
+    top: auto;
+    bottom: 0;
+    height: 62%;
+  }
+
+  .card-panel {
+    left: 0;
+  }
+
+  .card-ink {
+    width: 96%;
+    right: 0;
+  }
+
+  .card-guitar {
+    width: 92%;
+    right: -8%;
+  }
+
+  .card-glow {
+    width: 70%;
+    right: 8%;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .deck {
+    scroll-behavior: auto;
+  }
+
+  .card-feature:has(.glow-check:checked) .card-glow {
+    animation: none;
   }
 }

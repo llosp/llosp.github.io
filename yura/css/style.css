@@ -1,6 +1,8 @@
 :root {
   --pink: #ec1e79;
   --pink-hover: #ff3d90;
+  --splash-a: #e4ffbe;
+  --splash-b: #3a1223;
   --ink: #ffffff;
   --muted: #9b9295;
   --bg: #060104;
@@ -249,6 +251,43 @@ body::after {
   container-type: size;
 }
 
+/* Green paint splash decal sitting behind the guitar. The SVG is an alpha
+   mask; the visible olive comes from a gradient layer that slides across the
+   mask on load, so the paint appears to fling in from the right. Only
+   background-position animates and it runs once (no loop), so the one-time
+   repaint is cheap. */
+.splash {
+  position: absolute;
+  left: -6%;
+  top: 50%;
+  width: 92%;
+  aspect-ratio: 1689 / 877;
+  margin-top: 2.4cqw;
+  transform: translateY(-50%);
+  z-index: 0;
+  opacity: .5;
+  -webkit-mask: url(../assets/img/splash.svg) no-repeat center / contain;
+  mask: url(../assets/img/splash.svg) no-repeat center / contain;
+  background-image: linear-gradient(100deg,
+      var(--splash-a) 0%,
+      var(--splash-b) 48%,
+      rgba(58, 18, 35, 0) 66%);
+  background-repeat: no-repeat;
+  background-size: 200% 100%;
+  background-position: 130% 50%;
+  animation: splash-reveal .4s cubic-bezier(.22, .68, .28, 1) .12s both;
+}
+
+@keyframes splash-reveal {
+  from {
+    background-position: 130% 50%;
+  }
+
+  to {
+    background-position: 0% 50%;
+  }
+}
+
 .hero-guitar {
   position: absolute;
   left: 4.38%;
@@ -256,6 +295,7 @@ body::after {
   width: 88.34%;
   height: auto;
   margin-top: .6cqw;
+  z-index: 1;
   transform: translateY(-50%);
   filter: drop-shadow(0 2.4cqw 3cqw rgba(0, 0, 0, .5));
 }
@@ -289,6 +329,7 @@ body::after {
   line-height: .82;
   letter-spacing: .045em;
   text-transform: uppercase;
+  animation: title-slide-in .55s cubic-bezier(.22, .68, .28, 1) .16s both;
 }
 
 .hero-title-kanji {
@@ -297,6 +338,21 @@ body::after {
   font-size: 14.35cqw;
   line-height: .82;
   margin-top: 8.6cqw;
+  animation: title-slide-in .55s cubic-bezier(.22, .68, .28, 1) .26s both;
+}
+
+/* Title lines fly in from the right in step with the splash. Only transform
+   and opacity animate, so this stays on the compositor. */
+@keyframes title-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(34%);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
 }
 
 .hero-tagline {
@@ -353,6 +409,10 @@ body::after {
     display: contents;
   }
 
+  .splash {
+    display: none;
+  }
+
   .hero-guitar {
     position: static;
     width: 148%;
@@ -406,6 +466,18 @@ body::after {
 @media (prefers-reduced-motion: reduce) {
   .hero-cta {
     transition: none;
+  }
+
+  .splash {
+    animation: none;
+    background-position: 0% 50%;
+  }
+
+  .hero-title-latin,
+  .hero-title-kanji {
+    animation: none;
+    opacity: 1;
+    transform: none;
   }
 
   .smoke span {

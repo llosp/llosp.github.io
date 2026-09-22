@@ -6,6 +6,23 @@
   --accent: #4a4a4a;
   --danger: #b3261e;
 
+  /* Earthy palette — one hue per created list (cycled by index in sort.js),
+     and reused by results/js/charts.js for bar/histogram/heatmap fills.
+     Keep this list and js/charts.js's EARTH_COLORS array the same length
+     and in the same order so both pages read as one consistent set. */
+  --earth-1: #c1662f;  /* terracotta */
+  --earth-2: #d9a404;  /* ochre */
+  --earth-3: #6b7a3d;  /* olive */
+  --earth-4: #3f6b4f;  /* moss */
+  --earth-5: #a33b20;  /* rust */
+  --earth-6: #b4674e;  /* clay */
+  --earth-7: #c9a66b;  /* sand */
+  --earth-8: #8b5a2b;  /* sienna */
+  --earth-9: #4c6673;  /* slate */
+  --earth-10: #5c4033; /* umber */
+  --earth-11: #8a9a5b; /* sage */
+  --earth-12: #c66e2e; /* burnt orange */
+
   --space-1: 8px;
   --space-2: 16px;
   --space-3: 24px;
@@ -143,10 +160,14 @@ a { color: var(--ink); }
   transition: background-color 0.12s ease, border-color 0.12s ease;
 }
 
-.pool.drag-over,
-.list-body.drag-over {
+.pool.drag-over {
   border-color: var(--ink);
   background: #fafafa;
+}
+
+.list-body.drag-over {
+  border-color: var(--list-color, var(--ink));
+  background: color-mix(in srgb, var(--list-color, var(--ink)) 14%, white);
 }
 
 .card {
@@ -187,6 +208,7 @@ a { color: var(--ink); }
 
 .list-panel {
   border: 1px solid var(--line);
+  border-left: 4px solid var(--list-color, var(--line));
   border-radius: var(--radius);
   overflow: hidden;
 }
@@ -196,7 +218,7 @@ a { color: var(--ink); }
   align-items: center;
   gap: var(--space-1);
   padding: 10px 12px;
-  background: #fafafa;
+  background: color-mix(in srgb, var(--list-color, var(--ink-soft)) 10%, white);
   border-bottom: 1px solid var(--line);
   position: relative;
 }
@@ -217,14 +239,21 @@ a { color: var(--ink); }
   font-size: 1.1rem;
   line-height: 1;
   padding: 4px 2px;
-  color: var(--ink-soft);
+  color: var(--list-color, var(--ink-soft));
 }
 
 .list-rank {
-  font-size: 0.8rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 1.7em;
+  height: 1.7em;
+  padding: 0 6px;
+  border-radius: 999px;
+  background: var(--list-color, var(--ink-soft));
+  color: var(--paper);
+  font-size: 0.72rem;
   font-weight: 700;
-  color: var(--ink-soft);
-  min-width: 1.6em;
 }
 
 .list-name {
@@ -248,6 +277,11 @@ a { color: var(--ink); }
 .list-delete:hover { background: var(--line); }
 
 .list-body { border: none; border-radius: 0; padding: var(--space-1) 12px 12px; }
+
+.list-body .card {
+  border-color: var(--list-color, var(--ink));
+  background: color-mix(in srgb, var(--list-color, var(--paper)) 16%, white);
+}
 
 .new-list-form {
   display: flex;

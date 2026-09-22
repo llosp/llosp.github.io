@@ -39,6 +39,12 @@ SQL do Supabase se a tabela precisar ser recriada.
 conjunto real de cartas do estudo ser definido. Ao trocar, sempre mude `CARD_SET` junto,
 para que respostas antigas e novas nunca se misturem nos agregados de `results.js`.
 
+`sort.js` embaralha a ordem do pool uma vez por carregamento de página (`shuffle()`,
+Fisher-Yates, aplicado a `state.pool` na inicialização) — cada respondente vê as
+cartas em uma ordem diferente. Isso evita viés de ordenação alfabética/posicional,
+prática padrão em card sorting aberto. Não reembaralha em re-renders subsequentes
+(só na carga inicial), senão as cartas "pulariam" de posição a cada interação.
+
 ## Regras do sort
 - Cada carta pertence a **exatamente uma lista** por vez — mover uma carta já colocada
   para outra lista a remove de onde estava.
@@ -62,6 +68,23 @@ puras (`countBy`, `normalizedListNameFrequency`, `averagePriorityByListName`,
 `cardCooccurrence`, `listCountHistogram`); `charts.js` renderiza cada dataset como SVG
 inline estático (sem lib de gráfico, sem canvas, sem animação — mesmo espírito de
 `portfolio/js/chart.js`, mas cópia própria pois subsites não compartilham JS entre si).
+
+## Paleta de cores
+`css/style.css` define `--earth-1`..`--earth-12`, uma paleta terrosa de 12 tons
+(terracota, ocre, oliva, musgo, ferrugem, argila, areia, sienna, ardósia, âmbar,
+sálvia, laranja queimado). Cada lista criada recebe uma cor por índice (`i % 12`,
+cíclico) — `sort.js` define `LIST_COLORS` (nomes de var CSS) e injeta
+`style="--list-color:..."` no `.list-panel`; o resto do CSS (cabeçalho, badge de
+rank, borda das cartas dentro da lista, estado `drag-over`) lê `var(--list-color)`
+por herança, então só o `.list-panel` precisa do inline style. Cartas no pool
+continuam neutras (preto/branco) — a cor só aparece quando uma carta entra numa
+lista, para sinalizar pertencimento.
+
+`results/js/charts.js` reusa a mesma paleta (array `EARTH_COLORS`, valores
+`var(--earth-N)`, mesma ordem) para colorir cada barra em `barChart`/`histogram`
+por índice, e usa `--earth-5` (ferrugem) com opacidade variável no heatmap de
+co-ocorrência. Os dois arquivos precisam ficar em sincronia manualmente — não há
+build step para gerar um a partir do outro.
 
 ## Padrões de código
 - Scripts globais simples (`<script src="...">`), sem ES modules — mesmo padrão do `skrill/`

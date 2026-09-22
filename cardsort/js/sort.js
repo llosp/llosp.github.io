@@ -1,8 +1,29 @@
 // Sorting page: demographic gate -> card-sort board -> submit to Supabase.
 (function () {
+  // Cycled by list index (see css/style.css --earth-1..12) so each created list
+  // gets a distinct color, and cards placed in it are tinted to match — makes it
+  // easy to tell lists (and their cards) apart at a glance.
+  const LIST_COLORS = [
+    'var(--earth-1)', 'var(--earth-2)', 'var(--earth-3)', 'var(--earth-4)',
+    'var(--earth-5)', 'var(--earth-6)', 'var(--earth-7)', 'var(--earth-8)',
+    'var(--earth-9)', 'var(--earth-10)', 'var(--earth-11)', 'var(--earth-12)',
+  ];
+
+  // Fisher-Yates. Cards are shown in a random order each time someone opens the
+  // page — a fixed A-Z order would bias people toward sorting alphabetically
+  // instead of by actual meaning, which is the whole point of an open card sort.
+  function shuffle(arr) {
+    const a = arr.slice();
+    for (let i = a.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [a[i], a[j]] = [a[j], a[i]];
+    }
+    return a;
+  }
+
   const state = {
     demographics: null,
-    pool: CARDS.map(c => c.id),
+    pool: shuffle(CARDS.map(c => c.id)),
     lists: [], // { id, name, cards: [] }
   };
   let nextListId = 1;
@@ -113,8 +134,10 @@
 
   function renderLists() {
     if (!state.lists.length) return '<p class="empty-hint">Nenhuma lista criada ainda.</p>';
-    return state.lists.map((list, i) => `
-      <div class="list-panel">
+    return state.lists.map((list, i) => {
+      const color = LIST_COLORS[i % LIST_COLORS.length];
+      return `
+      <div class="list-panel" style="--list-color:${color}">
         <div class="list-header" data-list-id="${list.id}">
           <button type="button" class="list-drag-handle" aria-label="Reordenar lista" title="Arraste para reordenar">⠿</button>
           <span class="list-rank">${i + 1}º</span>
@@ -126,7 +149,8 @@
           ${list.cards.map(cardHTML).join('') || '<p class="empty-hint">Solte cartas aqui.</p>'}
         </div>
       </div>
-    `).join('');
+    `;
+    }).join('');
   }
 
   function onNewList(e) {

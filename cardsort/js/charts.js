@@ -4,6 +4,15 @@
 // width:100%; height:auto so the viewBox aspect ratio is preserved responsively.
 const SVG_NS = 'http://www.w3.org/2000/svg';
 
+// Same 12-hue earthy palette as css/style.css's --earth-1..12 (referenced by var()
+// so a single source of truth in that stylesheet drives both pages) — cycled per
+// bar/row so categories are distinguishable by color, not just by label position.
+const EARTH_COLORS = [
+  'var(--earth-1)', 'var(--earth-2)', 'var(--earth-3)', 'var(--earth-4)',
+  'var(--earth-5)', 'var(--earth-6)', 'var(--earth-7)', 'var(--earth-8)',
+  'var(--earth-9)', 'var(--earth-10)', 'var(--earth-11)', 'var(--earth-12)',
+];
+
 function svgEl(tag, attrs = {}, text) {
   const node = document.createElementNS(SVG_NS, tag);
   for (const [k, v] of Object.entries(attrs)) node.setAttribute(k, v);
@@ -45,8 +54,9 @@ function barChart({ title, desc, data, caption, valueFormat }) {
   data.forEach((d, i) => {
     const y = padTop + i * rowH;
     const barW = max > 0 ? (d.value / max) * maxBarW : 0;
+    const color = EARTH_COLORS[i % EARTH_COLORS.length];
     svg.appendChild(svgEl('text', { x: labelW - 10, y: y + rowH / 2 + 4, 'text-anchor': 'end', class: 'chart-label' }, d.label));
-    svg.appendChild(svgEl('rect', { x: labelW, y: y + 6, width: Math.max(barW, 1), height: rowH - 12, class: 'chart-bar', rx: 3 }));
+    svg.appendChild(svgEl('rect', { x: labelW, y: y + 6, width: Math.max(barW, 1), height: rowH - 12, class: 'chart-bar', rx: 3, style: `fill:${color}` }));
     svg.appendChild(svgEl('text', { x: labelW + barW + 8, y: y + rowH / 2 + 4, class: 'chart-value' }, fmt(d.value)));
   });
 
@@ -73,7 +83,8 @@ function histogram({ title, desc, data, caption }) {
     const h = (d.count / max) * innerH;
     const x = padL + i * barW;
     const y = H - padB - h;
-    svg.appendChild(svgEl('rect', { x: x + 4, y, width: Math.max(barW - 8, 1), height: h, class: 'chart-bar', rx: 3 }));
+    const color = EARTH_COLORS[i % EARTH_COLORS.length];
+    svg.appendChild(svgEl('rect', { x: x + 4, y, width: Math.max(barW - 8, 1), height: h, class: 'chart-bar', rx: 3, style: `fill:${color}` }));
     svg.appendChild(svgEl('text', { x: x + barW / 2, y: H - padB + 16, 'text-anchor': 'middle', class: 'chart-value' }, d.n));
     svg.appendChild(svgEl('text', { x: x + barW / 2, y: y - 6, 'text-anchor': 'middle', class: 'chart-value' }, d.count));
   });
@@ -103,7 +114,7 @@ function heatmap({ title, desc, cardIds, matrix, caption }) {
       const opacity = v === 0 ? 0 : 0.12 + 0.88 * (v / max);
       const rect = svgEl('rect', {
         x: padL + j * cell, y: padT + i * cell, width: cell - 1, height: cell - 1,
-        class: 'chart-bar', 'fill-opacity': opacity.toFixed(2),
+        class: 'chart-bar', 'fill-opacity': opacity.toFixed(2), style: 'fill:var(--earth-5)',
       });
       if (v > 0) rect.appendChild(svgEl('title', {}, `${cardIds[i]} + ${cardIds[j]}: ${v}`));
       svg.appendChild(rect);

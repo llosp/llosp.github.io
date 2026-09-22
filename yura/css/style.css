@@ -563,6 +563,105 @@ body::after {
   position: relative;
 }
 
+/* ---- light cards (photo + specs) ---- */
+
+.card-photo,
+.card-specs {
+  color: #101114;
+}
+
+.card-photo .card-title,
+.card-specs .card-title {
+  color: #0d0e11;
+}
+
+.card-photo .card-body p,
+.card-specs .card-body p {
+  color: #565b66;
+}
+
+/* Card 2 — ergonomics photo */
+.card-photo {
+  background: linear-gradient(125deg, #ffffff 0%, #eef0f3 55%, #e4e6ea 100%);
+}
+
+.photo-man {
+  position: absolute;
+  z-index: 0;
+  right: -8%;
+  bottom: -6%;
+  height: 176%;
+  width: auto;
+}
+
+/* Card 3 — specs */
+.card-specs {
+  background: linear-gradient(180deg, #fbfbf1 0%, #fbe9ee 60%, #f7d5e1 100%);
+}
+
+.specs-lead {
+  margin-top: -.2em;
+}
+
+.specs-lead strong {
+  color: #23262c;
+  font-weight: 600;
+}
+
+.specs-list {
+  margin: clamp(12px, 1.4vw, 20px) 0 0;
+  padding: 0;
+  list-style: none;
+  max-width: 30em;
+}
+
+.specs-list li {
+  position: relative;
+  padding-left: 1.2em;
+  margin-bottom: .28em;
+  font-size: clamp(13px, 1.05vw, 16px);
+  line-height: 1.45;
+  color: #565b66;
+}
+
+.specs-list li::before {
+  content: ">";
+  position: absolute;
+  left: 0;
+  color: #7a7f8a;
+}
+
+.specs-guitars {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+  container-type: size;
+}
+
+.spec-guitar {
+  position: absolute;
+  height: auto;
+  transform-origin: center;
+  filter: drop-shadow(0 14px 26px rgba(120, 40, 70, .22));
+}
+
+/* Body view: full guitar rotated upright, body resting at the bottom. */
+.spec-guitar-body {
+  width: 150cqh;
+  left: 54cqw;
+  top: 44cqh;
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+
+/* Headstock view: same image raised so the tuners sit at the top-right. */
+.spec-guitar-head {
+  width: 152cqh;
+  left: 90cqw;
+  top: 76cqh;
+  transform: translate(-50%, -50%) rotate(-90deg);
+}
+
 .card-blank {
   background: var(--surface);
   border: 1px solid rgba(255, 255, 255, .06);

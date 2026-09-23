@@ -39,10 +39,10 @@
   --font-body: "Grotesk", Arial, sans-serif;
   --font-mono: "Mono", "Courier New", monospace;
 
-  /* image grid: 3 columns so each cell spans one page-quarter — .file-detail
-     occupies grid columns 4/13 (3 of the 4 quarters marked by .grid-line),
-     so dividing it into 3 (not 4) keeps cell edges on those lines. */
-  --columns: 3;
+  /* image grid: 4 columns so each cell spans one page-quarter, matching
+     the quarters marked by .grid-line (5 lines = 4 quarters, full width
+     now that panels are no longer inset to 3/4 width). */
+  --columns: 4;
   --column-gap: 0em;
 }
 
@@ -277,78 +277,29 @@ img {
   line-height: 18px;
 }
 
-.work-explorer {
+.work-list {
   margin-top: 20px;
   margin-bottom: 15vh;
-  align-items: start;
-}
-
-.file-list {
-  grid-column: 1 / 4;
-  position: sticky;
-  top: 60px;
-  display: flex;
-  flex-direction: column;
-}
-
-.file-row {
-  display: flex;
-  align-items: baseline;
-  gap: 8px;
-  width: 100%;
-  padding: var(--gutter);
-  background: none;
-  border: 0;
-  border-top: 1px solid var(--placeholder);
-  font: inherit;
-  font-family: var(--font-mono);
-  font-size: 12px;
-  color: inherit;
-  text-align: left;
-  text-transform: inherit;
-  cursor: pointer;
-  transition: background-color 0.2s ease, color 0.2s ease, transform 0.15s ease;
-}
-
-.file-row:active {
-  transform: scale(0.98);
-}
-
-.row-cursor {
-  opacity: 0;
-}
-
-.file-row.is--active .row-cursor {
-  opacity: 1;
-  animation: blink 1s steps(1, end) infinite;
-}
-
-.file-list .file-row:last-child {
-  border-bottom: 1px solid var(--placeholder);
-}
-
-.file-index {
-  color: var(--grey);
-}
-
-.file-name {
-  flex: 1;
-}
-
-.file-row.is--active {
-  background: var(--black);
-  color: var(--white);
-}
-
-.file-row.is--active .file-index {
-  color: var(--white);
-}
-
-.file-detail {
-  grid-column: 4 / 13;
+  padding: 0 var(--gutter);
   display: flex;
   flex-direction: column;
   gap: 20vh;
+}
+
+.file-panel {
+  padding-top: 30px;
+  border-top: 1px solid var(--placeholder);
+}
+
+.file-panel:first-child {
+  padding-top: 0;
+  border-top: 0;
+}
+
+.file-panel_index {
+  color: var(--grey);
+  font-family: var(--font-mono);
+  font-size: 12px;
 }
 
 @keyframes panel-in {
@@ -404,8 +355,7 @@ img {
   .file-panel.is--revealed .file-panel_header,
   .file-panel.is--revealed .file-panel_desc,
   .file-panel.is--revealed .file-panel_meta,
-  .file-panel.is--revealed .layout-grid_item,
-  .file-row {
+  .file-panel.is--revealed .layout-grid_item {
     animation: none;
     transition: none;
   }
@@ -413,10 +363,19 @@ img {
 
 .file-panel_header {
   display: flex;
-  justify-content: space-between;
   align-items: baseline;
-  padding: 0 var(--gutter);
+  gap: 10px;
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 10px var(--gutter);
+  background: transparent;
+  color: inherit;
   font-family: var(--font-mono);
+  transition: background 0.25s ease, color 0.25s ease;
+}
+
+.file-panel_header:hover {
+  background: var(--black);
+  color: var(--white);
 }
 
 .file-panel_title {
@@ -427,6 +386,7 @@ img {
 .file-panel_tags {
   font-size: 12px;
   color: var(--grey);
+  margin-left: auto;
 }
 
 .file-panel_desc {
@@ -471,6 +431,7 @@ img {
 
 /* image grid */
 .file-panel_images {
+  margin: 0 calc(-1 * var(--gutter));
   padding: 20px 5px 0;
 }
 
@@ -620,19 +581,7 @@ img {
   :root { --columns: 2; }
   .layout-grid_item.is--active { width: 100%; }
 
-  .file-list {
-    grid-column: 1 / 13;
-    position: static;
-    flex-direction: row;
-    flex-wrap: wrap;
-  }
-
-  .file-row {
-    flex: 1 1 45%;
-  }
-
-  .file-detail {
-    grid-column: 1 / 13;
+  .work-list {
     margin-top: 20px;
     gap: 10vh;
   }
@@ -646,10 +595,7 @@ img {
   .title-h1 { font-size: 4.5vh; }
 
   .work-tag { margin-top: 10vh; }
-  .work-explorer { margin-bottom: 10vh; }
-  .mobile_invisible { display: none; }
-
-  .file-row { flex: 1 1 100%; }
+  .work-list { margin-bottom: 10vh; }
 
   .layout-grid_list { row-gap: 1em; }
 

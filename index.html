@@ -58,35 +58,12 @@
 
     <div class="work-tag">~/work</div>
 
-    <div class="work-explorer grid-12">
-      <nav class="file-list" aria-label="project list">
-        <button class="file-row is--active" type="button" data-target="proj-01" aria-current="true">
-          <span class="file-index">01</span>
-          <span class="file-name">skrill<span class="row-cursor">_</span></span>
-          <span class="file-status mobile_invisible">ongoing</span>
-        </button>
-        <button class="file-row" type="button" data-target="proj-02">
-          <span class="file-index">02</span>
-          <span class="file-name">yura<span class="row-cursor">_</span></span>
-          <span class="file-status mobile_invisible">concept</span>
-        </button>
-        <button class="file-row" type="button" data-target="proj-03">
-          <span class="file-index">03</span>
-          <span class="file-name">project-03<span class="row-cursor">_</span></span>
-          <span class="file-status mobile_invisible">—</span>
-        </button>
-        <button class="file-row" type="button" data-target="proj-04">
-          <span class="file-index">04</span>
-          <span class="file-name">project-04<span class="row-cursor">_</span></span>
-          <span class="file-status mobile_invisible">—</span>
-        </button>
-      </nav>
-
-      <div class="file-detail">
+    <div class="work-list">
 
         <!-- project 01 -->
         <article class="file-panel" id="proj-01">
           <div class="file-panel_header">
+            <span class="file-panel_index">01</span>
             <h2 class="file-panel_title">skrill</h2>
             <div class="file-panel_tags">web app, full stack · ongoing</div>
           </div>
@@ -99,7 +76,7 @@
             <div class="file-panel_row"><dt>role</dt><dd>web app, full stack development</dd></div>
             <div class="file-panel_row"><dt>built with</dt><dd>html, css, javascript, supabase, figma, claude code</dd></div>
             <div class="file-panel_row"><dt>context</dt><dd>personal project, solo</dd></div>
-            <div class="file-panel_row"><dt>play</dt><dd><a href="/skrill" target="_blank" rel="noopener">lope.design/skrill/demo</a></dd></div>
+            <div class="file-panel_row"><dt>play</dt><dd><a href="/skrill/demo" target="_blank" rel="noopener">lope.design/skrill</a></dd></div>
           </dl>
           <div class="file-panel_images">
             <div class="layout-grid_list">
@@ -160,6 +137,7 @@
         <!-- project 02 -->
         <article class="file-panel" id="proj-02">
           <div class="file-panel_header">
+            <span class="file-panel_index">02</span>
             <h2 class="file-panel_title">yura</h2>
             <div class="file-panel_tags">web design, branding · concept</div>
           </div>
@@ -179,10 +157,22 @@
               <div class="layout-grid_item">
                 <div class="project-image_outer">
                   <div class="image-wrapper">
-                    <img class="thumbnail wide" src="assets/yura/yura-hero.webp" alt="YURA storefront hero with the HAKKOTAI guitar and product title" loading="lazy">
+                    <img class="thumbnail landscape" src="assets/yura/yura-cover.webp" alt="YURA logo over the HAKKOTAI guitar on an amp" loading="lazy">
                   </div>
                   <div class="project-title_wrapper">
-                    <div class="project-image-tag">hero.webp</div>
+                    <div class="project-image-tag">cover.webp</div>
+                  </div>
+                </div>
+              </div>
+              <div class="layout-grid_item layout-grid_item--video">
+                <div class="project-image_outer">
+                  <div class="image-wrapper video-wrapper">
+                    <video class="thumbnail wide" playsinline loop preload="metadata" aria-label="YURA promo video">
+                      <source src="assets/yura/yura-vid.webm" type="video/webm">
+                    </video>
+                  </div>
+                  <div class="project-title_wrapper">
+                    <div class="project-image-tag">yura-vid.webm</div>
                   </div>
                 </div>
               </div>
@@ -206,28 +196,6 @@
                   </div>
                 </div>
               </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail wide" src="assets/yura/yura-footer.webp" alt="YURA footer with the star wordmark and site links" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">footer.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item layout-grid_item--video">
-                <div class="project-image_outer">
-                  <div class="image-wrapper video-wrapper">
-                    <video class="thumbnail wide" playsinline loop preload="metadata" aria-label="YURA promo video">
-                      <source src="assets/yura/yura-vid.webm" type="video/webm">
-                    </video>
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">yura-vid.webm</div>
-                  </div>
-                </div>
-              </div>
             </div>
           </div>
         </article>
@@ -235,55 +203,61 @@
         <!-- project 03 -->
         <article class="file-panel" id="proj-03">
           <div class="file-panel_header">
-            <h2 class="file-panel_title">project 03</h2>
-            <div class="file-panel_tags">game development · —</div>
+            <span class="file-panel_index">03</span>
+            <h2 class="file-panel_title">count me dead</h2>
+            <div class="file-panel_tags">game design, programming & audio · shipped</div>
           </div>
-          <p class="file-panel_desc">project details coming soon.</p>
+          <p class="file-panel_desc">a boss-rush western duel about reading a countdown. you're an accountant
+            collecting debts from a town full of outlaws, one bullet per debt, and the whole game is one
+            button: wait for the count to hit zero, then draw. nobody outdraws you, so every outlaw cheats
+            the count instead, each in a way that fits who they are. made in 72 hours for gmtk jam 2026 with
+            a team of three, where i did the game design, programming and audio while frovio and zumate made
+            the art. it placed 21st out of 10,587 entries.</p>
           <dl class="file-panel_meta">
-            <div class="file-panel_row"><dt>role</dt><dd>—</dd></div>
-            <div class="file-panel_row"><dt>tools</dt><dd>—</dd></div>
-            <div class="file-panel_row"><dt>context</dt><dd>—</dd></div>
-            <div class="file-panel_row"><dt>status</dt><dd>—</dd></div>
+            <div class="file-panel_row"><dt>role</dt><dd>game design, programming, audio</dd></div>
+            <div class="file-panel_row"><dt>built with</dt><dd>godot, gdscript</dd></div>
+            <div class="file-panel_row"><dt>context</dt><dd>gmtk jam 2026, team of 3</dd></div>
+            <div class="file-panel_row"><dt>play</dt><dd><a href="https://lopen.itch.io/count-me-dead" target="_blank" rel="noopener">lopen.itch.io/count-me-dead</a></dd></div>
           </dl>
           <div class="file-panel_images">
             <div class="layout-grid_list">
               <div class="layout-grid_item">
                 <div class="project-image_outer">
                   <div class="image-wrapper">
-                    <div class="thumbnail wide"></div>
+                    <img class="thumbnail wide" src="assets/count-me-dead/gameplay-1.webp" alt="A duel against Hoarse Ryder: the timer still reads 9 when the player fires, and TOO EARLY! flashes across the screen" loading="lazy">
                   </div>
                   <div class="project-title_wrapper">
-                    <div class="project-image-tag">p03_001.webp</div>
+                    <div class="project-image-tag">gameplay-1.webp</div>
                   </div>
                 </div>
               </div>
               <div class="layout-grid_item">
                 <div class="project-image_outer">
                   <div class="image-wrapper">
-                    <div class="thumbnail wide"></div>
+                    <img class="thumbnail wide" src="assets/count-me-dead/gameplay-2.webp" alt="Mid-duel against Danny D. Vile, the timer at 18, reading Let's see you count without me" loading="lazy">
                   </div>
                   <div class="project-title_wrapper">
-                    <div class="project-image-tag">p03_002.webp</div>
+                    <div class="project-image-tag">gameplay-2.webp</div>
                   </div>
                 </div>
               </div>
               <div class="layout-grid_item">
                 <div class="project-image_outer">
                   <div class="image-wrapper">
-                    <div class="thumbnail wide"></div>
+                    <img class="thumbnail wide" src="assets/count-me-dead/gameplay-3.webp" alt="Hoarse Ryder in the sheriff's office, bullying a frightened Conny Calzone and mangling an idiom" loading="lazy">
                   </div>
                   <div class="project-title_wrapper">
-                    <div class="project-image-tag">p03_003.webp</div>
+                    <div class="project-image-tag">gameplay-3.webp</div>
                   </div>
                 </div>
               </div>
               <div class="layout-grid_item">
                 <div class="project-image_outer">
                   <div class="image-wrapper">
-                    <div class="thumbnail wide"></div>
+                    <img class="thumbnail wide" src="assets/count-me-dead/gameplay-4.webp" alt="The town map, where each location is a name on the ledger and unlocks the next outlaw" loading="lazy">
                   </div>
                   <div class="project-title_wrapper">
-                    <div class="project-image-tag">p03_004.webp</div>
+                    <div class="project-image-tag">gameplay-4.webp</div>
                   </div>
                 </div>
               </div>
@@ -294,6 +268,7 @@
         <!-- project 04 -->
         <article class="file-panel" id="proj-04">
           <div class="file-panel_header">
+            <span class="file-panel_index">04</span>
             <h2 class="file-panel_title">project 04</h2>
             <div class="file-panel_tags">experimental · —</div>
           </div>
@@ -350,7 +325,6 @@
           </div>
         </article>
 
-      </div>
     </div>
 
   </main>
@@ -411,26 +385,6 @@
   <script>
     var projectIds = ['proj-01', 'proj-02', 'proj-03', 'proj-04'];
 
-    function setActiveRow(id) {
-      document.querySelectorAll('.file-row').forEach(function (r) {
-        var isMatch = r.dataset.target === id;
-        r.classList.toggle('is--active', isMatch);
-        if (isMatch) {
-          r.setAttribute('aria-current', 'true');
-        } else {
-          r.removeAttribute('aria-current');
-        }
-      });
-    }
-
-    document.querySelectorAll('.file-row').forEach(function (row) {
-      row.addEventListener('click', function () {
-        setActiveRow(row.dataset.target);
-        var panel = document.getElementById(row.dataset.target);
-        if (panel) panel.scrollIntoView({ block: 'start' });
-      });
-    });
-
     (function () {
       var panels = projectIds
         .map(function (id) { return document.getElementById(id); })
@@ -441,12 +395,6 @@
         return;
       }
 
-      var spyObserver = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (entry.isIntersecting) setActiveRow(entry.target.id);
-        });
-      }, { rootMargin: '-45% 0px -45% 0px', threshold: 0 });
-
       var revealObserver = new IntersectionObserver(function (entries) {
         entries.forEach(function (entry) {
           if (!entry.isIntersecting) return;
@@ -456,7 +404,6 @@
       }, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
 
       panels.forEach(function (panel) {
-        spyObserver.observe(panel);
         revealObserver.observe(panel);
       });
     })();

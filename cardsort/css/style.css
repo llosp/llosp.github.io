@@ -299,6 +299,7 @@ a { color: var(--ink); }
   border-left: 4px solid var(--list-color, var(--line));
   border-radius: var(--radius);
   overflow: hidden;
+  flex-shrink: 0;
 }
 
 .list-header {

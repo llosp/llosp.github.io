@@ -183,6 +183,13 @@
 
   function renderBoard() {
     saveProgress();
+    // innerHTML rebuild below replaces .pool and .lists-section, which resets their
+    // scroll to 0 — capture and reapply so dropping a card doesn't jump the view.
+    const prevPoolEl = appEl.querySelector('.pool');
+    const prevListsEl = appEl.querySelector('.lists-section');
+    const poolScrollTop = prevPoolEl ? prevPoolEl.scrollTop : 0;
+    const listsScrollTop = prevListsEl ? prevListsEl.scrollTop : 0;
+
     appEl.innerHTML = `
       <section class="board">
         <header class="board-header">
@@ -221,6 +228,9 @@
     document.getElementById('continue-btn').addEventListener('click', onContinueClick);
     document.getElementById('restart-btn').addEventListener('click', onRestart);
     updateSubmitState();
+
+    appEl.querySelector('.pool').scrollTop = poolScrollTop;
+    appEl.querySelector('.lists-section').scrollTop = listsScrollTop;
   }
 
   function onContinueClick() {

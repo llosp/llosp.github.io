@@ -67,8 +67,13 @@ p { line-height: 1.5; }
 
 a { color: var(--ink); }
 
-.gate, .board {
+.gate {
   max-width: 42rem;
+  margin: 0 auto;
+}
+
+.board {
+  max-width: 72rem;
   margin: 0 auto;
 }
 
@@ -140,7 +145,21 @@ a { color: var(--ink); }
 /* ── Board ─────────────────────────────────────────────────────────────── */
 .board-header { margin-bottom: var(--space-3); }
 
-.pool-section { margin-bottom: var(--space-3); }
+.board-columns {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--space-3);
+}
+
+.pool-column,
+.lists-column {
+  flex: 1 1 0;
+  min-width: 0;
+}
+
+@media (max-width: 768px) {
+  .board-columns { flex-direction: column; }
+}
 
 .counter {
   font-weight: 400;

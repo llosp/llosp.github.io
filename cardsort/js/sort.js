@@ -108,21 +108,26 @@
           <p class="lead">Arraste as cartas para dentro das listas. Crie quantas listas quiser e arraste o ícone ⠿ do cabeçalho para reordenar as listas por prioridade — a ordem importa.</p>
         </header>
 
-        <div class="pool-section">
-          <h2>Cartas <span class="counter" id="pool-counter"></span></h2>
-          <div class="pool" data-dropzone>${renderPoolCards()}</div>
-        </div>
+        <div class="board-columns">
+          <div class="pool-column">
+            <h2>Cartas <span class="counter" id="pool-counter"></span></h2>
+            <div class="pool" data-dropzone>${renderPoolCards()}</div>
+          </div>
 
-        <div class="lists-section" data-reorder-track>${renderLists()}</div>
+          <div class="lists-column">
+            <h2>Categorias</h2>
+            <div class="lists-section" data-reorder-track>${renderLists()}</div>
 
-        <form id="new-list-form" class="new-list-form">
-          <input type="text" name="listName" placeholder="Nome da nova lista" required maxlength="60" />
-          <button type="submit" class="btn btn-secondary">+ Nova lista</button>
-        </form>
+            <form id="new-list-form" class="new-list-form">
+              <input type="text" name="listName" placeholder="Nome da nova lista" required maxlength="60" />
+              <button type="submit" class="btn btn-secondary">+ Nova lista</button>
+            </form>
 
-        <div class="submit-row">
-          <button type="button" id="submit-btn" class="btn btn-primary" disabled>Enviar</button>
-          <span id="submit-hint" class="hint"></span>
+            <div class="submit-row">
+              <button type="button" id="submit-btn" class="btn btn-primary" disabled>Enviar</button>
+              <span id="submit-hint" class="hint"></span>
+            </div>
+          </div>
         </div>
       </section>
     `;

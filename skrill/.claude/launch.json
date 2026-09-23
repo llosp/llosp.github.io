@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "skrill",
-      "runtimeExecutable": "python3",
-      "runtimeArgs": ["/tmp/skrill-server.py"],
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["/tmp/skrill-server.js"],
       "port": 8765
     }
   ]

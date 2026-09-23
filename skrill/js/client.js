@@ -1372,9 +1372,7 @@ function injectDemoBadge() {
   b.style.cssText = 'position:fixed;top:8px;right:8px;z-index:10000;display:flex;align-items:center;gap:8px;'
     + 'background:var(--amber,#FFB300);color:#000;font-family:\'Micro 5\',monospace;font-size:20px;'
     + 'padding:4px 10px;border:2px solid #000;box-shadow:2px 2px 0 rgba(0,0,0,0.3);text-transform:uppercase';
-  b.innerHTML = '<span>Modo Demo</span>'
-    + '<button style="font-family:inherit;font-size:18px;cursor:pointer;border:1px solid #000;background:#fff;padding:1px 8px" '
-    + 'onclick="DemoDB.exit();window.location.href=\'/skrill/demo/\'">Sair</button>';
+  b.innerHTML = '<span>Modo Demo</span>';
   document.body.appendChild(b);
 }
 if (isDemoMode()) {

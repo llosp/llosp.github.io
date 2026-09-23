@@ -61,18 +61,12 @@
     <div class="work-list">
 
         <!-- project 01 -->
-        <article class="file-panel is--expanded" id="proj-01">
-          <div class="file-panel_header" role="button" tabindex="0" aria-expanded="true" aria-controls="proj-01-body">
-            <div class="file-panel_col--main">
-              <span class="file-panel_index">01</span>
-              <h2 class="file-panel_title">skrill</h2>
-            </div>
-            <div class="file-panel_col--category">web app, full stack</div>
-            <div class="file-panel_col--status">ongoing</div>
-            <div class="file-panel_col--context">solo</div>
-            <span class="file-panel_chevron" aria-hidden="true"></span>
+        <article class="file-panel" id="proj-01">
+          <div class="file-panel_header">
+            <span class="file-panel_index">01</span>
+            <h2 class="file-panel_title">skrill</h2>
+            <div class="file-panel_tags">web app, full stack · ongoing</div>
           </div>
-          <div class="file-panel_body" id="proj-01-body">
           <p class="file-panel_desc">a social productivity system for a small friend group, part habit
             tracker and part guild dashboard. every season each person declares goals at a difficulty that sets
             the base points, and progress stays hidden until the weekly meeting, where deliveries get
@@ -138,22 +132,15 @@
               </div>
             </div>
           </div>
-          </div>
         </article>
 
         <!-- project 02 -->
         <article class="file-panel" id="proj-02">
-          <div class="file-panel_header" role="button" tabindex="0" aria-expanded="false" aria-controls="proj-02-body">
-            <div class="file-panel_col--main">
-              <span class="file-panel_index">02</span>
-              <h2 class="file-panel_title">yura</h2>
-            </div>
-            <div class="file-panel_col--category">web design, branding</div>
-            <div class="file-panel_col--status">concept</div>
-            <div class="file-panel_col--context">solo</div>
-            <span class="file-panel_chevron" aria-hidden="true"></span>
+          <div class="file-panel_header">
+            <span class="file-panel_index">02</span>
+            <h2 class="file-panel_title">yura</h2>
+            <div class="file-panel_tags">web design, branding · concept</div>
           </div>
-          <div class="file-panel_body" id="proj-02-body">
           <p class="file-panel_desc">i built a guitar in real life and wanted a way to show it off, so i
             invented a brand around it instead of just posting photos. yura is a mock guitar company built
             for the hakkotai, the model i built. i designed the logo and identity, then built a full storefront
@@ -211,22 +198,15 @@
               </div>
             </div>
           </div>
-          </div>
         </article>
 
         <!-- project 03 -->
         <article class="file-panel" id="proj-03">
-          <div class="file-panel_header" role="button" tabindex="0" aria-expanded="false" aria-controls="proj-03-body">
-            <div class="file-panel_col--main">
-              <span class="file-panel_index">03</span>
-              <h2 class="file-panel_title">count me dead</h2>
-            </div>
-            <div class="file-panel_col--category">game design, programming &amp; audio</div>
-            <div class="file-panel_col--status">shipped</div>
-            <div class="file-panel_col--context">team of 3</div>
-            <span class="file-panel_chevron" aria-hidden="true"></span>
+          <div class="file-panel_header">
+            <span class="file-panel_index">03</span>
+            <h2 class="file-panel_title">count me dead</h2>
+            <div class="file-panel_tags">game design, programming & audio · shipped</div>
           </div>
-          <div class="file-panel_body" id="proj-03-body">
           <p class="file-panel_desc">a boss-rush western duel about reading a countdown. you're an accountant
             collecting debts from a town full of outlaws, one bullet per debt, and the whole game is one
             button: wait for the count to hit zero, then draw. nobody outdraws you, so every outlaw cheats
@@ -283,22 +263,15 @@
               </div>
             </div>
           </div>
-          </div>
         </article>
 
         <!-- project 04 -->
         <article class="file-panel" id="proj-04">
-          <div class="file-panel_header" role="button" tabindex="0" aria-expanded="false" aria-controls="proj-04-body">
-            <div class="file-panel_col--main">
-              <span class="file-panel_index">04</span>
-              <h2 class="file-panel_title">project 04</h2>
-            </div>
-            <div class="file-panel_col--category">experimental</div>
-            <div class="file-panel_col--status">—</div>
-            <div class="file-panel_col--context">—</div>
-            <span class="file-panel_chevron" aria-hidden="true"></span>
+          <div class="file-panel_header">
+            <span class="file-panel_index">04</span>
+            <h2 class="file-panel_title">project 04</h2>
+            <div class="file-panel_tags">experimental · —</div>
           </div>
-          <div class="file-panel_body" id="proj-04-body">
           <p class="file-panel_desc">project details coming soon.</p>
           <dl class="file-panel_meta">
             <div class="file-panel_row"><dt>role</dt><dd>—</dd></div>
@@ -349,7 +322,6 @@
                 </div>
               </div>
             </div>
-          </div>
           </div>
         </article>
 
@@ -436,163 +408,17 @@
       });
     })();
 
-    (function () {
-      function openPanel(panel) {
-        var header = panel.querySelector('.file-panel_header');
-        var body = panel.querySelector('.file-panel_body');
-        panel.classList.add('is--expanded');
-        header.setAttribute('aria-expanded', 'true');
-        body.style.maxHeight = body.scrollHeight + 'px';
-      }
-
-      function closePanel(panel) {
-        var header = panel.querySelector('.file-panel_header');
-        var body = panel.querySelector('.file-panel_body');
-        body.style.maxHeight = body.scrollHeight + 'px';
-        requestAnimationFrame(function () {
-          panel.classList.remove('is--expanded');
-          header.setAttribute('aria-expanded', 'false');
-          body.style.maxHeight = '0px';
-        });
-      }
-
-      document.querySelectorAll('.file-panel').forEach(function (panel) {
-        var header = panel.querySelector('.file-panel_header');
-
-        header.addEventListener('click', function () {
-          if (panel.classList.contains('is--expanded')) {
-            closePanel(panel);
-          } else {
-            openPanel(panel);
-          }
-        });
-
-        header.addEventListener('keydown', function (e) {
-          if (e.key === 'Enter' || e.key === ' ') {
-            e.preventDefault();
-            header.click();
-          }
-        });
-
-        if (panel.classList.contains('is--expanded')) {
-          openPanel(panel);
-        }
-      });
-
-      window.addEventListener('resize', function () {
-        document.querySelectorAll('.file-panel.is--expanded .file-panel_body').forEach(function (body) {
-          body.style.maxHeight = body.scrollHeight + 'px';
-        });
-      });
-    })();
-
-    document.querySelectorAll('.layout-grid_list').forEach(function (list) {
-      var originalItems = Array.prototype.slice.call(list.children);
-      if (!originalItems.length) return;
-
-      originalItems.forEach(function (item, i) {
-        item.style.animationDelay = (0.16 + i * 0.04) + 's';
-      });
-
-      var viewport = document.createElement('div');
-      viewport.className = 'carousel-viewport';
-      list.parentNode.insertBefore(viewport, list);
-      viewport.appendChild(list);
-
-      var beforeFrag = document.createDocumentFragment();
-      var afterFrag = document.createDocumentFragment();
-      originalItems.forEach(function (item) {
-        var beforeClone = item.cloneNode(true);
-        beforeClone.setAttribute('aria-hidden', 'true');
-        beforeClone.style.animationDelay = '';
-        beforeFrag.appendChild(beforeClone);
-
-        var afterClone = item.cloneNode(true);
-        afterClone.setAttribute('aria-hidden', 'true');
-        afterClone.style.animationDelay = '';
-        afterFrag.appendChild(afterClone);
-      });
-      list.insertBefore(beforeFrag, list.firstChild);
-      list.appendChild(afterFrag);
-
-      var count = originalItems.length;
-      var setWidth = 0;
-      var homeX = 0;
-      var currentX = 0;
-      var isDown = false;
-      var moved = false;
-      var startClientX = 0;
-      var startTranslate = 0;
-
-      function apply(x) {
-        list.style.transform = 'translateX(' + x + 'px)';
-      }
-
-      function wrap(x) {
-        while (x - homeX > setWidth) x -= setWidth;
-        while (x - homeX < -setWidth) x += setWidth;
-        return x;
-      }
-
-      function measure() {
-        var firstBefore = list.children[0];
-        var firstMiddle = list.children[count];
-        setWidth = firstMiddle.offsetLeft - firstBefore.offsetLeft;
-        var itemCenter = firstMiddle.offsetLeft + firstMiddle.offsetWidth / 2;
-        homeX = viewport.clientWidth / 2 - itemCenter;
-      }
-
-      measure();
-      currentX = homeX;
-      apply(currentX);
-
-      viewport.addEventListener('pointerdown', function (e) {
-        isDown = true;
-        moved = false;
-        startClientX = e.clientX;
-        startTranslate = currentX;
-        viewport.classList.add('is--dragging');
-        viewport.setPointerCapture(e.pointerId);
-      });
-
-      viewport.addEventListener('pointermove', function (e) {
-        if (!isDown) return;
-        var dx = e.clientX - startClientX;
-        if (Math.abs(dx) > 4) moved = true;
-        currentX = wrap(startTranslate + dx);
-        apply(currentX);
-      });
-
-      function endDrag() {
-        isDown = false;
-        viewport.classList.remove('is--dragging');
-      }
-      viewport.addEventListener('pointerup', endDrag);
-      viewport.addEventListener('pointercancel', endDrag);
-
-      viewport.addEventListener('click', function (e) {
-        if (moved) {
-          e.preventDefault();
-          e.stopPropagation();
-          moved = false;
-        }
-      }, true);
-
-      window.addEventListener('resize', function () {
-        measure();
-        currentX = homeX;
-        apply(currentX);
-      });
-    });
-
     document.querySelectorAll('.image-wrapper').forEach(function (wrapper) {
       wrapper.addEventListener('click', function () {
+        var item = wrapper.closest('.layout-grid_item');
+        var isActive = item.classList.toggle('is--active');
         var video = wrapper.querySelector('video');
         if (!video) return;
-        if (video.paused) {
+        if (isActive) {
           video.play();
         } else {
           video.pause();
+          video.currentTime = 0;
         }
       });
     });

@@ -4,15 +4,633 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Lope</title>
-  <link rel="canonical" href="https://lope.design/portfolio/">
+  <title>lope — designer + developer</title>
+  <meta name="description"
+    content="Lope (Pedro Lopes) is a designer and developer based in Rio de Janeiro, working across web, product, ai, interactive experiences and games.">
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
-  <meta http-equiv="refresh" content="0; url=/portfolio/">
-  <script>window.location.replace("/portfolio/");</script>
+  <link rel="stylesheet" href="/styles.css">
 </head>
 
 <body>
-  <p>Redirecting to the <a href="/portfolio/">portfolio</a>&hellip;</p>
+
+  <div class="page-transition">
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+  </div>
+  <noscript><style>.page-transition { display: none; }</style></noscript>
+
+  <canvas class="ascii-background" aria-hidden="true"></canvas>
+
+  <div class="background-gridlines">
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+  </div>
+
+  <div class="navbar">
+    <div class="header grid-12">
+      <a class="nav_button" href="/">
+        <div class="button-square not-blinking"></div>
+        <div class="text-color_inverse name-long">lope, designer + developer</div>
+        <div class="text-color_inverse name-short">lope</div>
+      </a>
+      <a class="nav_button" href="#work">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">work</div>
+      </a>
+      <a class="nav_button" href="#about">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">about</div>
+      </a>
+    </div>
+  </div>
+
+  <div class="hero">
+    <h1 class="title-h1">designer + developer creating digital experiences, products and games.</h1>
+    <div class="scroll-down-tag">scroll down</div>
+  </div>
+
+  <main id="work">
+
+    <!-- project 01 -->
+    <div class="project_wrapper">
+      <div class="project-text_wrapper">
+        <div class="project-text_header">
+          <div class="project-tag_wrapper">
+            <div class="project-tag">projects</div>
+          </div>
+          <button class="project_header-container" type="button" aria-expanded="false">
+            <div class="project_header grid-12">
+              <div class="project-info_container text-color_inverse">
+                <h2 class="project-info">skrill</h2>
+              </div>
+              <div class="project-info_container text-color_inverse">
+                <div class="project-info mobile_invisible">web app, full stack</div>
+              </div>
+              <div class="project-info_container text-color_inverse">
+                <div class="project-info mobile_invisible">ongoing</div>
+                <span class="plus-icon"></span>
+              </div>
+            </div>
+          </button>
+        </div>
+        <div class="project-content_wrapper">
+          <div class="project-contant_wrapper grid-12">
+            <div class="acc-content_col">
+              <p class="project-detail-text">a social productivity system for a small friend group, part habit
+                tracker and part guild dashboard. every season each person declares goals at a difficulty that sets
+                the base points, and progress stays hidden until the weekly meeting, where deliveries get
+                revealed and the group splits a shared bonus pool between each other's work. i designed the points
+                economy, built the whole stack solo and drew the pixel art mascot.</p>
+            </div>
+            <div class="acc-content_col">
+              <p class="project-detail-text">
+                role:<br>
+                built with:<br>
+                context:<br>
+                play:
+              </p>
+            </div>
+            <div class="acc-content_col">
+              <p class="project-detail-text">
+                web app, full stack development<br>
+                html, css, javascript, supabase<br>
+                personal project, solo<br>
+                <a href="/skrill" target="_blank" rel="noopener">lope.design/skrill</a>
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="project-image_wrapper">
+        <div class="project-image_grid">
+          <div class="layout-grid_list">
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <img class="thumbnail landscape" src="assets/skrill/mockup.webp" alt="Skrill mockup" loading="lazy">
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">mockup.webp</div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <img class="thumbnail wide" src="assets/skrill/configs.webp" alt="Skrill settings panel with theme and accent options" loading="lazy">
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">configs.webp</div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <img class="thumbnail wide" src="assets/skrill/add-goal.webp" alt="Skrill screen for declaring a weekly goal with difficulty" loading="lazy">
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">add-goal.webp</div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <img class="thumbnail wide" src="assets/skrill/leader-board.webp" alt="Skrill leaderboard with podium and rankings" loading="lazy">
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">leader-board.webp</div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <img class="thumbnail landscape" src="assets/skrill/profile.webp" alt="Skrill profile page with season timeline" loading="lazy">
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">profile.webp</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- project 02 -->
+    <div class="project_wrapper">
+      <div class="project-text_wrapper">
+        <div class="project-text_header">
+          <button class="project_header-container" type="button" aria-expanded="false">
+            <div class="project_header grid-12">
+              <div class="project-info_container text-color_inverse">
+                <h2 class="project-info">project 02</h2>
+              </div>
+              <div class="project-info_container text-color_inverse">
+                <div class="project-info mobile_invisible">ai / interaction</div>
+              </div>
+              <div class="project-info_container text-color_inverse">
+                <div class="project-info mobile_invisible">—</div>
+                <span class="plus-icon"></span>
+              </div>
+            </div>
+          </button>
+        </div>
+        <div class="project-content_wrapper">
+          <div class="project-contant_wrapper grid-12">
+            <div class="acc-content_col">
+              <p class="project-detail-text">project details coming soon.</p>
+            </div>
+            <div class="acc-content_col">
+              <p class="project-detail-text">
+                role:<br>
+                tools:<br>
+                context:<br>
+                status:
+              </p>
+            </div>
+            <div class="acc-content_col">
+              <p class="project-detail-text">
+                —<br>
+                —<br>
+                —<br>
+                —
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="project-image_wrapper">
+        <div class="project-image_grid">
+          <div class="layout-grid_list">
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <div class="thumbnail portrait"></div>
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">p02_001.webp</div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <div class="thumbnail wide"></div>
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">p02_002.webp</div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <div class="thumbnail wide"></div>
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">p02_003.webp</div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <div class="thumbnail wide"></div>
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">p02_004.webp</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- project 03 -->
+    <div class="project_wrapper">
+      <div class="project-text_wrapper">
+        <div class="project-text_header">
+          <button class="project_header-container" type="button" aria-expanded="false">
+            <div class="project_header grid-12">
+              <div class="project-info_container text-color_inverse">
+                <h2 class="project-info">project 03</h2>
+              </div>
+              <div class="project-info_container text-color_inverse">
+                <div class="project-info mobile_invisible">game development</div>
+              </div>
+              <div class="project-info_container text-color_inverse">
+                <div class="project-info mobile_invisible">—</div>
+                <span class="plus-icon"></span>
+              </div>
+            </div>
+          </button>
+        </div>
+        <div class="project-content_wrapper">
+          <div class="project-contant_wrapper grid-12">
+            <div class="acc-content_col">
+              <p class="project-detail-text">project details coming soon.</p>
+            </div>
+            <div class="acc-content_col">
+              <p class="project-detail-text">
+                role:<br>
+                tools:<br>
+                context:<br>
+                status:
+              </p>
+            </div>
+            <div class="acc-content_col">
+              <p class="project-detail-text">
+                —<br>
+                —<br>
+                —<br>
+                —
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="project-image_wrapper">
+        <div class="project-image_grid">
+          <div class="layout-grid_list">
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <div class="thumbnail wide"></div>
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">p03_001.webp</div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <div class="thumbnail wide"></div>
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">p03_002.webp</div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <div class="thumbnail wide"></div>
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">p03_003.webp</div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <div class="thumbnail wide"></div>
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">p03_004.webp</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- project 04 -->
+    <div class="project_wrapper">
+      <div class="project-text_wrapper">
+        <div class="project-text_header">
+          <button class="project_header-container" type="button" aria-expanded="false">
+            <div class="project_header grid-12">
+              <div class="project-info_container text-color_inverse">
+                <h2 class="project-info">project 04</h2>
+              </div>
+              <div class="project-info_container text-color_inverse">
+                <div class="project-info mobile_invisible">experimental</div>
+              </div>
+              <div class="project-info_container text-color_inverse">
+                <div class="project-info mobile_invisible">—</div>
+                <span class="plus-icon"></span>
+              </div>
+            </div>
+          </button>
+        </div>
+        <div class="project-content_wrapper">
+          <div class="project-contant_wrapper grid-12">
+            <div class="acc-content_col">
+              <p class="project-detail-text">project details coming soon.</p>
+            </div>
+            <div class="acc-content_col">
+              <p class="project-detail-text">
+                role:<br>
+                tools:<br>
+                context:<br>
+                status:
+              </p>
+            </div>
+            <div class="acc-content_col">
+              <p class="project-detail-text">
+                —<br>
+                —<br>
+                —<br>
+                —
+              </p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="project-image_wrapper">
+        <div class="project-image_grid">
+          <div class="layout-grid_list">
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <div class="thumbnail wide"></div>
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">p04_001.webp</div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <div class="thumbnail wide"></div>
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">p04_002.webp</div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <div class="thumbnail wide"></div>
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">p04_003.webp</div>
+                </div>
+              </div>
+            </div>
+            <div class="layout-grid_item">
+              <div class="project-image_outer">
+                <div class="image-wrapper">
+                  <div class="thumbnail wide"></div>
+                </div>
+                <div class="project-title_wrapper">
+                  <div class="project-image-tag">p04_004.webp</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- about -->
+    <div class="about-text_container" id="about">
+      <div class="about-text_grid grid-12">
+        <h2 class="h2-about">about</h2>
+        <div class="about-text">i'm pedro lopes, most people call me lope. i'm a designer and developer based in rio
+          de janeiro, and i like working in the space between the two, especially when i can move past designing
+          something and actually build it.</div>
+      </div>
+      <div class="about-text_grid grid-12">
+        <h2 class="h2-about">background</h2>
+        <div class="about-text">i study design at puc-rio. my background is in game development, where i worked
+          with systems, interaction, prototyping and gameplay, and that carried into digital products, interfaces
+          and web experiences. a lot of that work happens through prisma game lab, where i also help lead and
+          organize projects with multidisciplinary teams.</div>
+      </div>
+      <div class="about-text_grid grid-12">
+        <h2 class="h2-about">focus</h2>
+        <div class="about-text">my work moves between digital product design, web, ux/ui, ai, interactive
+          experiences and game development. i'm most interested in projects where design and technology overlap,
+          where i can prototype an idea, understand how the system works and help turn it into something that
+          actually runs.</div>
+      </div>
+      <div class="about-text_grid grid-12">
+        <h2 class="h2-about">toolbox</h2>
+        <div class="about-text">figma, unity, godot, and web technologies. ai is part of the everyday workflow,
+          both as a build tool and as something i design with.</div>
+      </div>
+      <div class="about-text_grid grid-12">
+        <h2 class="h2-about">contact</h2>
+        <div class="about-text">
+          m: email<br>
+          li: linkedin<br>
+          gh: github<br>
+          ig: instagram
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <div class="footer">
+    <div class="footer_grid grid-12">
+      <div class="credits-container">
+        <div class="text-color_inverse">design + development by me</div>
+      </div>
+      <div class="copyright-container">
+        <div class="text-color_inverse">&copy; 2026 lope</div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    document.querySelectorAll('.project_header-container').forEach(function (button) {
+      button.addEventListener('click', function () {
+        var project = button.closest('.project_wrapper');
+        var open = project.classList.toggle('is--open');
+        button.setAttribute('aria-expanded', String(open));
+      });
+    });
+
+    document.querySelectorAll('.image-wrapper').forEach(function (wrapper) {
+      wrapper.addEventListener('click', function () {
+        wrapper.closest('.layout-grid_item').classList.toggle('is--active');
+      });
+    });
+
+    var pageTransition = document.querySelector('.page-transition');
+    if (pageTransition) {
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+      if (reduceMotion) {
+        pageTransition.remove();
+      } else {
+        window.addEventListener('load', function () {
+          requestAnimationFrame(function () {
+            pageTransition.classList.add('is--open');
+          });
+          window.setTimeout(function () {
+            pageTransition.remove();
+          }, 1100);
+        });
+      }
+    }
+
+    (function () {
+      var canvas = document.querySelector('.ascii-background');
+      if (!canvas || !canvas.getContext) return;
+
+      var ctx = canvas.getContext('2d');
+      var chars = ['.', ':', 'o', 'O'];
+      var cell = 20;
+      var ringWidth = 28;
+      var maxRipples = 10;
+      var cols = 0;
+      var rows = 0;
+      var width = 0;
+      var height = 0;
+      var ripples = [];
+      var lastSpawn = 0;
+      var nextSpawnDelay = 350;
+      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+      function applyContextSettings() {
+        ctx.font = 'bold 15px "Mono", "Courier New", monospace';
+        ctx.textBaseline = 'top';
+        ctx.fillStyle = 'rgb(0, 0, 0)';
+      }
+
+      function resize() {
+        var dpr = window.devicePixelRatio || 1;
+        width = window.innerWidth;
+        height = Math.round(window.innerHeight * 1.2);
+        canvas.width = Math.round(width * dpr);
+        canvas.height = Math.round(height * dpr);
+        canvas.style.width = width + 'px';
+        canvas.style.height = height + 'px';
+        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+        applyContextSettings();
+        cols = Math.ceil(width / cell);
+        rows = Math.ceil(height / cell);
+      }
+
+      // a top-down raindrop: a ring that expands outward from a point and
+      // weakens as it grows, same shape a drop makes hitting still water.
+      function spawnRipple(now) {
+        ripples.push({
+          x: Math.random() * width,
+          y: Math.random() * height,
+          t0: now,
+          life: 2600 + Math.random() * 1600,
+          maxRadius: 80 + Math.random() * 150
+        });
+        if (ripples.length > maxRipples) ripples.shift();
+      }
+
+      function drawFrame(now) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        if (now - lastSpawn > nextSpawnDelay) {
+          spawnRipple(now);
+          lastSpawn = now;
+          nextSpawnDelay = 250 + Math.random() * 400;
+        }
+
+        ripples = ripples.filter(function (r) { return now - r.t0 < r.life; });
+
+        for (var gy = 0; gy < rows; gy++) {
+          for (var gx = 0; gx < cols; gx++) {
+            var px = gx * cell + cell / 2;
+            var py = gy * cell + cell / 2;
+            var best = 0;
+
+            for (var i = 0; i < ripples.length; i++) {
+              var r = ripples[i];
+              var progress = (now - r.t0) / r.life;
+              var radius = progress * r.maxRadius;
+              var fade = 1 - progress;
+              var dist = Math.hypot(px - r.x, py - r.y);
+              var delta = Math.abs(dist - radius);
+              if (delta < ringWidth) {
+                var intensity = (1 - delta / ringWidth) * fade;
+                if (intensity > best) best = intensity;
+              }
+            }
+
+            if (best < 0.08) continue;
+            var index = Math.min(chars.length - 1, Math.floor((best - 0.08) / 0.92 * chars.length));
+            ctx.globalAlpha = 0.45 + best * 0.55;
+            ctx.fillText(chars[index], gx * cell, gy * cell);
+          }
+        }
+        ctx.globalAlpha = 1;
+      }
+
+      resize();
+      window.addEventListener('resize', resize);
+
+      if (reduceMotion) {
+        var now = performance.now();
+        spawnRipple(now - 1800);
+        spawnRipple(now - 900);
+        spawnRipple(now - 200);
+        drawFrame(now);
+      } else {
+        // setTimeout rather than a pure rAF chain: rAF gets fully suspended
+        // in backgrounded/hidden tabs in some browsers, which would freeze
+        // the ripples entirely instead of just slowing them down.
+        (function loop() {
+          drawFrame(performance.now());
+          window.setTimeout(loop, 50);
+        })();
+      }
+    })();
+  </script>
+
 </body>
 
 </html>

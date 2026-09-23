@@ -171,19 +171,39 @@ a { color: var(--ink); }
 }
 
 .card {
-  width: 44px;
-  height: 44px;
+  width: 104px;
   display: flex;
-  align-items: center;
-  justify-content: center;
+  flex-direction: column;
+  align-items: stretch;
   border: 1px solid var(--ink);
   border-radius: 8px;
-  font-weight: 700;
-  font-size: 1.05rem;
+  overflow: hidden;
   user-select: none;
   touch-action: none;
   cursor: grab;
   background: var(--paper);
+}
+
+.card-thumb {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  display: block;
+  background: var(--line);
+  pointer-events: none;
+}
+
+.card-thumb-empty {
+  background: var(--line);
+}
+
+.card-label {
+  padding: 6px 8px;
+  font-weight: 700;
+  font-size: 0.8rem;
+  line-height: 1.25;
+  text-align: center;
+  overflow-wrap: anywhere;
 }
 
 .card.dragging-source { opacity: 0.35; }
@@ -311,5 +331,5 @@ a { color: var(--ink); }
 
 @media (max-width: 520px) {
   body { padding: var(--space-2) var(--space-1) var(--space-4); }
-  .card { width: 40px; height: 40px; }
+  .card { width: 84px; }
 }

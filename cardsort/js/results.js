@@ -97,12 +97,14 @@
     }));
 
     const cardIds = CARDS.map(c => c.id);
+    const cardLabels = Object.fromEntries(CARDS.map(c => [c.id, c.label]));
     const heatmapEl = heatmap({
       title: 'Cartas agrupadas juntas',
       desc: 'Com que frequência cada par de cartas foi colocado na mesma lista.',
       cardIds,
+      labels: cardLabels,
       matrix: cardCooccurrence(rows, cardIds),
-      caption: 'Células mais escuras indicam pares de cartas agrupados juntos com mais frequência.',
+      caption: 'Células mais escuras indicam pares de cartas agrupados juntos com mais frequência. Passe o mouse sobre uma célula para ver os nomes.',
     });
     heatmapEl.classList.add('chart-wide');
     grid.appendChild(heatmapEl);

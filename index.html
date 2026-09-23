@@ -97,7 +97,7 @@
             economy, built the whole stack solo and made a silly mascot.</p>
           <dl class="file-panel_meta">
             <div class="file-panel_row"><dt>role</dt><dd>web app, full stack development</dd></div>
-            <div class="file-panel_row"><dt>built with</dt><dd>html, css, javascript, supabase</dd></div>
+            <div class="file-panel_row"><dt>built with</dt><dd>html, css, javascript, supabase, figma, claude code</dd></div>
             <div class="file-panel_row"><dt>context</dt><dd>personal project, solo</dd></div>
             <div class="file-panel_row"><dt>play</dt><dd><a href="/skrill" target="_blank" rel="noopener">lope.design/skrill/demo</a></dd></div>
           </dl>
@@ -170,7 +170,7 @@
             set of legal pages a real store would ship with.</p>
           <dl class="file-panel_meta">
             <div class="file-panel_row"><dt>role</dt><dd>web design, branding, front-end development</dd></div>
-            <div class="file-panel_row"><dt>built with</dt><dd>html, css, javascript</dd></div>
+            <div class="file-panel_row"><dt>built with</dt><dd>html, css, javascript, figma, claude code</dd></div>
             <div class="file-panel_row"><dt>context</dt><dd>personal project, solo</dd></div>
             <div class="file-panel_row"><dt>visit</dt><dd><a href="/yura" target="_blank" rel="noopener">lope.design/yura</a></dd></div>
           </dl>
@@ -213,6 +213,21 @@
                   </div>
                   <div class="project-title_wrapper">
                     <div class="project-image-tag">footer.webp</div>
+                  </div>
+                </div>
+              </div>
+              <div class="layout-grid_item layout-grid_item--video">
+                <div class="project-image_outer">
+                  <div class="image-wrapper video-wrapper">
+                    <video class="thumbnail wide" playsinline loop preload="metadata" aria-label="YURA promo video">
+                      <source src="assets/yura/yura-vid.webm" type="video/webm">
+                    </video>
+                    <button class="video-play-toggle" type="button" aria-label="Pause video">
+                      <span class="video-play-icon" aria-hidden="true"></span>
+                    </button>
+                  </div>
+                  <div class="project-title_wrapper">
+                    <div class="project-image-tag">yura-vid.webm</div>
                   </div>
                 </div>
               </div>
@@ -451,7 +466,40 @@
 
     document.querySelectorAll('.image-wrapper').forEach(function (wrapper) {
       wrapper.addEventListener('click', function () {
-        wrapper.closest('.layout-grid_item').classList.toggle('is--active');
+        var item = wrapper.closest('.layout-grid_item');
+        var isActive = item.classList.toggle('is--active');
+        var video = wrapper.querySelector('video');
+        if (!video) return;
+        if (isActive) {
+          video.play();
+        } else {
+          video.pause();
+          video.currentTime = 0;
+        }
+      });
+    });
+
+    document.querySelectorAll('.video-play-toggle').forEach(function (toggle) {
+      var video = toggle.closest('.video-wrapper').querySelector('video');
+      if (!video) return;
+
+      toggle.addEventListener('click', function (event) {
+        event.stopPropagation();
+        if (video.paused) {
+          video.play();
+        } else {
+          video.pause();
+        }
+      });
+
+      video.addEventListener('play', function () {
+        toggle.classList.add('is--playing');
+        toggle.setAttribute('aria-label', 'Pause video');
+      });
+
+      video.addEventListener('pause', function () {
+        toggle.classList.remove('is--playing');
+        toggle.setAttribute('aria-label', 'Play video');
       });
     });
 

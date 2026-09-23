@@ -28,10 +28,18 @@
   };
   let nextListId = 1;
 
+  const CARDS_BY_ID = new Map(CARDS.map(c => [c.id, c]));
+
   const appEl = document.getElementById('app');
 
   function escapeHTML(str) {
     return String(str).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+  }
+
+  // Folder/filenames under assets/Fotos do itens/ have spaces and accents —
+  // encodeURI turns those into a valid <img src> without touching '/' or ':'.
+  function cardImageSrc(path) {
+    return encodeURI(path);
   }
 
   function render() {
@@ -125,7 +133,12 @@
   }
 
   function cardHTML(id) {
-    return `<div class="card" data-card-id="${id}">${id}</div>`;
+    const card = CARDS_BY_ID.get(id);
+    const label = card ? card.label : id;
+    const thumb = card && card.image
+      ? `<img class="card-thumb" src="${cardImageSrc(card.image)}" alt="" loading="lazy" />`
+      : `<span class="card-thumb card-thumb-empty"></span>`;
+    return `<div class="card" data-card-id="${id}">${thumb}<span class="card-label">${escapeHTML(label)}</span></div>`;
   }
 
   function renderPoolCards() {

@@ -92,7 +92,8 @@ function histogram({ title, desc, data, caption }) {
   return chartWrap(svg, { title, caption });
 }
 
-function heatmap({ title, desc, cardIds, matrix, caption }) {
+function heatmap({ title, desc, cardIds, labels, matrix, caption }) {
+  const labelFor = id => (labels && labels[id]) || id;
   const n = cardIds.length;
   const cell = 20, padL = 26, padT = 26;
   const W = padL + n * cell, H = padT + n * cell;
@@ -116,7 +117,7 @@ function heatmap({ title, desc, cardIds, matrix, caption }) {
         x: padL + j * cell, y: padT + i * cell, width: cell - 1, height: cell - 1,
         class: 'chart-bar', 'fill-opacity': opacity.toFixed(2), style: 'fill:var(--earth-5)',
       });
-      if (v > 0) rect.appendChild(svgEl('title', {}, `${cardIds[i]} + ${cardIds[j]}: ${v}`));
+      if (v > 0) rect.appendChild(svgEl('title', {}, `${labelFor(cardIds[i])} + ${labelFor(cardIds[j])}: ${v}`));
       svg.appendChild(rect);
     }
   }

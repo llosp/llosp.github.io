@@ -24,7 +24,7 @@ Tabela única `card_sort_submissions` (RLS ativo — ver SQL abaixo, política s
 |---|---|---|
 | `id` | uuid pk | `gen_random_uuid()` |
 | `created_at` | timestamptz | default `now()` |
-| `card_set` | text | versão do conjunto de cartas, hoje `'alphabet-v1'` — trocar ao introduzir cartas reais, nunca reescrever dados antigos |
+| `card_set` | text | versão do conjunto de cartas, hoje `'sushi-menu-v1'` — trocar sempre que a lista de itens mudar, nunca reescrever dados antigos |
 | `respondent_name` | text \| null | opcional |
 | `age_range` | text | uma de `18-24 \| 25-34 \| 35-44 \| 45-54 \| 55+` |
 | `gender` | text | uma de `Masculino \| Feminino \| Outro \| Prefiro não dizer` |
@@ -35,9 +35,14 @@ SQL de criação está no histórico do plano de implementação — rode manual
 SQL do Supabase se a tabela precisar ser recriada.
 
 ## Cartas (`js/cards.js`)
-`CARDS` é um array hardcoded de A–Z (`CARD_SET = 'alphabet-v1'`) — placeholder até o
-conjunto real de cartas do estudo ser definido. Ao trocar, sempre mude `CARD_SET` junto,
-para que respostas antigas e novas nunca se misturem nos agregados de `results.js`.
+`CARDS` é um array hardcoded com os 54 itens do cardápio (`CARD_SET = 'sushi-menu-v1'`),
+cada um `{ id, label, image }`: `id` é um número de dois dígitos (`'01'`..`'54'`, estável
+e curto — usado como eixo do heatmap em `results/`), `label` é o nome em PT-BR mostrado
+no card, `image` é o caminho para a foto em `assets/Fotos do itens/` (ou `null` — item 45,
+"Combinado 30 peças", não tem foto ainda). `sort.js` roda `image` por `encodeURI()` antes
+de usar em `<img src>`, porque a pasta e alguns arquivos têm espaços/acentos no nome. Ao
+trocar o conjunto de cartas, sempre mude `CARD_SET` junto, para que respostas antigas e
+novas nunca se misturem nos agregados de `results.js`.
 
 `sort.js` embaralha a ordem do pool uma vez por carregamento de página (`shuffle()`,
 Fisher-Yates, aplicado a `state.pool` na inicialização) — cada respondente vê as

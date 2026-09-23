@@ -528,53 +528,10 @@ img {
   overflow-wrap: anywhere;
 }
 
-/* video thumbnail: plays only once expanded (same 1→2 column grow as the
-   image thumbnails), and exposes a single play/pause control (no native
-   seek bar or settings menu) */
-.video-wrapper {
-  position: relative;
-}
-
+/* video thumbnail: paused while collapsed, plays while expanded — no
+   visible controls at all, native or custom */
 .video-wrapper .thumbnail {
   display: block;
-}
-
-.video-play-toggle {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  display: none;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border: 1px solid var(--white);
-  border-radius: 50%;
-  background-color: rgba(0, 0, 0, 0.45);
-  cursor: pointer;
-}
-
-.layout-grid_item--video.is--active .video-play-toggle {
-  display: flex;
-}
-
-.video-play-icon {
-  width: 0;
-  height: 0;
-  border-top: 8px solid transparent;
-  border-bottom: 8px solid transparent;
-  border-left: 13px solid var(--white);
-  margin-left: 3px;
-}
-
-.video-play-toggle.is--playing .video-play-icon {
-  width: 4px;
-  height: 16px;
-  border: none;
-  margin-left: 0;
-  box-shadow: 8px 0 0 var(--white);
-  background-color: var(--white);
 }
 
 /* ─── about ─────────────────────────────────────────────────────────── */

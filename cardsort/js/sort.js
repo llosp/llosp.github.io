@@ -1,4 +1,6 @@
-// Sorting page: demographic gate -> card-sort board -> submit to Supabase.
+// Sorting page: card-sort board -> demographic form -> submit to Supabase.
+// Demographics is asked last so respondents start sorting immediately instead of
+// facing a form first — see the `phase` field on `state` below.
 (function () {
   // Cycled by list index (see css/style.css --earth-1..12) so each created list
   // gets a distinct color, and cards placed in it are tinted to match — makes it
@@ -21,12 +23,51 @@
     return a;
   }
 
-  const state = {
-    demographics: null,
-    pool: shuffle(CARDS.map(c => c.id)),
-    lists: [], // { id, name, cards: [] }
-  };
-  let nextListId = 1;
+  // Progress (demographics + pool + lists) is saved to localStorage on every change
+  // and restored on load, so refreshing or closing the tab doesn't lose a respondent's
+  // work. Keyed by CARD_SET so a future card-set swap doesn't restore stale card ids.
+  // Cleared on successful submit and on the "Recomeçar" button.
+  const STORAGE_KEY = `cardsort:${CARD_SET}`;
+
+  function loadProgress() {
+    try {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return null;
+      const data = JSON.parse(raw);
+      if (!data || !Array.isArray(data.pool) || !Array.isArray(data.lists)) return null;
+      return data;
+    } catch {
+      return null;
+    }
+  }
+
+  function saveProgress() {
+    try {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify({
+        phase: state.phase,
+        demographics: state.demographics,
+        pool: state.pool,
+        lists: state.lists,
+        nextListId,
+      }));
+    } catch {
+      // Storage unavailable (private mode, quota, etc.) — progress just won't persist.
+    }
+  }
+
+  function clearProgress() {
+    try { localStorage.removeItem(STORAGE_KEY); } catch {}
+  }
+
+  const saved = loadProgress();
+
+  // phase: 'sorting' (cards into lists) -> 'demographics' (asked only once the list
+  // is done) -> submit. Demographics comes last so respondents dive straight into
+  // sorting instead of facing a form first.
+  const state = saved
+    ? { phase: saved.phase || 'sorting', demographics: saved.demographics || null, pool: saved.pool, lists: saved.lists }
+    : { phase: 'sorting', demographics: null, pool: shuffle(CARDS.map(c => c.id)), lists: [] };
+  let nextListId = (saved && saved.nextListId) || 1;
 
   const CARDS_BY_ID = new Map(CARDS.map(c => [c.id, c]));
 
@@ -43,53 +84,66 @@
   }
 
   function render() {
-    if (!state.demographics) renderDemographicsForm();
+    if (state.phase === 'demographics') renderDemographicsForm();
     else renderBoard();
   }
 
+  function selectedAttr(current, value) {
+    return current === value ? ' selected' : '';
+  }
+
   function renderDemographicsForm() {
+    const d = state.demographics || {};
     appEl.innerHTML = `
       <section class="gate">
-        <h1>Ordenação de cartas</h1>
-        <p class="lead">Antes de começar, conte um pouco sobre você. Isso nos ajuda a entender os resultados agregados — seus dados não são associados publicamente ao seu nome.</p>
+        <h1>Quase lá</h1>
+        <p class="lead">Antes de enviar, conte um pouco sobre você. Isso nos ajuda a entender os resultados agregados — seus dados não são associados publicamente ao seu nome.</p>
         <form id="demo-form" class="demo-form" novalidate>
           <label class="field">
             <span>Nome <em>(opcional)</em></span>
-            <input type="text" name="name" autocomplete="off" />
+            <input type="text" name="name" autocomplete="off" value="${escapeHTML(d.name || '')}" />
           </label>
           <label class="field">
             <span>Faixa etária</span>
             <select name="ageRange" required>
-              <option value="" disabled selected>Selecione</option>
-              <option value="18-24">18–24</option>
-              <option value="25-34">25–34</option>
-              <option value="35-44">35–44</option>
-              <option value="45-54">45–54</option>
-              <option value="55+">55+</option>
+              <option value="" disabled${selectedAttr(d.ageRange, undefined)}>Selecione</option>
+              <option value="18-24"${selectedAttr(d.ageRange, '18-24')}>18–24</option>
+              <option value="25-34"${selectedAttr(d.ageRange, '25-34')}>25–34</option>
+              <option value="35-44"${selectedAttr(d.ageRange, '35-44')}>35–44</option>
+              <option value="45-54"${selectedAttr(d.ageRange, '45-54')}>45–54</option>
+              <option value="55+"${selectedAttr(d.ageRange, '55+')}>55+</option>
             </select>
           </label>
           <label class="field">
             <span>Gênero</span>
             <select name="gender" required>
-              <option value="" disabled selected>Selecione</option>
-              <option value="Masculino">Masculino</option>
-              <option value="Feminino">Feminino</option>
-              <option value="Outro">Outro</option>
-              <option value="Prefiro não dizer">Prefiro não dizer</option>
+              <option value="" disabled${selectedAttr(d.gender, undefined)}>Selecione</option>
+              <option value="Masculino"${selectedAttr(d.gender, 'Masculino')}>Masculino</option>
+              <option value="Feminino"${selectedAttr(d.gender, 'Feminino')}>Feminino</option>
+              <option value="Outro"${selectedAttr(d.gender, 'Outro')}>Outro</option>
+              <option value="Prefiro não dizer"${selectedAttr(d.gender, 'Prefiro não dizer')}>Prefiro não dizer</option>
             </select>
           </label>
           <label class="field">
             <span>Área / ocupação</span>
-            <input type="text" name="area" placeholder="ex: design, estudante, tecnologia..." required />
+            <input type="text" name="area" placeholder="ex: design, estudante, tecnologia..." required value="${escapeHTML(d.area || '')}" />
           </label>
-          <button type="submit" class="btn btn-primary">Começar</button>
+          <div class="demo-form-actions">
+            <button type="button" id="back-to-board-btn" class="btn btn-secondary">← Voltar para as cartas</button>
+            <button type="submit" class="btn btn-primary" id="demo-submit-btn">Enviar</button>
+          </div>
+          <span id="demo-submit-hint" class="hint"></span>
         </form>
       </section>
     `;
     document.getElementById('demo-form').addEventListener('submit', onDemoSubmit);
+    document.getElementById('back-to-board-btn').addEventListener('click', () => {
+      state.phase = 'sorting';
+      render();
+    });
   }
 
-  function onDemoSubmit(e) {
+  async function onDemoSubmit(e) {
     e.preventDefault();
     const data = new FormData(e.target);
     const ageRange = data.get('ageRange');
@@ -97,15 +151,46 @@
     const area = (data.get('area') || '').trim();
     if (!ageRange || !gender || !area) return;
     state.demographics = { name: (data.get('name') || '').trim(), ageRange, gender, area };
-    render();
+    saveProgress();
+
+    const btn = document.getElementById('demo-submit-btn');
+    const hint = document.getElementById('demo-submit-hint');
+    btn.disabled = true;
+    btn.textContent = 'Enviando...';
+
+    const payload = {
+      card_set: CARD_SET,
+      respondent_name: state.demographics.name || null,
+      age_range: state.demographics.ageRange,
+      gender: state.demographics.gender,
+      area: state.demographics.area,
+      lists: state.lists.map((l, i) => ({ name: l.name.trim(), priority: i + 1, cards: l.cards })),
+    };
+
+    const { error } = await sb.from('card_sort_submissions').insert(payload);
+
+    if (error) {
+      console.error(error);
+      hint.textContent = 'Erro ao enviar. Tente novamente.';
+      btn.disabled = false;
+      btn.textContent = 'Enviar';
+      return;
+    }
+
+    clearProgress();
+    renderThankYou();
   }
 
   function renderBoard() {
+    saveProgress();
     appEl.innerHTML = `
       <section class="board">
         <header class="board-header">
-          <h1>Ordene as cartas</h1>
-          <p class="lead">Arraste as cartas para dentro das listas. Crie quantas listas quiser e arraste o ícone ⠿ do cabeçalho para reordenar as listas por prioridade — a ordem importa.</p>
+          <div class="board-header-top">
+            <h1>Ordene as cartas</h1>
+            <button type="button" id="restart-btn" class="btn btn-secondary">Recomeçar</button>
+          </div>
+          <p class="lead">Arraste as cartas para dentro das listas. Crie quantas listas quiser e arraste o ícone ⠿ do cabeçalho para reordenar as listas por prioridade — a ordem importa. Seu progresso é salvo automaticamente neste dispositivo.</p>
         </header>
 
         <div class="board-columns">
@@ -124,8 +209,8 @@
             </form>
 
             <div class="submit-row">
-              <button type="button" id="submit-btn" class="btn btn-primary" disabled>Enviar</button>
-              <span id="submit-hint" class="hint"></span>
+              <button type="button" id="continue-btn" class="btn btn-primary" disabled>Continuar</button>
+              <span id="continue-hint" class="hint"></span>
             </div>
           </div>
         </div>
@@ -133,8 +218,27 @@
     `;
 
     document.getElementById('new-list-form').addEventListener('submit', onNewList);
-    document.getElementById('submit-btn').addEventListener('click', onSubmit);
+    document.getElementById('continue-btn').addEventListener('click', onContinueClick);
+    document.getElementById('restart-btn').addEventListener('click', onRestart);
     updateSubmitState();
+  }
+
+  function onContinueClick() {
+    state.phase = 'demographics';
+    saveProgress();
+    render();
+  }
+
+  function onRestart() {
+    const ok = window.confirm('Isso apaga seu progresso salvo neste dispositivo e começa do zero. Continuar?');
+    if (!ok) return;
+    clearProgress();
+    state.phase = 'sorting';
+    state.demographics = null;
+    state.pool = shuffle(CARDS.map(c => c.id));
+    state.lists = [];
+    nextListId = 1;
+    render();
   }
 
   function cardHTML(id) {
@@ -218,8 +322,8 @@
   }
 
   function updateSubmitState() {
-    const btn = document.getElementById('submit-btn');
-    const hint = document.getElementById('submit-hint');
+    const btn = document.getElementById('continue-btn');
+    const hint = document.getElementById('continue-hint');
     const counter = document.getElementById('pool-counter');
     if (counter) counter.textContent = state.pool.length ? `— faltam ${state.pool.length}` : '— completo';
     const ready = state.pool.length === 0 && state.lists.length > 0;
@@ -231,34 +335,6 @@
           ? 'Crie pelo menos uma lista.'
           : `Distribua todas as cartas (faltam ${state.pool.length}).`;
     }
-  }
-
-  async function onSubmit() {
-    const btn = document.getElementById('submit-btn');
-    const hint = document.getElementById('submit-hint');
-    btn.disabled = true;
-    btn.textContent = 'Enviando...';
-
-    const payload = {
-      card_set: CARD_SET,
-      respondent_name: state.demographics.name || null,
-      age_range: state.demographics.ageRange,
-      gender: state.demographics.gender,
-      area: state.demographics.area,
-      lists: state.lists.map((l, i) => ({ name: l.name.trim(), priority: i + 1, cards: l.cards })),
-    };
-
-    const { error } = await sb.from('card_sort_submissions').insert(payload);
-
-    if (error) {
-      console.error(error);
-      hint.textContent = 'Erro ao enviar. Tente novamente.';
-      btn.disabled = false;
-      btn.textContent = 'Enviar';
-      return;
-    }
-
-    renderThankYou();
   }
 
   function renderThankYou() {

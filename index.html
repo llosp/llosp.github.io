@@ -222,9 +222,6 @@
                     <video class="thumbnail wide" playsinline loop preload="metadata" aria-label="YURA promo video">
                       <source src="assets/yura/yura-vid.webm" type="video/webm">
                     </video>
-                    <button class="video-play-toggle" type="button" aria-label="Pause video">
-                      <span class="video-play-icon" aria-hidden="true"></span>
-                    </button>
                   </div>
                   <div class="project-title_wrapper">
                     <div class="project-image-tag">yura-vid.webm</div>
@@ -476,30 +473,6 @@
           video.pause();
           video.currentTime = 0;
         }
-      });
-    });
-
-    document.querySelectorAll('.video-play-toggle').forEach(function (toggle) {
-      var video = toggle.closest('.video-wrapper').querySelector('video');
-      if (!video) return;
-
-      toggle.addEventListener('click', function (event) {
-        event.stopPropagation();
-        if (video.paused) {
-          video.play();
-        } else {
-          video.pause();
-        }
-      });
-
-      video.addEventListener('play', function () {
-        toggle.classList.add('is--playing');
-        toggle.setAttribute('aria-label', 'Pause video');
-      });
-
-      video.addEventListener('pause', function () {
-        toggle.classList.remove('is--playing');
-        toggle.setAttribute('aria-label', 'Play video');
       });
     });
 

@@ -40,7 +40,7 @@ Produtividade social em grupo. Reunião semanal ("Skrill Time") é o evento cent
 - Ativado por `localStorage['skrill_demo'] === '1'` (`isDemoMode()`). Entrada pelo launcher secreto `/skrill/demo/`.
 - Quando ativo, `const sb = DemoDB.client()` — um mock do Supabase persistido em `localStorage['skrill_demo_db']`. **Nada toca o banco real.**
 - `DemoDB` implementa a superfície usada: `from().select/insert/update/upsert/delete`, filtros (`eq/neq/not/or/gte/lt`), `order/limit/single/maybeSingle`, joins embed (`profile:profiles(*)`, `week:weeks(*)`), `storage` (upload→dataURL) e `channel` (no-op).
-- `DemoDB.enter()/reset()/exit()` usados pelo launcher. Badge "MODO DEMO" injetado por `injectDemoBadge()`.
+- `DemoDB.enter()/reset()/exit()` usados pelo launcher.
 - Seed: 1 perfil (`demo-you`, admin) + 1 season com `end_date` = hoje (Skrill Day já alcançável). Solo: o fluxo do Skrill Time fecha com 1 participante.
 
 ## Banco de dados (tabelas-chave)

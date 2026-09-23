@@ -1362,20 +1362,3 @@ function fireConfetti() {
   requestAnimationFrame(frame);
 }
 
-// ── Badge do modo demo ───────────────────────────────────────────────────────
-// Faixa fixa "MODO DEMO", injetada em qualquer pagina quando a demo esta ativa.
-// Evita confundir o sandbox com o jogo real. Sair do modo demo fica em /demo/.
-function injectDemoBadge() {
-  if (document.getElementById('demo-badge')) return;
-  const b = document.createElement('div');
-  b.id = 'demo-badge';
-  b.style.cssText = 'position:fixed;top:56px;right:8px;z-index:10000;display:flex;align-items:center;gap:8px;'
-    + 'background:var(--amber,#FFB300);color:#000;font-family:\'Micro 5\',monospace;font-size:20px;'
-    + 'padding:4px 10px;border:2px solid #000;box-shadow:2px 2px 0 rgba(0,0,0,0.3);text-transform:uppercase';
-  b.innerHTML = '<span>Modo Demo</span>';
-  document.body.appendChild(b);
-}
-if (isDemoMode()) {
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', injectDemoBadge);
-  else injectDemoBadge();
-}

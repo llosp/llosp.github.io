@@ -491,8 +491,31 @@ img {
 
 /* video thumbnail: paused while collapsed, plays while expanded — no
    visible controls at all, native or custom */
+.video-wrapper {
+  position: relative;
+}
+
 .video-wrapper .thumbnail {
   display: block;
+}
+
+/* custom black play button, shown only while minimized */
+.video-wrapper::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 64px;
+  height: 64px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: #000 url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Cpath fill='white' d='M25 19v26l22-13z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+  pointer-events: none;
+  transition: opacity 0.2s ease;
+}
+
+.layout-grid_item--video.is--active .video-wrapper::after {
+  opacity: 0;
 }
 
 /* ─── about ─────────────────────────────────────────────────────────── */

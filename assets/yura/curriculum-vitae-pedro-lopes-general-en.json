@@ -1,0 +1,416 @@
+{
+  "picture": {
+    "hidden": true,
+    "fit": "cover",
+    "url": "https://rxresu.me/api/uploads/019bef8d-cb76-74ce-859a-d924374147c1/pictures/1783040295131.jpeg",
+    "size": 32,
+    "rotation": 0,
+    "aspectRatio": 1,
+    "borderRadius": 20,
+    "borderColor": "rgba(0, 0, 0, 0)",
+    "borderWidth": 10,
+    "shadowColor": "rgba(0, 0, 0, 0.5)",
+    "shadowWidth": 0
+  },
+  "basics": {
+    "name": "Pedro Lopes",
+    "headline": "Game Developer & Designer | Prototyping, Systems & Programming",
+    "email": "work@lope.design",
+    "phone": "+55 (21) 98726-2109",
+    "location": "Rio de Janeiro, Brazil",
+    "website": {
+      "url": "https://lope.design/portfolio",
+      "label": "Portfolio"
+    },
+    "customFields": []
+  },
+  "summary": {
+    "title": "Summary",
+    "icon": "",
+    "columns": 1,
+    "hidden": false,
+    "keepTogether": false,
+    "startOnNewPage": false,
+    "content": "<p style=\"text-align: left;\">Game developer and designer with hands-on experience prototyping in Unity and Godot, programming gameplay systems, and shipping playable projects with multidisciplinary teams. Comfortable across programming, design, art and UI, with added background in economy and progression tuning.</p>"
+  },
+  "sections": {
+    "profiles": {
+      "title": "",
+      "icon": "",
+      "columns": 4,
+      "hidden": false,
+      "keepTogether": false,
+      "startOnNewPage": false,
+      "items": []
+    },
+    "experience": {
+      "title": "Experience",
+      "icon": "",
+      "columns": 1,
+      "hidden": false,
+      "keepTogether": false,
+      "startOnNewPage": false,
+      "items": [
+        {
+          "id": "qo8s8s9ieivqrjfsrf8ub93b",
+          "hidden": false,
+          "company": "Prisma Game Lab",
+          "position": "",
+          "location": "PUC-Rio, Brazil",
+          "period": "",
+          "website": {
+            "url": "",
+            "label": "",
+            "inlineLink": false
+          },
+          "description": "<p></p><hr><ul><li><p>Game development lab at PUC-Rio building original games with multidisciplinary teams.</p></li></ul><p></p>",
+          "roles": [
+            {
+              "id": "019f2550-19a6-722f-bc67-9bf1a02443d9",
+              "position": "Project Director",
+              "period": "February 2025 - February 2026",
+              "description": "<ul><li><p>Led multidisciplinary teams (design, programming, art) across game projects.</p></li><li><p>Managed scope, scheduling and production tracking to meet deadlines.</p></li><li><p>Communicated design and technical trade-offs to stakeholders.</p></li></ul><p></p>"
+            },
+            {
+              "id": "019f254f-d256-7149-8430-8ad35cf7ac6d",
+              "position": "Game Designer",
+              "period": "April 2024 - February 2026",
+              "description": "<ul><li><p>Programmed and prototyped <strong>gameplay systems and mechanics</strong> in Unity (C#).</p></li><li><p>Modelled and tuned progression, economy and difficulty systems.</p></li><li><p>Iterated designs from playtest feedback and documented system behaviour.</p></li></ul><p></p>"
+            }
+          ]
+        },
+        {
+          "id": "019f252c-c635-74e3-8945-378b9fd27c11",
+          "hidden": false,
+          "company": "Instituto ECOA, PUC-Rio (Programa Ignicao Petrobras 2026)",
+          "position": "Design Intern",
+          "location": "Rio de Janeiro, Brazil",
+          "period": "February 2026 - Present",
+          "website": {
+            "url": "",
+            "label": "",
+            "inlineLink": false
+          },
+          "description": "<ul><li><p>Build digital products end-to-end with multidisciplinary teams, from concept to implementation.</p></li><li><p>Work on interface design, web systems and prototyping.</p></li><li><p>Translate requirements into specs for engineering.</p></li></ul><p></p>",
+          "roles": []
+        }
+      ]
+    },
+    "education": {
+      "title": "Education",
+      "icon": "",
+      "columns": 1,
+      "hidden": false,
+      "keepTogether": false,
+      "startOnNewPage": false,
+      "items": [
+        {
+          "id": "zmnwhmmkzlp3nm1e75e39yqs",
+          "hidden": false,
+          "school": "Pontifical Catholic University of Rio de Janeiro (PUC-Rio)",
+          "degree": "BA",
+          "area": "Design",
+          "grade": "",
+          "location": "Rio de Janeiro, Brazil",
+          "period": "March 2024 - Present",
+          "website": {
+            "url": "",
+            "label": "",
+            "inlineLink": false
+          },
+          "description": ""
+        }
+      ]
+    },
+    "projects": {
+      "title": "Projects",
+      "icon": "",
+      "columns": 1,
+      "hidden": false,
+      "keepTogether": false,
+      "startOnNewPage": false,
+      "items": []
+    },
+    "skills": {
+      "title": "Skills",
+      "icon": "",
+      "columns": 1,
+      "hidden": false,
+      "keepTogether": false,
+      "startOnNewPage": false,
+      "items": [
+        {
+          "id": "wlyz3jrht9hcqh8etsgtwarj",
+          "hidden": false,
+          "icon": "code",
+          "iconColor": "",
+          "name": "Programming & Prototyping",
+          "proficiency": "",
+          "level": 0,
+          "keywords": [
+            "Unity (C#)",
+            "Godot",
+            "Programming logic",
+            "Gameplay systems implementation",
+            "JavaScript / HTML5 / CSS"
+          ]
+        },
+        {
+          "id": "019f2585-5fe3-767f-b35c-8f7968075453",
+          "hidden": false,
+          "icon": "game-controller",
+          "iconColor": "",
+          "name": "Game Design",
+          "proficiency": "",
+          "level": 0,
+          "keywords": [
+            "Systems and mechanics design",
+            "Progression and economy design",
+            "Playtest-driven iteration",
+            "Difficulty and pacing tuning"
+          ]
+        },
+        {
+          "id": "019f2588-432d-753e-ae57-a2c054387444",
+          "hidden": false,
+          "icon": "paint-brush-broad",
+          "iconColor": "",
+          "name": "Art & UI",
+          "proficiency": "",
+          "level": 0,
+          "keywords": [
+            "2D/3D art (Blender)",
+            "UI/UX design",
+            "Figma, Photoshop, Illustrator"
+          ]
+        },
+        {
+          "id": "019f252e-2886-77fb-b074-ee42ba152566",
+          "hidden": false,
+          "icon": "placeholder",
+          "iconColor": "",
+          "name": "Production",
+          "proficiency": "",
+          "level": 0,
+          "keywords": [
+            "Spreadsheet modelling",
+            "Team leadership and scheduling",
+            "Design documentation"
+          ]
+        }
+      ],
+      "keywordLayout": "inline",
+      "layout": "default"
+    },
+    "languages": {
+      "title": "Languages",
+      "icon": "",
+      "columns": 3,
+      "hidden": false,
+      "keepTogether": false,
+      "startOnNewPage": false,
+      "items": [
+        {
+          "id": "frahp7yfoplppi03pk2in44d",
+          "hidden": false,
+          "language": "English",
+          "fluency": "Fluent (written and spoken)",
+          "level": 0
+        },
+        {
+          "id": "uq6ac51mk26qivcvy0zcen1i",
+          "hidden": false,
+          "language": "Portuguese",
+          "fluency": "Native",
+          "level": 0
+        },
+        {
+          "id": "ffh78cbyol7qoxb8vuw2hq1g",
+          "hidden": false,
+          "language": "Japanese",
+          "fluency": "Basic",
+          "level": 0
+        }
+      ]
+    },
+    "interests": {
+      "title": "Interests",
+      "icon": "",
+      "columns": 1,
+      "hidden": false,
+      "keepTogether": false,
+      "startOnNewPage": false,
+      "items": []
+    },
+    "awards": {
+      "title": "Awards",
+      "icon": "",
+      "columns": 1,
+      "hidden": false,
+      "keepTogether": false,
+      "startOnNewPage": false,
+      "items": []
+    },
+    "certifications": {
+      "title": "Certifications",
+      "icon": "",
+      "columns": 2,
+      "hidden": true,
+      "keepTogether": false,
+      "startOnNewPage": false,
+      "items": [
+        {
+          "id": "wuasgxvbrv7i83mdh6qkvdlz",
+          "hidden": false,
+          "title": "UX Design Program",
+          "issuer": "Alura",
+          "date": "January 2023",
+          "website": {
+            "url": "https://cursos.alura.com.br/degree/certificate/36403a0e-5dae-4a97-a9b8-05804e13704e",
+            "label": "Certificate",
+            "inlineLink": false
+          },
+          "description": ""
+        },
+        {
+          "id": "w5np22c6l3p7vouzzaum7csb",
+          "hidden": false,
+          "title": "Graphic Design Program",
+          "issuer": "Alura",
+          "date": "March 2022",
+          "website": {
+            "url": "https://cursos.alura.com.br/degree/certificate/caf2dde2-a373-4ca0-9c86-88506d53c8f9",
+            "label": "Certificate",
+            "inlineLink": false
+          },
+          "description": ""
+        },
+        {
+          "id": "vgwtsdppnzuwfqwrhhmw25j4",
+          "hidden": false,
+          "title": "InDesign Program",
+          "issuer": "Alura",
+          "date": "January 2023",
+          "website": {
+            "url": "https://cursos.alura.com.br/degree/certificate/29ea9fa4-3ff0-4374-a199-768194ec1104",
+            "label": "Certificate",
+            "inlineLink": false
+          },
+          "description": ""
+        },
+        {
+          "id": "rtr0hhs7idpwonqy2lwpi7nb",
+          "hidden": false,
+          "title": "Motion Design Program",
+          "issuer": "Alura",
+          "date": "January 2023",
+          "website": {
+            "url": "https://cursos.alura.com.br/degree/certificate/1bdb9ae5-ee34-43f5-8096-ee19557326f7",
+            "label": "Certificate",
+            "inlineLink": false
+          },
+          "description": ""
+        }
+      ]
+    },
+    "publications": {
+      "title": "Publications",
+      "icon": "",
+      "columns": 1,
+      "hidden": false,
+      "keepTogether": false,
+      "startOnNewPage": false,
+      "items": []
+    },
+    "volunteer": {
+      "title": "Volunteering",
+      "icon": "",
+      "columns": 1,
+      "hidden": false,
+      "keepTogether": false,
+      "startOnNewPage": false,
+      "items": []
+    },
+    "references": {
+      "title": "References",
+      "icon": "",
+      "columns": 1,
+      "hidden": false,
+      "keepTogether": false,
+      "startOnNewPage": false,
+      "items": []
+    }
+  },
+  "customSections": [],
+  "metadata": {
+    "template": "rhyhorn",
+    "layout": {
+      "sidebarWidth": 31.6,
+      "pages": [
+        {
+          "fullWidth": false,
+          "main": [
+            "summary",
+            "profiles",
+            "experience",
+            "projects",
+            "volunteer",
+            "references",
+            "interests",
+            "awards",
+            "publications",
+            "certifications"
+          ],
+          "sidebar": [
+            "skills",
+            "education",
+            "languages"
+          ]
+        }
+      ]
+    },
+    "page": {
+      "gapX": 4,
+      "gapY": 6,
+      "marginX": 18,
+      "marginY": 18,
+      "format": "a4",
+      "locale": "en-US",
+      "hideLinkUnderline": false,
+      "hideIcons": false,
+      "hideSectionIcons": true
+    },
+    "design": {
+      "level": {
+        "icon": "star",
+        "type": "circle"
+      },
+      "colors": {
+        "primary": "rgba(225, 113, 0, 1)",
+        "text": "rgba(0, 0, 0, 1)",
+        "background": "rgba(255, 255, 255, 1)"
+      }
+    },
+    "typography": {
+      "body": {
+        "fontFamily": "Open Sans",
+        "fontWeights": [
+          "400",
+          "600"
+        ],
+        "fontSize": 10,
+        "lineHeight": 1
+      },
+      "heading": {
+        "fontFamily": "Open Sans",
+        "fontWeights": [
+          "600"
+        ],
+        "fontSize": 12,
+        "lineHeight": 1.5
+      }
+    },
+    "notes": "",
+    "styleRules": []
+  }
+}

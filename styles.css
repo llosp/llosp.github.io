@@ -283,17 +283,31 @@ img {
   padding: 0 var(--gutter);
   display: flex;
   flex-direction: column;
-  gap: 20vh;
 }
 
 .file-panel {
+  margin-top: 20vh;
   padding-top: 30px;
   border-top: 1px solid var(--placeholder);
+  transition: margin-top 0.35s ease, padding-top 0.35s ease, border-color 0.35s ease;
 }
 
 .file-panel:first-child {
+  margin-top: 0;
   padding-top: 0;
   border-top: 0;
+}
+
+.file-panel.is--collapsed {
+  margin-top: 0;
+  padding-top: 0;
+  border-top-color: transparent;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .file-panel {
+    transition: none;
+  }
 }
 
 .file-panel_index {
@@ -370,6 +384,8 @@ img {
   background: transparent;
   color: inherit;
   font-family: var(--font-mono);
+  cursor: pointer;
+  user-select: none;
   transition: background 0.25s ease, color 0.25s ease;
 }
 
@@ -389,31 +405,59 @@ img {
   margin-left: auto;
 }
 
+.file-panel_toggle {
+  font-size: 12px;
+  color: var(--grey);
+}
+
+.file-panel_header:hover .file-panel_toggle {
+  color: var(--white);
+}
+
+.file-panel_body {
+  display: grid;
+  grid-template-rows: 1fr;
+  transition: grid-template-rows 0.35s ease;
+}
+
+.file-panel.is--collapsed .file-panel_body {
+  grid-template-rows: 0fr;
+}
+
+.file-panel_body-inner {
+  overflow: hidden;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .file-panel_body {
+    transition: none;
+  }
+}
+
 .file-panel_desc {
   padding: 15px var(--gutter) 0;
 }
 
 .file-panel_meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 4px 24px;
-  padding: 15px var(--gutter) 0;
-  margin: 0;
+  display: grid;
+  grid-template-columns: repeat(var(--columns), 1fr);
+  column-gap: 0;
+  row-gap: 15px;
+  margin: 0 calc(-1 * var(--gutter));
+  padding: 15px 5px 0;
   font-family: var(--font-mono);
   font-size: 12px;
 }
 
 .file-panel_row {
   display: flex;
-  gap: 6px;
+  flex-direction: column;
+  gap: 4px;
+  padding-right: 12px;
 }
 
 .file-panel_row dt {
   color: var(--grey);
-}
-
-.file-panel_row dt::after {
-  content: ":";
 }
 
 .file-panel_row dd {
@@ -435,18 +479,24 @@ img {
   padding: 20px 5px 0;
 }
 
+/* positioned by the masonry script (index.html) rather than flex/grid, so
+   each column fills independently instead of a row's height being pinned
+   to its tallest item. row-gap/column-gap stay declared here purely as
+   values for the script to read via getComputedStyle. */
 .layout-grid_list {
   position: relative;
-  display: flex;
-  flex-wrap: wrap;
   row-gap: 2em;
   column-gap: var(--column-gap);
 }
 
 .layout-grid_item {
-  position: relative;
+  position: absolute;
+  top: 0;
+  left: 0;
   width: calc((100% - (var(--columns) - 1) * var(--column-gap)) / var(--columns));
-  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1);
+  transition: width 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    top 0.6s cubic-bezier(0.22, 1, 0.36, 1),
+    left 0.6s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 .layout-grid_item.is--active {
@@ -477,6 +527,7 @@ img {
 .thumbnail.landscape { aspect-ratio: 4 / 3; object-fit: cover; }
 .thumbnail.portrait { aspect-ratio: 4 / 5; object-fit: cover; }
 .thumbnail.square { aspect-ratio: 1; object-fit: cover; }
+.thumbnail.natural { aspect-ratio: auto; object-fit: contain; }
 
 .project-title_wrapper {
   padding-top: 2px;
@@ -606,7 +657,18 @@ img {
 
   .work-list {
     margin-top: 20px;
-    gap: 10vh;
+  }
+
+  .file-panel {
+    margin-top: 10vh;
+  }
+
+  .file-panel:first-child {
+    margin-top: 0;
+  }
+
+  .file-panel.is--collapsed {
+    margin-top: 0;
   }
 }
 

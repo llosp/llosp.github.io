@@ -304,6 +304,12 @@ img {
   border-top-color: transparent;
 }
 
+/* a panel right after a collapsed one shouldn't jump away when it opens —
+   only stay far from panels that are themselves open */
+.file-panel.is--collapsed + .file-panel {
+  margin-top: 0;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .file-panel {
     transition: none;
@@ -444,7 +450,7 @@ img {
   column-gap: 0;
   row-gap: 15px;
   margin: 0 calc(-1 * var(--gutter));
-  padding: 15px 5px 0;
+  padding: 15px var(--gutter) 0;
   font-family: var(--font-mono);
   font-size: 12px;
 }
@@ -609,6 +615,24 @@ img {
   text-decoration: none;
 }
 
+.toolbox-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.toolbox-cat {
+  display: flex;
+  gap: 16px;
+}
+
+.toolbox-cat_label {
+  flex: 0 0 140px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--grey);
+}
+
 /* ─── footer ────────────────────────────────────────────────────────── */
 
 .footer {
@@ -685,6 +709,13 @@ img {
   .layout-grid_list { row-gap: 1em; }
 
   .about { margin-top: 15vh; }
+
+  .toolbox-cat {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .toolbox-cat_label { flex: none; }
 
   .footer { margin-top: 25vh; }
   .credits-container { grid-column: span 9; }

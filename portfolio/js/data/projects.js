@@ -18,7 +18,7 @@ export const projects = [
     },
     summary: {
       en: "You're an accountant hired by letter to collect on a town full of outlaws, one bullet per debt. The whole game is one button: wait for the count to hit zero, then draw. Nobody shoots faster than you, so every outlaw cheats the count instead, each one in the way their character would. Made in 72 hours for GMTK Jam 2026; placed 21st of 10,587.",
-      pt: "Você é um contador contratado por carta para cobrar uma cidade cheia de foras da lei, uma bala por dívida. O jogo inteiro é um botão: espere a contagem chegar a zero e saque. Ninguém saca mais rápido que você, então cada fora da lei falsifica a contagem, cada um do jeito que o personagem dele falsificaria. Feito em 72 horas para a GMTK Jam 2026; ficou em 21º de 10.587."
+      pt: "Você é contador, contratado por carta para cobrar uma cidade de foras da lei, uma bala por dívida. O jogo é um botão só: espere a contagem zerar e saque. Como ninguém saca mais rápido que você, cada fora da lei trapaceia a contagem do próprio jeito. Feito em 72 horas para a GMTK Jam 2026; ficou em 21º de 10.587."
     },
     caseStudy: {
       heroImage: {
@@ -47,11 +47,11 @@ export const projects = [
       },
       overview: {
         en: "A letter hires you to collect on a town full of outlaws: \"Balance the ledger.\" Five names, one duel, one button. The ledger you are balancing is a countdown, and the last debtor turns out to have written the letter. Made in 72 hours for GMTK Jam 2026, where it finished 21st with 218 ratings.",
-        pt: "Uma carta te contrata para cobrar uma cidade cheia de foras da lei: \"Equilibre o livro-caixa.\" Cinco nomes, um duelo, um botão. O livro que você equilibra é uma contagem regressiva, e o último devedor acaba sendo quem escreveu a carta. Feito em 72 horas para a GMTK Jam 2026, onde ficou em 21º com 218 avaliações."
+        pt: "Uma carta te contrata para cobrar uma cidade de foras da lei: \"Acerte as contas.\" Cinco nomes, um duelo, um botão. As contas que você acerta são uma contagem regressiva, e o último devedor é quem escreveu a carta. Feito em 72 horas para a GMTK Jam 2026, onde ficou em 21º com 218 avaliações."
       },
       role: {
         en: "A three-person team at Wolfish Studios. I did the game design, all of the programming and the audio; Frovio and Zumate made the art. The rule I designed against: a boss's mechanic has to be a joke about who they are.",
-        pt: "Um time de três pessoas na Wolfish Studios. Fiz o game design, toda a programação e o áudio; Frovio e Zumate fizeram a arte. A regra contra a qual projetei: a mecânica de um chefe tem que ser uma piada sobre quem ele é."
+        pt: "Time de três pessoas na Wolfish Studios. Fiz o game design, a programação e o áudio; Frovio e Zumate fizeram a arte. Regra do projeto: a mecânica de cada chefe precisa ser uma piada sobre quem ele é."
       },
       responsibilities: [
         {
@@ -83,7 +83,7 @@ export const projects = [
       ],
       challenge: {
         en: "One input, one verb: shoot. 72 hours, five boss fights that all have to feel different. Adding verbs would not have shipped in time, so I attacked what the player knows instead of what the player does. A duel on a countdown is a reading problem. Every boss stopped being a difficulty tier and became a specific kind of liar.",
-        pt: "Um input, um verbo: atirar. 72 horas, cinco lutas de chefe que precisam parecer diferentes. Adicionar verbos não ficaria pronto a tempo, então ataquei o que o jogador sabe em vez do que o jogador faz. Um duelo em cima de uma contagem é um problema de leitura. Cada chefe deixou de ser um nível de dificuldade e virou um tipo específico de mentiroso."
+        pt: "Um input, um verbo: atirar. 72 horas, cinco chefes que precisam parecer diferentes entre si. Não daria tempo de adicionar verbos, então ataquei o que o jogador sabe, não o que ele faz. Um duelo em cima de uma contagem é um problema de leitura, e cada chefe virou um tipo diferente de mentiroso em vez de um nível de dificuldade."
       },
       coreLoop: {
         steps: [
@@ -91,7 +91,7 @@ export const projects = [
           { en: "Hold your nerve", pt: "Segurar o nervo" },
           { en: "Draw on zero", pt: "Sacar no zero" },
           { en: "Hit, or lose a heart", pt: "Acertar, ou perder um coração" },
-          { en: "The outlaw cooks the books", pt: "O fora da lei frauda o livro-caixa" }
+          { en: "The outlaw cooks the books", pt: "O fora da lei frauda as contas" }
         ],
         note: {
           en: "Three hearts each, five for the final boss. A clean draw takes one of theirs; firing too early or too slow takes one of yours. The base tempo is one tick per second with a 0.7s draw window, and every boss overrides both.",
@@ -103,20 +103,20 @@ export const projects = [
           title: { en: "One duel, five liars", pt: "Um duelo, cinco mentirosos" },
           body: {
             en: "A six-state machine runs every fight and never learns which outlaw is standing across from you. Each one is a subclass overriding thirteen hooks: round length, draw window, what happens each tick, what they say when you jump the gun. Bosses override, never fork.",
-            pt: "Uma máquina de seis estados roda todas as lutas e nunca sabe qual fora da lei está do outro lado. Cada um é uma subclasse que sobrescreve treze hooks: duração do round, janela de saque, o que acontece a cada tick, o que ele fala quando você saca cedo. Chefes sobrescrevem, nunca bifurcam."
+            pt: "Uma máquina de seis estados roda todas as lutas sem saber qual fora da lei está na sua frente. Cada um é uma subclasse que sobrescreve treze hooks: duração do round, janela de saque, o que acontece a cada tick, a fala quando você saca cedo. Chefes sobrescrevem, nunca bifurcam."
           },
           visual: {
             kind: "image",
             src: "./assets/img/projects/count-me-dead-gameplay-4.webp",
-            alt: { en: "The town map, where each location is a name on the ledger and unlocks the next outlaw", pt: "O mapa da cidade, onde cada local é um nome no livro-caixa e libera o próximo fora da lei" },
-            caption: { en: "Five locations, five names on the ledger. Every one of them runs the same duel.", pt: "Cinco locais, cinco nomes no livro-caixa. Todos eles rodam o mesmo duelo." }
+            alt: { en: "The town map, where each location is a name on the ledger and unlocks the next outlaw", pt: "O mapa da cidade, onde cada local é um nome na lista de dívidas e libera o próximo fora da lei" },
+            caption: { en: "Five locations, five names on the ledger. Every one of them runs the same duel.", pt: "Cinco locais, cinco nomes na lista de dívidas. Todos rodam o mesmo duelo." }
           }
         },
         {
           title: { en: "Hoarse Ryder talks over the count", pt: "Hoarse Ryder fala por cima da contagem" },
           body: {
             en: "He never touches the timer. His bit is needing three lines to walk back a threat, so the fight escalates by talking more. Two hearts in, scripted lines become a flood drawn from a shuffled bag of seven triads, two bubbles a second. The number is right there. You stop reading it.",
-            pt: "Ele nunca toca no timer. A piada dele é precisar de três falas para desdizer uma ameaça, então a luta aumenta a pressão falando mais. Depois de dois corações, as falas roteirizadas viram uma enxurrada sorteada de um conjunto de sete tríades, dois balões por segundo. O número está bem ali. Você para de ler."
+            pt: "Ele nunca toca no timer. A piada dele é precisar de três falas para desdizer uma ameaça, então a luta escala na base da tagarelice. Depois de dois corações, as falas roteirizadas viram uma enxurrada sorteada de sete tríades, dois balões por segundo. O número continua ali. Você só para de ler."
           },
           visual: {
             kind: "image",
@@ -129,7 +129,7 @@ export const projects = [
           title: { en: "Danny D. Vile makes you forget", pt: "Danny D. Vile te faz esquecer" },
           body: {
             en: "His running gag is that he remembers nothing, so his mechanic erases the count. He lights a fuse and blows seconds off the clock on a cooldown that tightens from 8s to 2s. By his last heart he detonates the timer entirely and you finish the round counting in your head.",
-            pt: "A piada recorrente dele é não lembrar de nada, então a mecânica dele apaga a contagem. Ele acende um pavio e explode segundos do relógio num cooldown que aperta de 8s para 2s. No último coração ele detona o timer inteiro e você termina o round contando de cabeça."
+            pt: "A piada dele é não lembrar de nada, e a mecânica apaga a contagem. Ele acende um pavio e explode segundos do relógio, num cooldown que aperta de 8s para 2s. No último coração ele detona o timer inteiro e você termina o round contando de cabeça."
           },
           visual: {
             kind: "image",
@@ -142,7 +142,7 @@ export const projects = [
           title: { en: "Tunga Tatu sells you time at interest", pt: "Tunga Tatu te vende tempo a juros" },
           body: {
             en: "The loan shark does not steal seconds, he trades them: a green buy adds 3 to 5 seconds, an orange sell slashes the count to zero. Both spawn as floating market numbers. Phase 2 mirrors the display horizontally. Phase 3 stops printing the figures, so you see him trading but not how much.",
-            pt: "O agiota não rouba segundos, ele negocia: uma compra verde soma 3 a 5 segundos, uma venda laranja corta a contagem a zero. As duas saem como números flutuantes de mercado. A fase 2 espelha o display na horizontal. A fase 3 para de imprimir os valores, então você vê ele negociando mas não quanto."
+            pt: "O agiota não rouba segundos, ele negocia: uma compra verde soma de 3 a 5 segundos, uma venda laranja zera a contagem. As duas aparecem como números flutuantes de mercado. Na fase 2 o display espelha na horizontal; na fase 3 os valores somem, e você vê ele negociando sem saber quanto."
           },
           visual: {
             kind: "stat",
@@ -157,7 +157,7 @@ export const projects = [
           title: { en: "Conny Calzone turns the clock into homework", pt: "Conny Calzone transforma o relógio em dever de casa" },
           body: {
             en: "\"You know what's scarier than guns? MATH!\" She splits the counter with an operator and you draw when the sum hits zero. Phase 3 rotates the plus into a multiplication, which is pure bluff: she says she does not know what the symbol means. The left number is noise.",
-            pt: "\"Sabe o que é mais assustador que armas? MATEMÁTICA!\" Ela parte o contador com um operador e você saca quando a soma chega a zero. A fase 3 gira o mais e vira multiplicação, o que é puro blefe: ela mesma diz que não sabe o que o símbolo significa. O número da esquerda é ruído."
+            pt: "\"Sabe o que é mais assustador que arma? MATEMÁTICA!\" Ela quebra o contador com um operador, e você saca quando a soma bate zero. Na fase 3 o mais vira multiplicação, puro blefe: ela mesma admite não saber o que o símbolo significa. O número da esquerda é ruído."
           },
           visual: {
             kind: "diagram",
@@ -175,7 +175,7 @@ export const projects = [
           title: { en: "El To Angus owns the rules", pt: "El To Angus é dono das regras" },
           body: {
             en: "He wrote the letter that started the game, and he wrote your ledger. \"I run this town, so I make the rules. For instance, I have 5 lives.\" Five near-identical timers, shuffled, one real. Mid-round the real face slides and the number that ends the count moves from 0 to 7.",
-            pt: "Ele escreveu a carta que começou o jogo, e escreveu o seu livro-caixa. \"Eu mando nesta cidade, então eu faço as regras. Por exemplo, eu tenho 5 vidas.\" Cinco timers quase idênticos, embaralhados, um real. No meio do round a face real desliza e o número que encerra a contagem vai de 0 para 7."
+            pt: "Ele escreveu a carta que começou o jogo, e escreveu suas próprias contas. \"Eu mando nesta cidade, então eu faço as regras. Por exemplo, eu tenho 5 vidas.\" Cinco timers quase idênticos, embaralhados, um real. No meio do round a face real troca de lugar e o número que zera a contagem passa de 0 para 7."
           },
           visual: {
             kind: "diagram",
@@ -226,12 +226,12 @@ export const projects = [
             value: { en: "1 pressure float", pt: "1 float de pressão" },
             body: { en: "A hidden value in [0, 1] rises 0.25 per fast clean draw and falls 0.30 per heart lost, then drives her draw window, feint rate and shift unlock.", pt: "Um valor escondido em [0, 1] sobe 0,25 por saque rápido e limpo e cai 0,30 por coração perdido, e comanda a janela de saque, a taxa de fintas e a liberação do shift dela." }
           },
-          note: { en: "The fight converges on the player's actual skill and the UI never admits it.", pt: "A luta converge para habilidade real do jogador e a UI nunca admite isso." }
+          note: { en: "The fight converges on the player's actual skill and the UI never admits it.", pt: "A luta converge para a habilidade real do jogador, e a UI nunca admite isso." }
         }
       ],
       progression: {
         en: "The town is ordered by what each debtor takes from you. Ryder takes your attention and never touches the number. Danny takes the seconds themselves. Tunga takes your ability to read them. Conny takes the arithmetic. Angus takes the rules, and then the numbers. Every fight also runs its phases off the boss's remaining hearts, so the gimmick escalates inside the fight too.",
-        pt: "A cidade é ordenada pelo que cada devedor tira de você. Ryder tira sua atenção e nunca toca no número. Danny tira os segundos em si. Tunga tira sua capacidade de lê-los. Conny tira a aritmética. Angus tira as regras, e depois os números. Toda luta também roda suas fases a partir dos corações restantes do chefe, então o truque também cresce dentro da luta."
+        pt: "A cidade segue o que cada devedor tira de você. Ryder tira sua atenção sem tocar no número. Danny tira os segundos. Tunga tira sua capacidade de lê-los. Conny tira a aritmética. Angus tira as regras, e depois os próprios números. Cada luta também muda de fase pelos corações restantes do chefe, então o truque cresce dentro da própria luta."
       },
       combat: {
         visual: {
@@ -246,7 +246,7 @@ export const projects = [
         },
         body: {
           en: "The whole combat model is one window, so a boss's personality has to be expressed as a change to it: how wide it is, when it opens, or whether you can read the count leading into it. Nothing else about the duel is allowed to move.",
-          pt: "O modelo de combate inteiro é uma janela, então a personalidade de um chefe precisa ser expressa como uma mudança nela: a largura, quando ela abre, ou se dá para ler a contagem que leva até ela. Nada mais no duelo pode se mexer."
+          pt: "Todo o combate se resume a uma janela, então a personalidade de cada chefe é uma mudança nela: a largura, quando ela abre, ou se dá para ler a contagem até lá. Nada mais no duelo pode mudar."
         }
       },
       balancing: {
@@ -256,7 +256,7 @@ export const projects = [
         },
         body: {
           en: "Boss tuning lives entirely in exported arrays, one entry per phase, so every fight was tuned in the inspector between playtests rather than in code. Conny's countdown isn't authored at all, it's solved from the two counters, so the round lasts exactly as long as the equation takes to reach zero. The adaptive layer sits on top: a pressure value in [0, 1] that rises 0.25 per fast, clean draw and falls 0.30 per heart lost, then drives the draw window, the feint rate and the shift unlock. One float in place of a difficulty menu.",
-          pt: "O tuning dos chefes vive inteiramente em arrays exportados, uma entrada por fase, então cada luta foi ajustada no inspector entre playtests, não no código. A contagem da Conny nem é autoral, ela é resolvida a partir dos dois contadores, então o round dura exatamente o tempo que a equação leva para chegar a zero. A camada adaptativa fica por cima: um valor de pressão em [0, 1] que sobe 0,25 por saque rápido e limpo e cai 0,30 por coração perdido, e então comanda a janela de saque, a taxa de fintas e a liberação do shift. Um float no lugar de um menu de dificuldade."
+          pt: "O tuning dos chefes vive em arrays exportados, uma entrada por fase, ajustada no inspector entre playtests, nunca no código. A contagem da Conny nem é escrita à mão: sai dos dois contadores, então o round dura o tempo exato que a equação leva para zerar. Por cima disso, uma camada adaptativa: um valor de pressão em [0, 1] que sobe 0,25 por saque rápido e limpo e cai 0,30 por coração perdido, comandando a janela de saque, a taxa de fintas e a liberação do shift. Um float no lugar de um menu de dificuldade."
         },
         tables: [
           {
@@ -328,11 +328,11 @@ export const projects = [
       ],
       implementation: {
         en: "Godot 4 and GDScript, no external tooling. Both the fights and the writing are authored as data: Angus's whole event track, which timer is real, when the rack shuffles, which number ends the count, is inspector data rather than code, and the town's dialogue is script files with speaker, portrait and expression tags. In 72 hours that meant rewriting a boss's difficulty was a field edit between playtests, not a code change.",
-        pt: "Godot 4 e GDScript, sem ferramental externo. Tanto as lutas quanto o texto são feitos como dado: a trilha de eventos inteira do Angus, qual timer é real, quando a estante embaralha, qual número encerra a contagem, é dado do inspector, não código, e o diálogo da cidade são arquivos de script com tags de falante, retrato e expressão. Em 72 horas isso significou que reescrever a dificuldade de um chefe era editar um campo entre playtests, não mexer no código."
+        pt: "Godot 4 e GDScript, sem ferramental externo. Lutas e texto são dados: a trilha de eventos do Angus, qual timer é real, quando a estante embaralha, qual número encerra a contagem, tudo vem do inspector, não do código; o diálogo da cidade é arquivo de script com tags de falante, retrato e expressão. Em 72 horas isso significou reajustar a dificuldade de um chefe editando um campo entre playtests, sem tocar no código."
       },
       learnings: {
         en: "Mechanics and characters were never designed separately. Once the premise was debt collection, \"what does this boss do to the timer\" and \"who is this boss\" became the same question. Players remember the ending, where the timer drops digits for the alphabet and one letter quietly becomes a real zero. It lands because it is the one time the player falsifies the count instead of the outlaw.",
-        pt: "Mecânica e personagem nunca foram projetadas separadamente. Quando a premissa virou cobrança de dívida, \"o que esse chefe faz com o timer\" e \"quem é esse chefe\" viraram a mesma pergunta. Os jogadores lembram do final, em que o timer troca os dígitos pelo alfabeto e uma letra vira um zero de verdade. Funciona porque é a única vez em que quem falsifica a contagem é o jogador, não o fora da lei."
+        pt: "Mecânica e personagem nunca foram projetados separadamente: com a premissa de cobrança de dívida, \"o que esse chefe faz com o timer\" e \"quem é esse chefe\" viraram a mesma pergunta. O final é o que os jogadores lembram: o timer troca dígitos pelo alfabeto até uma letra virar um zero de verdade. Funciona porque, dessa vez, quem falsifica a contagem é o jogador, não o fora da lei."
       },
       links: [
         { label: { en: "Play on itch.io", pt: "Jogar na itch.io" }, url: "https://lopen.itch.io/count-me-dead", kind: "play" }
@@ -359,7 +359,7 @@ export const projects = [
     },
     summary: {
       en: "A skeleton office-drone defends his boss's crypt from scheming minions. Built at Prisma Game Lab, I led the design and drove combat, progression and boss fights from one big balancing sheet, plus sound, UI and art.",
-      pt: "Um esqueleto do mundo corporativo defende a cripta do chefe de lacaios conspiradores. Feito no Prisma Game Lab, liderei o design e conduzi combate, progressão e chefes a partir de uma grande planilha de balanceamento, além de som, UI e arte."
+      pt: "Um esqueleto do mundo corporativo defende a cripta do chefe de lacaios conspiradores. Feito no Prisma Game Lab, liderei o design e conduzi combate, progressão e chefes a partir de uma planilha de balanceamento, além de som, UI e arte."
     },
     caseStudy: {
       heroVideo: {
@@ -392,7 +392,7 @@ export const projects = [
       },
       overview: {
         en: "“Esqueleto Chico: Ossos do Ofício” is a top-down action game set in an oddly corporate crypt. You play Chico, a prodigy skeleton left in charge while the boss is away on a 'business trip', which sparks envy among the other minions, who steal the boss's favorite mug to sabotage him. A Prisma Game Lab production.",
-        pt: "“Esqueleto Chico: Ossos do Ofício” é um jogo de ação top-down numa cripta um tanto corporativa. Você joga como Chico, um esqueleto prodígio deixado no comando enquanto o chefe está numa 'viagem a trabalho', o que desperta inveja nos outros lacaios, que roubam a caneca favorita do chefe para sabotá-lo. Uma produção do Prisma Game Lab."
+        pt: "“Esqueleto Chico: Ossos do Ofício” é um jogo de ação top-down numa cripta corporativa. Você é Chico, um esqueleto prodígio deixado no comando enquanto o chefe está numa 'viagem a trabalho'. Isso desperta inveja nos lacaios, que roubam a caneca favorita dele para sabotá-lo. Uma produção do Prisma Game Lab."
       },
       responsibilities: [
         {
@@ -433,7 +433,7 @@ export const projects = [
       ],
       challenge: {
         en: "The player's power swings wildly across a run: a glass-cannon ATK build and a tanky HP build reach the same boss with very different stats. The design problem: make every boss feel fair and threatening for all of them, without hand-tuning each case.",
-        pt: "O poder do jogador varia muito ao longo da run: uma build de ATK glass-cannon e uma build tanque de HP chegam ao mesmo chefe com stats bem diferentes. O problema de design: fazer cada chefe parecer justo e ameaçador para todas elas, sem ajustar cada caso na mão."
+        pt: "O poder do jogador varia muito numa run: uma build glass-cannon de ATK e uma build tanque de HP chegam ao mesmo chefe com stats bem diferentes. O problema de design era deixar cada chefe justo e ameaçador para as duas, sem ajustar cada caso na mão."
       },
       coreLoop: {
         steps: [
@@ -444,7 +444,7 @@ export const projects = [
         ],
         note: {
           en: "You clear a run of rooms, each one granting an upgrade (ATK, fire rate or HP), then face the floor boss, and only after beating it do you descend to the next floor. Every room cleared reshapes the build the balancing model has to keep honest.",
-          pt: "Você limpa uma sequência de salas, cada uma concedendo um upgrade (ATK, cadência ou HP), depois encara o chefe do andar, e só depois de vencê-lo você desce para o próximo andar. Cada sala limpa remodela a build que o modelo de balanceamento precisa manter honesta."
+          pt: "Você limpa uma sequência de salas, cada uma dando um upgrade (ATK, cadência ou HP), depois encara o chefe do andar e só desce ao próximo depois de vencê-lo. Cada sala limpa remodela a build, e é isso que o modelo de balanceamento precisa acompanhar."
         }
       },
       systems: [
@@ -524,7 +524,7 @@ export const projects = [
         },
         body: {
           en: "Instead of hand-picking boss damage, I derived each attack from the player's *expected* HP divided by how many hits of that attack should kill, so the laser might threaten a 5-hit kill and the broom a 3-hit kill, staying fair for every build.",
-          pt: "Em vez de escolher o dano do chefe na mão, derivei cada ataque do HP *esperado* do jogador dividido por quantos golpes daquele ataque deveriam matar, então o laser ameaça matar em 5 hits e a vassourada em 3, ficando justo para qualquer build."
+          pt: "Em vez de escolher o dano do chefe na mão, derivei cada ataque do HP *esperado* do jogador dividido por quantos golpes deveriam matar: o laser ameaça em 5 hits, a vassourada em 3, e a conta fica justa para qualquer build."
         }
       },
       balancing: {
@@ -534,7 +534,7 @@ export const projects = [
         },
         body: {
           en: "The whole game lived in one balancing spreadsheet: player base stats, per-room scaling, enemy and boss tables, and DPS curves for the extreme builds. The interesting piece is the boss HP: it doesn't scale with the floor, it scales with how many rooms you actually cleared, on a logarithm (base 2.3). Clear more rooms and you arrive stronger, so the boss grows to match, but logarithmically, so a full clear makes it tougher without ever becoming an impossible wall.",
-          pt: "O jogo inteiro vivia numa única planilha de balanceamento: stats base do jogador, escalonamento por sala, tabelas de inimigos e chefes, e curvas de DPS das builds extremas. A parte interessante é o HP do chefe: ele não escala com o andar, escala com quantas salas você realmente limpou, num logaritmo (base 2,3). Limpar mais salas te deixa mais forte, então o chefe cresce junto, mas logaritmicamente, ficando mais difícil sem nunca virar uma parede impossível."
+          pt: "O jogo vivia numa planilha de balanceamento: stats base do jogador, escalonamento por sala, tabelas de inimigos e chefes, e curvas de DPS das builds extremas. A parte interessante é o HP do chefe: ele não escala com o andar, escala com quantas salas você realmente limpou, num logaritmo de base 2,3. Limpar mais salas te deixa mais forte, então o chefe cresce junto, mas sem nunca virar uma parede impossível."
         },
         tables: [
           {
@@ -638,7 +638,7 @@ export const projects = [
     },
     summary: {
       en: "A roguelite dungeon crawler where you play a coward caretaker who can't cast a single spell, so you send the toddlers in your care to fight instead. Built by two people, it's driven by an enemy AI that scores every (skill, target) pair by weighted random, with intelligence and conviction as separate difficulty dials. Still in active development.",
-      pt: "Um roguelite de masmorra em que você é um cuidador covarde que não consegue lançar nem o feitiço mais simples, então manda os bebês sob seus cuidados para a luta. Feito por duas pessoas, é movido por uma IA inimiga que pontua cada par (skill, alvo) por sorteio ponderado, com inteligência e convicção como diais de dificuldade separados. Ainda em desenvolvimento ativo."
+      pt: "Um roguelite de masmorra em que você é um cuidador covarde, incapaz de lançar até o feitiço mais simples, e por isso manda os bebês sob seus cuidados para a luta. Feito por dois, é movido por uma IA inimiga que pontua cada par (skill, alvo) por sorteio ponderado, com inteligência e convicção como diais de dificuldade separados. Em desenvolvimento ativo."
     },
     caseStudy: {
       results: [
@@ -663,11 +663,11 @@ export const projects = [
       },
       overview: {
         en: "Project Maguitos is a roguelite dungeon crawler currently in active development, built by a two-person team. You play a caretaker at a magical daycare who can't cast even the simplest spell. On your first day almost every child in your care vanishes into the Cursed Forest, and your only way out is to let the toddlers themselves fight for you. It's a run of back-to-back encounters: survive a fixed number of battles, rescue toddlers, swap your party, and reach the boss intact.",
-        pt: "Projeto Maguitos é um roguelite de masmorra atualmente em desenvolvimento ativo, feito por uma dupla. Você é um cuidador de uma creche mágica que não consegue lançar nem o feitiço mais simples. No seu primeiro dia, quase todas as crianças sob seus cuidados desaparecem na Floresta Amaldiçoada, e sua única saída é deixar os próprios bebês lutarem por você. É uma sequência de combates um atrás do outro: sobreviva a um número fixo de batalhas, resgate bebês, troque sua party e chegue ao chefe inteiro."
+        pt: "Projeto Maguitos é um roguelite de masmorra em desenvolvimento, feito por uma dupla. Você é cuidador de uma creche mágica, incapaz de lançar até o feitiço mais simples. No primeiro dia, quase todas as crianças sob seus cuidados desaparecem na Floresta Amaldiçoada, e sua única saída é deixar os próprios bebês lutarem por você. É uma sequência de combates: sobreviva a um número fixo de batalhas, resgate bebês, troque sua party e chegue ao chefe inteiro."
       },
       role: {
         en: "Game & Systems Designer / Gameplay Programmer on a two-person team. I own the design and the entire GDScript codebase: the roguelite run structure, the toddler-swap progression, the shared-MP economy, and the enemy AI (action scoring, charges, the intent board, personalities and the intelligence/conviction split). A collaborator handles art and interface.",
-        pt: "Game & Systems Designer / Gameplay Programmer numa dupla. Conduzo o design e todo o código em GDScript: a estrutura do run roguelite, a progressão por troca de bebês, a economia de MP compartilhado e a IA dos inimigos (pontuação de ações, cargas, o quadro de intenções, personalidades e a separação entre inteligência e convicção). Um colaborador cuida da arte e da interface."
+        pt: "Game & Systems Designer / Gameplay Programmer numa dupla. Conduzo o design e todo o código em GDScript: a estrutura do run, a progressão por troca de bebês, a economia de MP compartilhado e a IA dos inimigos (pontuação de ações, cargas, quadro de intenções, personalidades e a separação entre inteligência e convicção). Um colaborador cuida da arte e da interface."
       },
       responsibilities: [
         {
@@ -694,7 +694,7 @@ export const projects = [
       ],
       challenge: {
         en: "Enemies do not run a fixed behavior tree. Each one builds its list of legal actions, scores every one, and picks by weighted random. The goal was difficulty that is not just bigger HP and damage, but enemies that see more of the board and misplay less, while staying legible enough that shielding a fragile toddler visibly pays off.",
-        pt: "Os inimigos não rodam uma árvore de comportamento fixa. Cada um monta sua lista de ações legais, pontua cada uma e escolhe por sorteio ponderado. O objetivo era uma dificuldade que não fosse só mais HP e dano, mas inimigos que enxergam mais do tabuleiro e erram menos, legíveis o bastante para que proteger um bebê frágil valha a pena de forma visível."
+        pt: "Os inimigos não rodam uma árvore de comportamento fixa: cada um monta sua lista de ações legais, pontua cada uma e escolhe por sorteio ponderado. O objetivo era uma dificuldade que não fosse só mais HP e dano, mas inimigos que enxergam mais do tabuleiro e erram menos, sem deixar de ser legíveis: proteger um bebê frágil precisa compensar visivelmente."
       },
       coreLoop: {
         steps: [
@@ -710,7 +710,7 @@ export const projects = [
       },
       progression: {
         en: "All three toddlers share a single MP pool: there are no individual reserves. Each skill costs a flat value or a percentage of the group's max MP, with a live preview showing the remaining MP as you build the turn. A shared pool turns every turn into a negotiation between the three characters: one toddler's expensive skill starves the others, so the party has to coordinate its spending as a team, not unit by unit.",
-        pt: "Os três bebês dividem um único pool de MP: não há reservas individuais. Cada skill custa um valor fixo ou uma porcentagem do MP máximo do grupo, com um preview ao vivo mostrando o MP restante enquanto você monta o turno. Um pool compartilhado transforma cada turno numa negociação entre os três personagens: a skill cara de um bebê sufoca os outros, então a party precisa coordenar seus gastos como time, não unidade por unidade."
+        pt: "Os três bebês dividem um único pool de MP, sem reservas individuais. Cada skill custa um valor fixo ou uma porcentagem do MP máximo do grupo, com um preview ao vivo do MP restante enquanto você monta o turno. Isso transforma cada turno numa negociação: a skill cara de um bebê sufoca os outros, então a party precisa coordenar os gastos como time, não unidade por unidade."
       },
       systems: [
         {
@@ -799,13 +799,13 @@ export const projects = [
         },
         body: {
           en: "Two orthogonal channels drive the AI. Intelligence scales the situational weight: hit the vulnerable, avoid overkill, finish kills. Conviction is the exponent above, and it only decides how faithfully the enemy obeys its own preference. Personality biases the weights by skill tag, so a Hot-headed enemy wants damage and a Coward wants distance. High conviction on a bad personality makes an enemy stubborn, not smart.",
-          pt: "Dois canais ortogonais conduzem a IA. Inteligência escala o peso situacional: acertar o vulnerável, evitar overkill, finalizar kills. Convicção é o expoente acima, e só decide o quanto o inimigo obedece à própria preferência. A personalidade enviesa os pesos por tag de skill, então um inimigo Esquentado quer dano e um Covarde quer distância. Convicção alta numa personalidade ruim deixa o inimigo teimoso, não esperto."
+          pt: "Dois canais ortogonais conduzem a IA. Inteligência escala o peso situacional: acertar o vulnerável, evitar overkill, finalizar kills. Convicção é o expoente acima e só decide o quanto o inimigo obedece à própria preferência. A personalidade enviesa os pesos por tag de skill: um inimigo Esquentado quer dano, um Covarde quer distância. Convicção alta numa personalidade ruim deixa o inimigo teimoso, não esperto."
         }
       },
       balancing: {
         body: {
           en: "There was no separate spreadsheet: the balancing data lives directly in Godot Resource files (.tres). Characters, enemies and skills are all data, so tuning a stat or a skill cost is editing a resource in the inspector, never touching code. These are the prototype's shipped values.",
-          pt: "Não havia planilha separada: os dados de balanceamento vivem direto em arquivos de Resource do Godot (.tres). Personagens, inimigos e skills são todos dados, então ajustar um atributo ou o custo de uma skill é editar um resource no inspetor, sem nunca tocar no código. Estes são os valores do protótipo."
+          pt: "Não havia planilha separada: os dados de balanceamento vivem em arquivos de Resource do Godot (.tres). Personagens, inimigos e skills são todos dados, então ajustar um atributo ou o custo de uma skill é editar um resource no inspetor, sem tocar no código. Estes são os valores do protótipo."
         },
         tables: [
           {
@@ -877,7 +877,7 @@ export const projects = [
       ],
       implementation: {
         en: "Built in Godot 4.7. Each skill type carries its own estimator and score (ai_estimate and ai_score), with a damage default on the base class; heal, buff and DoT override it. A new skill or exception never touches the central scorer (the same pattern the game's resolve() uses elsewhere), which keeps the AI extensible without becoming one giant if-statement. Adding a combat mechanic means adding a subclass, not editing the AI's brain.",
-        pt: "Feito em Godot 4.7. Cada tipo de skill carrega seu próprio estimador e pontuação (ai_estimate e ai_score), com um padrão de dano na classe base; cura, buff e DoT sobrescrevem isso. Uma skill nova ou uma exceção nunca toca o pontuador central (o mesmo padrão que o resolve() do jogo usa em outros lugares), o que mantém a IA extensível sem virar um if gigante. Adicionar uma mecânica de combate significa adicionar uma subclasse, não editar o cérebro da IA."
+        pt: "Feito em Godot 4.7. Cada tipo de skill carrega seu próprio estimador e pontuação (ai_estimate e ai_score), com um padrão de dano na classe base; cura, buff e DoT sobrescrevem isso. Uma skill nova nunca toca o pontuador central, o mesmo padrão que o resolve() do jogo usa em outros lugares, o que mantém a IA extensível sem virar um if gigante. Adicionar uma mecânica de combate é adicionar uma subclasse, não editar o cérebro da IA."
       },
       learnings: {
         en: "Phases 1 and 2 are implemented and verified in-editor. Splitting intelligence from conviction early is what made every later system click into place instead of fighting the others. Phase 3 is open: archetypes beyond the first roster, a tuning overlay to lock values during playtest, and bosses with triggers and phases layered over the same weight system.",
@@ -901,7 +901,7 @@ export const projects = [
     },
     summary: {
       en: "A cozy idle-clicker where the goal is to fully furnish the room where your dog lives: click to earn affection, spend it on furniture and upgrades, one piece at a time. A solo web project whose entire economy is derived from a single number (how long the run should take) through one closed-form balancing spreadsheet.",
-      pt: "Um idle-clicker aconchegante onde o objetivo é completar o quarto onde seu cachorro mora: clique para ganhar carinho e gaste em móveis e upgrades, peça por peça. Um projeto solo para web cuja economia inteira é derivada de um único número (quanto tempo a run deve durar) a partir de uma única planilha de balanceamento de forma fechada."
+      pt: "Um idle-clicker aconchegante em que o objetivo é completar o quarto do seu cachorro: clique para ganhar carinho, gaste em móveis e upgrades, peça por peça. Projeto solo para web cuja economia inteira é derivada de um único número, quanto tempo a run deve durar, por uma planilha de balanceamento de forma fechada."
     },
     caseStudy: {
       heroImage: {
@@ -1012,7 +1012,7 @@ export const projects = [
           }
         },
         {
-          title: { en: "Costs outrun output on purpose", pt: "Custos correm mais que a produção de propósito" },
+          title: { en: "Costs outrun output on purpose", pt: "Custo cresce mais rápido que a produção, de propósito" },
           body: {
             en: "Costs grow by a = 1.60 per stage, idle output by b = 1.45. Because a is larger, each piece takes slightly longer than the last, so the run swells toward the finale instead of flatlining. The total is still fixed, because the sum is a geometric series.",
             pt: "Os custos crescem por a = 1,60 a cada estágio, a produção passiva por b = 1,45. Como a é maior, cada peça leva um pouco mais que a anterior, então a run cresce rumo ao final em vez de estagnar. O total continua fixo, porque a soma é uma série geométrica."

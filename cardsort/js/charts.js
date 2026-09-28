@@ -122,5 +122,22 @@ function heatmap({ title, desc, cardIds, labels, matrix, caption }) {
     }
   }
 
-  return chartWrap(svg, { title, caption });
+  const wrap = chartWrap(svg, { title, caption });
+
+  if (labels) {
+    const legend = document.createElement('ul');
+    legend.className = 'chart-legend';
+    cardIds.forEach(id => {
+      const li = document.createElement('li');
+      const idSpan = document.createElement('span');
+      idSpan.className = 'chart-legend-id';
+      idSpan.textContent = id;
+      li.appendChild(idSpan);
+      li.appendChild(document.createTextNode(labelFor(id)));
+      legend.appendChild(li);
+    });
+    wrap.appendChild(legend);
+  }
+
+  return wrap;
 }

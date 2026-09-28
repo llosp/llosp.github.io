@@ -65,3 +65,23 @@
   font-size: 13px;
   fill: var(--ink-soft);
 }
+
+.chart-legend {
+  list-style: none;
+  margin: var(--space-2) 0 0;
+  padding: var(--space-2) 0 0;
+  border-top: 1px solid var(--line);
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 3px var(--space-2);
+  font-size: 11px;
+  color: var(--ink-soft);
+}
+
+.chart-legend-id {
+  display: inline-block;
+  min-width: 1.6em;
+  margin-right: 4px;
+  font-weight: 700;
+  color: var(--ink);
+}

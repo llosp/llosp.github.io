@@ -117,7 +117,7 @@ function heatmap({ title, desc, cardIds, labels, matrix, caption }) {
         x: padL + j * cell, y: padT + i * cell, width: cell - 1, height: cell - 1,
         class: 'chart-bar', 'fill-opacity': opacity.toFixed(2), style: 'fill:var(--earth-5)',
       });
-      if (v > 0) rect.appendChild(svgEl('title', {}, `${labelFor(cardIds[i])} + ${labelFor(cardIds[j])}: ${v}`));
+      rect.appendChild(svgEl('title', {}, `${labelFor(cardIds[i])} + ${labelFor(cardIds[j])}: ${v}`));
       svg.appendChild(rect);
     }
   }

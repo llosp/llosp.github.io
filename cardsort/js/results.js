@@ -104,7 +104,7 @@
       cardIds,
       labels: cardLabels,
       matrix: cardCooccurrence(rows, cardIds),
-      caption: 'Células mais escuras indicam pares de cartas agrupados juntos com mais frequência. Passe o mouse sobre uma célula para ver os nomes.',
+      caption: 'Células mais escuras indicam pares de cartas agrupados juntos com mais frequência. Passe o mouse sobre uma célula para ver os nomes e o número de vezes.',
     });
     heatmapEl.classList.add('chart-wide');
     grid.appendChild(heatmapEl);

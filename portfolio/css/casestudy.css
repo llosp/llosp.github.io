@@ -115,34 +115,6 @@
 .case-section p { max-width: 60ch; }
 .case-meta-role { font-weight: 700; color: var(--yellow); }
 
-/* Core loop diagram */
-.case-loop {
-  display: flex;
-  align-items: center;
-  gap: var(--space-1);
-  flex-wrap: wrap;
-  margin-bottom: var(--space-2);
-}
-.case-loop-step {
-  font-family: var(--font-display);
-  font-size: var(--step-0);
-  text-transform: uppercase;
-  padding: 0.4em 0.9em;
-  background: var(--yellow);
-  color: var(--black);
-  border: 3px solid var(--black);
-  box-shadow: 3px 3px 0 var(--black);
-  transform: rotate(-1deg);
-}
-.case-loop-step:nth-child(4n+3) { background: var(--pink); transform: rotate(1deg); }
-.case-loop-arrow {
-  font-family: var(--font-mono);
-  font-weight: 700;
-  color: var(--pink);
-  font-size: var(--step-1);
-}
-.case-loop-back { color: var(--yellow); }
-
 /* ═══ VISUALS ════════════════════════════════════════════════════════════ */
 /* Every figure in a case body: screenshot, number callout or diagram. The
    caption carries the point, so scanning the figures is enough. */
@@ -315,75 +287,6 @@
   margin-top: 0.7em;
 }
 
-/* ═══ PROCESS ════════════════════════════════════════════════════════════ */
-/* Numbered before/after cards: what shipped, what the playtest showed, what
-   changed, with the numbers on both sides. */
-.case-process {
-  display: flex;
-  flex-direction: column;
-  gap: var(--space-3);
-  list-style: none;
-  counter-reset: process;
-}
-.case-process-step {
-  counter-increment: process;
-  border-left: 3px solid rgba(245, 241, 232, 0.25);
-  padding-left: var(--space-3);
-  position: relative;
-}
-.case-process-step::before {
-  content: counter(process, decimal-leading-zero);
-  position: absolute;
-  left: 0;
-  top: 0;
-  transform: translateX(-50%);
-  font-family: var(--font-mono);
-  font-size: var(--step--1);
-  font-weight: 700;
-  background: var(--yellow);
-  color: var(--black);
-  border: 3px solid var(--black);
-  padding: 0.1em 0.4em;
-}
-.case-process-title {
-  font-family: var(--font-display);
-  text-transform: uppercase;
-  font-size: var(--step-1);
-  margin-bottom: var(--space-2);
-}
-.case-process-pair {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(min(14rem, 100%), 1fr));
-  gap: var(--space-2);
-}
-.case-process-side {
-  background: rgba(245, 241, 232, 0.06);
-  border: 2px solid rgba(245, 241, 232, 0.2);
-  padding: var(--space-2);
-}
-.case-process-side.is-after { border-color: var(--yellow); }
-.case-process-tag {
-  display: block;
-  font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 0.18em;
-  color: var(--pink);
-}
-.case-process-side.is-after .case-process-tag { color: var(--yellow); }
-.case-process-value {
-  display: block;
-  font-family: var(--font-display);
-  font-size: var(--step-1);
-  line-height: 1.1;
-  margin: 0.4em 0 0.5em;
-}
-.case-process-side p { font-size: var(--step--1); }
-.case-process-note {
-  font-size: var(--step--1);
-  color: rgba(245, 241, 232, 0.7);
-  margin-top: var(--space-2);
-}
-
 /* Damage formula panel */
 .case-formula {
   font-family: var(--font-mono);
@@ -436,7 +339,7 @@
 /* multiple tables stack with breathing room */
 .case-section .case-table-wrap + .case-table-wrap { margin-top: var(--space-2); }
 
-/* Hero image (key art poster at top of a case) */
+/* Closing screenshot (key art poster at the end of a case) */
 .case-hero-img {
   margin: 0 0 var(--space-2);
   border: 4px solid var(--yellow);
@@ -724,5 +627,4 @@
   .case-beat.is-wide { grid-template-columns: 1fr; }
   .case-beat > .case-visual,
   .case-beat.is-flipped > .case-visual { order: 0; }
-  .case-process-pair { grid-template-columns: 1fr; }
 }

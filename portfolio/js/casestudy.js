@@ -144,36 +144,14 @@ function renderBeats(beats) {
   return stack;
 }
 
-// The process section: what shipped first, what the playtest showed, what
-// changed. Numbers on both sides, so the iteration is visible and not claimed.
-function renderProcess(steps) {
-  const list = el('ol', 'case-process');
-  steps.forEach(step => {
-    const li = el('li', 'case-process-step');
-    li.append(el('h4', 'case-process-title', t(step.title)));
-    const pair = el('div', 'case-process-pair');
-    [['before', step.before], ['after', step.after]].forEach(([side, data]) => {
-      const cell = el('div', `case-process-side is-${side}`);
-      cell.append(
-        el('span', 'case-process-tag mono', tk(`process.${side}`)),
-        el('span', 'case-process-value', t(data.value)),
-        el('p', null, t(data.body))
-      );
-      pair.append(cell);
-    });
-    li.append(pair);
-    if (step.note) li.append(el('p', 'case-process-note', t(step.note)));
-    list.append(li);
-  });
-  return list;
-}
-
 function buildBody(project) {
   const cs = project.caseStudy;
   const body = document.getElementById('case-body');
   body.replaceChildren();
   if (!cs) return;
 
+  // A trailer stays up top; the key-art screenshot moves to the very end of
+  // the case (see below), so the recruiter hits results/facts first.
   if (cs.heroVideo) {
     const fig = el('figure', 'case-hero-video');
     const iframe = document.createElement('iframe');
@@ -183,15 +161,6 @@ function buildBody(project) {
     iframe.allow = 'accelerometer; clipboard-write; encrypted-media; picture-in-picture';
     iframe.allowFullscreen = true;
     fig.append(iframe);
-    body.append(fig);
-  } else if (cs.heroImage) {
-    const fig = el('figure', 'case-hero-img');
-    const img = el('img');
-    img.src = cs.heroImage.src;
-    img.alt = t(cs.heroImage.alt);
-    img.loading = 'lazy';
-    img.decoding = 'async';
-    fig.append(img);
     body.append(fig);
   }
 
@@ -228,23 +197,7 @@ function buildBody(project) {
     body.append(section('case.challenge', ...children));
   }
 
-  if (cs.coreLoop) {
-    const loop = el('div', 'case-loop');
-    cs.coreLoop.steps.forEach((step, i) => {
-      loop.append(el('span', 'case-loop-step', t(step)));
-      if (i < cs.coreLoop.steps.length - 1) {
-        loop.append(el('span', 'case-loop-arrow', '→'));
-      }
-    });
-    loop.append(el('span', 'case-loop-arrow case-loop-back', '⟲'));
-    const children = [loop];
-    if (cs.coreLoop.note) children.push(el('p', null, t(cs.coreLoop.note)));
-    body.append(section('case.coreLoop', ...children));
-  }
-
   if (cs.systems?.length) body.append(section('case.systems', renderBeats(cs.systems)));
-
-  if (cs.process?.length) body.append(section('case.process', renderProcess(cs.process)));
 
   if (cs.progression) body.append(section('case.progression', el('p', null, t(cs.progression))));
 
@@ -277,6 +230,18 @@ function buildBody(project) {
   if (cs.implementation) body.append(section('case.implementation', el('p', null, t(cs.implementation))));
 
   if (cs.learnings) body.append(section('case.learnings', el('p', null, t(cs.learnings))));
+
+  // Closing screenshot: the key art that used to open the case now closes it.
+  if (cs.heroImage) {
+    const fig = el('figure', 'case-hero-img');
+    const img = el('img');
+    img.src = cs.heroImage.src;
+    img.alt = t(cs.heroImage.alt);
+    img.loading = 'lazy';
+    img.decoding = 'async';
+    fig.append(img);
+    body.append(fig);
+  }
 
   if (cs.links?.length) {
     const row = el('div', 'case-links');

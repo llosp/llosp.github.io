@@ -105,27 +105,35 @@ disparos por seg / cadência → fire rate · precisão → accuracy · chefe �
 andar → floor · planilha → spreadsheet · escalonamento → scaling ·
 escalonamento logarítmico → logarithmic scaling · balanceamento → balancing ·
 progressão → progression · build → build · playtest → playtest ·
-core loop → core loop · atributos → attributes
+atributos → attributes
 
 ## Case-study schema (all `caseStudy.*` fields optional; renderer skips what's absent)
 
 `heroImage {src, alt}` · `heroVideo {youtube, title}` · `results [{value, label}]` ·
 `meta {timeline, team, studio, engine, platform}` · `overview` · `role` ·
-`responsibilities [{group, items[]}]` · `challenge` · `coreLoop {steps[], note}` ·
+`responsibilities [{group, items[]}]` · `challenge` ·
 `systems [{title, body}]` · `progression` · `combat {formula, body}` ·
 `balancing {formula?, tables[]|table, body}` · `charts [chartSpec]` · `tuner {targetMinutes}` ·
 `artifacts [{kind, label, note, file, download?}]` · `implementation` ·
 `gallery [{src, alt}]` · `learnings` · `links [{label, url, kind}]`
 
+No `coreLoop` field and no `process` (before/after iteration) field: case studies
+deliberately skip the core-loop diagram and the dev-process narrative. Keep new content
+focused on the overview, the design challenge, systems/mechanics, numbers (balancing,
+charts, tables) and learnings — a systems-designer recruiter's checklist, not a story.
+
 `combat.formula` and `balancing.formula` accept a string or `{ en, pt }` (rendered in the
 `.case-formula` panel). `balancing.tables` renders multiple tables; `balancing.table`
 (single) still works.
 
-**Result-first order.** `results` (2–3 outcome chips) and `meta` render immediately after
-the hero media, above `overview`. A recruiter should read what happened, then the facts
-they scan for, before any narrative. `meta` fields render in the fixed order listed above
-so the same fact sits in the same place across every case study; omit a field rather than
-guessing a date or a team size.
+**Result-first order.** `heroVideo` (a trailer) is the only hero media at the top, if
+present. `results` (2–3 outcome chips) and `meta` render right after it — or as the very
+first thing in the case if there's no trailer. A recruiter should read what happened,
+then the facts they scan for, before any narrative. `meta` fields render in the fixed
+order listed above so the same fact sits in the same place across every case study; omit
+a field rather than guessing a date or a team size. `heroImage` (a screenshot) is *not*
+top-of-case media: the renderer places it as a closing shot at the very end of the case,
+right before `links`.
 
 **Charts** (`js/chart.js`, rendered inside the `balancing` section under the tables) are
 inline SVG built once when a case study opens, then a static tree — no canvas, no rAF, no

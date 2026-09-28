@@ -1,6 +1,6 @@
 // Project content, EN/PT. PLACEHOLDER DATA: swap freely.
 // Every human-readable string is { en, pt }. Optional caseStudy fields
-// (coreLoop, combat, balancing.table, …) are simply skipped when absent.
+// (combat, balancing.table, …) are simply skipped when absent.
 export const projects = [
   {
     id: "count-me-dead",
@@ -85,19 +85,6 @@ export const projects = [
         en: "One input, one verb: shoot. 72 hours, five boss fights that all have to feel different. Adding verbs would not have shipped in time, so I attacked what the player knows instead of what the player does. A duel on a countdown is a reading problem. Every boss stopped being a difficulty tier and became a specific kind of liar.",
         pt: "Um input, um verbo: atirar. 72 horas, cinco chefes que precisam parecer diferentes entre si. Não daria tempo de adicionar verbos, então ataquei o que o jogador sabe, não o que ele faz. Um duelo em cima de uma contagem é um problema de leitura, e cada chefe virou um tipo diferente de mentiroso em vez de um nível de dificuldade."
       },
-      coreLoop: {
-        steps: [
-          { en: "Read the count", pt: "Ler a contagem" },
-          { en: "Hold your nerve", pt: "Segurar o nervo" },
-          { en: "Draw on zero", pt: "Sacar no zero" },
-          { en: "Hit, or lose a heart", pt: "Acertar, ou perder um coração" },
-          { en: "The outlaw cooks the books", pt: "O fora da lei frauda as contas" }
-        ],
-        note: {
-          en: "Three hearts each, five for the final boss. A clean draw takes one of theirs; firing too early or too slow takes one of yours. The base tempo is one tick per second with a 0.7s draw window, and every boss overrides both.",
-          pt: "Três corações de cada lado, cinco no chefe final. Um saque limpo tira um deles; atirar cedo ou lento demais tira um seu. O tempo base é um tick por segundo com uma janela de saque de 0,7s, e todo chefe sobrescreve os dois."
-        }
-      },
       systems: [
         {
           title: { en: "One duel, five liars", pt: "Um duelo, cinco mentirosos" },
@@ -115,8 +102,8 @@ export const projects = [
         {
           title: { en: "Hoarse Ryder talks over the count", pt: "Hoarse Ryder fala por cima da contagem" },
           body: {
-            en: "He never touches the timer. His bit is needing three lines to walk back a threat, so the fight escalates by talking more. Two hearts in, scripted lines become a flood drawn from a shuffled bag of seven triads, two bubbles a second. The number is right there. You stop reading it.",
-            pt: "Ele nunca toca no timer. A piada dele é precisar de três falas para desdizer uma ameaça, então a luta escala na base da tagarelice. Depois de dois corações, as falas roteirizadas viram uma enxurrada sorteada de sete tríades, dois balões por segundo. O número continua ali. Você só para de ler."
+            en: "He never touches the timer; the fight escalates by talking more instead. Two hearts in, scripted lines become a flood drawn from a shuffled bag of seven triads, two bubbles a second. The number is right there. You stop reading it.",
+            pt: "Ele nunca toca no timer; a luta escala na base da tagarelice. Depois de dois corações, as falas roteirizadas viram uma enxurrada sorteada de sete tríades, dois balões por segundo. O número continua ali. Você só para de ler."
           },
           visual: {
             kind: "image",
@@ -128,8 +115,8 @@ export const projects = [
         {
           title: { en: "Danny D. Vile makes you forget", pt: "Danny D. Vile te faz esquecer" },
           body: {
-            en: "His running gag is that he remembers nothing, so his mechanic erases the count. He lights a fuse and blows seconds off the clock on a cooldown that tightens from 8s to 2s. By his last heart he detonates the timer entirely and you finish the round counting in your head.",
-            pt: "A piada dele é não lembrar de nada, e a mecânica apaga a contagem. Ele acende um pavio e explode segundos do relógio, num cooldown que aperta de 8s para 2s. No último coração ele detona o timer inteiro e você termina o round contando de cabeça."
+            en: "His mechanic erases the count: he lights a fuse and blows seconds off the clock on a cooldown that tightens from 8s to 2s. By his last heart he detonates the timer entirely and you finish the round counting in your head.",
+            pt: "A mecânica dele apaga a contagem: ele acende um pavio e explode segundos do relógio, num cooldown que aperta de 8s para 2s. No último coração ele detona o timer inteiro e você termina o round contando de cabeça."
           },
           visual: {
             kind: "image",
@@ -156,8 +143,8 @@ export const projects = [
         {
           title: { en: "Conny Calzone turns the clock into homework", pt: "Conny Calzone transforma o relógio em dever de casa" },
           body: {
-            en: "\"You know what's scarier than guns? MATH!\" She splits the counter with an operator and you draw when the sum hits zero. Phase 3 rotates the plus into a multiplication, which is pure bluff: she says she does not know what the symbol means. The left number is noise.",
-            pt: "\"Sabe o que é mais assustador que arma? MATEMÁTICA!\" Ela quebra o contador com um operador, e você saca quando a soma bate zero. Na fase 3 o mais vira multiplicação, puro blefe: ela mesma admite não saber o que o símbolo significa. O número da esquerda é ruído."
+            en: "She splits the counter with an operator and you draw when the sum hits zero. Phase 3 rotates the plus into a multiplication that is pure bluff: the left number is noise.",
+            pt: "Ela quebra o contador com um operador, e você saca quando a soma bate zero. Na fase 3 o mais vira multiplicação, puro blefe: o número da esquerda é ruído."
           },
           visual: {
             kind: "diagram",
@@ -174,8 +161,8 @@ export const projects = [
         {
           title: { en: "El To Angus owns the rules", pt: "El To Angus é dono das regras" },
           body: {
-            en: "He wrote the letter that started the game, and he wrote your ledger. \"I run this town, so I make the rules. For instance, I have 5 lives.\" Five near-identical timers, shuffled, one real. Mid-round the real face slides and the number that ends the count moves from 0 to 7.",
-            pt: "Ele escreveu a carta que começou o jogo, e escreveu suas próprias contas. \"Eu mando nesta cidade, então eu faço as regras. Por exemplo, eu tenho 5 vidas.\" Cinco timers quase idênticos, embaralhados, um real. No meio do round a face real troca de lugar e o número que zera a contagem passa de 0 para 7."
+            en: "Five near-identical timers, shuffled, one real. Mid-round the real face slides and the number that ends the count moves from 0 to 7.",
+            pt: "Cinco timers quase idênticos, embaralhados, um real. No meio do round a face real troca de lugar e o número que zera a contagem passa de 0 para 7."
           },
           visual: {
             kind: "diagram",
@@ -190,43 +177,6 @@ export const projects = [
             note: { en: "The real counter also runs a hand-written sequence with decoy zeros in it: 10, 9, 8, 0, 6, 5, 4, 3, 2, 1, 7.", pt: "O contador real também roda uma sequência escrita à mão com zeros-isca dentro: 10, 9, 8, 0, 6, 5, 4, 3, 2, 1, 7." },
             caption: { en: "He even baits one by name. \"I once had a friend named Tyler…\", and TYLER starts counting.", pt: "Ele até usa um como isca, pelo nome. \"Eu tinha um amigo chamado Tyler…\", e TYLER começa a contar." }
           }
-        }
-      ],
-      process: [
-        {
-          title: { en: "Danny punished a read he had caused", pt: "Danny punia uma leitura que ele mesmo causou" },
-          before: {
-            value: { en: "0.00s grace", pt: "0,00s de tolerância" },
-            body: { en: "A draw fired a hair before zero read TOO EARLY, even against the boss whose whole mechanic is removing seconds from your clock. Testers read it as the game cheating.", pt: "Um saque disparado um fio antes do zero lia CEDO DEMAIS, mesmo contra o chefe cuja mecânica inteira é tirar segundos do seu relógio. Os testers liam aquilo como trapaça do jogo." }
-          },
-          after: {
-            value: { en: "0.30s grace", pt: "0,30s de tolerância" },
-            body: { en: "Danny is the only outlaw with an early-grace window. He steals the seconds, so a hair-early read is his fault, not yours.", pt: "Danny é o único fora da lei com janela de tolerância. Ele rouba os segundos, então uma leitura um fio adiantada é culpa dele, não sua." }
-          },
-          note: { en: "One of the commits is named 'danny easier by 0.40'. That exception is the difference between a boss who feels unfair and a boss who feels like a cheat you can beat.", pt: "Um dos commits se chama 'danny easier by 0.40'. Essa exceção é a diferença entre um chefe que parece injusto e um chefe que parece uma trapaça vencível." }
-        },
-        {
-          title: { en: "His first fuse could kill before it taught", pt: "O primeiro pavio dele matava antes de ensinar" },
-          before: {
-            value: { en: "Can zero the clock", pt: "Pode zerar o relógio" },
-            body: { en: "Danny's opening cast could take the count straight to zero, so a first-time player lost a heart before understanding what had happened to the timer.", pt: "O primeiro cast do Danny podia levar a contagem direto a zero, então um jogador de primeira viagem perdia um coração antes de entender o que tinha acontecido com o timer." }
-          },
-          after: {
-            value: { en: "Leaves 1s minimum", pt: "Deixa 1s no mínimo" },
-            body: { en: "The first cast of the fight is capped non-lethal. You see the fuse, you see the number drop, and you still get to draw. Every cast after it is live.", pt: "O primeiro cast da luta nunca é letal. Você vê o pavio, vê o número cair, e ainda consegue sacar. Todo cast depois dele é para valer." }
-          }
-        },
-        {
-          title: { en: "The difficulty menu I never built", pt: "O menu de dificuldade que nunca construí" },
-          before: {
-            value: { en: "3 difficulty presets", pt: "3 presets de dificuldade" },
-            body: { en: "The plan was easy, normal and hard settings on Conny's fight. Three sets of numbers to tune and no time to playtest any of them properly.", pt: "O plano era ter dificuldade fácil, normal e difícil na luta da Conny. Três conjuntos de números para ajustar e sem tempo de testar nenhum direito." }
-          },
-          after: {
-            value: { en: "1 pressure float", pt: "1 float de pressão" },
-            body: { en: "A hidden value in [0, 1] rises 0.25 per fast clean draw and falls 0.30 per heart lost, then drives her draw window, feint rate and shift unlock.", pt: "Um valor escondido em [0, 1] sobe 0,25 por saque rápido e limpo e cai 0,30 por coração perdido, e comanda a janela de saque, a taxa de fintas e a liberação do shift dela." }
-          },
-          note: { en: "The fight converges on the player's actual skill and the UI never admits it.", pt: "A luta converge para a habilidade real do jogador, e a UI nunca admite isso." }
         }
       ],
       progression: {
@@ -331,8 +281,8 @@ export const projects = [
         pt: "Godot 4 e GDScript, sem ferramental externo. Lutas e texto são dados: a trilha de eventos do Angus, qual timer é real, quando a estante embaralha, qual número encerra a contagem, tudo vem do inspector, não do código; o diálogo da cidade é arquivo de script com tags de falante, retrato e expressão. Em 72 horas isso significou reajustar a dificuldade de um chefe editando um campo entre playtests, sem tocar no código."
       },
       learnings: {
-        en: "Mechanics and characters were never designed separately. Once the premise was debt collection, \"what does this boss do to the timer\" and \"who is this boss\" became the same question. Players remember the ending, where the timer drops digits for the alphabet and one letter quietly becomes a real zero. It lands because it is the one time the player falsifies the count instead of the outlaw.",
-        pt: "Mecânica e personagem nunca foram projetados separadamente: com a premissa de cobrança de dívida, \"o que esse chefe faz com o timer\" e \"quem é esse chefe\" viraram a mesma pergunta. O final é o que os jogadores lembram: o timer troca dígitos pelo alfabeto até uma letra virar um zero de verdade. Funciona porque, dessa vez, quem falsifica a contagem é o jogador, não o fora da lei."
+        en: "Tying each boss's mechanic to a distinct read-the-count problem, rather than a difficulty tier, is what made five fights on one input feel distinct. The adaptive pressure float replaced a difficulty menu I didn't have time to tune, and it's the piece I'd reach for first on the next jam game.",
+        pt: "Prender a mecânica de cada chefe a um problema de leitura de contagem distinto, em vez de um nível de dificuldade, foi o que fez cinco lutas sobre um único input parecerem diferentes entre si. O float de pressão adaptativa substituiu um menu de dificuldade que não deu tempo de ajustar, e é a peça que eu usaria primeiro na próxima jam."
       },
       links: [
         { label: { en: "Play on itch.io", pt: "Jogar na itch.io" }, url: "https://lopen.itch.io/count-me-dead", kind: "play" }
@@ -391,8 +341,8 @@ export const projects = [
         platform: { en: "PC", pt: "PC" }
       },
       overview: {
-        en: "“Esqueleto Chico: Ossos do Ofício” is a top-down action game set in an oddly corporate crypt. You play Chico, a prodigy skeleton left in charge while the boss is away on a 'business trip', which sparks envy among the other minions, who steal the boss's favorite mug to sabotage him. A Prisma Game Lab production.",
-        pt: "“Esqueleto Chico: Ossos do Ofício” é um jogo de ação top-down numa cripta corporativa. Você é Chico, um esqueleto prodígio deixado no comando enquanto o chefe está numa 'viagem a trabalho'. Isso desperta inveja nos lacaios, que roubam a caneca favorita dele para sabotá-lo. Uma produção do Prisma Game Lab."
+        en: "“Esqueleto Chico: Ossos do Ofício” is a top-down action game set in an oddly corporate crypt, where Chico defends against waves of scheming minions across three floors and their bosses. A Prisma Game Lab production.",
+        pt: "“Esqueleto Chico: Ossos do Ofício” é um jogo de ação top-down numa cripta corporativa, em que Chico se defende de ondas de lacaios conspiradores por três andares e seus chefes. Uma produção do Prisma Game Lab."
       },
       responsibilities: [
         {
@@ -435,18 +385,6 @@ export const projects = [
         en: "The player's power swings wildly across a run: a glass-cannon ATK build and a tanky HP build reach the same boss with very different stats. The design problem: make every boss feel fair and threatening for all of them, without hand-tuning each case.",
         pt: "O poder do jogador varia muito numa run: uma build glass-cannon de ATK e uma build tanque de HP chegam ao mesmo chefe com stats bem diferentes. O problema de design era deixar cada chefe justo e ameaçador para as duas, sem ajustar cada caso na mão."
       },
-      coreLoop: {
-        steps: [
-          { en: "Clear the room", pt: "Limpar a sala" },
-          { en: "Pick 1 upgrade", pt: "Escolher 1 upgrade" },
-          { en: "Beat the floor boss", pt: "Vencer o chefe do andar" },
-          { en: "Descend", pt: "Descer" }
-        ],
-        note: {
-          en: "You clear a run of rooms, each one granting an upgrade (ATK, fire rate or HP), then face the floor boss, and only after beating it do you descend to the next floor. Every room cleared reshapes the build the balancing model has to keep honest.",
-          pt: "Você limpa uma sequência de salas, cada uma dando um upgrade (ATK, cadência ou HP), depois encara o chefe do andar e só desce ao próximo depois de vencê-lo. Cada sala limpa remodela a build, e é isso que o modelo de balanceamento precisa acompanhar."
-        }
-      },
       systems: [
         {
           title: { en: "Rooms, not floors", pt: "Salas, não andares" },
@@ -485,31 +423,6 @@ export const projects = [
             src: "./assets/img/projects/esqueleto-chico-gameplay-2.webp",
             alt: { en: "Boss fight against O Zelador: laser sweeps across the crypt", pt: "Luta contra O Zelador: lasers varrendo a cripta" },
             caption: { en: "The laser sweep is tuned as a 5-hit kill. The broom is a 3-hit kill.", pt: "A varredura de laser é ajustada para matar em 5 hits. A vassourada, em 3." }
-          }
-        }
-      ],
-      process: [
-        {
-          title: { en: "Boss HP was pinned to the floor number", pt: "O HP do chefe estava preso ao número do andar" },
-          before: {
-            value: { en: "Flat per floor", pt: "Fixo por andar" },
-            body: { en: "Each floor's boss had one HP value. Players who cleared every room arrived overpowered and walked through it; players who rushed hit a wall they could not damage.", pt: "O chefe de cada andar tinha um valor de HP. Quem limpava todas as salas chegava forte demais e passava por cima; quem corria batia numa parede que não conseguia arranhar." }
-          },
-          after: {
-            value: { en: "×1.00 → ×2.34", pt: "×1,00 → ×2,34" },
-            body: { en: "HP became base_HP × log₂.₃(rooms_cleared). Clear more and the boss grows to match, but logarithmically, so a full clear is tougher and never an impossible wall.", pt: "O HP virou HP_base × log₂,₃(salas_limpas). Limpar mais faz o chefe crescer junto, mas logaritmicamente, então limpar tudo é mais difícil e nunca uma parede impossível." }
-          },
-          note: { en: "The multiplier is the same number for both players. What changed is that it now reads their route instead of the floor sign.", pt: "O multiplicador é o mesmo número para os dois jogadores. O que mudou é que agora ele lê a rota deles, não a placa do andar." }
-        },
-        {
-          title: { en: "Boss damage was picked by hand", pt: "O dano do chefe era escolhido na mão" },
-          before: {
-            value: { en: "Tuned per attack", pt: "Ajustado por ataque" },
-            body: { en: "Every attack's damage was a number I chose and re-chose. It felt right against the build I happened to be testing with and wrong against the other two.", pt: "O dano de cada ataque era um número que eu escolhia e reescolhia. Parecia certo contra a build que eu estava testando e errado contra as outras duas." }
-          },
-          after: {
-            value: { en: "ideal_HP ÷ hits_target", pt: "HP_ideal ÷ hits_alvo" },
-            body: { en: "Damage is derived from the player's expected HP divided by how many hits of that attack should kill. Retuning a whole floor became a one-cell change in the sheet.", pt: "O dano é derivado do HP esperado do jogador dividido por quantos golpes daquele ataque deveriam matar. Reajustar um andar inteiro virou mudar uma célula na planilha." }
           }
         }
       ],
@@ -662,8 +575,8 @@ export const projects = [
         platform: { en: "PC", pt: "PC" }
       },
       overview: {
-        en: "Project Maguitos is a roguelite dungeon crawler currently in active development, built by a two-person team. You play a caretaker at a magical daycare who can't cast even the simplest spell. On your first day almost every child in your care vanishes into the Cursed Forest, and your only way out is to let the toddlers themselves fight for you. It's a run of back-to-back encounters: survive a fixed number of battles, rescue toddlers, swap your party, and reach the boss intact.",
-        pt: "Projeto Maguitos é um roguelite de masmorra em desenvolvimento, feito por uma dupla. Você é cuidador de uma creche mágica, incapaz de lançar até o feitiço mais simples. No primeiro dia, quase todas as crianças sob seus cuidados desaparecem na Floresta Amaldiçoada, e sua única saída é deixar os próprios bebês lutarem por você. É uma sequência de combates: sobreviva a um número fixo de batalhas, resgate bebês, troque sua party e chegue ao chefe inteiro."
+        en: "Project Maguitos is a roguelite dungeon crawler currently in active development, built by a two-person team: a run of back-to-back encounters where you send a party of toddlers to fight, rescue more toddlers, swap your party, and reach the boss intact.",
+        pt: "Projeto Maguitos é um roguelite de masmorra em desenvolvimento, feito por uma dupla: uma sequência de combates em que você manda uma party de bebês para a luta, resgata mais bebês, troca sua party e chega ao chefe inteiro."
       },
       role: {
         en: "Game & Systems Designer / Gameplay Programmer on a two-person team. I own the design and the entire GDScript codebase: the roguelite run structure, the toddler-swap progression, the shared-MP economy, and the enemy AI (action scoring, charges, the intent board, personalities and the intelligence/conviction split). A collaborator handles art and interface.",
@@ -695,18 +608,6 @@ export const projects = [
       challenge: {
         en: "Enemies do not run a fixed behavior tree. Each one builds its list of legal actions, scores every one, and picks by weighted random. The goal was difficulty that is not just bigger HP and damage, but enemies that see more of the board and misplay less, while staying legible enough that shielding a fragile toddler visibly pays off.",
         pt: "Os inimigos não rodam uma árvore de comportamento fixa: cada um monta sua lista de ações legais, pontua cada uma e escolhe por sorteio ponderado. O objetivo era uma dificuldade que não fosse só mais HP e dano, mas inimigos que enxergam mais do tabuleiro e erram menos, sem deixar de ser legíveis: proteger um bebê frágil precisa compensar visivelmente."
-      },
-      coreLoop: {
-        steps: [
-          { en: "Fight a back-to-back encounter", pt: "Enfrentar um combate seguido de outro" },
-          { en: "Rescue a toddler", pt: "Resgatar um bebê" },
-          { en: "Swap your party from the rescued pool", pt: "Trocar sua party a partir do pool resgatado" },
-          { en: "Reach the boss intact", pt: "Chegar ao chefe inteiro" }
-        ],
-        note: {
-          en: "Toddlers do not level up by fighting: you get stronger by swapping, not grinding. The toddler that saved you in stage two becomes currency for a stronger one in stage four, so progression is a run of painful choices instead of a number that climbs on its own.",
-          pt: "Os bebês não sobem de nível lutando: você fica mais forte trocando, não grindando. O bebê que te salvou na fase dois vira moeda de troca por um mais forte na fase quatro, então a progressão é uma sequência de escolhas dolorosas, não um número que sobe sozinho."
-        }
       },
       progression: {
         en: "All three toddlers share a single MP pool: there are no individual reserves. Each skill costs a flat value or a percentage of the group's max MP, with a live preview showing the remaining MP as you build the turn. A shared pool turns every turn into a negotiation between the three characters: one toddler's expensive skill starves the others, so the party has to coordinate its spending as a team, not unit by unit.",
@@ -765,31 +666,6 @@ export const projects = [
             ],
             caption: { en: "The 'likely kill' bonus vanishes, so the second enemy looks elsewhere. A low-intelligence enemy skips the check and hits the corpse anyway.", pt: "O bônus de 'kill provável' some, então o segundo inimigo procura outro alvo. Um inimigo de inteligência baixa pula a checagem e acerta o cadáver mesmo assim." }
           }
-        }
-      ],
-      process: [
-        {
-          title: { en: "The fixed role tag was lying", pt: "A etiqueta de papel fixo estava mentindo" },
-          before: {
-            value: { en: "tank / dps / support", pt: "tank / dps / suporte" },
-            body: { en: "Every unit carried a hand-written role, and the AI targeted off it. Celetro was tagged tank while holding the highest Witness in the party. Isara was dps by default when what defines her is MP Regen, 2.5 times the others.", pt: "Cada unidade carregava um papel escrito à mão, e a IA mirava por ele. Celetro estava etiquetado como tank enquanto tinha o maior Witness da party. Isara era dps por padrão quando o que a define é o MP Regen, 2,5 vezes o dos outros." }
-          },
-          after: {
-            value: { en: "primary_stat + secondary_stat", pt: "primary_stat + secondary_stat" },
-            body: { en: "The tag was ripped out and replaced by key stats read from the real numbers, plus a tier tiebreaker. Buffs finally land on the right target, and a dead rule stopped needing maintenance.", pt: "A etiqueta foi arrancada e substituída por key stats lidos dos números reais, mais um desempate por tier. Os buffs finalmente acertam o alvo certo, e uma regra morta parou de exigir manutenção." }
-          }
-        },
-        {
-          title: { en: "Difficulty was going to be bigger numbers", pt: "A dificuldade ia ser números maiores" },
-          before: {
-            value: { en: "More HP, more damage", pt: "Mais HP, mais dano" },
-            body: { en: "The default plan was to scale enemy stats per difficulty. It makes fights longer without making them harder to read, and it teaches the player nothing new.", pt: "O plano padrão era escalar os stats dos inimigos por dificuldade. Isso deixa as lutas mais longas sem deixá-las mais difíceis de ler, e não ensina nada novo ao jogador." }
-          },
-          after: {
-            value: { en: "Conviction 0 → 3", pt: "Convicção 0 → 3" },
-            body: { en: "One exponent on the action draw. At conviction 0 every action has a 20% chance and the enemy plays erratically; at conviction 3 its best action is picked 67% of the time. Same stats, same weights.", pt: "Um expoente no sorteio de ações. Com convicção 0, toda ação tem 20% de chance e o inimigo joga de forma errática; com convicção 3, a melhor ação é escolhida 67% das vezes. Mesmos stats, mesmos pesos." }
-          },
-          note: { en: "Intelligence is what the enemy wants. Conviction is how much it obeys itself, and it is the dial the difficulty setting actually turns.", pt: "Inteligência é o que o inimigo quer. Convicção é o quanto ele obedece a si mesmo, e é o dial que a dificuldade realmente gira." }
         }
       ],
       combat: {
@@ -972,18 +848,6 @@ export const projects = [
         en: "The failure mode of a clicker is length: ship it too generous and it's over in five minutes; too greedy and it drags for hours. I didn't want to hand-tune forty costs chasing a feel. The design goal: make session length an explicit input and have the entire economy obey it.",
         pt: "O modo de falha de um clicker é a duração: generoso demais e acaba em cinco minutos; ganancioso demais e arrasta por horas. Eu não queria ajustar quarenta custos na mão atrás de um feeling. O objetivo de design: transformar a duração da sessão num input explícito e fazer a economia inteira obedecer a ele."
       },
-      coreLoop: {
-        steps: [
-          { en: "Click the dog", pt: "Clicar no cachorro" },
-          { en: "Earn affection", pt: "Ganhar carinho" },
-          { en: "Buy a helper / upgrade", pt: "Comprar ajudante / upgrade" },
-          { en: "Unlock a piece of furniture", pt: "Desbloquear um móvel" }
-        ],
-        note: {
-          en: "Clicking earns affection; affection buys helpers and upgrades that idle-earn for you; enough of it unlocks the next piece of furniture for the room. Every piece costs more affection than the last, so the loop keeps pulling forward, toward the twelfth and final piece that completes the room and ends the game.",
-          pt: "Clicar rende carinho; carinho compra ajudantes e upgrades que rendem sozinhos; carinho suficiente libera a próxima peça de mobília do quarto. Cada peça custa mais carinho que a anterior, então o loop segue puxando para frente, até a décima segunda e última peça que completa o quarto e encerra o jogo."
-        }
-      },
       systems: [
         {
           title: { en: "The room is the progress bar", pt: "O quarto é a barra de progresso" },
@@ -1037,31 +901,6 @@ export const projects = [
             src: "./assets/img/projects/clicachorro-gameplay-furniture.webp",
             alt: { en: "Mid-run room with a few furniture unlocks: a blank poster frame, a cabinet and a plant", pt: "Quarto no meio da run com alguns móveis desbloqueados: um quadro em branco, um armário e uma planta" },
             caption: { en: "Roughly minute ten. Playtesters described progress by naming objects, not by quoting affection totals.", pt: "Por volta do minuto dez. Os playtesters descreviam o progresso nomeando objetos, não citando totais de carinho." }
-          }
-        }
-      ],
-      process: [
-        {
-          title: { en: "The costs were going to be picked by feel", pt: "Os custos iam ser escolhidos no feeling" },
-          before: {
-            value: { en: "40 numbers by hand", pt: "40 números na mão" },
-            body: { en: "The default way to build a clicker is to type a cost, play it, and nudge it. Forty coupled numbers chasing a feel, where fixing the mid-game breaks the ending and there is no way to prove the run is the length you wanted.", pt: "O jeito padrão de fazer um clicker é digitar um custo, jogar e ajustar. Quarenta números acoplados atrás de um feeling, onde consertar o meio-jogo quebra o final e não há como provar que a run tem a duração que você queria." }
-          },
-          after: {
-            value: { en: "1 input cell", pt: "1 célula de input" },
-            body: { en: "Session length became the input and the geometric sum was inverted for the base cost C0. Target 45 minutes, get C0 = 618, and the twelve stage times sum back to 45.00 exactly. Retuning to 90 minutes is one edit.", pt: "A duração da sessão virou o input e a soma geométrica foi invertida para o custo base C0. Alvo de 45 minutos, sai C0 = 618, e os doze tempos por estágio somam exatamente 45,00. Retunar para 90 minutos é uma única edição." }
-          },
-          note: { en: "The tuner further down this page is that spreadsheet, running live. Drag the target and watch every cost re-solve.", pt: "O tuner mais abaixo nesta página é essa planilha, rodando ao vivo. Arraste o alvo e veja cada custo ser resolvido de novo." }
-        },
-        {
-          title: { en: "Playtesters said the mid-game sagged", pt: "Os playtesters disseram que o meio-jogo caía" },
-          before: {
-            value: { en: "A pass over 12 stages", pt: "Uma passada por 12 estágios" },
-            body: { en: "With hand-written costs, that note means reopening every stage between the fourth and the ninth and hoping the total still lands near the target.", pt: "Com custos escritos à mão, essa nota significa reabrir todo estágio entre o quarto e o nono e torcer pro total ainda cair perto do alvo." }
-          },
-          after: {
-            value: { en: "r = a ÷ b", pt: "r = a ÷ b" },
-            body: { en: "The shape of the curve lives in one ratio. Moving r flattens or steepens the whole run at once, and C0 re-solves so the total stays at the target. The sag became a one-cell edit.", pt: "O formato da curva vive numa razão só. Mexer em r achata ou inclina a run inteira de uma vez, e o C0 se resolve de novo pro total ficar no alvo. A queda virou uma edição de uma célula." }
           }
         }
       ],

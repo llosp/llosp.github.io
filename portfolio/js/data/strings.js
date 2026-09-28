@@ -59,7 +59,6 @@ export const strings = {
   "case.overview":   { en: "Overview", pt: "Visão Geral" },
   "case.role":       { en: "My Role", pt: "Meu Papel" },
   "case.challenge":  { en: "Design Challenge", pt: "Desafio de Design" },
-  "case.coreLoop":   { en: "Core Loop", pt: "Core Loop" },
   "case.systems":    { en: "Main Systems", pt: "Sistemas Principais" },
   "case.progression":{ en: "Progression", pt: "Progressão" },
   "case.combat":     { en: "Damage & Combat", pt: "Dano e Combate" },
@@ -67,9 +66,6 @@ export const strings = {
   "case.implementation": { en: "Implementation & Prototyping", pt: "Implementação e Prototipagem" },
   "case.learnings":  { en: "Learnings", pt: "Aprendizados" },
   "case.responsibilities": { en: "What I Owned", pt: "Do Que Cuidei" },
-  "case.process":    { en: "What Changed", pt: "O Que Mudou" },
-  "process.before":  { en: "Before", pt: "Antes" },
-  "process.after":   { en: "After", pt: "Depois" },
 
   "case.results":    { en: "Results", pt: "Resultados" },
   "case.timeline":   { en: "Timeline", pt: "Período" },

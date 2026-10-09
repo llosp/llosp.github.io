@@ -479,6 +479,14 @@ function shell({ title, description, route, body, cls = '' }) {
 
   <canvas class="ascii-background" aria-hidden="true"></canvas>
 
+  <div class="background-gridlines" aria-hidden="true">
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+  </div>
+
   <div class="cursor-pill" aria-hidden="true"></div>
 
   ${nav()}
@@ -505,21 +513,24 @@ ${body}
 /* ── pages ────────────────────────────────────────────────────────────── */
 
 function renderIndex(projects) {
-  // the covers are the index. each one sits at the shape of its own image,
-  // which is what staggers the two columns, and each one is the element the
-  // router morphs into the case study hero.
+  // one grid on the four-column spine the gridlines draw, every project a
+  // tile. each tile keeps the shape of its own cover, which is what staggers
+  // the columns, and each one is the element the router morphs into the case
+  // study hero.
   const covers = projects
     .map((p, i) => {
-      const meta = [p.data.type, p.data.status].filter(Boolean).join(' · ');
-      return `<a class="covers_item" href="/work/${p.slug}/" data-slug="${p.slug}" data-index="${i}">
-          <div class="covers_frame" style="aspect-ratio: ${coverRatio(p.data)}">
+      const { slug, data } = p;
+      const meta = [data.type, data.status].filter(Boolean).join(' · ');
+
+      return `<a class="layout-grid_item covers_item" href="/work/${slug}/" data-slug="${slug}" data-index="${i}">
+          <div class="covers_frame" style="aspect-ratio: ${coverRatio(data)}">
             ${coverMedia(p, i)}
           </div>
           <div class="covers_label">
-            <span class="covers_name">${inline(p.data.title, p.slug)}</span>
-            <span class="covers_meta">${inline(meta, p.slug)}</span>
+            <span class="covers_name">${inline(data.title, slug)}</span>
+            <span class="covers_meta">${inline(meta, slug)}</span>
           </div>
-          <div class="covers_outcome">${inline(p.data.outcome, p.slug)}</div>
+          <div class="covers_outcome">${inline(data.outcome, slug)}</div>
         </a>`;
     })
     .join('\n        ');
@@ -535,7 +546,7 @@ function renderIndex(projects) {
 
     <main class="work" id="work">
       <div class="work-tag">~/work</div>
-      <div class="covers">
+      <div class="covers layout-grid_list">
         ${covers}
       </div>
     </main>

@@ -48,18 +48,20 @@ cover_caption: // a code comment about why the cover is this image
 `cover` when it is a photograph or a centred mark that crops safely. The
 `live_*` fields are optional and only appear if `live` is set.
 
-The work index is the covers and nothing else. Under each one it prints the
-`title`, then `type · status` on the right, then `outcome` underneath. Those
-four are the only fields that show there, so write `type` and `status` as
-two or three words and `outcome` as one sentence that makes sense with no
-heading above it. `role`, `timeline`, `team` and `built_with` appear on the
-case study instead, and `cover_caption` sits under the hero there.
+The work index is the covers and nothing else. Each cover is a link straight
+to its case study. Under each one it prints the `title`, then `type · status`,
+then `outcome` underneath. Those four are the only fields that show there, so
+write `type` and `status` as two or three words and `outcome` as one sentence
+that makes sense with no heading above it. The tile is a quarter of the page
+wide, so keep all four short. `role`, `timeline`, `team`, `built_with` and
+`summary` appear on the case study instead, and `cover_caption` sits under the
+hero there.
 
 ## cover shapes
 
-The index is two columns of covers, and each cover keeps the shape of its own
+The index is four columns of covers, and each cover keeps the shape of its own
 image. That is what staggers the columns, so a set of covers that are all the
-same shape will produce two flat columns with no rhythm. Vary them.
+same shape will produce four flat columns with no rhythm. Vary them.
 
 The build reads the width and height out of the `.webp` itself, so there is
 nothing to declare and nothing to keep in sync when you replace a file. If

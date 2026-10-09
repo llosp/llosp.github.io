@@ -18,10 +18,10 @@ function initAscii() {
   if (!canvas || !canvas.getContext) return { scatter() {} };
 
   const ctx = canvas.getContext('2d');
-  const chars = ['.', ':', 'o', 'O'];
+  const chars = ['.', ':', '+', 'o', 'O', '#'];
   const cell = 20;
   const ringWidth = 28;
-  const maxRipples = 10;
+  const maxRipples = 14;
   const scatterMs = 400;
   const scatterDist = 26;
 
@@ -71,7 +71,7 @@ function initAscii() {
     if (now - lastSpawn > nextSpawnDelay) {
       spawnRipple(now);
       lastSpawn = now;
-      nextSpawnDelay = 250 + Math.random() * 400;
+      nextSpawnDelay = 180 + Math.random() * 320;
     }
 
     ripples = ripples.filter((r) => now - r.t0 < r.life);
@@ -120,7 +120,7 @@ function initAscii() {
           dy = (oy / len) * push;
         }
 
-        ctx.globalAlpha = 0.1 + best * 0.2;
+        ctx.globalAlpha = 0.15 + best * 0.4;
         ctx.fillText(chars[index], gx * cell + dx, gy * cell + dy);
       }
     }
@@ -165,19 +165,22 @@ function initAscii() {
 // each item goes into the leftmost column that's within one row-gap of the
 // shortest available column, so images prefer sitting left and only drop to
 // a shorter column further right when the left one is meaningfully taller.
-// expanded items span 2 columns and align to the taller of the two.
+// an item spans --span columns at rest and twice that when expanded, and a
+// multi-column item aligns to the tallest column it covers.
 function layoutMasonryGrids() {
   document.querySelectorAll('.layout-grid_list').forEach((container) => {
     const style = getComputedStyle(container);
     const columns = parseInt(style.getPropertyValue('--columns'), 10) || 1;
     const columnGap = parseFloat(style.columnGap) || 0;
     const rowGap = parseFloat(style.rowGap) || 0;
+    const baseSpan = parseInt(style.getPropertyValue('--span'), 10) || 1;
     const columnWidth = (container.clientWidth - (columns - 1) * columnGap) / columns;
     const colHeights = new Array(columns).fill(0);
     const items = [...container.children].filter((el) => el.classList.contains('layout-grid_item'));
 
     items.forEach((item) => {
-      const span = Math.min(item.classList.contains('is--active') ? 2 : 1, columns);
+      const wanted = item.classList.contains('is--active') ? baseSpan * 2 : baseSpan;
+      const span = Math.min(wanted, columns);
 
       let minTop = Infinity;
       for (let i = 0; i <= columns - span; i++) {
@@ -207,36 +210,43 @@ function layoutMasonryGrids() {
   });
 }
 
+// opening an item moves every other item in the grid, so it cannot simply
+// be measured in place. width is mid-transition at the moment of the click,
+// so reading offsetHeight then would measure the OLD size: the item is
+// snapped to its final size with no transition, the masonry is remeasured
+// against that true footprint, and only then is it animated from where it
+// actually started.
+function toggleGridItem(item) {
+  const startWidth = item.getBoundingClientRect().width;
+  const startTop = item.style.top;
+  const startLeft = item.style.left;
+  const isActive = item.classList.toggle('is--active');
+
+  item.style.transition = 'none';
+  void item.offsetHeight;
+  layoutMasonryGrids();
+  const finalTop = item.style.top;
+  const finalLeft = item.style.left;
+
+  item.style.width = `${startWidth}px`;
+  item.style.top = startTop;
+  item.style.left = startLeft;
+  void item.offsetHeight;
+
+  requestAnimationFrame(() => {
+    item.style.transition = '';
+    item.style.width = '';
+    item.style.top = finalTop;
+    item.style.left = finalLeft;
+  });
+
+  return isActive;
+}
+
 function initGallery(scope) {
   scope.querySelectorAll('.layout-grid_item .frame').forEach((frame) => {
     frame.addEventListener('click', () => {
-      const item = frame.closest('.layout-grid_item');
-      const startWidth = item.getBoundingClientRect().width;
-      const startTop = item.style.top;
-      const startLeft = item.style.left;
-      const isActive = item.classList.toggle('is--active');
-
-      // width is mid-transition at this point, so reading offsetHeight now
-      // would measure the OLD size. snap the clicked item to its final size
-      // with no transition so the masonry math sees its true footprint,
-      // then flip it back and release on the next frame.
-      item.style.transition = 'none';
-      void item.offsetHeight;
-      layoutMasonryGrids();
-      const finalTop = item.style.top;
-      const finalLeft = item.style.left;
-
-      item.style.width = `${startWidth}px`;
-      item.style.top = startTop;
-      item.style.left = startLeft;
-      void item.offsetHeight;
-
-      requestAnimationFrame(() => {
-        item.style.transition = '';
-        item.style.width = '';
-        item.style.top = finalTop;
-        item.style.left = finalLeft;
-      });
+      const isActive = toggleGridItem(frame.closest('.layout-grid_item'));
 
       const video = frame.querySelector('video');
       if (!video) return;
@@ -307,6 +317,7 @@ function initVideos(scope) {
 // the covers are the work index. each one is also the element the router
 // morphs into the case study hero, which is why it is a real img in the page
 // rather than something drawn on hover.
+//
 function initCovers(scope) {
   const items = [...scope.querySelectorAll('.covers_item')];
   if (!items.length) return;

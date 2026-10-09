@@ -21,7 +21,7 @@ function isInternal(link) {
   if (!link || link.target || link.hasAttribute('download')) return false;
   if (link.origin !== window.location.origin) return false;
   const path = link.pathname;
-  return path === '/' || path.startsWith('/work/');
+  return path === '/' || path === '/about/' || path.startsWith('/work/');
 }
 
 async function fetchPage(url) {

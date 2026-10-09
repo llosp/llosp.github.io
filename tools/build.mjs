@@ -360,7 +360,7 @@ function nav() {
         <div class="text-color_inverse name-short">lope</div>
       </a>
       ${navItem('/#work', './work')}
-      ${navItem('/#about', './about')}
+      ${navItem('/about/', './about')}
       ${resume}
     </div>
   </div>`;
@@ -496,14 +496,11 @@ function renderIndex(projects) {
         </div>
       </div>
     </main>
-
-${aboutSection()}
 `;
 }
 
-function aboutSection() {
-  const file = join(root, 'content/about.md');
-  const src = readFileSync(file, 'utf8');
+function renderAbout() {
+  const src = readFileSync(join(root, 'content/about.md'), 'utf8');
   const { body } = parseFrontmatter(src, 'content/about.md');
   const blocks = splitSections(body)
     .map((section) => {
@@ -514,10 +511,17 @@ function aboutSection() {
       </div>`;
     })
     .join('\n');
-  return `    <section class="about" id="about">
+
+  return shell({
+    title: 'about / lope.design',
+    description:
+      'Pedro Lopes, a product designer and developer in Rio de Janeiro working on ai and web interfaces.',
+    route: 'about',
+    body: `    <section class="about" id="about">
       <div class="about-tag">~/about</div>
 ${blocks}
-    </section>`;
+    </section>`,
+  });
 }
 
 function renderCaseStudy(project, prev, next) {
@@ -639,6 +643,9 @@ writeFileSync(
   })
 );
 
+mkdirSync(join(root, 'about'), { recursive: true });
+writeFileSync(join(root, 'about', 'index.html'), renderAbout());
+
 projects.forEach((project, i) => {
   const dir = join(root, 'work', project.slug);
   mkdirSync(dir, { recursive: true });
@@ -650,7 +657,7 @@ projects.forEach((project, i) => {
 
 /* ── report ───────────────────────────────────────────────────────────── */
 
-console.log(`built index.html + ${projects.length} case studies`);
+console.log(`built index.html + /about/ + ${projects.length} case studies`);
 console.log(projects.map((p) => `  /work/${p.slug}/`).join('\n'));
 
 if (warnings.length) {

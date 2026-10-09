@@ -165,29 +165,6 @@ video {
   pointer-events: none;
 }
 
-.background-gridlines {
-  position: fixed;
-  inset: 0 0 auto 0;
-  z-index: -1;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  height: 120vh;
-  min-height: 120vh;
-  padding: 0 5px;
-  pointer-events: none;
-}
-
-.grid-line {
-  width: 1px;
-  height: 100%;
-  background-color: var(--grey-meta);
-  opacity: 0.35;
-  transform: scaleX(0.5);
-  transform-origin: 0;
-}
-
 /* ─── navbar ────────────────────────────────────────────────────────── */
 
 .navbar {
@@ -1093,7 +1070,6 @@ a.cs-nav_link:hover .cs-nav_name {
   .nav_button:nth-child(3) { grid-column: span 3; }
   .nav_button:nth-child(4) { grid-column: span 3; }
 
-  .grid-line { transform: scaleX(0.25); }
   .title-h1 { font-size: 4.5vh; text-indent: 0; }
 
   .work-tag,

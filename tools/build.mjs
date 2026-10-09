@@ -479,14 +479,6 @@ function shell({ title, description, route, body, cls = '' }) {
 
   <canvas class="ascii-background" aria-hidden="true"></canvas>
 
-  <div class="background-gridlines" aria-hidden="true">
-    <div class="grid-line"></div>
-    <div class="grid-line"></div>
-    <div class="grid-line"></div>
-    <div class="grid-line"></div>
-    <div class="grid-line"></div>
-  </div>
-
   <div class="cursor-pill" aria-hidden="true"></div>
 
   ${nav()}

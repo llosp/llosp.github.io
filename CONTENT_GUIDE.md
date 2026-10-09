@@ -49,7 +49,13 @@ cover_caption: // a code comment about why the cover is this image
 `live_*` fields are optional and only appear if `live` is set.
 
 `type`, `role`, `status` and `outcome` are the columns of the work index, so
-write them as short phrases rather than sentences.
+write them as short phrases rather than sentences. `outcome` and
+`cover_caption` appear a second time under the cover in the grid below the
+table, so they have to read on their own without the column header.
+
+The project with the lowest `order` runs full width in the cover grid and
+everything after it falls into two columns, so **keep the project count
+odd**. Six projects would leave a hole at the end of the grid.
 
 ## sections
 
@@ -201,3 +207,16 @@ from `/work/<slug>/`.
 Cover images are framed at 16:9 on both the work index and the case study
 hero, which is what lets the cover morph between them without distorting.
 Anything roughly that shape works; `cover_fit` handles the rest.
+
+### video covers
+
+A `cover` may be a `.webm` or `.mp4` instead of a `.webp`, and nothing else
+in the frontmatter changes. In the work index it becomes a muted looping clip
+that plays only while the cursor is over it. On the case study it fills the
+hero and plays whenever it is on screen, because there the clip is the
+subject of the page rather than a label on a link. The morph between the two
+carries the video, not a still frame.
+
+Keep the clips short and small. Every cover on the index preloads its
+metadata, so five long videos cost five round trips before anything plays.
+`cover_alt` is still used: it becomes the accessible label on the hero.

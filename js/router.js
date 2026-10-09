@@ -41,26 +41,47 @@ async function fetchPage(url) {
   return page;
 }
 
+// the 16:9 box around a cover. the morph measures this rather than the
+// image itself, because the image carries a scale transform on hover and
+// that would otherwise make the clone start a few percent too large.
+const frameOf = (el) => el.closest('.cs-cover_frame, .covers_frame') || el;
+
+// a cover scrolled out of the window would morph in from somewhere off
+// screen, which reads as a glitch rather than as a transition. partly
+// visible is fine: the clone just starts where it actually sits.
+const onScreen = (r) => r.bottom > 0 && r.top < window.innerHeight;
+
 // the element the morph starts from on the current page
 function sourceCover(slug) {
   const hero = document.querySelector('.cs-cover_img');
   if (hero && hasBox(rect(hero))) return hero;
-  const preview = document.querySelector(`.index_preview-img[data-slug="${slug}"].is--active`);
-  if (preview && hasBox(rect(preview))) return preview;
+
+  const cover = document.querySelector(`.covers_media[data-slug="${slug}"]`);
+  if (cover) {
+    const box = rect(frameOf(cover));
+    if (hasBox(box) && onScreen(box)) return cover;
+  }
   return null;
 }
 
 // the slot the morph lands in on the page we just swapped in
 function targetSlot(route, slug) {
   if (route === 'work') return document.querySelector('.cs-cover_frame');
-  return document.querySelector(`.index_preview-img[data-slug="${slug}"]`);
+  const cover = document.querySelector(`.covers_media[data-slug="${slug}"]`);
+  return cover ? frameOf(cover) : null;
 }
 
+// cloned rather than rebuilt as an img, so that a cover which is a video
+// travels as a video. a cloned img reuses the decoded original, so neither
+// kind flashes on the first frame.
 function cloneCover(source, from) {
-  const clone = document.createElement('img');
+  const clone = source.cloneNode(true);
   clone.className = 'morph-img';
-  clone.src = source.currentSrc || source.src || '';
-  clone.alt = '';
+  clone.removeAttribute('data-slug');
+  if (clone.tagName === 'VIDEO') {
+    clone.muted = true;
+    clone.play().catch(() => {});
+  }
   clone.style.objectFit = getComputedStyle(source).objectFit;
   clone.style.top = `${from.top}px`;
   clone.style.left = `${from.left}px`;
@@ -70,13 +91,18 @@ function cloneCover(source, from) {
   return clone;
 }
 
-const frameOf = (el) => (el.classList.contains('cs-cover_img') ? el.closest('.cs-cover_frame') : el);
-
 export function initRouter({ onSwap, onTransition }) {
   if (!window.matchMedia) return;
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
   let busy = false;
+
+  // a back or forward that arrived while a swap was still running. the
+  // browser changes the url for a traversal before we hear about it, so
+  // unlike a click it cannot simply be dropped: that would leave the address
+  // bar describing a page that is not the one on screen. it waits here
+  // instead and runs as soon as the current swap lands.
+  let pending = null;
 
   // where the work index was left scrolled to. going home from a case study
   // should land back on the row the cover shrinks into, not the top of the
@@ -97,20 +123,29 @@ export function initRouter({ onSwap, onTransition }) {
 
   history.replaceState(state(0), '', window.location.href);
 
-  async function swap(url, { slug, scrollTo = 0, push = true }) {
-    if (busy) return;
+  async function swap(url, options) {
+    const { slug, scrollTo = 0, push = true } = options;
+
+    if (busy) {
+      // a click mid-morph is just an impatient reader and is ignored
+      if (!push) pending = { url, options };
+      return;
+    }
     busy = true;
 
-    if (window.location.pathname === '/') homeScroll = window.scrollY;
+    // measured against what is rendered rather than the url, because a
+    // deferred traversal runs with the url already pointing at the target
+    if (rendered === '/') homeScroll = window.scrollY;
 
     const app = document.querySelector('#app');
     const instant = reduceMotion();
 
     let page;
     const source = instant ? null : sourceCover(slug);
-    const from = source ? rect(source) : null;
+    const sourceFrame = source ? frameOf(source) : null;
+    const from = sourceFrame ? rect(sourceFrame) : null;
     const clone = source && hasBox(from) ? cloneCover(source, from) : null;
-    if (clone) frameOf(source).style.visibility = 'hidden';
+    if (clone) sourceFrame.style.visibility = 'hidden';
 
     // the rest of the page drops toward white while the cover holds still
     app.classList.add('is--leaving');
@@ -155,7 +190,6 @@ export function initRouter({ onSwap, onTransition }) {
 
     if (clone && hasBox(to)) {
       slot.classList.add('is--morph-target');
-      if (slot.classList.contains('index_preview-img')) slot.style.visibility = 'hidden';
 
       onTransition();
 
@@ -177,7 +211,6 @@ export function initRouter({ onSwap, onTransition }) {
       animation.cancel();
 
       slot.classList.remove('is--morph-target');
-      slot.style.visibility = '';
       clone.remove();
     } else if (clone) {
       clone.remove();
@@ -189,6 +222,14 @@ export function initRouter({ onSwap, onTransition }) {
     }
 
     busy = false;
+
+    // a back or forward that was held while this swap ran. the url is
+    // already where it wants to be, so this only has to catch the dom up.
+    if (pending) {
+      const next = pending;
+      pending = null;
+      if (window.location.pathname !== rendered) swap(next.url, next.options);
+    }
   }
 
   document.addEventListener('click', (event) => {

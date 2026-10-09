@@ -276,8 +276,11 @@ function initReveal(scope) {
 
 // gallery videos have no controls, so they play while they are on screen
 // and pause when they are not, instead of sitting on a frozen first frame
+// a video hero plays whenever it is on screen, unlike a video cover in the
+// index, which waits to be hovered. on the case study the clip is the
+// subject of the page, so making the reader hover it to see it is backwards.
 function initVideos(scope) {
-  const videos = [...scope.querySelectorAll('.frame--video video')];
+  const videos = [...scope.querySelectorAll('.frame--video video, video.cs-cover_img')];
   if (!videos.length) return;
 
   if (!('IntersectionObserver' in window)) {
@@ -299,58 +302,52 @@ function initVideos(scope) {
   videos.forEach((v) => observer.observe(v));
 }
 
-/* ── index hover preview ──────────────────────────────────────────────── */
+/* ── work covers ──────────────────────────────────────────────────────── */
 
-// the preview image is the same element the router morphs into the case
-// study hero, which is why it is a real img in a fixed column rather than
-// something drawn on hover.
-function initIndexPreview(scope, slug) {
-  const rows = [...scope.querySelectorAll('.index_row')];
-  const images = [...scope.querySelectorAll('.index_preview-img')];
-  const captions = [...scope.querySelectorAll('.index_preview-caption')];
-  if (!rows.length || !images.length) return;
+// the covers are the other half of the index: the table says what each
+// project is, the grid shows it. each cover is also the element the router
+// morphs into the case study hero, which is why it is a real img in the page
+// rather than something drawn on hover.
+function initCovers(scope) {
+  const items = [...scope.querySelectorAll('.covers_item')];
+  if (!items.length) return;
 
-  const show = (slug) => {
-    [...images, ...captions].forEach((el) => {
-      el.classList.toggle('is--active', el.dataset.slug === slug);
+  // hovering either half marks the matching entry in the other, so the
+  // table and the grid read as one list rather than two
+  const entries = [...items, ...scope.querySelectorAll('.index_row')];
+  const link = (slug) =>
+    entries.forEach((el) => {
+      el.classList.toggle('is--linked', Boolean(slug) && el.dataset.slug === slug);
     });
-  };
 
-  // coming back from a case study, the row you came from is the one showing,
-  // so the cover has something visible to shrink into
-  const fallback = images.find((el) => el.dataset.default) || images[0];
-  show(images.some((el) => el.dataset.slug === slug) ? slug : fallback.dataset.slug);
-
-  rows.forEach((row) => {
-    const activate = () => show(row.dataset.slug);
-    row.addEventListener('mouseenter', activate);
-    row.addEventListener('focus', activate);
+  entries.forEach((el) => {
+    el.addEventListener('mouseenter', () => link(el.dataset.slug));
+    el.addEventListener('focus', () => link(el.dataset.slug));
+    el.addEventListener('mouseleave', () => link(null));
+    el.addEventListener('blur', () => link(null));
   });
 
-  // the covers stay lazy until the index is actually approached, then load
-  // eagerly so the first hover never waits on a fetch
-  if ('IntersectionObserver' in window) {
-    const table = scope.querySelector('.index');
-    if (!table) return;
-    const observer = new IntersectionObserver(
-      (entries) => {
-        if (!entries.some((e) => e.isIntersecting)) return;
-        images.forEach((img) => {
-          if (img.tagName === 'IMG') img.loading = 'eager';
-        });
-        observer.disconnect();
-      },
-      { rootMargin: '400px 0px' }
-    );
-    observer.observe(table);
-  }
+  // a cover that is a video plays only while it is hovered, so the whole
+  // index is never decoding five clips at once just for being on screen
+  if (reduceMotion()) return;
+  items.forEach((item) => {
+    const video = item.querySelector('video.covers_media');
+    if (!video) return;
+    item.addEventListener('mouseenter', () => video.play().catch(() => {}));
+    item.addEventListener('mouseleave', () => {
+      video.pause();
+      video.currentTime = 0;
+    });
+  });
 }
 
 /* ── cursor pill ──────────────────────────────────────────────────────── */
 
-// replaces the cursor over a project row with the command the click runs.
-// hidden on touch and under reduced motion by the stylesheet, and never
-// started here either, so there is no rAF loop running for nothing.
+const PILL_TARGETS = '.index_row, .covers_item';
+
+// replaces the cursor over anything that opens a case study with the command
+// the click runs. hidden on touch and under reduced motion by the stylesheet,
+// and never started here either, so there is no rAF loop running for nothing.
 function initCursorPill() {
   const pill = document.querySelector('.cursor-pill');
   if (!pill || !finePointer() || reduceMotion()) return;
@@ -379,7 +376,7 @@ function initCursorPill() {
   );
 
   document.addEventListener('mouseover', (event) => {
-    const row = event.target.closest('.index_row');
+    const row = event.target.closest(PILL_TARGETS);
     if (!row) return;
 
     pill.textContent = `[ open ~/work/${row.dataset.slug} ]`;
@@ -396,8 +393,8 @@ function initCursorPill() {
   });
 
   document.addEventListener('mouseout', (event) => {
-    if (!event.target.closest('.index_row')) return;
-    if (event.relatedTarget && event.relatedTarget.closest('.index_row')) return;
+    if (!event.target.closest(PILL_TARGETS)) return;
+    if (event.relatedTarget && event.relatedTarget.closest(PILL_TARGETS)) return;
     visible = false;
     pill.classList.remove('is--visible');
   });
@@ -405,13 +402,13 @@ function initCursorPill() {
 
 /* ── per page wiring ──────────────────────────────────────────────────── */
 
-function initPage(slug) {
+function initPage() {
   const app = document.querySelector('#app');
   if (!app) return;
 
   initReveal(app);
   initVideos(app);
-  initIndexPreview(app, slug);
+  initCovers(app);
   initGallery(app);
   layoutMasonryGrids();
 }

@@ -192,6 +192,61 @@ function mediaFrame({ src, alt = '', shape = 'wide', where, className = '' }) {
     </div>`;
 }
 
+// a cover may be a still or a clip, and the extension is the only thing that
+// decides. both the index grid and the case study hero go through here, so
+// swapping a .webp for a .webm never leaves one of the two broken.
+const isVideo = (src) => /\.(webm|mp4)$/.test(src);
+const videoType = (src) => (src.endsWith('.webm') ? 'webm' : 'mp4');
+
+// the cover in the work index. it carries no alt text because the link
+// around it already says the project name, so describing the image here
+// would only make a screen reader read every row twice.
+function coverMedia(project, index) {
+  const { slug, data } = project;
+
+  if (!data.cover || !assetExists(data.cover)) {
+    if (data.cover) warnings.push(`${slug}: missing cover ${data.cover}`);
+    return `<div class="covers_media frame--empty" data-slug="${slug}">${inline(
+      `[todo: cover for ${slug}]`,
+      slug
+    )}</div>`;
+  }
+
+  const fit = data.cover_fit || 'cover';
+  const url = assetUrl(data.cover);
+
+  if (isVideo(data.cover)) {
+    return `<video class="covers_media" data-slug="${slug}" style="object-fit: ${fit}"
+              muted loop playsinline preload="metadata">
+              <source src="${url}" type="video/${videoType(data.cover)}">
+            </video>`;
+  }
+
+  // the first cover is the only one near the fold on most screens
+  const loading = index === 0 ? 'eager' : 'lazy';
+  return `<img class="covers_media" data-slug="${slug}" src="${url}" alt=""
+              style="object-fit: ${fit}" loading="${loading}" decoding="async">`;
+}
+
+// the same cover again, filling the case study hero. this one keeps its alt
+// text, because here the image is the subject of the page rather than the
+// label on a link.
+function heroCover(data) {
+  const fit = data.cover_fit || 'cover';
+  const url = assetUrl(data.cover);
+  const alt = escapeHtml(data.cover_alt || '');
+
+  if (isVideo(data.cover)) {
+    return `<video class="cs-cover_img" style="object-fit: ${fit}"
+            muted loop playsinline preload="auto" aria-label="${alt}">
+            <source src="${url}" type="video/${videoType(data.cover)}">
+          </video>`;
+  }
+
+  return `<img class="cs-cover_img" src="${url}" alt="${alt}"
+            style="object-fit: ${fit}" fetchpriority="high" decoding="async">`;
+}
+
 const caption = (text, where) =>
   text ? `<figcaption class="caption-code">${inline(text, where)}</figcaption>` : '';
 
@@ -439,33 +494,26 @@ function renderIndex(projects) {
     })
     .join('\n      ');
 
-  // every cover is rendered up front and toggled by opacity, so hovering a
-  // row never waits on a decode and the morph always has a real element to
-  // start from. they stay lazy until the index scrolls into view.
-  const previews = projects
-    .map((p, i) => {
-      const isDefault = i === 0 ? ' data-default="true"' : '';
-      if (!p.data.cover || !assetExists(p.data.cover)) {
-        return `<div class="index_preview-img frame--empty" data-slug="${p.slug}"${isDefault}>${inline(
-          `[todo: cover for ${p.slug}]`,
-          p.slug
-        )}</div>`;
-      }
-      return `<img class="index_preview-img" data-slug="${p.slug}"
-          src="${assetUrl(p.data.cover)}" alt=""
-          style="object-fit: ${p.data.cover_fit || 'cover'}"
-          loading="lazy" decoding="async" fetchpriority="low"${isDefault}>`;
-    })
-    .join('\n        ');
-
-  const previewCaptions = projects
+  // the covers are the visual half of the index, and each one is the element
+  // the router morphs into the case study hero, which is why it is a real
+  // img in the page rather than something drawn on hover.
+  const covers = projects
     .map(
-      (p, i) =>
-        `<div class="index_preview-caption caption-code" data-slug="${p.slug}"${
-          i === 0 ? ' data-default="true"' : ''
-        }>${inline(p.data.cover_caption || `[todo: cover caption for ${p.slug}]`, p.slug)}</div>`
+      (p, i) => `<a class="covers_item" href="/work/${p.slug}/" data-slug="${p.slug}" data-index="${i}">
+          <div class="covers_frame">
+            ${coverMedia(p, i)}
+          </div>
+          <div class="covers_label">
+            <span class="covers_name">${inline(p.data.title, p.slug)}</span>
+            <span class="covers_outcome">${inline(p.data.outcome, p.slug)}</span>
+          </div>
+          <div class="covers_caption caption-code">${inline(
+            p.data.cover_caption || `[todo: cover caption for ${p.slug}]`,
+            p.slug
+          )}</div>
+        </a>`
     )
-    .join('\n          ');
+    .join('\n        ');
 
   return `    <div class="hero">
       <h1 class="title-h1">product designer who builds. ai + web interfaces.</h1>
@@ -486,14 +534,9 @@ function renderIndex(projects) {
           </div>
           ${rows}
         </div>
-        <div class="index_preview" aria-hidden="true">
-          <div class="index_preview-frame">
-            ${previews}
-          </div>
-          <div class="index_preview-captions">
-            ${previewCaptions}
-          </div>
-        </div>
+      </div>
+      <div class="covers">
+        ${covers}
       </div>
     </main>
 `;
@@ -569,8 +612,7 @@ ${renderBlocks(section.text, { slug })}
         slug
       )}</div>`
     : `<div class="cs-cover_frame" data-cover-slot="${slug}">
-          <img class="cs-cover_img" src="${assetUrl(data.cover)}" alt="${escapeHtml(data.cover_alt || '')}"
-            style="object-fit: ${data.cover_fit || 'cover'}" fetchpriority="high" decoding="async">
+          ${heroCover(data)}
         </div>`;
 
   const footNav = `      <nav class="cs-nav">

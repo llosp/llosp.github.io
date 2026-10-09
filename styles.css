@@ -89,8 +89,8 @@ body {
 .work-tag,
 .about-tag,
 .about-prompt,
-.index_head,
-.index_name,
+.covers_name,
+.covers_meta,
 .cs-section_file,
 .cs-breadcrumb,
 .cs-title,
@@ -283,14 +283,12 @@ video {
 }
 
 /* the pill replaces the cursor rather than sitting beside it */
-.index_row:hover,
 .covers_item:hover {
   cursor: none;
 }
 
 @media (hover: none), (pointer: coarse) {
   .cursor-pill { display: none; }
-  .index_row:hover,
   .covers_item:hover { cursor: pointer; }
 }
 
@@ -366,115 +364,34 @@ video {
   line-height: 18px;
 }
 
-.index {
-  display: grid;
-  grid-template-columns: repeat(12, 1fr);
-  gap: var(--gap);
-  align-items: start;
-  margin-top: 20px;
-  padding: 0 var(--gutter);
-}
-
-.index_table {
-  grid-column: 1 / span 12;
-  font-family: var(--font-mono);
-  font-size: 12px;
-}
-
-.index_head,
-.index_row {
-  display: grid;
-  grid-template-columns: 2.4em minmax(0, 1.1fr) minmax(0, 1fr) minmax(0, 1.4fr) minmax(0, 0.8fr) minmax(0, 1.6fr);
-  gap: var(--gap);
-  align-items: baseline;
-  padding: 9px var(--gutter);
-  margin: 0 calc(-1 * var(--gutter));
-}
-
-.index_head {
-  color: var(--grey-meta);
-  border-bottom: 1px solid var(--hairline);
-  padding-bottom: 7px;
-}
-
-.index_row {
-  position: relative;
-  border-bottom: 1px solid var(--hairline);
-  transition: background 0.2s ease, color 0.2s ease;
-}
-
-.index_row:hover,
-.index_row:focus-visible {
-  background: var(--black);
-  color: var(--white);
-  outline: none;
-}
-
-.index_row:hover .index_num,
-.index_row:hover .index_type,
-.index_row:hover .index_role,
-.index_row:hover .index_status,
-.index_row:focus-visible .index_num,
-.index_row:focus-visible .index_type,
-.index_row:focus-visible .index_role,
-.index_row:focus-visible .index_status {
-  color: var(--white);
-}
-
-.index_num,
-.index_type,
-.index_role,
-.index_status {
-  color: var(--grey-meta);
-}
-
-.index_num,
-.index_name,
-.index_status {
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.index_type,
-.index_role,
-.index_outcome {
-  line-height: 1.45;
-}
-
-.index_name {
-  font-weight: 700;
-}
-
 /* ─── work covers ───────────────────────────────────────────────────── */
 
+/* multicol rather than grid, because each cover keeps the height of its own
+   image. that is what staggers the two columns: the column with shorter
+   covers simply fits more of them. it also needs no javascript and no
+   measuring pass, so nothing moves after the page paints. */
 .covers {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 56px var(--gap);
+  columns: 2;
+  column-gap: var(--gap);
   margin-top: 80px;
   padding: 0 var(--gutter);
 }
 
-/* the lead project runs the full width. it gives the first cover the weight
-   it should have, and it leaves an even number behind it, so the two columns
-   fill with no hole at the end. */
-.covers_item:first-child {
-  grid-column: 1 / -1;
-}
-
 .covers_item {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  break-inside: avoid;
+  -webkit-column-break-inside: avoid;
+  /* inline-block is what makes break-inside hold up across browsers */
+  display: inline-block;
+  width: 100%;
+  margin-bottom: 56px;
   color: inherit;
   text-decoration: none;
 }
 
+/* the ratio is set per project, inline, from the size of the actual file */
 .covers_frame {
   position: relative;
   width: 100%;
-  aspect-ratio: var(--cover-ratio);
   background: var(--placeholder);
   overflow: hidden;
 }
@@ -484,9 +401,9 @@ video {
   inset: 0;
   width: 100%;
   height: 100%;
-  /* the hover scale sits on the media rather than the frame, so the 16:9 box
-     the morph measures stays exactly the same size whether or not the cursor
-     is over it */
+  /* the hover scale sits on the media rather than the frame, so the box the
+     morph measures stays exactly the same size whether or not the cursor is
+     over it */
   transition: transform 0.6s var(--ease-out);
 }
 
@@ -506,47 +423,32 @@ video {
   display: flex;
   align-items: baseline;
   gap: var(--gap);
+  margin-top: 12px;
+  padding-bottom: 7px;
+  border-bottom: 1px solid var(--hairline);
   font-family: var(--font-mono);
   font-size: 12px;
   line-height: 18px;
-  padding-bottom: 7px;
-  border-bottom: 1px solid var(--hairline);
 }
 
 .covers_name {
   font-weight: 700;
+}
+
+.covers_meta {
+  margin-left: auto;
+  color: var(--grey-meta);
+  letter-spacing: 0.04em;
+  text-align: right;
   white-space: nowrap;
 }
 
+/* the one line that says why the project was worth doing */
 .covers_outcome {
+  margin-top: 8px;
   color: var(--grey-meta);
-  margin-left: auto;
-  text-align: right;
-}
-
-.covers_caption {
-  /* reserved so a two line caption next to a one line caption does not drag
-     the row below it out of alignment */
-  min-height: 3em;
-}
-
-/* hovering a row in the table marks the matching cover, and the other way
-   round, so the two halves of the index read as one list */
-.covers_item.is--linked .covers_frame {
-  outline: 1px solid var(--black);
-  outline-offset: 3px;
-}
-
-.index_row.is--linked {
-  background: var(--black);
-  color: var(--white);
-}
-
-.index_row.is--linked .index_num,
-.index_row.is--linked .index_type,
-.index_row.is--linked .index_role,
-.index_row.is--linked .index_status {
-  color: var(--white);
+  font-size: 13px;
+  line-height: 1.5;
 }
 
 /* ─── about ─────────────────────────────────────────────────────────── */
@@ -1130,8 +1032,7 @@ a.cs-nav_link:hover .cs-nav_name {
   .button-square { width: 12px; height: 12px; }
   .work-tag,
   .about-tag,
-  .caption-code,
-  .index_table { font-size: 14px; }
+  .caption-code { font-size: 14px; }
   .prose { font-size: 16px; }
 }
 
@@ -1154,43 +1055,21 @@ a.cs-nav_link:hover .cs-nav_name {
 
   .layout-grid_item.is--active { width: 100%; }
 
-  .index_head { display: none; }
-
-  /* one cover per row, because a 16:9 cover at half a phone screen is too
-     small to tell you anything */
+  /* one cover per row, because half a phone screen is too small to tell you
+     anything about a screenshot */
   .covers {
-    grid-template-columns: minmax(0, 1fr);
-    gap: 40px;
+    columns: 1;
     margin-top: 56px;
   }
 
+  .covers_item { margin-bottom: 40px; }
+
   .covers_label { flex-wrap: wrap; }
 
-  .covers_outcome {
+  .covers_meta {
     margin-left: 0;
     text-align: left;
     flex-basis: 100%;
-  }
-
-  .covers_caption { min-height: 0; }
-
-  .index_row {
-    grid-template-columns: 2.4em 1fr;
-    row-gap: 2px;
-    padding: 12px var(--gutter);
-  }
-
-  .index_name { font-size: 14px; }
-  .index_role { display: none; }
-
-  .index_type,
-  .index_status,
-  .index_outcome { grid-column: 2; }
-
-  .index_status::before {
-    content: "status: ";
-    color: inherit;
-    opacity: 0.7;
   }
 
   .meta { grid-template-columns: repeat(2, minmax(0, 1fr)); }
@@ -1264,6 +1143,5 @@ a.cs-nav_link:hover .cs-nav_name {
   }
 
   .cursor-pill { display: none; }
-  .index_row:hover,
   .covers_item:hover { cursor: pointer; }
 }

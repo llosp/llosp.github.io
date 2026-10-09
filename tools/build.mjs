@@ -160,6 +160,45 @@ function assetExists(src) {
   return existsSync(join(root, src.replace(/^\//, '')));
 }
 
+// the index covers sit at the shape of their own image rather than in one
+// fixed box, which is what staggers the two columns. the shape is read out
+// of the file so that swapping a cover never also means editing a number in
+// the frontmatter. webp only, which is what the guide asks for anyway.
+const sizeCache = new Map();
+
+function webpSize(file) {
+  let buf;
+  try {
+    buf = readFileSync(file);
+  } catch {
+    return null;
+  }
+  if (buf.length < 30) return null;
+  if (buf.toString('ascii', 0, 4) !== 'RIFF' || buf.toString('ascii', 8, 12) !== 'WEBP') return null;
+
+  const tag = buf.toString('ascii', 12, 16);
+  // the three webp flavours each keep the size somewhere else
+  if (tag === 'VP8X') return { w: buf.readUIntLE(24, 3) + 1, h: buf.readUIntLE(27, 3) + 1 };
+  if (tag === 'VP8 ') return { w: buf.readUInt16LE(26) & 0x3fff, h: buf.readUInt16LE(28) & 0x3fff };
+  if (tag === 'VP8L') {
+    const bits = buf.readUInt32LE(21);
+    return { w: (bits & 0x3fff) + 1, h: ((bits >> 14) & 0x3fff) + 1 };
+  }
+  return null;
+}
+
+// a video cover, a missing file or one this cannot parse all fall back to
+// the ratio the case study hero uses, so a frame is never zero height.
+function coverRatio(data) {
+  if (data.cover_ratio) return data.cover_ratio;
+  if (!data.cover || !assetExists(data.cover) || !/\.webp$/i.test(data.cover)) return '16 / 9';
+
+  const file = join(root, data.cover.replace(/^\//, ''));
+  if (!sizeCache.has(file)) sizeCache.set(file, webpSize(file));
+  const size = sizeCache.get(file);
+  return size ? `${size.w} / ${size.h}` : '16 / 9';
+}
+
 // case studies live at /work/<slug>/, so every asset path has to be
 // root-absolute rather than relative to the page.
 function assetUrl(src) {
@@ -473,46 +512,24 @@ ${body}
 
 /* ── pages ────────────────────────────────────────────────────────────── */
 
-const INDEX_COLUMNS = ['name', 'type', 'role', 'status', 'outcome'];
-
 function renderIndex(projects) {
-  const head = INDEX_COLUMNS.map((c) => `<span class="index_cell">${c}</span>`).join('');
-
-  const rows = projects
-    .map((p, i) => {
-      const cells = [
-        `<span class="index_cell index_name">${inline(p.data.title, p.slug)}</span>`,
-        `<span class="index_cell index_type">${inline(p.data.type, p.slug)}</span>`,
-        `<span class="index_cell index_role">${inline(p.data.role, p.slug)}</span>`,
-        `<span class="index_cell index_status">${inline(p.data.status, p.slug)}</span>`,
-        `<span class="index_cell index_outcome">${inline(p.data.outcome, p.slug)}</span>`,
-      ].join('\n        ');
-      return `<a class="index_row" href="/work/${p.slug}/" data-slug="${p.slug}" data-index="${i}">
-        <span class="index_cell index_num">${String(i + 1).padStart(2, '0')}</span>
-        ${cells}
-      </a>`;
-    })
-    .join('\n      ');
-
-  // the covers are the visual half of the index, and each one is the element
-  // the router morphs into the case study hero, which is why it is a real
-  // img in the page rather than something drawn on hover.
+  // the covers are the index. each one sits at the shape of its own image,
+  // which is what staggers the two columns, and each one is the element the
+  // router morphs into the case study hero.
   const covers = projects
-    .map(
-      (p, i) => `<a class="covers_item" href="/work/${p.slug}/" data-slug="${p.slug}" data-index="${i}">
-          <div class="covers_frame">
+    .map((p, i) => {
+      const meta = [p.data.type, p.data.status].filter(Boolean).join(' · ');
+      return `<a class="covers_item" href="/work/${p.slug}/" data-slug="${p.slug}" data-index="${i}">
+          <div class="covers_frame" style="aspect-ratio: ${coverRatio(p.data)}">
             ${coverMedia(p, i)}
           </div>
           <div class="covers_label">
             <span class="covers_name">${inline(p.data.title, p.slug)}</span>
-            <span class="covers_outcome">${inline(p.data.outcome, p.slug)}</span>
+            <span class="covers_meta">${inline(meta, p.slug)}</span>
           </div>
-          <div class="covers_caption caption-code">${inline(
-            p.data.cover_caption || `[todo: cover caption for ${p.slug}]`,
-            p.slug
-          )}</div>
-        </a>`
-    )
+          <div class="covers_outcome">${inline(p.data.outcome, p.slug)}</div>
+        </a>`;
+    })
     .join('\n        ');
 
   return `    <div class="hero">
@@ -526,15 +543,6 @@ function renderIndex(projects) {
 
     <main class="work" id="work">
       <div class="work-tag">~/work</div>
-      <div class="index">
-        <div class="index_table">
-          <div class="index_head">
-            <span class="index_cell index_num">#</span>
-            ${head}
-          </div>
-          ${rows}
-        </div>
-      </div>
       <div class="covers">
         ${covers}
       </div>

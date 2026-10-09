@@ -304,28 +304,12 @@ function initVideos(scope) {
 
 /* ── work covers ──────────────────────────────────────────────────────── */
 
-// the covers are the other half of the index: the table says what each
-// project is, the grid shows it. each cover is also the element the router
+// the covers are the work index. each one is also the element the router
 // morphs into the case study hero, which is why it is a real img in the page
 // rather than something drawn on hover.
 function initCovers(scope) {
   const items = [...scope.querySelectorAll('.covers_item')];
   if (!items.length) return;
-
-  // hovering either half marks the matching entry in the other, so the
-  // table and the grid read as one list rather than two
-  const entries = [...items, ...scope.querySelectorAll('.index_row')];
-  const link = (slug) =>
-    entries.forEach((el) => {
-      el.classList.toggle('is--linked', Boolean(slug) && el.dataset.slug === slug);
-    });
-
-  entries.forEach((el) => {
-    el.addEventListener('mouseenter', () => link(el.dataset.slug));
-    el.addEventListener('focus', () => link(el.dataset.slug));
-    el.addEventListener('mouseleave', () => link(null));
-    el.addEventListener('blur', () => link(null));
-  });
 
   // a cover that is a video plays only while it is hovered, so the whole
   // index is never decoding five clips at once just for being on screen
@@ -343,7 +327,7 @@ function initCovers(scope) {
 
 /* ── cursor pill ──────────────────────────────────────────────────────── */
 
-const PILL_TARGETS = '.index_row, .covers_item';
+const PILL_TARGETS = '.covers_item';
 
 // replaces the cursor over anything that opens a case study with the command
 // the click runs. hidden on touch and under reduced motion by the stylesheet,

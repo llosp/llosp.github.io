@@ -48,14 +48,28 @@ cover_caption: // a code comment about why the cover is this image
 `cover` when it is a photograph or a centred mark that crops safely. The
 `live_*` fields are optional and only appear if `live` is set.
 
-`type`, `role`, `status` and `outcome` are the columns of the work index, so
-write them as short phrases rather than sentences. `outcome` and
-`cover_caption` appear a second time under the cover in the grid below the
-table, so they have to read on their own without the column header.
+The work index is the covers and nothing else. Under each one it prints the
+`title`, then `type · status` on the right, then `outcome` underneath. Those
+four are the only fields that show there, so write `type` and `status` as
+two or three words and `outcome` as one sentence that makes sense with no
+heading above it. `role`, `timeline`, `team` and `built_with` appear on the
+case study instead, and `cover_caption` sits under the hero there.
 
-The project with the lowest `order` runs full width in the cover grid and
-everything after it falls into two columns, so **keep the project count
-odd**. Six projects would leave a hole at the end of the grid.
+## cover shapes
+
+The index is two columns of covers, and each cover keeps the shape of its own
+image. That is what staggers the columns, so a set of covers that are all the
+same shape will produce two flat columns with no rhythm. Vary them.
+
+The build reads the width and height out of the `.webp` itself, so there is
+nothing to declare and nothing to keep in sync when you replace a file. If
+you need to override it, `cover_ratio: 4 / 3` wins. A missing cover or a
+video one falls back to 16:9.
+
+The case study hero is always 16:9 regardless, and the cover morphs between
+the two shapes on the way in. `cover_fit` is what keeps that from distorting,
+so it has to be right: `contain` artwork rescales inside the growing box,
+`cover` photography re-crops.
 
 ## sections
 
@@ -204,9 +218,9 @@ video. Paths in markdown are written relative to the repo root
 (`assets/oracle/cover.webp`); the build makes them absolute so they resolve
 from `/work/<slug>/`.
 
-Cover images are framed at 16:9 on both the work index and the case study
-hero, which is what lets the cover morph between them without distorting.
-Anything roughly that shape works; `cover_fit` handles the rest.
+Covers keep their own shape on the work index and are framed at 16:9 on the
+case study hero. See "cover shapes" above for what that means when you are
+choosing one.
 
 ### video covers
 

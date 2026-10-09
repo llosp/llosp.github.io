@@ -474,12 +474,33 @@ function renderSeasonLocked(week, profile, pageLabel, pageTitle) {
   </div>`;
 }
 
+// Toasts empilham no canto; somem quando a barra de tempo (::after) acaba —
+// o hover pausa a barra. Clique dispensa.
 function toast(msg, color = '#22c55e') {
+  let stack = document.getElementById('m-toasts');
+  if (!stack) {
+    stack = document.createElement('div');
+    stack.id = 'm-toasts';
+    stack.className = 'm-toasts';
+    stack.setAttribute('data-m-skip', '');
+    stack.setAttribute('role', 'status');
+    stack.setAttribute('aria-live', 'polite');
+    document.body.appendChild(stack);
+  }
   const t = document.createElement('div');
+  t.className = 'm-toast';
   t.textContent = msg;
-  t.style.cssText = `position:fixed;bottom:20px;right:20px;background:${color};color:#fff;padding:10px 18px;font-family:'Micro 5',monospace;font-size:22px;border:2px solid #000;box-shadow:3px 3px 0 #000;z-index:9999;text-transform:uppercase`;
-  document.body.appendChild(t);
-  setTimeout(() => t.remove(), 2500);
+  t.style.background = color;
+  const dismiss = () => {
+    if (t.classList.contains('m-out')) return;
+    t.classList.add('m-out');
+    setTimeout(() => t.remove(), 260);
+  };
+  t.addEventListener('animationend', e => { if (e.pseudoElement === '::after') dismiss(); });
+  t.addEventListener('click', dismiss);
+  setTimeout(() => { if (!t.matches(':hover')) dismiss(); }, 7000);   // rede de segurança
+  stack.appendChild(t);
+  while (stack.children.length > 4) stack.firstElementChild.remove();
 }
 
 // ── Checkbox SVGs ─────────────────────────────────────────────────────────────
@@ -715,8 +736,14 @@ function renderNoWeekBanner() {
 
 // ── Tab helper ────────────────────────────────────────────────────────────────
 function switchTab(tabId) {
-  document.querySelectorAll('.tab-btn').forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
+  const btns = [...document.querySelectorAll('.tab-btn')];
+  const from = btns.findIndex(b => b.classList.contains('active'));
+  const to   = btns.findIndex(b => b.dataset.tab === tabId);
+  const panel = document.getElementById(tabId);
+  if (panel) panel.style.setProperty('--dir', Math.sign(to - from));
+  btns.forEach(b => b.classList.toggle('active', b.dataset.tab === tabId));
   document.querySelectorAll('.tab-panel').forEach(p => p.classList.toggle('active', p.id === tabId));
+  Motion.tabChanged(panel);
 }
 
 // ── Windows-style image lightbox ──────────────────────────────────────────────
@@ -751,6 +778,7 @@ function openImageLightbox(url) {
       `${img.naturalWidth} x ${img.naturalHeight}px`;
   };
   overlay.classList.remove('hidden');
+  Motion.zoomFromOrigin(overlay.querySelector('.win-window'), img);
 }
 
 function closeImageLightbox() {
@@ -926,11 +954,13 @@ function getAccent() {
 }
 
 function setAccent(id) {
-  localStorage.setItem('skrill_accent', id);
-  if (id === 'gold') delete document.documentElement.dataset.accent;
-  else document.documentElement.dataset.accent = id;
-  const sel = document.getElementById('accent-select');
-  if (sel) { sel.innerHTML = accentDropdownInner(); sel.classList.remove('open'); }
+  Motion.themeSwap(() => {
+    localStorage.setItem('skrill_accent', id);
+    if (id === 'gold') delete document.documentElement.dataset.accent;
+    else document.documentElement.dataset.accent = id;
+    const sel = document.getElementById('accent-select');
+    if (sel) { sel.innerHTML = accentDropdownInner(); sel.classList.remove('open'); }
+  });
 }
 
 function toggleAccentMenu(e) {
@@ -967,9 +997,11 @@ function setDarkMode(on) {
 }
 
 function toggleThemeSetting() {
-  setDarkMode(!isDarkMode());
-  const row = document.getElementById('config-theme-row');
-  if (row) row.innerHTML = configThemeRowInner();
+  Motion.themeSwap(() => {
+    setDarkMode(!isDarkMode());
+    const row = document.getElementById('config-theme-row');
+    if (row) row.innerHTML = configThemeRowInner();
+  });
 }
 
 function configThemeRowInner() {
@@ -1299,14 +1331,17 @@ document.addEventListener('click', e => {
 });
 
 // ── Confetti ─────────────────────────────────────────────────────────────────
-// Animacao vanilla em canvas (sem libs). Dispara uma rajada de particulas com
-// gravidade por ~2.5s e remove o canvas ao terminar. Usado no reveal do Skrill Time.
-function fireConfetti() {
+// Animacao vanilla em canvas (sem libs). Sem argumentos: rajada central + dois
+// canhoes laterais (reveal do Skrill Time). Com opts {x, y, count}: rajada
+// menor a partir de um ponto (ex.: meta concluida). Respeita reduced-motion.
+function fireConfetti(opts = {}) {
+  if (Motion.reduced()) return;
   const existing = document.getElementById('confetti-canvas');
   if (existing) existing.remove();
   const canvas = document.createElement('canvas');
   canvas.id = 'confetti-canvas';
   canvas.className = 'confetti-canvas';
+  canvas.setAttribute('data-m-skip', '');
   const dpr = window.devicePixelRatio || 1;
   const W = window.innerWidth, H = window.innerHeight;
   canvas.width = W * dpr; canvas.height = H * dpr;
@@ -1321,44 +1356,505 @@ function fireConfetti() {
     '#22c55e', '#3498DB', '#9B59B6', '#FF6347',
   ].filter(Boolean);
 
-  const N = 130;
   const parts = [];
-  for (let i = 0; i < N; i++) {
-    parts.push({
-      x: W / 2 + (Math.random() - 0.5) * W * 0.3,
-      y: H * 0.35 + (Math.random() - 0.5) * 60,
-      vx: (Math.random() - 0.5) * 14,
-      vy: Math.random() * -12 - 4,
-      size: 5 + Math.random() * 7,
-      color: colors[Math.floor(Math.random() * colors.length)],
-      rot: Math.random() * Math.PI,
-      vrot: (Math.random() - 0.5) * 0.3,
-    });
+  // angle em radianos (0 = direita, -PI/2 = pra cima)
+  function spawn(x, y, n, angle, spread, speed) {
+    for (let i = 0; i < n; i++) {
+      const a = angle + (Math.random() - 0.5) * spread;
+      const v = speed * (0.55 + Math.random() * 0.6);
+      parts.push({
+        x, y, vx: Math.cos(a) * v, vy: Math.sin(a) * v,
+        size: 5 + Math.random() * 7,
+        color: colors[Math.floor(Math.random() * colors.length)],
+        rot: Math.random() * Math.PI,
+        vrot: (Math.random() - 0.5) * 0.3,
+        wobble: Math.random() * Math.PI * 2,
+      });
+    }
+  }
+  if (opts.x != null) {
+    spawn(opts.x, opts.y, opts.count ?? 60, -Math.PI / 2, Math.PI * 1.1, 13);
+  } else {
+    spawn(W / 2, H * 0.35, 110, -Math.PI / 2, Math.PI * 2, 12);
+    spawn(-10, H * 0.9, 55, -Math.PI / 3, 0.6, 24);              // canhao esquerdo
+    spawn(W + 10, H * 0.9, 55, -Math.PI * 2 / 3, 0.6, 24);       // canhao direito
   }
 
   const start = performance.now();
-  const DURATION = 2600;
+  const DURATION = opts.x != null ? 2000 : 3000;
   function frame(now) {
     const elapsed = now - start;
     ctx.clearRect(0, 0, W, H);
+    const fade = Math.max(0, 1 - Math.max(0, elapsed - DURATION * 0.55) / (DURATION * 0.45));
     for (const p of parts) {
       p.vy += 0.35;        // gravidade
-      p.vx *= 0.99;
-      p.x += p.vx; p.y += p.vy; p.rot += p.vrot;
+      p.vx *= 0.985;
+      p.vy *= 0.99;
+      p.wobble += 0.12;
+      p.x += p.vx + Math.sin(p.wobble) * 0.6; p.y += p.vy; p.rot += p.vrot;
       ctx.save();
       ctx.translate(p.x, p.y);
       ctx.rotate(p.rot);
-      ctx.globalAlpha = Math.max(0, 1 - elapsed / DURATION);
+      ctx.globalAlpha = fade;
       ctx.fillStyle = p.color;
-      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * 0.6);
+      // "flip" do papel: altura oscila
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size * (0.3 + Math.abs(Math.cos(p.wobble)) * 0.5));
       ctx.restore();
     }
-    if (elapsed < DURATION) {
-      requestAnimationFrame(frame);
-    } else {
-      canvas.remove();
-    }
+    if (elapsed < DURATION) requestAnimationFrame(frame);
+    else canvas.remove();
   }
   requestAnimationFrame(frame);
 }
 
+// ════════════════════════════════════════════════════════════════════════════
+// MOTION — engine de animação. Observa o DOM, então qualquer render via
+// innerHTML ganha animação sem código na página:
+//  - componentes novos entram em cascata (delay pela posição na tela; os que
+//    estão abaixo da dobra esperam o scroll);
+//  - re-renders só animam o que MUDOU: a chave de um componente é seu id ou
+//    classe + texto sem dígitos, então o Skrill Time pode re-renderizar a cada
+//    clique/realtime sem "piscar". Números que mudaram contam até o novo valor,
+//    estados novos (.on, .voted-up, .completed...) ganham um pop;
+//  - overlays (.modal-overlay/.win-overlay/.config-overlay) ganham saída
+//    animada via clone "ghost" quando recebem .hidden;
+//  - fx: partículas pixel em botões primários, "+1" flutuante ([data-float]).
+// CSS correspondente: MOTION LAYER no fim de style.css.
+// ════════════════════════════════════════════════════════════════════════════
+const Motion = (function () {
+  const mq = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const reduced = () => mq.matches;
+
+  const COMPONENTS = [
+    '.page-header', '.card', '.window', '.stat-card', '.goal-card', '.goal-row',
+    '.delivery-post', '.lb-entry', '.podium-wrap', '.rating-card', '.reveal-member-block',
+    '.bounty-card', '.meeting-card', '.arch-delivery', '.week-section', '.cal-year-head',
+    '.cal-month', '.activity-item', '.xp-row', '.profile-hero', '.profile-pick-card',
+    '.tab-list', '.empty-state', '.waiting-msg', '.kept-img-row', '.login-box',
+  ].join(',');
+  // Números que contam (0 → valor na entrada; antigo → novo em updates).
+  const VALUES = '.stat-value,.podium-xp,.entry-xp,.level-badge-sm,.rating-value,.profile-stat-val,' +
+                 '.reveal-member-pts,.xp-earned,.xp-amount,.week-pts,.tab-count,.m-num';
+  const BARS_X = '.xp-bar-fill,.evo-hbar-fill,.cal-bar';
+  const BARS_Y = '.evo-bar';
+  // [seletor, classe]: quando a classe aparece num re-render, o elemento dá um pop.
+  const STATES = [
+    ['.ready-square', 'on'], ['.vote-btn', 'voted-up'], ['.vote-btn', 'voted-down'],
+    ['.report-btn', 'reported'], ['.goal-card', 'completed'], ['.goal-card', 'attempted'],
+  ];
+  const NO_ENTER = '.sidebar, .mobile-nav, .reveal-rise, [data-m-skip]';
+  const IGNORE   = '[data-m-skip], #countdown-display';
+  const OVERLAYS = '.modal-overlay, .win-overlay, .config-overlay';
+
+  // ── chaves ────────────────────────────────────────────────────────────────
+  const norm = s => s.replace(/[\d.,]+/g, '#').replace(/\s+/g, ' ').trim().slice(0, 80);
+  const keyOf = el => el.id ? '#' + el.id : (el.classList[0] || el.tagName) + '|' + norm(el.textContent || '');
+  const ctxOf = el => { const c = el.closest(COMPONENTS); return c ? keyOf(c) : '~'; };
+
+  function collect(roots, sel) {
+    const out = new Set();
+    for (const r of roots) {
+      if (r.matches(sel)) out.add(r);
+      r.querySelectorAll(sel).forEach(e => out.add(e));
+    }
+    return [...out];
+  }
+  // Chama fn(chave, el) com chave = contexto + seletor + índice no contexto,
+  // para casar o elemento "antigo" com o "novo" entre dois renders.
+  function indexed(roots, sel, fn) {
+    const seen = new Map();
+    for (const el of collect(roots, sel)) {
+      const base = ctxOf(el) + '>' + sel;
+      const i = seen.get(base) ?? 0;
+      seen.set(base, i + 1);
+      fn(base + '#' + i, el);
+    }
+  }
+
+  // ── entradas ──────────────────────────────────────────────────────────────
+  let io = null;
+  const delayOf = el => parseFloat(el.style.getPropertyValue('--m-d')) || 0;
+
+  function enter(el, delay) {
+    el.style.setProperty('--m-d', Math.round(delay) + 'ms');
+    if (el.classList.contains('m-enter')) { el.classList.remove('m-enter'); void el.offsetWidth; }
+    el.classList.add('m-enter');
+    flushPending(el, delay);
+  }
+
+  // Delay espacial: de cima pra baixo (e um pouco da esquerda pra direita).
+  function spatialDelay(r) {
+    const vh = window.innerHeight, vw = window.innerWidth;
+    return Math.max(0, Math.min(r.top, vh)) / vh * 520 + Math.max(0, Math.min(r.left, vw)) / vw * 140;
+  }
+
+  function enterMany(els) {
+    const rects = els.map(e => e.getBoundingClientRect());   // lê tudo, depois escreve
+    els.forEach((el, i) => {
+      const r = rects[i];
+      const hidden = r.width === 0 && r.height === 0;
+      if (!hidden && r.top > window.innerHeight + 24 && 'IntersectionObserver' in window) return wait(el);
+      enter(el, hidden ? 0 : spatialDelay(r));
+    });
+  }
+
+  function wait(el) {
+    el.classList.add('m-wait');
+    io ||= new IntersectionObserver(entries => {
+      entries.filter(e => e.isIntersecting)
+        .sort((a, b) => a.boundingClientRect.top - b.boundingClientRect.top)
+        .forEach((e, i) => {
+          io.unobserve(e.target);
+          e.target.classList.remove('m-wait');
+          enter(e.target, i * 60);
+        });
+    }, { rootMargin: '0px 0px -24px 0px' });
+    io.observe(el);
+  }
+
+  // Contadores/barras dentro de um componente que ainda vai entrar disparam
+  // junto com ele.
+  function later(host, job) { (host._mJobs ||= []).push(job); if (!host.classList.contains('m-wait')) flushPending(host, delayOf(host)); }
+  function flushPending(host, delay) {
+    const jobs = host._mJobs; if (!jobs) return;
+    host._mJobs = null;
+    jobs.forEach(j => j(delay));
+  }
+
+  // ── contadores ────────────────────────────────────────────────────────────
+  const NUM = /\d[\d.,]*/g;
+  const fmt = new Intl.NumberFormat();
+  const toInt = s => parseInt(String(s).replace(/\D/g, ''), 10) || 0;
+
+  function countTo(el, fromVals, delay) {
+    const w = document.createTreeWalker(el, NodeFilter.SHOW_TEXT);
+    const parts = [];
+    while (w.nextNode()) {
+      const n = w.currentNode;
+      if (/\d/.test(n.nodeValue)) parts.push({ n, tpl: n.nodeValue });
+    }
+    const targets = parts.flatMap(p => (p.tpl.match(NUM) || []).map(toInt));
+    if (!targets.length) return;
+    const from = fromVals && fromVals.length === targets.length ? fromVals : targets.map(() => 0);
+    if (from.every((f, i) => f === targets[i])) return;
+    const span = Math.max(...targets.map((t, i) => Math.abs(t - from[i])));
+    const dur = Math.min(1200, 420 + span * 30);
+    const paint = k => {
+      let idx = 0;
+      for (const p of parts) {
+        p.n.nodeValue = p.tpl.replace(NUM, tok => {
+          const v = Math.round(from[idx] + (targets[idx] - from[idx]) * k); idx++;
+          return /[.,]/.test(tok) ? fmt.format(v) : String(v);
+        });
+      }
+    };
+    paint(0);
+    const t0 = performance.now() + delay;
+    const step = now => {
+      if (!el.isConnected) return;
+      const t = Math.min(1, Math.max(0, (now - t0) / dur));
+      if (t < 1) { paint(1 - Math.pow(1 - t, 3)); requestAnimationFrame(step); }
+      else parts.forEach(p => { p.n.nodeValue = p.tpl; });
+    };
+    requestAnimationFrame(step);
+  }
+
+  function pop(el) {
+    el.classList.remove('m-pop'); void el.offsetWidth; el.classList.add('m-pop');
+    el.addEventListener('animationend', function done(e) {
+      if (e.target !== el) return;
+      el.classList.remove('m-pop'); el.removeEventListener('animationend', done);
+    });
+  }
+
+  // ── núcleo: compara o que saiu com o que entrou ───────────────────────────
+  function process(added, removed) {
+    added = added.filter(n => n.isConnected);
+    if (!added.length) return;
+    const still = reduced();
+
+    const oldKeys = new Map();
+    for (const c of collect(removed, COMPONENTS)) oldKeys.set(keyOf(c), (oldKeys.get(keyOf(c)) ?? 0) + 1);
+    const oldVals = new Map();
+    indexed(removed, VALUES, (k, el) => oldVals.set(k, el.textContent));
+    const oldStates = new Map();
+    for (const [sel, cls] of STATES) indexed(removed, sel, (k, el) => oldStates.set(k + cls, el.classList.contains(cls)));
+    const oldImgs = new Set(collect(removed, 'img').map(i => i.getAttribute('src')));
+
+    // tabs: posiciona a "tinta" (sem animar) em toda tab-list nova
+    collect(added, '.tab-list').forEach(l => syncInk(l, false));
+
+    if (still) return;
+
+    // 1. componentes cuja chave não existia antes → entram
+    const fresh = collect(added, COMPONENTS).filter(c => {
+      if (c.closest(NO_ENTER)) return false;
+      const k = keyOf(c), n = oldKeys.get(k);
+      if (n) { oldKeys.set(k, n - 1); return false; }
+      return true;
+    });
+    if (fresh.length) enterMany(fresh);
+
+    // 2. números
+    indexed(added, VALUES, (k, el) => {
+      const old = oldVals.get(k);
+      if (old !== undefined) {
+        if (old !== el.textContent) { pop(el); countTo(el, (old.match(NUM) || []).map(toInt), 0); }
+        return;
+      }
+      const rise = el.closest('.reveal-rise');
+      if (rise) return countTo(el, null, (parseFloat(getComputedStyle(rise).getPropertyValue('--rd')) || 0) * 1000 + 400);
+      const host = el.closest('.m-enter, .m-wait');
+      if (host) later(host, d => countTo(el, null, d + 180));
+    });
+
+    // 3. estados que acabaram de ligar
+    for (const [sel, cls] of STATES) indexed(added, sel, (k, el) => {
+      if (el.classList.contains(cls) && oldStates.get(k + cls) === false) pop(el);
+    });
+
+    // 4. barras crescem junto com o componente que as contém
+    const byHost = new Map();
+    collect(added, BARS_X + ',' + BARS_Y).forEach(b => {
+      const host = b.closest('.m-enter, .m-wait');
+      if (!host) return;
+      if (!byHost.has(host)) byHost.set(host, []);
+      byHost.get(host).push(b);
+    });
+    byHost.forEach((bars, host) => later(host, d => bars.forEach((b, i) => {
+      b.style.setProperty('--m-d', Math.round(d + 160 + Math.min(i, 20) * 35) + 'ms');
+      b.classList.add(b.matches(BARS_Y) ? 'm-grow-y' : 'm-grow-x');
+    })));
+
+    // 5. imagens de rede aparecem quando carregam
+    for (const img of collect(added, 'img.delivery-img, img.reveal-img')) {
+      if (img.complete || oldImgs.has(img.getAttribute('src'))) continue;
+      img.classList.add('m-img');
+      const show = () => img.classList.add('m-img-in');
+      img.addEventListener('load', show, { once: true });
+      img.addEventListener('error', show, { once: true });
+    }
+  }
+
+  // ── overlays: saída via ghost ─────────────────────────────────────────────
+  function ghostOut(el) {
+    if (reduced()) return;
+    el._mGhost?.remove();
+    const g = el.cloneNode(true);
+    g.classList.remove('hidden');
+    g.classList.add('m-ghost');
+    g.removeAttribute('id');
+    g.setAttribute('data-m-skip', '');
+    g.setAttribute('aria-hidden', 'true');
+    // sem `name`: um radio clonado marcado desmarcaria o original
+    g.querySelectorAll('[name]').forEach(n => n.removeAttribute('name'));
+    const src = el.querySelectorAll('input, textarea, select');
+    const dst = g.querySelectorAll('input, textarea, select');
+    src.forEach((s, i) => {
+      const d = dst[i]; if (!d) return;
+      if (s.type === 'checkbox' || s.type === 'radio') d.checked = s.checked;
+      else if (s.type !== 'file') d.value = s.value;
+    });
+    el.after(g);
+    el._mGhost = g;
+    const kill = () => { g.remove(); if (el._mGhost === g) el._mGhost = null; };
+    g.addEventListener('animationend', e => { if (e.target === g) kill(); });
+    setTimeout(kill, 600);
+  }
+
+  // ── abas ──────────────────────────────────────────────────────────────────
+  function syncInk(list, animate) {
+    const active = list.querySelector('.tab-btn.active');
+    if (!active) return;
+    let ink = list.querySelector(':scope > .tab-ink');
+    if (!ink) {
+      ink = document.createElement('span');
+      ink.className = 'tab-ink';
+      ink.setAttribute('data-m-skip', '');
+      list.prepend(ink);
+      list.classList.add('m-has-ink');
+      animate = false;
+    }
+    if (!animate) ink.style.transition = 'none';
+    ink.style.width = active.offsetWidth + 'px';
+    ink.style.transform = `translateX(${active.offsetLeft}px)`;
+    if (!animate) { void ink.offsetWidth; ink.style.transition = ''; }
+  }
+  function syncAllInk() { document.querySelectorAll('.tab-list.m-has-ink').forEach(l => syncInk(l, false)); }
+
+  function tabChanged(panel) {
+    document.querySelectorAll('.tab-list').forEach(l => syncInk(l, true));
+    if (!panel || reduced()) return;
+    // os componentes do painel estavam ocultos: recalcula a cascata agora que têm posição
+    const els = [...panel.querySelectorAll('.m-enter')];
+    const rects = els.map(e => e.getBoundingClientRect());
+    els.forEach((el, i) => el.style.setProperty('--m-d', Math.round(spatialDelay(rects[i]) * 0.6) + 'ms'));
+    panel.querySelectorAll(VALUES).forEach(v => {
+      const h = v.closest('.m-enter');
+      if (h) countTo(v, null, delayOf(h) + 180);
+    });
+  }
+
+  // ── fx ────────────────────────────────────────────────────────────────────
+  let layer = null;
+  function fxLayer() {
+    if (layer?.isConnected) return layer;
+    layer = document.createElement('div');
+    layer.className = 'm-fx-layer';
+    layer.setAttribute('data-m-skip', '');
+    layer.setAttribute('aria-hidden', 'true');
+    document.body.appendChild(layer);
+    return layer;
+  }
+  const cssVar = name => getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+
+  function burst(x, y, { count = 10, color } = {}) {
+    if (reduced()) return;
+    const c1 = color || cssVar('--amber'), c2 = cssVar('--amber-dark'), c3 = cssVar('--text');
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('i');
+      p.className = 'm-px';
+      const s = 4 + (Math.random() * 5 | 0);
+      p.style.width = p.style.height = s + 'px';
+      p.style.background = i % 4 === 0 ? c3 : i % 2 ? c1 : c2;
+      fxLayer().appendChild(p);
+      const a = (Math.PI * 2 * i) / count + Math.random() * 0.6;
+      const d = 26 + Math.random() * 34;
+      p.animate([
+        { transform: `translate(${x}px, ${y}px) scale(1)`, opacity: 1 },
+        { transform: `translate(${x + Math.cos(a) * d}px, ${y + Math.sin(a) * d + 10}px) scale(.3)`, opacity: 0 },
+      ], { duration: 420 + Math.random() * 260, easing: 'cubic-bezier(.16,1,.3,1)' }).onfinish = () => p.remove();
+    }
+  }
+
+  function floatText(x, y, text, color) {
+    if (reduced()) return;
+    const el = document.createElement('span');
+    el.className = 'm-float';
+    el.textContent = text;
+    if (color) el.style.color = color;
+    fxLayer().appendChild(el);
+    const w = el.offsetWidth;
+    el.animate([
+      { transform: `translate(${x - w / 2}px, ${y}px) scale(.6)`, opacity: 0 },
+      { transform: `translate(${x - w / 2}px, ${y - 22}px) scale(1.15)`, opacity: 1, offset: 0.25 },
+      { transform: `translate(${x - w / 2}px, ${y - 58}px) scale(1)`, opacity: 0 },
+    ], { duration: 800, easing: 'cubic-bezier(.16,1,.3,1)' }).onfinish = () => el.remove();
+  }
+
+  // ── troca de tema: círculo que se expande do ponto do clique ──────────────
+  let lastPointer = null;
+  function themeSwap(apply) {
+    if (reduced() || !document.startViewTransition) { apply(); return; }
+    const x = lastPointer?.x ?? window.innerWidth - 30, y = lastPointer?.y ?? 30;
+    const r = Math.hypot(Math.max(x, window.innerWidth - x), Math.max(y, window.innerHeight - y));
+    const root = document.documentElement;
+    root.classList.add('m-vt-theme');
+    const vt = document.startViewTransition(apply);
+    vt.ready.then(() => root.animate(
+      { clipPath: [`circle(0px at ${x}px ${y}px)`, `circle(${r}px at ${x}px ${y}px)`] },
+      { duration: 620, easing: 'cubic-bezier(.65,0,.35,1)', pseudoElement: '::view-transition-new(root)' },
+    )).catch(() => {});
+    vt.finished.catch(() => {}).finally(() => root.classList.remove('m-vt-theme'));
+  }
+
+  // ── lightbox: a janela "sai" da miniatura clicada (FLIP) ──────────────────
+  let lastThumb = null;
+  async function zoomFromOrigin(win, img) {
+    if (!win || reduced()) return;
+    const from = lastThumb; lastThumb = null;
+    if (!from) { win.animate([{ opacity: 0, transform: 'scale(.92)' }, { opacity: 1, transform: 'none' }], { duration: 300, easing: 'cubic-bezier(.34,1.56,.64,1)' }); return; }
+    win.style.opacity = '0';
+    // espera o tamanho final da imagem (cache costuma resolver na hora)
+    await Promise.race([img.decode().catch(() => {}), new Promise(r => setTimeout(r, 250))]);
+    win.style.opacity = '';
+    const to = win.getBoundingClientRect();
+    const dx = (from.left + from.width / 2) - (to.left + to.width / 2);
+    const dy = (from.top + from.height / 2) - (to.top + to.height / 2);
+    win.animate([
+      { transform: `translate(${dx}px, ${dy}px) scale(${from.width / to.width}, ${from.height / to.height})`, opacity: 0.3 },
+      { transform: 'none', opacity: 1 },
+    ], { duration: 460, easing: 'cubic-bezier(.16,1,.3,1)' });
+  }
+
+  // ── listeners globais ─────────────────────────────────────────────────────
+  function start() {
+    new MutationObserver(records => {
+      const added = [], removed = [];
+      const toggled = new Map();   // overlay → classe antiga (1º registro do lote)
+      for (const r of records) {
+        if (r.type === 'attributes') {
+          const t = r.target;
+          if (!toggled.has(t) && t.matches(OVERLAYS) && !t.hasAttribute('data-m-skip')) toggled.set(t, r.oldValue || '');
+          continue;
+        }
+        if (r.target.closest?.(IGNORE)) continue;
+        r.addedNodes.forEach(n => { if (n.nodeType === 1 && !n.hasAttribute('data-m-skip')) added.push(n); });
+        r.removedNodes.forEach(n => { if (n.nodeType === 1) removed.push(n); });
+      }
+      toggled.forEach((oldCls, el) => {
+        const was = oldCls.split(/\s+/).includes('hidden'), is = el.classList.contains('hidden');
+        if (!was && is) ghostOut(el);
+        else if (was && !is) { el._mGhost?.remove(); el._mGhost = null; }
+      });
+      if (added.length) process(added, removed);
+    }).observe(document.body, {
+      childList: true, subtree: true,
+      attributes: true, attributeFilter: ['class'], attributeOldValue: true,
+    });
+
+    // conteúdo estático já presente (login, demo...)
+    process([document.body], []);
+
+    // transição entre páginas pulada (aba em 2º plano, timeout) não é erro
+    window.addEventListener('pagereveal', e => {
+      e.viewTransition?.ready.catch(() => {});
+      e.viewTransition?.finished.catch(() => {});
+    });
+
+    document.addEventListener('pointerdown', e => { lastPointer = { x: e.clientX, y: e.clientY }; }, true);
+    document.addEventListener('click', e => {
+      const thumb = e.target.closest?.('img.delivery-img, img.reveal-img');
+      if (thumb) lastThumb = thumb.getBoundingClientRect();
+
+      const t = e.target.closest?.('[data-float], .btn-primary, .vote-btn, .diff-pill, [data-burst]');
+      if (!t || t.disabled) return;
+      const r = t.getBoundingClientRect();
+      const kb = e.detail === 0;   // ativado por teclado: usa o centro
+      const x = kb ? r.left + r.width / 2 : e.clientX, y = kb ? r.top + r.height / 2 : e.clientY;
+      if (t.dataset.float) floatText(x, r.top - 4, t.dataset.float);
+      else burst(x, y, { count: t.matches('.btn-primary') ? 12 : 8 });
+    }, true);
+
+    let rz;
+    window.addEventListener('resize', () => { clearTimeout(rz); rz = setTimeout(syncAllInk, 120); });
+    document.fonts?.ready.then(syncAllInk);
+  }
+
+  // Comemora um elemento (ex.: meta concluída): pop + confete saindo dele.
+  function celebrate(el) {
+    if (!el) return;
+    pop(el);
+    const r = el.getBoundingClientRect();
+    fireConfetti({ x: r.left + r.width / 2, y: r.top + Math.min(r.height / 2, 60), count: 70 });
+  }
+
+  return { start, reduced, burst, floatText, themeSwap, zoomFromOrigin, tabChanged, celebrate, pop };
+})();
+
+// Pré-renderiza sidebar/nav a partir do perfil salvo para o 1º frame da página
+// já ter a navegação (a pílula ativa desliza entre páginas via View
+// Transitions). A página re-renderiza com dados frescos depois do fetch.
+function prerenderChrome() {
+  const sr = document.getElementById('sidebar-root');
+  const mr = document.getElementById('mobile-nav-root');
+  if ((!sr && !mr) || !isAppUnlocked()) return;
+  const p = getStoredProfile();
+  if (!p) return;
+  const key = location.pathname.split('/').filter(Boolean)[1] || '';
+  if (sr && !sr.children.length) sr.innerHTML = renderSidebar(p, key);
+  if (mr && !mr.children.length) mr.innerHTML = renderMobileNav(key);
+}
+
+prerenderChrome();
+Motion.start();

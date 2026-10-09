@@ -262,7 +262,7 @@
     if (!revealed) {
       if (!isSkDay) {
         body = `
-          <div class="card" style="margin-bottom:20px">
+          <div class="card" id="st-countdown" style="margin-bottom:20px">
             <div class="card-body countdown-wrap">
               <div id="countdown-subtext" class="countdown-dynamic-title"></div>
               <div class="countdown-row" id="countdown-display"></div>
@@ -274,12 +274,12 @@
           <div class="ready-square ${readyIds.has(p.id) ? 'on' : ''}" title="${p.name}"></div>
         `).join('');
         body = `
-          <div class="card" style="margin-bottom:20px">
+          <div class="card" id="st-ready" style="margin-bottom:20px">
             <div class="card-body" style="padding:20px;text-align:center">
               <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px">
                 ${squares}
               </div>
-              <div style="font-size:28px;font-weight:700;color:var(--text-muted);margin-bottom:20px;text-transform:uppercase">
+              <div class="m-num" style="font-size:28px;font-weight:700;color:var(--text-muted);margin-bottom:20px;text-transform:uppercase">
                 ${count} / ${total} prontos
               </div>
               ${!iReady ? `
@@ -361,14 +361,20 @@
       const seconds = Math.floor((diff % 60000)    / 1000);
       const pad     = n => String(n).padStart(2, '0');
       if (sub) sub.textContent = countdownLabel(diff);
-      el.innerHTML = `
-        <span class="cd-num">${pad(days)}</span>
-        <span class="cd-sep">:</span>
-        <span class="cd-num">${pad(hours)}</span>
-        <span class="cd-sep">:</span>
-        <span class="cd-num">${pad(minutes)}</span>
-        <span class="cd-sep">:</span>
-        <span class="cd-num">${pad(seconds)}</span>`;
+      // Monta os dígitos uma vez; depois só troca (e anima) os que mudaram.
+      if (!el.children.length) {
+        el.innerHTML = [0, 1, 2, 3].map(() =>
+          `<span class="cd-num"><span class="cd-digit"></span><span class="cd-digit"></span></span>`
+        ).join('<span class="cd-sep">:</span>');
+      }
+      const chars = (pad(days) + pad(hours) + pad(minutes) + pad(seconds)).split('');
+      el.querySelectorAll('.cd-digit').forEach((d, i) => {
+        if (d.textContent === chars[i]) return;
+        const first = d.textContent === '';
+        d.textContent = chars[i];
+        if (first) return;
+        d.classList.remove('tick'); void d.offsetWidth; d.classList.add('tick');
+      });
     }
     tick();
     countdownInterval = setInterval(tick, 1000);
@@ -441,7 +447,7 @@
       const adminBtn = isAdmin() ? `<div style="margin-top:10px"><button class="btn btn-ghost btn-sm" onclick="forceFinalize()">Admin: forçar encerramento</button></div>` : '';
       return `
         ${renderBountySection(false)}
-        <div class="card" style="padding:36px 20px;text-align:center">
+        <div class="card" id="st-no-deliveries" style="padding:36px 20px;text-align:center">
           <div style="font-size:30px;font-weight:700;margin-bottom:8px">Nenhuma entrega esta temporada</div>
           <div style="font-size:22px;color:var(--text-muted);text-transform:uppercase;margin-bottom:14px">Nada para avaliar.</div>
           <button class="btn btn-primary" style="font-size:24px;padding:10px 28px" onclick="skipRatings()">Continuar</button>
@@ -476,9 +482,9 @@
               </div>
             </div>
             <div class="rating-stepper">
-              <button class="btn btn-sm btn-ghost" ${cur <= 0 ? 'disabled' : ''} onclick="decRating('${g.id}')">−</button>
+              <button class="btn btn-sm btn-ghost" data-float="-1" ${cur <= 0 ? 'disabled' : ''} onclick="decRating('${g.id}')">−</button>
               <div class="rating-value">${cur}</div>
-              <button class="btn btn-sm btn-primary" ${remaining <= 0 ? 'disabled' : ''} onclick="incRating('${g.id}')">+</button>
+              <button class="btn btn-sm btn-primary" data-float="+1" ${remaining <= 0 ? 'disabled' : ''} onclick="incRating('${g.id}')">+</button>
             </div>
           </div>
           ${imgs.length ? `<div class="delivery-images">
@@ -490,10 +496,10 @@
     const canSubmit = myUsed === bonusTotal;
     return `
       ${renderBountySection(false)}
-      <div class="card" style="margin-bottom:14px">
+      <div class="card" id="st-rating" style="margin-bottom:14px">
         <div class="card-header">
           <div class="card-title">Avaliação por pares</div>
-          <div style="font-size:22px;font-weight:700">${myUsed} / ${bonusTotal} pts</div>
+          <div class="m-num" style="font-size:22px;font-weight:700">${myUsed} / ${bonusTotal} pts</div>
         </div>
         <div class="card-body" style="padding:14px">
           <div style="font-size:22px;color:var(--text-muted);text-transform:uppercase;margin-bottom:14px">
@@ -521,11 +527,11 @@
         <button class="btn btn-ghost btn-sm" onclick="forceFinalize()">Admin: forçar encerramento</button>
       </div>` : '';
     return `
-      <div class="card">
+      <div class="card" id="st-wait-rating">
         <div class="card-body" style="padding:24px;text-align:center">
           <div style="font-size:28px;font-weight:700;margin-bottom:12px;text-transform:uppercase">Avaliação enviada</div>
           <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px">${squares}</div>
-          <div style="font-size:24px;color:var(--text-muted);text-transform:uppercase">
+          <div class="m-num" style="font-size:24px;color:var(--text-muted);text-transform:uppercase">
             ${submissionIds.size} / ${allProfiles.length} avaliações recebidas
           </div>
           <div style="font-size:22px;color:var(--text-muted);margin-top:8px;text-transform:uppercase">Aguardando os demais...</div>
@@ -579,7 +585,7 @@
               <div style="font-size:28px;font-weight:700">${profile.name}</div>
               <div style="font-size:24px;color:var(--text-muted)">${mGoals.length} meta${mGoals.length !== 1 ? 's' : ''} entregue${mGoals.length !== 1 ? 's' : ''}</div>
             </div>
-            <div style="font-size:32px;font-weight:700;color:var(--amber)">${totalPts}pts</div>
+            <div class="reveal-member-pts" style="font-size:32px;font-weight:700;color:var(--amber)">${totalPts}pts</div>
           </div>
           ${mGoals.length ? goalsHTML : `<div style="font-size:24px;color:var(--text-muted);text-align:center;padding:8px">Nenhuma meta entregue esta temporada</div>`}
         </div>`;
@@ -610,15 +616,15 @@
     const bountyHTML = renderBountySection(true);
     const items = (bountyHTML ? [bountyHTML] : []).concat(memberBlocks);
     const bodyHTML = items.map((html, i) => animate
-      ? `<div class="reveal-rise" style="animation-delay:${(i * 0.12).toFixed(2)}s">${html}</div>`
+      ? `<div class="reveal-rise" style="--rd:${(0.2 + i * 0.35).toFixed(2)}s">${html}</div>`
       : html
     ).join('');
 
     return `
-      <div class="card">
+      <div class="card" id="st-results">
         <div class="card-header">
           <div class="card-title">Resultados da Temporada</div>
-          <div style="font-size:24px;font-weight:700;color:var(--amber)">${grandTotal}pts total</div>
+          <div class="m-num" style="font-size:24px;font-weight:700;color:var(--amber)">${grandTotal}pts total</div>
         </div>
         <div class="card-body" style="padding:16px">${bodyHTML}</div>
       </div>
@@ -665,12 +671,12 @@
         </div>`;
 
       return animate
-        ? `<div class="reveal-rise" style="animation-delay:${(i * 0.12).toFixed(2)}s">${cardHTML}</div>`
+        ? `<div class="reveal-rise" style="--rd:${(0.6 + i * 0.25).toFixed(2)}s">${cardHTML}</div>`
         : cardHTML;
     }).join('');
 
     return `
-      <div class="card" style="margin-top:14px">
+      <div class="card" id="st-attempts-reveal" style="margin-top:14px">
         <div class="card-header">
           <div class="card-title">Tentativas</div>
           <div style="font-size:20px;color:#000;text-transform:uppercase">${attempted.length} tentativa${attempted.length !== 1 ? 's' : ''}</div>
@@ -692,11 +698,11 @@
         <div style="margin-top:18px"><button class="btn btn-ghost btn-sm" onclick="forceFinalize()">Admin: forçar encerramento</button></div>` : '';
       return `
         ${renderBountySection(false)}
-        <div class="card">
+        <div class="card" id="st-wait-attempt">
           <div class="card-body" style="padding:24px;text-align:center">
             <div style="font-size:28px;font-weight:700;margin-bottom:12px;text-transform:uppercase">Votos de tentativa enviados</div>
             <div style="display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px">${squares}</div>
-            <div style="font-size:24px;color:var(--text-muted);text-transform:uppercase">
+            <div class="m-num" style="font-size:24px;color:var(--text-muted);text-transform:uppercase">
               ${attemptSubmissionIds.size} / ${allProfiles.length} confirmados
             </div>
             <div style="font-size:22px;color:var(--text-muted);margin-top:8px;text-transform:uppercase">Aguardando os demais...</div>
@@ -740,7 +746,7 @@
 
     return `
       ${renderBountySection(false)}
-      <div class="card" style="margin-bottom:14px">
+      <div class="card" id="st-attempts" style="margin-bottom:14px">
         <div class="card-header">
           <div class="card-title">Votação de Tentativas</div>
           <div style="font-size:20px;color:var(--text-muted);text-transform:uppercase">${attempted.length} tentativa${attempted.length !== 1 ? 's' : ''}</div>

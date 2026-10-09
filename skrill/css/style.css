@@ -44,6 +44,15 @@
   --sec-text:         #4B4BA0;
   /* Borda clara */
   --border-light: #eee;
+  /* Motion tokens — usar sempre estes em vez de valores soltos */
+  --ease-out:    cubic-bezier(.16, 1, .3, 1);      /* entradas: rápido → assenta */
+  --ease-in:     cubic-bezier(.5, 0, .75, 0);      /* saídas */
+  --ease-spring: cubic-bezier(.34, 1.56, .64, 1);  /* pop com overshoot */
+  --ease-bounce: cubic-bezier(.2, 1.9, .4, .8);    /* pop mais elástico */
+  --dur-1: 120ms;
+  --dur-2: 220ms;
+  --dur-3: 420ms;
+  --dur-4: 650ms;
 }
 
 /* ── Accent themes (cor de destaque) ─────────────────────────────────────────── */
@@ -289,20 +298,38 @@ body {
 /* check on active (amber) row stays black even in dark mode */
 .accent-opt.active .accent-check svg [stroke="black"] { stroke: #000; }
 
-/* ── Spinner ────────────────────────────────────────────────────────────────── */
+/* ── Spinner — 3 blocos pixel em onda ───────────────────────────────────────── */
 .spinner {
-  width: 28px; height: 28px;
-  border: 3px solid var(--border);
-  border-top-color: var(--amber);
-  animation: spin 0.7s linear infinite;
+  width: 12px; height: 12px; margin-right: 36px;
+  background: var(--amber);
+  box-shadow: 18px 0 0 var(--amber), 36px 0 0 var(--amber);
+  animation: pixel-wave 0.9s var(--ease-out) infinite;
+}
+@keyframes pixel-wave {
+  0%, 100% { box-shadow: 18px 0 0 var(--amber), 36px 0 0 var(--amber); transform: translateY(0); }
+  20%      { box-shadow: 18px 0 0 var(--amber), 36px 0 0 var(--amber); transform: translateY(-12px); }
+  40%      { box-shadow: 18px -12px 0 var(--amber), 36px 0 0 var(--amber); transform: translateY(0); }
+  60%      { box-shadow: 18px 0 0 var(--amber), 36px -12px 0 var(--amber); }
+  80%      { box-shadow: 18px 0 0 var(--amber), 36px 0 0 var(--amber); }
 }
 @keyframes spin { to { transform: rotate(360deg); } }
 
+/* Reveal do Skrill Time: cada bloco "vira" para frente, em sequência */
 @keyframes reveal-rise {
-  from { opacity: 0; transform: translateY(14px); }
-  to   { opacity: 1; transform: translateY(0); }
+  0%   { opacity: 0; transform: perspective(900px) translateY(26px) rotateX(-24deg) scale(.96); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: none; }
 }
-.reveal-rise { opacity: 0; animation: reveal-rise 0.45s ease forwards; }
+.reveal-rise {
+  opacity: 0; transform-origin: 50% 0;
+  animation: reveal-rise 0.7s var(--ease-out) var(--rd, 0s) forwards;
+}
+/* As fotos, borradas a temporada toda, desfocam no momento da revelação */
+@keyframes reveal-unblur {
+  0%   { filter: blur(14px) saturate(.4); transform: scale(1.06); }
+  100% { filter: none; transform: none; }
+}
+.reveal-rise .reveal-img { animation: reveal-unblur 1s var(--ease-out) calc(var(--rd, 0s) + .45s) backwards; }
 
 .center-screen {
   display: flex; align-items: center; justify-content: center;
@@ -1278,3 +1305,298 @@ textarea.form-input { resize: vertical; min-height: 70px; }
 /* ── Editar Entrega ───────────────────── */
 .kept-img-row   { display:flex; align-items:center; gap:8px; padding:4px 0; border-bottom:1px solid var(--border); }
 .kept-img-thumb { width:48px; height:48px; object-fit:cover; border:1px solid var(--border); cursor:pointer; }
+
+/* ════════════════════════════════════════════════════════════════════════════
+   MOTION LAYER — animações e micro-interações.
+   Engine em client.js (`Motion`): adiciona .m-enter (com --m-d = delay) aos
+   componentes que aparecem pela 1ª vez, .m-pop em estados que mudam,
+   .m-grow-x/.m-grow-y em barras e conta números. Tudo desliga em
+   prefers-reduced-motion (fim do arquivo). Tokens: --ease-*, --dur-* em :root.
+   ════════════════════════════════════════════════════════════════════════════ */
+
+/* ── Keyframes base ─────────────────────────────────────────────────────────── */
+@keyframes m-rise    { from { opacity: 0; transform: translateY(16px); } }
+@keyframes m-slide   { from { opacity: 0; transform: translateX(-16px); } }
+@keyframes m-slide-r { from { opacity: 0; transform: translateX(16px); } }
+@keyframes m-pop     { from { opacity: 0; transform: scale(.86); } }
+@keyframes m-fade    { from { opacity: 0; } }
+@keyframes m-fade-out { to { opacity: 0; } }
+@keyframes m-grow-x  { from { transform: scaleX(0); } }
+@keyframes m-grow-y  { from { transform: scaleY(0); } }
+@keyframes m-drop    { 0% { opacity: 0; transform: translateY(-46px) scale(.7); } 50% { opacity: 1; } }
+@keyframes m-bump    { 0% { transform: scale(1); } 35% { transform: scale(1.25); } 100% { transform: scale(1); } }
+@keyframes m-hop     { 0%, 100% { transform: translateY(0); } 40% { transform: translateY(-8px) rotate(-6deg); } 70% { transform: translateY(1px); } }
+@keyframes m-bob     { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+@keyframes m-wiggle  { 0%, 100% { transform: rotate(0); } 25% { transform: rotate(-7deg); } 55% { transform: rotate(5deg); } 80% { transform: rotate(-2deg); } }
+@keyframes m-shake   { 0%, 100% { transform: translateX(0); } 20% { transform: translateX(-7px); } 40% { transform: translateX(6px); } 60% { transform: translateX(-4px); } 80% { transform: translateX(2px); } }
+@keyframes m-swing   { 0%, 100% { transform: rotate(-7deg); } 50% { transform: rotate(7deg); } }
+@keyframes m-nudge   { 50% { transform: translateX(4px); } }
+
+/* ── Entradas (aplicadas pelo engine) ───────────────────────────────────────── */
+.m-wait  { opacity: 0; }
+.m-enter { animation: m-rise var(--dur-4) var(--ease-out) var(--m-d, 0ms) backwards; }
+
+/* sabores por componente */
+.lb-entry.m-enter, .goal-row.m-enter, .activity-item.m-enter, .xp-row.m-enter,
+.kept-img-row.m-enter, .cal-month.m-enter, .arch-delivery.m-enter { animation-name: m-slide; }
+.stat-card.m-enter, .profile-pick-card.m-enter, .empty-state.m-enter, .meeting-card.m-enter {
+  animation-name: m-pop; animation-timing-function: var(--ease-spring);
+}
+.tab-list.m-enter { animation-name: m-fade; }
+
+/* cabeçalho: eyebrow desliza, título sobe, ações saltam */
+.page-header.m-enter { animation: none; }
+.page-header.m-enter .page-header-label { animation: m-slide var(--dur-3) var(--ease-out) var(--m-d, 0ms) backwards; }
+.page-header.m-enter .page-header-title { animation: m-rise var(--dur-4) var(--ease-out) calc(var(--m-d, 0ms) + 70ms) backwards; }
+.page-header.m-enter .page-header-title ~ * { animation: m-fade var(--dur-3) var(--ease-out) calc(var(--m-d, 0ms) + 150ms) backwards; }
+.page-header.m-enter > * + * { animation: m-pop var(--dur-3) var(--ease-spring) calc(var(--m-d, 0ms) + 200ms) backwards; }
+
+/* pódio: blocos crescem 3º → 2º → 1º, avatares caem com quique, #1 flutua */
+.p3 { --pd: 0ms; } .p2 { --pd: 140ms; } .p1 { --pd: 300ms; }
+.podium-wrap.m-enter { animation-name: m-fade; animation-duration: var(--dur-2); }
+.podium-wrap.m-enter .podium-block {
+  transform-origin: bottom;
+  animation: m-grow-y var(--dur-4) var(--ease-spring) calc(var(--m-d, 0ms) + var(--pd)) backwards;
+}
+.podium-wrap.m-enter .podium-col > .avatar {
+  animation: m-drop var(--dur-4) var(--ease-bounce) calc(var(--m-d, 0ms) + var(--pd) + 280ms) backwards;
+}
+.podium-wrap.m-enter .podium-medal,
+.podium-wrap.m-enter .podium-name,
+.podium-wrap.m-enter .podium-xp {
+  animation: m-rise var(--dur-3) var(--ease-out) calc(var(--m-d, 0ms) + var(--pd) + 420ms) backwards;
+}
+.p1 > .avatar { animation: m-bob 3.2s ease-in-out infinite; }
+.podium-wrap.m-enter .p1 > .avatar {
+  animation: m-drop var(--dur-4) var(--ease-bounce) calc(var(--m-d, 0ms) + 580ms) backwards,
+             m-bob 3.2s ease-in-out calc(var(--m-d, 0ms) + 1.4s) infinite;
+}
+.podium-block { overflow: hidden; }
+.p1 .podium-block::after {   /* brilho que varre o bloco do 1º */
+  content: ''; position: absolute; top: 0; bottom: 0; left: -60%; width: 40%;
+  background: linear-gradient(100deg, transparent, rgba(255,255,255,.55), transparent);
+  animation: m-sheen 4.5s var(--ease-out) 1.6s infinite;
+}
+@keyframes m-sheen { 0% { left: -60%; } 30%, 100% { left: 130%; } }
+
+/* barras */
+.m-grow-x { transform-origin: left center;  animation: m-grow-x var(--dur-4) var(--ease-out)    var(--m-d, 0ms) backwards; }
+.m-grow-y { transform-origin: center bottom; animation: m-grow-y var(--dur-4) var(--ease-spring) var(--m-d, 0ms) backwards; }
+
+/* imagens de rede: aparecem quando carregam (sem "pipocar") */
+img.m-img { opacity: 0; transition: opacity var(--dur-3) var(--ease-out), filter .4s, transform var(--dur-2) var(--ease-spring), box-shadow var(--dur-2); }
+img.m-img.m-img-in { opacity: 1; }
+
+/* ── Mudanças de estado em re-renders ───────────────────────────────────────── */
+span.m-pop, a.m-pop { display: inline-block; }
+.m-pop { animation: m-bump var(--dur-3) var(--ease-spring); }
+.ready-square.m-pop { animation: m-ready-on .7s var(--ease-bounce); }
+@keyframes m-ready-on {
+  0%   { transform: scale(.4); }
+  45%  { transform: scale(1.3); box-shadow: 0 0 26px #22c55e; }
+  100% { transform: scale(1); }
+}
+.goal-card.m-pop { animation: m-celebrate .9s var(--ease-out); }
+@keyframes m-celebrate {
+  0%   { transform: scale(.97); }
+  35%  { transform: scale(1.02) translate(-2px,-2px); box-shadow: 5px 5px 0 var(--green-dark), 0 0 0 6px var(--green-soft); }
+  100% { transform: none; }
+}
+.report-btn.m-pop img { animation: m-wiggle .5s var(--ease-out); }
+
+/* quem ainda não está pronto "respira", em onda */
+.ready-square:not(.on) { animation: m-waiting 2s ease-in-out infinite; }
+.ready-square:nth-child(3n+2):not(.on) { animation-delay: .25s; }
+.ready-square:nth-child(3n+3):not(.on) { animation-delay: .5s; }
+@keyframes m-waiting { 50% { border-color: #666; background: #1e1e1e; } }
+
+/* ── Botões: sobe no hover, afunda no clique, volta com mola ────────────────── */
+.btn {
+  transition: transform var(--dur-2) var(--ease-spring), box-shadow var(--dur-2) var(--ease-spring),
+              background-color var(--dur-2), color var(--dur-2), filter var(--dur-2);
+}
+.btn:hover:not(:disabled)               { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--border-dark); }
+.btn-primary:hover:not(:disabled)       { box-shadow: 3px 3px 0 var(--amber-dark); filter: brightness(1.05); }
+.btn-ghost:hover:not(:disabled)         { box-shadow: 3px 3px 0 var(--border-dark); color: var(--text); }
+.btn-success:hover:not(:disabled)       { box-shadow: 3px 3px 0 var(--green-dark); }
+.btn-purple-soft:hover:not(:disabled)   { box-shadow: 3px 3px 0 var(--purple); }
+.btn:active:not(:disabled) {
+  transform: translate(2px,2px) scale(.97); box-shadow: 0 0 0 transparent;
+  transition-duration: 50ms;
+}
+.signout-btn { transition: background-color var(--dur-2), color var(--dur-2), box-shadow var(--dur-2), transform var(--dur-2) var(--ease-spring); }
+.signout-btn:active { transform: translate(2px,2px); box-shadow: none; }
+.card-link { display: inline-block; transition: transform var(--dur-2) var(--ease-spring); }
+.card-link:hover { transform: translateX(4px); }
+.vote-btn { transition: background-color var(--dur-2), transform var(--dur-2) var(--ease-spring), box-shadow var(--dur-2); }
+.vote-btn:hover:not(:disabled) { transform: translate(-1px,-1px); box-shadow: 3px 3px 0 var(--border-dark); }
+.vote-btn:active:not(:disabled) { transform: scale(.92); box-shadow: none; transition-duration: 50ms; }
+.report-btn:hover:not(:disabled) img { animation: m-wiggle .5s var(--ease-out); }
+.diff-pill { transition: background-color var(--dur-2), color var(--dur-2); }
+.diff-pill.active { animation: m-pill var(--dur-3) var(--ease-spring); }
+@keyframes m-pill { from { transform: scale(.92); } }
+
+/* ── Cards interativos: hover com mola + detalhe vivo ───────────────────────── */
+.stat-card, .goal-card, .lb-entry, .profile-pick-card, .profile-card, .cal-bar,
+.config-row, .accent-trigger, .config-btn, .accent-opt {
+  transition-duration: var(--dur-2);
+  transition-timing-function: var(--ease-spring);
+}
+.stat-card:hover .stat-icon            { animation: m-hop .55s var(--ease-spring); }
+.lb-entry:hover .avatar                { animation: m-wiggle .5s var(--ease-out); }
+.lb-entry:active, .profile-pick-card:active { transform: scale(.97); transition-duration: 50ms; }
+.profile-pick-card:hover .profile-pick-avatar { animation: m-hop .55s var(--ease-spring); }
+.profile-hero .avatar-xl:hover         { animation: m-wiggle .5s var(--ease-out); }
+.delivery-img:not(.blurred), .reveal-img {
+  transition: transform var(--dur-2) var(--ease-spring), box-shadow var(--dur-2), filter .4s, opacity var(--dur-3);
+}
+.delivery-img:not(.blurred):hover, .reveal-img:hover {
+  transform: translate(-2px,-2px); box-shadow: 3px 3px 0 var(--amber-dark);
+}
+.empty-state .empty-icon img { animation: m-bob 3s ease-in-out infinite; }
+.bounty-head img { transform-origin: 50% 0; animation: m-swing 2.6s ease-in-out infinite; }
+.cal-bar.current { animation: m-current 2.2s ease-in-out infinite; }
+.cal-bar.current.m-grow-x {
+  animation: m-grow-x var(--dur-4) var(--ease-out) var(--m-d, 0ms) backwards,
+             m-current 2.2s ease-in-out calc(var(--m-d, 0ms) + 700ms) infinite;
+}
+@keyframes m-current { 50% { box-shadow: 1px 1px 0 var(--sec-border), 0 0 0 3px var(--sec-bg); } }
+.timeline-dot { transition: background-color var(--dur-2), transform var(--dur-3) var(--ease-spring); }
+.timeline-node:hover .timeline-dot { transform: scale(1.25); }
+.timeline-node.active .timeline-dot { transform: scale(1.3) rotate(45deg); }
+.timeline-node-label { transition: color var(--dur-2); }
+
+/* ── Navegação ──────────────────────────────────────────────────────────────── */
+.nav-link {
+  transition: background-color var(--dur-2), border-color var(--dur-2), color var(--dur-2),
+              padding-left var(--dur-3) var(--ease-spring);
+}
+.nav-link:not(.active):hover { padding-left: 18px; }
+.nav-link .icon-svg { transition: transform var(--dur-3) var(--ease-spring); }
+.nav-link:hover .icon-svg { transform: rotate(-10deg) scale(1.18); }
+.nav-link.active .nav-arrow { animation: m-nudge 1s steps(1) infinite; }
+.sidebar-logo:hover .skrill-sprite { animation: skrill-blink 1.2s steps(1) infinite, m-hop .55s var(--ease-spring); }
+.profile-card:hover .avatar { animation: m-wiggle .5s var(--ease-out); }
+.mobile-nav a { transition: background-color var(--dur-2), color var(--dur-2); }
+.mobile-nav a .icon-svg { transition: transform var(--dur-3) var(--ease-spring); }
+.mobile-nav a:active .icon-svg { transform: scale(.8); transition-duration: 50ms; }
+.mobile-nav a.active .icon-svg { transform: translateY(-2px); }
+
+/* Abas: um bloco âmbar desliza para a aba ativa; o painel entra na direção */
+.tab-list { position: relative; isolation: isolate; background: var(--surface); }
+.tab-ink {
+  position: absolute; top: 0; left: 0; height: 100%; z-index: -1; pointer-events: none;
+  background: var(--amber);
+  transition: transform var(--dur-3) var(--ease-spring), width var(--dur-3) var(--ease-spring);
+}
+.tab-list.m-has-ink .tab-btn { background: transparent; transition: color var(--dur-2), background-color var(--dur-2); }
+.tab-list.m-has-ink .tab-btn:not(.active):hover { background: var(--surface-hover); }
+.tab-panel.active { animation: m-tab-in var(--dur-3) var(--ease-out); }
+@keyframes m-tab-in { from { opacity: 0; transform: translateX(calc(var(--dir, 0) * 22px)); } }
+
+/* ── Overlays: entram com mola, saem via "ghost" (clone animado pelo engine) ── */
+.modal-overlay, .win-overlay { backdrop-filter: blur(2px); }
+.modal-overlay:not(.hidden), .win-overlay:not(.hidden), .config-overlay:not(.hidden) {
+  animation: m-fade var(--dur-2) var(--ease-out);
+}
+.modal-overlay:not(.hidden) > .modal,
+.win-overlay:not(.hidden) > .win-window { animation: m-modal-in var(--dur-3) var(--ease-spring); }
+#win-lightbox:not(.hidden) > .win-window { animation: none; }   /* zoom FLIP via JS */
+@keyframes m-modal-in  { from { opacity: 0; transform: translateY(18px) scale(.93); } }
+@keyframes m-modal-out { to   { opacity: 0; transform: translateY(10px) scale(.96); } }
+.m-ghost { pointer-events: none !important; animation: m-fade-out var(--dur-2) var(--ease-in) forwards !important; }
+.m-ghost > .modal, .m-ghost > .win-window { animation: m-modal-out var(--dur-2) var(--ease-in) forwards !important; }
+.m-ghost .config-panel { animation: m-panel-out var(--dur-2) var(--ease-in) forwards !important; }
+.form-error:not(.hidden) { animation: m-shake .45s var(--ease-out); }
+.form-input { transition: border-color var(--dur-2), box-shadow var(--dur-2) var(--ease-out); }
+
+/* Painel de config: desliza com mola, itens entram em cascata */
+.config-overlay:not(.hidden) .config-panel { animation: m-panel-in var(--dur-3) var(--ease-out); }
+@keyframes m-panel-in  { from { transform: translateX(100%); } }
+@keyframes m-panel-out { from { transform: translateX(0); } to { transform: translateX(100%); } }
+.config-overlay:not(.hidden) .config-panel-body > * { animation: m-slide-r var(--dur-3) var(--ease-out) backwards; }
+.config-panel-body > :nth-child(1) { animation-delay: 80ms; }
+.config-panel-body > :nth-child(2) { animation-delay: 120ms; }
+.config-panel-body > :nth-child(3) { animation-delay: 160ms; }
+.config-panel-body > :nth-child(4) { animation-delay: 200ms; }
+.config-panel-body > :nth-child(5) { animation-delay: 240ms; }
+.config-panel-body > :nth-child(6) { animation-delay: 280ms; }
+.config-btn img { transition: transform var(--dur-4) var(--ease-spring); }
+.config-btn:hover img { transform: rotate(90deg); }
+.config-check svg { animation: m-pop var(--dur-3) var(--ease-spring); }
+.accent-select.open .accent-menu { transform-origin: top; animation: m-menu-in var(--dur-2) var(--ease-out); }
+@keyframes m-menu-in { from { opacity: 0; transform: translateY(-6px) scaleY(.9); } }
+.accent-swatch { transition: transform var(--dur-3) var(--ease-spring); }
+.accent-opt:hover .accent-swatch, .accent-trigger:hover .accent-swatch { transform: rotate(45deg) scale(.82); }
+
+/* ── Countdown: dígitos rolam ao mudar, dois-pontos piscam ──────────────────── */
+.cd-digit { display: inline-block; }
+.cd-digit.tick { animation: m-digit .5s var(--ease-out); }
+@keyframes m-digit { from { opacity: 0; transform: translateY(-45%) scaleY(.8); } }
+.cd-sep { animation: m-sep 1s steps(1) infinite; }
+@keyframes m-sep { 50% { opacity: .25; } }
+
+/* ── Toasts: empilham, entram com mola, barra de tempo (pausa no hover) ─────── */
+.m-toasts {
+  position: fixed; right: 20px; bottom: 20px; z-index: 9999;
+  display: flex; flex-direction: column; align-items: flex-end; gap: 8px; pointer-events: none;
+}
+@media (max-width: 767px) { .m-toasts { left: 12px; right: 12px; bottom: 96px; align-items: stretch; } }
+.m-toast {
+  position: relative; overflow: hidden; pointer-events: auto; cursor: pointer;
+  color: #fff; padding: 10px 18px 13px; border: 2px solid #000; box-shadow: 3px 3px 0 #000;
+  font-family: 'Micro 5', monospace; font-size: 22px; text-transform: uppercase;
+  animation: m-toast-in var(--dur-3) var(--ease-spring) backwards;
+}
+.m-toast::after {
+  content: ''; position: absolute; left: 0; bottom: 0; width: 100%; height: 3px;
+  background: rgba(0,0,0,.35); transform-origin: left;
+  animation: m-toast-timer var(--toast-life, 2600ms) linear forwards;
+}
+.m-toast:hover::after { animation-play-state: paused; }
+.m-toast.m-out { animation: m-toast-out var(--dur-2) var(--ease-in) forwards; }
+@keyframes m-toast-in  { from { opacity: 0; transform: translateX(46px) scale(.9); } }
+@keyframes m-toast-out { to   { opacity: 0; transform: translateX(32px) scale(.95); } }
+@keyframes m-toast-timer { to { transform: scaleX(0); } }
+
+/* ── FX (partículas e textos flutuantes) ────────────────────────────────────── */
+.m-fx-layer { position: fixed; inset: 0; pointer-events: none; z-index: 10000; overflow: hidden; }
+.m-px { position: absolute; left: 0; top: 0; }
+.m-float {
+  position: absolute; left: 0; top: 0; white-space: nowrap;
+  font-family: 'Jersey 25', monospace; font-size: 32px; color: var(--amber-dark);
+  text-shadow: 2px 2px 0 var(--surface);
+}
+
+/* ── Acessibilidade: foco visível de teclado ────────────────────────────────── */
+:focus-visible { outline: 2px dashed var(--amber-dark); outline-offset: 3px; }
+.form-input:focus-visible { outline: none; }
+
+/* ── Transições entre páginas (View Transitions, progressivo) ───────────────── */
+@view-transition { navigation: auto; }
+.sidebar             { view-transition-name: m-sidebar; }
+.mobile-nav          { view-transition-name: m-mobile-nav; }
+.nav-link.active     { view-transition-name: m-nav-active; }   /* a pílula desliza entre páginas */
+.mobile-nav a.active { view-transition-name: m-mnav-active; }
+.config-btn          { view-transition-name: m-config; }
+::view-transition-group(m-nav-active),
+::view-transition-group(m-mnav-active) { animation-duration: var(--dur-3); animation-timing-function: var(--ease-spring); }
+::view-transition-old(root) { animation: m-vt-out 160ms var(--ease-in) both; }
+::view-transition-new(root) { animation: m-vt-in 320ms var(--ease-out) 60ms both; }
+@keyframes m-vt-out { to   { opacity: 0; transform: translateY(-6px); } }
+@keyframes m-vt-in  { from { opacity: 0; transform: translateY(10px); } }
+/* troca de tema/accent: revelação circular (clip-path animado via JS) */
+html.m-vt-theme::view-transition-old(root),
+html.m-vt-theme::view-transition-new(root) { animation: none; mix-blend-mode: normal; }
+html.m-vt-theme .sidebar, html.m-vt-theme .mobile-nav, html.m-vt-theme .nav-link.active,
+html.m-vt-theme .mobile-nav a.active, html.m-vt-theme .config-btn { view-transition-name: none; }
+
+/* ── Movimento reduzido: tudo instantâneo ───────────────────────────────────── */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *:not(.m-toast)::after {
+    animation-duration: 1ms !important; animation-delay: 0s !important;
+    animation-iteration-count: 1 !important; transition-duration: 1ms !important;
+  }
+  .skrill-sprite { animation: none !important; }
+  ::view-transition-group(*), ::view-transition-old(*), ::view-transition-new(*) { animation: none !important; }
+}

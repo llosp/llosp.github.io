@@ -3,8 +3,8 @@
   "configurations": [
     {
       "name": "skrill",
-      "runtimeExecutable": "node",
-      "runtimeArgs": ["/tmp/skrill-server.js"],
+      "runtimeExecutable": "npx",
+      "runtimeArgs": ["-y", "http-server", "..", "-p", "8765", "-c-1"],
       "port": 8765
     }
   ]

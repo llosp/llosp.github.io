@@ -385,6 +385,7 @@
       bountySubs = [row, ...bountySubs.filter(s => s.profile_id !== currentProfile.id)];
       closeBountyModal();
       renderPage();
+      Motion.celebrate(document.querySelector('#app .bounty-card'));
     } catch (err) {
       errEl.textContent = err.message ?? 'Erro ao enviar. Tente novamente.';
       errEl.classList.remove('hidden');
@@ -572,8 +573,10 @@
         ? { ...g, status: 'completed', image_urls: urls, completed_at: new Date().toISOString() }
         : g);
 
+      const doneId = pendingGoalId;
       closeDeliveryModal();
       renderPage();
+      Motion.celebrate(document.getElementById('goal-' + doneId));
     } catch (err) {
       errEl.textContent = err.message ?? 'Erro ao enviar. Tente novamente.';
       errEl.classList.remove('hidden');

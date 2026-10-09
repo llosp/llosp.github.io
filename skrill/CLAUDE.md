@@ -69,7 +69,7 @@ Storage bucket `deliveries` (público) — path: `{goal_id}/{timestamp}-{filenam
 - `difficultyChip(difficulty)` — chip `Simples` (azul) · `Complexa` (roxo) · `Extra` (neutro)
 - `basePoints(difficulty)` — `simple`→2, `complex`→5, `extra`→0
 - `bonusPoolFor(n)` — `Math.max(1, Math.floor(n/2))` — pool de bônus por avaliador
-- `fireConfetti()` — rajada de confetti em canvas (sem libs); usada no reveal do Skrill Time
+- `fireConfetti(opts?)` — confetti em canvas (sem libs). Sem args: rajada central + canhões laterais (reveal). `{x, y, count}`: rajada a partir de um ponto
 - `iconHTML(type)` — SVG img tag para ícones de nav (`G`, `T`, `P`, `A`, `+`, `S`, `R`)
 - `renderSidebar(profile, activePage)` — sidebar com ícones SVG
 - `renderMobileNav(activeKey)` — nav inferior mobile
@@ -79,7 +79,7 @@ Storage bucket `deliveries` (público) — path: `{goal_id}/{timestamp}-{filenam
 - `initConfigButton()` — botão de configurações flutuante (tema escuro + seletor de accent)
 - `getAccent()` / `setAccent(id)` — lê/define accent theme (persiste em `localStorage['skrill_accent']`)
 - `ACCENTS` — array com 5 temas: `Amber Lupus` (padrão) · `Bamboo Fever` · `Eggplant Eel` · `Gentle Fuchsia` · `Tomato Planet`
-- `toast(msg, color?)` — notificação flutuante temporária
+- `toast(msg, color?)` — notificação empilhável (barra de tempo, pausa no hover, clique dispensa)
 - `timeAgo(d)` — tempo relativo em pt-BR
 - `switchTab(tabId)` — troca tab ativa (`.tab-btn` + `.tab-panel`)
 - `openImageLightbox(url)` / `closeImageLightbox()` — lightbox estilo Windows 95 (ícone `image.svg`)
@@ -123,6 +123,19 @@ Cada tema tem uma **cor primária** (`--amber`) e uma **cor secundária** (`--se
 
 A secundária aparece em: pódio 2º lugar, destaque "me" no leaderboard, eyebrow labels (`.page-header-label`), faixa superior dos stat cards, barra de XP, pontos do feed, divisores do Acervo, temporada atual no calendário.
 Tokens semânticos (`--purple`, `--green`, `--blue`) **não mudam** por tema — carregam significado de status.
+
+## Motion (animações) — `Motion` no fim de `client.js` + MOTION LAYER no fim de `style.css`
+Automático: um MutationObserver anima qualquer render via `innerHTML`, sem código na página.
+- **Entradas:** componentes (`.card`, `.goal-card`, `.lb-entry`, `.stat-card`, `.page-header`, ... lista `COMPONENTS`) entram em cascata pela posição na tela; abaixo da dobra esperam o scroll.
+- **Re-renders só animam o que mudou.** Chave do componente = `id` ou classe + texto sem dígitos. Dê `id` estável a cards cujo texto muda no lugar (ex.: `#st-ready`, `#st-rating` no Skrill Time), senão eles "re-entram".
+- **Números:** classes em `VALUES` (`.stat-value`, `.entry-xp`, `.rating-value`...) contam 0→valor na entrada e antigo→novo em updates. Para qualquer outro número use a classe `.m-num`.
+- **Estados:** `STATES` (`.ready-square.on`, `.vote-btn.voted-*`, `.goal-card.completed`...) dão pop quando a classe aparece.
+- **Overlays:** `.modal-overlay` / `.win-overlay` / `.config-overlay` entram com mola e saem animados ao receber `.hidden` (clone "ghost").
+- **FX:** `.btn-primary`/`.vote-btn` soltam partículas no clique; `data-float="+1"` num botão faz o texto flutuar.
+- API: `Motion.celebrate(el)` (pop + confete), `Motion.burst(x,y)`, `Motion.floatText(x,y,txt)`, `Motion.themeSwap(fn)` (troca de tema com círculo via View Transitions), `Motion.pop(el)`.
+- Navegação entre páginas usa View Transitions (`@view-transition`); `prerenderChrome()` desenha sidebar/nav do perfil salvo para a pílula ativa deslizar.
+- Tokens: `--ease-out`, `--ease-in`, `--ease-spring`, `--ease-bounce`, `--dur-1..4`. Use `animation-fill-mode: backwards` (nunca `forwards` em transform de elemento com hover).
+- `prefers-reduced-motion` desliga tudo (CSS + checagens `Motion.reduced()`).
 
 ## Regras de UI
 - Ícones de navegação: SVG imgs via `iconHTML()` — não usar texto ASCII

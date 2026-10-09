@@ -4,750 +4,195 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>lope — designer + developer</title>
-  <meta name="description"
-    content="Lope (Pedro Lopes) is a designer and developer based in Rio de Janeiro, working across web, product, ai, interactive experiences and games.">
+  <title>lope / product designer who builds</title>
+  <meta name="description" content="Lope (Pedro Lopes) is a product designer and developer in Rio de Janeiro working on ai and web interfaces.">
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/styles.css">
 </head>
 
 <body>
 
-  <div class="page-transition">
-    <div class="transition_column"><div class="transition_column-background"></div></div>
-    <div class="transition_column"><div class="transition_column-background"></div></div>
-    <div class="transition_column"><div class="transition_column-background"></div></div>
-    <div class="transition_column"><div class="transition_column-background"></div></div>
-  </div>
-  <noscript><style>.page-transition { display: none; }</style></noscript>
-
   <canvas class="ascii-background" aria-hidden="true"></canvas>
 
-  <div class="background-gridlines">
+  <div class="background-gridlines" aria-hidden="true">
     <div class="grid-line"></div>
     <div class="grid-line"></div>
     <div class="grid-line"></div>
     <div class="grid-line"></div>
     <div class="grid-line"></div>
   </div>
+
+  <div class="cursor-pill" aria-hidden="true"></div>
 
   <div class="navbar">
     <div class="header grid-12">
-      <a class="nav_button" href="/">
+      <a class="nav_button nav_button--home" href="/">
         <div class="button-square not-blinking"></div>
         <div class="text-color_inverse name-long">lope.design</div>
         <div class="text-color_inverse name-short">lope</div>
       </a>
-      <a class="nav_button" href="#work">
+      <a class="nav_button" href="/#work">
         <div class="button-square blinking"></div>
         <div class="text-color_inverse">./work</div>
       </a>
-      <a class="nav_button" href="#about">
+      <a class="nav_button" href="/#about">
         <div class="button-square blinking"></div>
         <div class="text-color_inverse">./about</div>
+      </a>
+      <a class="nav_button" href="/resume.pdf">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">resume.pdf</div>
+        <!-- TODO(pedro): add resume.pdf to the repo root --><mark class="todo">[todo: add resume.pdf to the repo root]</mark>
       </a>
     </div>
   </div>
 
-  <div class="hero">
-    <h1 class="title-h1">designer + developer creating digital experiences, products and games.</h1>
-    <div class="scroll-down-tag">↓ scroll<span class="cursor">_</span></div>
-  </div>
-
-  <main id="work">
-
-    <div class="work-tag">~/work</div>
-
-    <div class="work-list">
-
-        <!-- project 01 -->
-        <article class="file-panel" id="proj-01">
-          <div class="file-panel_header" role="button" tabindex="0" aria-expanded="true" aria-controls="proj-01-body">
-            <span class="file-panel_index">01</span>
-            <h2 class="file-panel_title">skrill</h2>
-            <div class="file-panel_tags">web app, full stack · ongoing</div>
-            <span class="file-panel_toggle" aria-hidden="true">[-]</span>
-          </div>
-          <div class="file-panel_body" id="proj-01-body">
-            <div class="file-panel_body-inner">
-          <p class="file-panel_desc">a social productivity system for a small friend group, part habit
-            tracker and part guild dashboard. every season each person declares goals at a difficulty that sets
-            the base points, and progress stays hidden until the weekly meeting, where deliveries get
-            revealed and the group splits a shared bonus pool between each other's work. i designed the points
-            economy, built the whole stack solo and made a silly mascot.</p>
-          <dl class="file-panel_meta">
-            <div class="file-panel_row"><dt>role</dt><dd>web app, full stack development</dd></div>
-            <div class="file-panel_row"><dt>built with</dt><dd>html, css, javascript, supabase, figma, claude code</dd></div>
-            <div class="file-panel_row"><dt>context</dt><dd>personal project, solo</dd></div>
-            <div class="file-panel_row"><dt>play</dt><dd><a href="/skrill/demo" target="_blank" rel="noopener">lope.design/skrill</a></dd></div>
-          </dl>
-          <div class="file-panel_images">
-            <div class="layout-grid_list">
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail natural" src="assets/skrill/cover.webp" alt="Skrill cover" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">cover.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail wide" src="assets/skrill/skrill-vid.webp" alt="Skrill app walkthrough" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">skrill-vid.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail landscape" src="assets/skrill/mockup.webp" alt="Skrill mockup" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">mockup.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail natural" src="assets/skrill/profile-gallery.webp" alt="Skrill profile gallery" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">profile-gallery.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail wide" src="assets/skrill/add-goal.webp" alt="Skrill screen for declaring a weekly goal with difficulty" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">add-goal.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail wide" src="assets/skrill/leader-board.webp" alt="Skrill leaderboard with podium and rankings" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">leader-board.webp</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- project 02 -->
-        <article class="file-panel" id="proj-02">
-          <div class="file-panel_header" role="button" tabindex="0" aria-expanded="true" aria-controls="proj-02-body">
-            <span class="file-panel_index">02</span>
-            <h2 class="file-panel_title">yura</h2>
-            <div class="file-panel_tags">web design, branding · concept</div>
-            <span class="file-panel_toggle" aria-hidden="true">[-]</span>
-          </div>
-          <div class="file-panel_body" id="proj-02-body">
-            <div class="file-panel_body-inner">
-          <p class="file-panel_desc">i built a guitar in real life and wanted a way to show it off, so i
-            invented a brand around it instead of just posting photos. yura is a mock guitar company built
-            for the hakkotai, the model i built. i designed the logo and identity, then built a full storefront
-            site around it: product page, checkout flow with a working cart, team and about pages, the whole
-            set of legal pages a real store would ship with.</p>
-          <dl class="file-panel_meta">
-            <div class="file-panel_row"><dt>role</dt><dd>web design, branding, front-end development</dd></div>
-            <div class="file-panel_row"><dt>built with</dt><dd>html, css, javascript, figma, claude code</dd></div>
-            <div class="file-panel_row"><dt>context</dt><dd>personal project, solo</dd></div>
-            <div class="file-panel_row"><dt>visit</dt><dd><a href="/yura" target="_blank" rel="noopener">lope.design/yura</a></dd></div>
-          </dl>
-          <div class="file-panel_images">
-            <div class="layout-grid_list">
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail landscape" src="assets/yura/yura-cover.webp" alt="YURA logo over the HAKKOTAI guitar on an amp" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">cover.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item layout-grid_item--video">
-                <div class="project-image_outer">
-                  <div class="image-wrapper video-wrapper">
-                    <video class="thumbnail wide" playsinline loop preload="metadata" aria-label="YURA promo video">
-                      <source src="assets/yura/yura-vid.webm" type="video/webm">
-                    </video>
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">yura-vid.webm</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail portrait" src="assets/yura/yura-neck.webp" alt="Close-up looking down the HAKKOTAI's neck and fretboard" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">neck.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail square" src="assets/yura/yura-cable.webp" alt="Braided pink YURA guitar cable with branded cable tie" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">cable.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail landscape" src="assets/yura/yura-guitar.webp" alt="The pink and yellow HAKKOTAI guitar resting on an amp" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">guitar.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail" style="aspect-ratio: 1215 / 585; object-fit: cover;" src="assets/yura/yura-glow.webp" alt="The HAKKOTAI guitar glowing under stage lights" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">glow.webp</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- project 03 -->
-        <article class="file-panel" id="proj-03">
-          <div class="file-panel_header" role="button" tabindex="0" aria-expanded="true" aria-controls="proj-03-body">
-            <span class="file-panel_index">03</span>
-            <h2 class="file-panel_title">count me dead</h2>
-            <div class="file-panel_tags">game design, UI, programming & audio · shipped</div>
-            <span class="file-panel_toggle" aria-hidden="true">[-]</span>
-          </div>
-          <div class="file-panel_body" id="proj-03-body">
-            <div class="file-panel_body-inner">
-          <p class="file-panel_desc">a boss-rush western duel about reading a countdown. you're an accountant
-            collecting debts from a town full of outlaws, one bullet per debt, and the whole game is one
-            button: wait for the count to hit zero, then draw. nobody outdraws you, so every outlaw cheats
-            the count instead, each in a way that fits who they are. made in 72 hours for gmtk jam 2026 with
-            a team of three, where i did the game design, programming and audio while frovio and zumate made
-            the art. it placed 21st out of 10,587 entries.</p>
-          <dl class="file-panel_meta">
-            <div class="file-panel_row"><dt>role</dt><dd>game design, UI, programming, audio</dd></div>
-            <div class="file-panel_row"><dt>built with</dt><dd>godot, gdscript</dd></div>
-            <div class="file-panel_row"><dt>context</dt><dd>gmtk jam 2026, team of 3</dd></div>
-            <div class="file-panel_row"><dt>play</dt><dd><a href="https://lopen.itch.io/count-me-dead" target="_blank" rel="noopener">lopen.itch.io/count-me-dead</a></dd></div>
-          </dl>
-          <div class="file-panel_images">
-            <div class="layout-grid_list">
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail landscape" src="assets/count-me-dead/cover.webp" alt="Count Me Dead cover art" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">cover.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail wide" src="assets/count-me-dead/gameplay-1.webp" alt="A duel against Hoarse Ryder: the timer still reads 9 when the player fires, and TOO EARLY! flashes across the screen" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">gameplay-1.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail wide" src="assets/count-me-dead/gameplay-2.webp" alt="Mid-duel against Danny D. Vile, the timer at 18, reading Let's see you count without me" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">gameplay-2.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail wide" src="assets/count-me-dead/gameplay-3.webp" alt="Hoarse Ryder in the sheriff's office, bullying a frightened Conny Calzone and mangling an idiom" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">gameplay-3.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail wide" src="assets/count-me-dead/gameplay-4.webp" alt="The town map, where each location is a name on the ledger and unlocks the next outlaw" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">gameplay-4.webp</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-            </div>
-          </div>
-        </article>
-
-        <!-- project 04 -->
-        <article class="file-panel" id="proj-04">
-          <div class="file-panel_header" role="button" tabindex="0" aria-expanded="true" aria-controls="proj-04-body">
-            <span class="file-panel_index">04</span>
-            <h2 class="file-panel_title">oracle</h2>
-            <div class="file-panel_tags">ux/ui, product design · concept</div>
-            <span class="file-panel_toggle" aria-hidden="true">[-]</span>
-          </div>
-          <div class="file-panel_body" id="proj-04-body">
-            <div class="file-panel_body-inner">
-          <p class="file-panel_desc">a phone app for tabletop rpg game masters that turns the room into part of
-            the table. the gm builds scenes out of smart home states and sounds, so an ice cave sets the ac to
-            18°c, closes the blinds, drops the lights to a flickering blue, puts a frozen cavern on the tv and
-            starts a howling wind, all with one tap. i redesigned it from a version that had drifted into a music
-            player: a scene editor that works device by device, a live console for running the game with a sound
-            mix and one-shot effect pads, a way to put the house back when the session ends, and safety limits for
-            flashing lights and the ac. the library stays local, your own files plus a few official packs.</p>
-          <dl class="file-panel_meta">
-            <div class="file-panel_row"><dt>role</dt><dd>ux/ui, product design, design system</dd></div>
-            <div class="file-panel_row"><dt>built with</dt><dd>figma, claude code</dd></div>
-            <div class="file-panel_row"><dt>context</dt><dd>concept app, redesign</dd></div>
-            <div class="file-panel_row"><dt>status</dt><dd>in design</dd></div>
-          </dl>
-          <div class="file-panel_images">
-            <div class="layout-grid_list">
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail landscape" src="assets/oracle/cover.webp" alt="Three Oracle screens: a session's scene list, the Ice Cave scene editor and the live console" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">cover.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail wide" src="assets/oracle/scene-editor.webp" alt="The scene editor with its device tiles, the add-device sheet, the light editor with colour wheel and flicker effect, and the AC editor set to 18°C" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">scene-editor.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail wide" src="assets/oracle/live-session.webp" alt="Running a session: the live console, a scene applying device by device, a partial failure with a retry, and ending the session by restoring the home" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">live-session.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail wide" src="assets/oracle/home-devices.webp" alt="Smart home setup: devices grouped by room, scanning for new devices, linked integrations and the safety and comfort limits" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">home-devices.webp</div>
-                  </div>
-                </div>
-              </div>
-              <div class="layout-grid_item">
-                <div class="project-image_outer">
-                  <div class="image-wrapper">
-                    <img class="thumbnail wide" src="assets/oracle/library.webp" alt="The local library of sounds in folders, a folder after an upload, the official packs list and a pack with its scene templates" loading="lazy">
-                  </div>
-                  <div class="project-title_wrapper">
-                    <div class="project-image-tag">library.webp</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-          </div>
-            </div>
-          </div>
-        </article>
-
+  <div id="app" data-route="home">
+    <div class="hero">
+      <h1 class="title-h1">product designer who builds. ai + web interfaces.</h1>
+      <div class="hero-now">
+        <div class="hero-now_cmd">$ cat now.md</div>
+        <div class="hero-now_out">designing digital products at ecoa × petrobras · open to product design roles</div>
+      </div>
+      <div class="scroll-down-tag">↓ scroll<span class="cursor">_</span></div>
     </div>
 
-  </main>
-
-  <section class="about" id="about">
-    <div class="about-tag">~/about</div>
-
-    <div class="about-block">
-      <div class="about-prompt">about.md</div>
-      <p class="about-text">i'm Pedro Lopes, but most people call me Lope. i'm a designer based in Rio de Janeiro
-        who likes to understand how things work and, when needed, code my way into making them real.</p>
-    </div>
-
-    <div class="about-block">
-      <div class="about-prompt">background.md</div>
-      <p class="about-text">i study design at puc-rio. my background is in game development, where i worked
-        with systems, interaction, prototyping, gameplay and also led projects with multidisciplinary teams,
-        and that carried into digital products, interfaces and web experiences.
-        i am currently working at ecoa institute in partnership with petrobras designing and developing
-        digital products to solve real company problems.</p>
-    </div>
-
-    <div class="about-block">
-      <div class="about-prompt">focus.md</div>
-      <p class="about-text">my work moves between digital product design, web, ux/ui, ai, interactive experiences
-        and game development. i'm especially drawn to challenging projects that force me to learn something new.
-        the kind of problems where the obvious solution isn't enough.</p>
-    </div>
-
-    <div class="about-block">
-      <div class="about-prompt">toolbox/</div>
-      <div class="toolbox-grid">
-        <div class="toolbox-cat">
-          <span class="toolbox-cat_label">product &amp; ux/ui</span>
-          <span class="toolbox-cat_items">figma&nbsp;&nbsp;figjam&nbsp;&nbsp;framer&nbsp;&nbsp;notion</span>
+    <main class="work" id="work">
+      <div class="work-tag">~/work</div>
+      <div class="index">
+        <div class="index_table">
+          <div class="index_head">
+            <span class="index_cell index_num">#</span>
+            <span class="index_cell">name</span><span class="index_cell">type</span><span class="index_cell">role</span><span class="index_cell">status</span><span class="index_cell">outcome</span>
+          </div>
+          <a class="index_row" href="/work/oracle/" data-slug="oracle" data-index="0">
+        <span class="index_cell index_num">01</span>
+        <span class="index_cell index_name">oracle</span>
+        <span class="index_cell index_type">product design, ux/ui</span>
+        <span class="index_cell index_role">ux/ui, product design, design system</span>
+        <span class="index_cell index_status">in design</span>
+        <span class="index_cell index_outcome"><!-- TODO(pedro): one line on what the redesign proved --><mark class="todo">[todo: one line on what the redesign proved]</mark></span>
+      </a>
+      <a class="index_row" href="/work/ecoa/" data-slug="ecoa" data-index="1">
+        <span class="index_cell index_num">02</span>
+        <span class="index_cell index_name">ecoa × petrobras</span>
+        <span class="index_cell index_type">product design</span>
+        <span class="index_cell index_role">product design, development</span>
+        <span class="index_cell index_status">ongoing</span>
+        <span class="index_cell index_outcome"><!-- TODO(pedro): one line, nda-safe --><mark class="todo">[todo: one line, nda-safe]</mark></span>
+      </a>
+      <a class="index_row" href="/work/skrill/" data-slug="skrill" data-index="2">
+        <span class="index_cell index_num">03</span>
+        <span class="index_cell index_name">skrill</span>
+        <span class="index_cell index_type">web app, full stack</span>
+        <span class="index_cell index_role">product design, ui, full stack development</span>
+        <span class="index_cell index_status">ongoing</span>
+        <span class="index_cell index_outcome"><!-- TODO(pedro): one line. how many seasons have run, or how many people use it --><mark class="todo">[todo: one line. how many seasons have run, or how many people use it]</mark></span>
+      </a>
+      <a class="index_row" href="/work/yura/" data-slug="yura" data-index="3">
+        <span class="index_cell index_num">04</span>
+        <span class="index_cell index_name">yura</span>
+        <span class="index_cell index_type">web design, branding</span>
+        <span class="index_cell index_role">web design, branding, front-end development</span>
+        <span class="index_cell index_status">concept</span>
+        <span class="index_cell index_outcome"><!-- TODO(pedro): one line --><mark class="todo">[todo: one line]</mark></span>
+      </a>
+      <a class="index_row" href="/work/count-me-dead/" data-slug="count-me-dead" data-index="4">
+        <span class="index_cell index_num">05</span>
+        <span class="index_cell index_name">count me dead</span>
+        <span class="index_cell index_type">game design, ui</span>
+        <span class="index_cell index_role">game design, ui, programming, audio</span>
+        <span class="index_cell index_status">shipped</span>
+        <span class="index_cell index_outcome">21st out of 10,587 entries at gmtk jam 2026</span>
+      </a>
         </div>
-        <div class="toolbox-cat">
-          <span class="toolbox-cat_label">branding &amp; visual</span>
-          <span class="toolbox-cat_items">illustrator&nbsp;&nbsp;photoshop&nbsp;&nbsp;after effects</span>
-        </div>
-        <div class="toolbox-cat">
-          <span class="toolbox-cat_label">dev &amp; ai</span>
-          <span class="toolbox-cat_items">web&nbsp;&nbsp;ai</span>
+        <div class="index_preview" aria-hidden="true">
+          <div class="index_preview-frame">
+            <img class="index_preview-img" data-slug="oracle"
+          src="/assets/oracle/cover.webp" alt=""
+          style="object-fit: contain"
+          loading="lazy" decoding="async" fetchpriority="low" data-default="true">
+        <div class="index_preview-img frame--empty" data-slug="ecoa"><!-- TODO(pedro): cover for ecoa --><mark class="todo">[todo: cover for ecoa]</mark></div>
+        <img class="index_preview-img" data-slug="skrill"
+          src="/assets/skrill/cover.webp" alt=""
+          style="object-fit: cover"
+          loading="lazy" decoding="async" fetchpriority="low">
+        <img class="index_preview-img" data-slug="yura"
+          src="/assets/yura/yura-cover.webp" alt=""
+          style="object-fit: cover"
+          loading="lazy" decoding="async" fetchpriority="low">
+        <img class="index_preview-img" data-slug="count-me-dead"
+          src="/assets/count-me-dead/cover.webp" alt=""
+          style="object-fit: contain"
+          loading="lazy" decoding="async" fetchpriority="low">
+          </div>
+          <div class="index_preview-captions">
+            <div class="index_preview-caption caption-code" data-slug="oracle" data-default="true">// three states of one session: picking a scene, building it device by device, and running it live</div>
+          <div class="index_preview-caption caption-code" data-slug="ecoa"><!-- TODO(pedro): cover caption once there is a cover --><mark class="todo">[todo: cover caption once there is a cover]</mark></div>
+          <div class="index_preview-caption caption-code" data-slug="skrill">// the whole thing is dressed as a desktop app from about 1996, which is the joke and also the reason people open it</div>
+          <div class="index_preview-caption caption-code" data-slug="yura">// the brand exists because the guitar does. everything on the storefront is photographed from the instrument I actually built</div>
+          <div class="index_preview-caption caption-code" data-slug="count-me-dead">// the player character is an accountant collecting debts, which is where the whole countdown conceit comes from</div>
+          </div>
         </div>
       </div>
-    </div>
+    </main>
 
-    <div class="about-block">
-      <div class="about-prompt">contact.md</div>
-      <p class="about-text">
-        email: <a href="mailto:work@lope.design">work@lope.design</a><br>
-        linkedin: <a href="https://www.linkedin.com/in/lopes-pedro/">lopes-pedro</a><br>
-      </p>
-    </div>
-  </section>
+    <section class="about" id="about">
+      <div class="about-tag">~/about</div>
+      <div class="about-block">
+        <div class="about-prompt">about.md</div>
+        <div class="prose"><p>i'm Pedro Lopes, but most people call me Lope. i'm a designer based in Rio de Janeiro who likes to understand how things work and, when needed, code my way into making them real.</p></div>
+      </div>
+      <div class="about-block">
+        <div class="about-prompt">background.md</div>
+        <div class="prose"><p>i study design at puc-rio. my background is in game development, where i worked with systems, interaction, prototyping, gameplay and also led projects with multidisciplinary teams, and that carried into digital products, interfaces and web experiences. i am currently working at ecoa institute in partnership with petrobras designing and developing digital products to solve real company problems.</p></div>
+      </div>
+      <div class="about-block">
+        <div class="about-prompt">focus.md</div>
+        <div class="prose"><p>my work moves between digital product design, web, ux/ui, ai, interactive experiences and game development. i'm especially drawn to challenging projects that force me to learn something new. the kind of problems where the obvious solution isn't enough.</p></div>
+      </div>
+      <div class="about-block">
+        <div class="about-prompt">availability.md</div>
+        <div class="prose"><p>open to product design roles. <!-- TODO(pedro): where you can work from, whether you need visa sponsorship, and whether you prefer remote, hybrid or relocation. studios screen on this before they read the work. --><mark class="todo">[todo: where you can work from, whether you need visa sponsorship, and whether you prefer remote, hybrid or relocation. studios screen on this before they read the work.]</mark></p></div>
+      </div>
+      <div class="about-block">
+        <div class="about-prompt">toolbox/</div>
+        <div class="toolbox-grid">
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">product &amp; ux/ui</span>
+        <span class="toolbox-cat_items">figma  figjam  framer  notion</span>
+      </div>
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">branding &amp; visual</span>
+        <span class="toolbox-cat_items">illustrator  photoshop  after effects</span>
+      </div>
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">dev &amp; ai</span>
+        <span class="toolbox-cat_items">web  ai  <!-- TODO(pedro): name the actual stack here. your own project pages already say html, css, javascript, supabase, godot, gdscript and claude code, and that reads stronger than &quot;web ai&quot; --><mark class="todo">[todo: name the actual stack here. your own project pages already say html, css, javascript, supabase, godot, gdscript and claude code, and that reads stronger than &quot;web ai&quot;]</mark></span>
+      </div>
+</div>
+      </div>
+      <div class="about-block">
+        <div class="about-prompt">contact.md</div>
+        <div class="prose"><ul class="prose-list">
+<li>email: <a href="mailto:work@lope.design">work@lope.design</a></li>
+<li>linkedin: <a href="https://www.linkedin.com/in/lopes-pedro/" target="_blank" rel="noopener">lopes-pedro</a></li>
+</ul></div>
+      </div>
+    </section>
+
+  </div>
 
   <div class="footer">
     <div class="footer_grid grid-12">
-      <div class="credits-container">
-      </div>
-      <div class="copyright-container">
-        <div class="text-color_inverse">2026</div>
-      </div>
+      <div class="credits-container"><div class="text-color_inverse">work@lope.design</div></div>
+      <div class="copyright-container"><div class="text-color_inverse">2026</div></div>
     </div>
   </div>
 
-  <script>
-    var projectIds = ['proj-01', 'proj-02', 'proj-03', 'proj-04'];
-
-    // masonry: each item goes into the leftmost column that's within one
-    // row-gap of the shortest available column, so images prefer sitting
-    // left and only drop to a shorter column further right/down when the
-    // left one is meaningfully taller (no space). expanded (is--active)
-    // items span 2 columns and align to the taller of the two — this also
-    // means that once an expanded image opens up its two neighboring
-    // columns, later single-width images keep filling both of them
-    // (since they're the shortest) before the layout moves past it.
-    function layoutMasonryGrids() {
-      document.querySelectorAll('.layout-grid_list').forEach(function (container) {
-        var style = getComputedStyle(container);
-        var columns = parseInt(style.getPropertyValue('--columns'), 10) || 1;
-        var columnGap = parseFloat(style.columnGap) || 0;
-        var rowGap = parseFloat(style.rowGap) || 0;
-        var columnWidth = (container.clientWidth - (columns - 1) * columnGap) / columns;
-        var colHeights = new Array(columns).fill(0);
-        var items = Array.prototype.filter.call(container.children, function (el) {
-          return el.classList.contains('layout-grid_item');
-        });
-
-        items.forEach(function (item) {
-          var span = Math.min(item.classList.contains('is--active') ? 2 : 1, columns);
-
-          var minTop = Infinity;
-          for (var i = 0; i <= columns - span; i++) {
-            minTop = Math.min(minTop, Math.max.apply(null, colHeights.slice(i, i + span)));
-          }
-
-          var bestCol = 0;
-          var bestTop = minTop;
-          for (var j = 0; j <= columns - span; j++) {
-            var top = Math.max.apply(null, colHeights.slice(j, j + span));
-            if (top <= minTop + rowGap) {
-              bestCol = j;
-              bestTop = top;
-              break;
-            }
-          }
-
-          item.style.left = (bestCol * (columnWidth + columnGap)) + 'px';
-          item.style.top = bestTop + 'px';
-
-          var newHeight = bestTop + item.offsetHeight + rowGap;
-          for (var k = bestCol; k < bestCol + span; k++) {
-            colHeights[k] = newHeight;
-          }
-        });
-
-        var maxHeight = Math.max.apply(null, colHeights.concat([0]));
-        container.style.height = Math.max(maxHeight - rowGap, 0) + 'px';
-      });
-    }
-
-    document.querySelectorAll('.file-panel_header').forEach(function (header) {
-      var panel = header.closest('.file-panel');
-      var toggle = header.querySelector('.file-panel_toggle');
-
-      function setCollapsed(collapsed) {
-        panel.classList.toggle('is--collapsed', collapsed);
-        header.setAttribute('aria-expanded', String(!collapsed));
-        if (toggle) toggle.textContent = collapsed ? '[+]' : '[-]';
-      }
-
-      header.addEventListener('click', function () {
-        setCollapsed(!panel.classList.contains('is--collapsed'));
-      });
-
-      header.addEventListener('keydown', function (e) {
-        if (e.key !== 'Enter' && e.key !== ' ') return;
-        e.preventDefault();
-        setCollapsed(!panel.classList.contains('is--collapsed'));
-      });
-    });
-
-    (function () {
-      var panels = projectIds
-        .map(function (id) { return document.getElementById(id); })
-        .filter(Boolean);
-
-      if (!panels.length || !('IntersectionObserver' in window)) {
-        panels.forEach(function (p) { p.classList.add('is--revealed'); });
-        return;
-      }
-
-      var revealObserver = new IntersectionObserver(function (entries) {
-        entries.forEach(function (entry) {
-          if (!entry.isIntersecting) return;
-          entry.target.classList.add('is--revealed');
-          revealObserver.unobserve(entry.target);
-        });
-      }, { rootMargin: '0px 0px -10% 0px', threshold: 0 });
-
-      panels.forEach(function (panel) {
-        revealObserver.observe(panel);
-      });
-    })();
-
-    document.querySelectorAll('.image-wrapper').forEach(function (wrapper) {
-      wrapper.addEventListener('click', function () {
-        var item = wrapper.closest('.layout-grid_item');
-        var startWidth = item.getBoundingClientRect().width;
-        var startTop = item.style.top;
-        var startLeft = item.style.left;
-        var isActive = item.classList.toggle('is--active');
-
-        // width is mid-transition at this point, so reading offsetHeight
-        // now would measure the OLD size. snap the clicked item to its
-        // final size (no transition) so the masonry math below sees its
-        // true new footprint, then FLIP it back and release on the next
-        // frame so it still animates smoothly instead of jump-cutting.
-        item.style.transition = 'none';
-        void item.offsetHeight;
-        layoutMasonryGrids();
-        var finalTop = item.style.top;
-        var finalLeft = item.style.left;
-
-        item.style.width = startWidth + 'px';
-        item.style.top = startTop;
-        item.style.left = startLeft;
-        void item.offsetHeight;
-
-        requestAnimationFrame(function () {
-          item.style.transition = '';
-          item.style.width = '';
-          item.style.top = finalTop;
-          item.style.left = finalLeft;
-        });
-
-        var video = wrapper.querySelector('video');
-        if (!video) return;
-        if (isActive) {
-          video.play();
-        } else {
-          video.pause();
-          video.currentTime = 0;
-        }
-      });
-    });
-
-    layoutMasonryGrids();
-    window.addEventListener('load', layoutMasonryGrids);
-    if (document.fonts && document.fonts.ready) {
-      document.fonts.ready.then(layoutMasonryGrids);
-    }
-
-    var masonryResizeTimer;
-    window.addEventListener('resize', function () {
-      clearTimeout(masonryResizeTimer);
-      masonryResizeTimer = setTimeout(layoutMasonryGrids, 100);
-    });
-
-    var pageTransition = document.querySelector('.page-transition');
-    if (pageTransition) {
-      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-      if (reduceMotion) {
-        pageTransition.remove();
-      } else {
-        window.addEventListener('load', function () {
-          requestAnimationFrame(function () {
-            pageTransition.classList.add('is--open');
-          });
-          window.setTimeout(function () {
-            pageTransition.remove();
-          }, 1100);
-        });
-      }
-    }
-
-    (function () {
-      var canvas = document.querySelector('.ascii-background');
-      if (!canvas || !canvas.getContext) return;
-
-      var ctx = canvas.getContext('2d');
-      var chars = ['.', ':', 'o', 'O'];
-      var cell = 20;
-      var ringWidth = 28;
-      var maxRipples = 10;
-      var cols = 0;
-      var rows = 0;
-      var width = 0;
-      var height = 0;
-      var ripples = [];
-      var lastSpawn = 0;
-      var nextSpawnDelay = 350;
-      var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-      function applyContextSettings() {
-        ctx.font = 'bold 15px "Mono", "Courier New", monospace';
-        ctx.textBaseline = 'top';
-        ctx.fillStyle = 'rgb(0, 0, 0)';
-      }
-
-      function resize() {
-        var dpr = window.devicePixelRatio || 1;
-        width = window.innerWidth;
-        height = Math.round(window.innerHeight * 1.2);
-        canvas.width = Math.round(width * dpr);
-        canvas.height = Math.round(height * dpr);
-        canvas.style.width = width + 'px';
-        canvas.style.height = height + 'px';
-        ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
-        applyContextSettings();
-        cols = Math.ceil(width / cell);
-        rows = Math.ceil(height / cell);
-      }
-
-      // a top-down raindrop: a ring that expands outward from a point and
-      // weakens as it grows, same shape a drop makes hitting still water.
-      function spawnRipple(now) {
-        ripples.push({
-          x: Math.random() * width,
-          y: Math.random() * height,
-          t0: now,
-          life: 2600 + Math.random() * 1600,
-          maxRadius: 80 + Math.random() * 150
-        });
-        if (ripples.length > maxRipples) ripples.shift();
-      }
-
-      function drawFrame(now) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        if (now - lastSpawn > nextSpawnDelay) {
-          spawnRipple(now);
-          lastSpawn = now;
-          nextSpawnDelay = 250 + Math.random() * 400;
-        }
-
-        ripples = ripples.filter(function (r) { return now - r.t0 < r.life; });
-
-        for (var gy = 0; gy < rows; gy++) {
-          for (var gx = 0; gx < cols; gx++) {
-            var px = gx * cell + cell / 2;
-            var py = gy * cell + cell / 2;
-            var best = 0;
-
-            for (var i = 0; i < ripples.length; i++) {
-              var r = ripples[i];
-              var progress = (now - r.t0) / r.life;
-              var radius = progress * r.maxRadius;
-              var fade = 1 - progress;
-              var dist = Math.hypot(px - r.x, py - r.y);
-              var delta = Math.abs(dist - radius);
-              if (delta < ringWidth) {
-                var intensity = (1 - delta / ringWidth) * fade;
-                if (intensity > best) best = intensity;
-              }
-            }
-
-            if (best < 0.15) continue;
-            var index = Math.min(chars.length - 1, Math.floor((best - 0.15) / 0.85 * chars.length));
-            ctx.globalAlpha = 0.1 + best * 0.2;
-            ctx.fillText(chars[index], gx * cell, gy * cell);
-          }
-        }
-        ctx.globalAlpha = 1;
-      }
-
-      resize();
-      window.addEventListener('resize', resize);
-
-      if (reduceMotion) {
-        var now = performance.now();
-        spawnRipple(now - 1800);
-        spawnRipple(now - 900);
-        spawnRipple(now - 200);
-        drawFrame(now);
-      } else {
-        // setTimeout rather than a pure rAF chain: rAF gets fully suspended
-        // in backgrounded/hidden tabs in some browsers, which would freeze
-        // the ripples entirely instead of just slowing them down.
-        (function loop() {
-          drawFrame(performance.now());
-          window.setTimeout(loop, 50);
-        })();
-      }
-    })();
-  </script>
+  <script type="module" src="/js/site.js"></script>
 
 </body>
 

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>yura / lope.design</title>
+  <meta name="description" content="A mock guitar company built around the HAKKOTAI, a guitar I built in real life.">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body class="is--case-study">
+
+  <canvas class="ascii-background" aria-hidden="true"></canvas>
+
+  <div class="background-gridlines" aria-hidden="true">
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+  </div>
+
+  <div class="cursor-pill" aria-hidden="true"></div>
+
+  <div class="navbar">
+    <div class="header grid-12">
+      <a class="nav_button nav_button--home" href="/">
+        <div class="button-square not-blinking"></div>
+        <div class="text-color_inverse name-long">lope.design</div>
+        <div class="text-color_inverse name-short">lope</div>
+      </a>
+      <a class="nav_button" href="/#work">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./work</div>
+      </a>
+      <a class="nav_button" href="/#about">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./about</div>
+      </a>
+      <a class="nav_button" href="/resume.pdf">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">resume.pdf</div>
+        <!-- TODO(pedro): add resume.pdf to the repo root --><mark class="todo">[todo: add resume.pdf to the repo root]</mark>
+      </a>
+    </div>
+  </div>
+
+  <div id="app" data-route="work">
+    <article class="case-study" data-slug="yura">
+      <header class="cs-hero">
+        <figure class="cs-cover">
+          <div class="cs-cover_frame" data-cover-slot="yura">
+          <img class="cs-cover_img" src="/assets/yura/yura-cover.webp" alt="The YURA logo over the HAKKOTAI guitar resting on an amp"
+            style="object-fit: cover" fetchpriority="high" decoding="async">
+        </div>
+          <figcaption class="caption-code">// the brand exists because the guitar does. everything on the storefront is photographed from the instrument I actually built</figcaption>
+        </figure>
+        <div class="cs-hero_text">
+          <nav class="cs-breadcrumb" aria-label="breadcrumb">
+            <a href="/#work">~/work</a>/<span>yura</span>
+          </nav>
+          <h1 class="cs-title">yura</h1>
+          <dl class="meta cs-meta">
+          <div class="meta_row">
+            <dt>role</dt>
+            <dd>web design, branding, front-end development</dd>
+          </div>
+          <div class="meta_row">
+            <dt>timeline</dt>
+            <dd><!-- TODO(pedro): when --><mark class="todo">[todo: when]</mark></dd>
+          </div>
+          <div class="meta_row">
+            <dt>team</dt>
+            <dd>solo</dd>
+          </div>
+          <div class="meta_row">
+            <dt>built with</dt>
+            <dd>html, css, javascript, figma, claude code</dd>
+          </div>
+          <div class="meta_row">
+            <dt>status</dt>
+            <dd>concept</dd>
+          </div>
+          <div class="meta_row">
+            <dt>visit</dt>
+            <dd><a href="/yura">lope.design/yura</a></dd>
+          </div>
+          </dl>
+        </div>
+      </header>
+
+      <section class="cs-section" id="readme-md">
+        <div class="cs-section_file">README.md</div>
+        <div class="cs-section_body">
+<div class="prose"><p>I built a guitar in real life and wanted a way to show it off, so I invented a brand around it instead of just posting photos. YURA is a mock guitar company built for the HAKKOTAI, the model I built.</p>
+<p>I designed the logo and identity, then built a full storefront site around it: a product page, a checkout flow with a working cart, team and about pages, and the whole set of legal pages a real store would ship with.</p>
+<p><!-- TODO(pedro): what came out of it. for a branding and front-end piece the honest outcome is often &quot;it is the most complete thing I have shipped end to end&quot;, which is a fine answer. --><mark class="todo">[todo: what came out of it. for a branding and front-end piece the honest outcome is often &quot;it is the most complete thing I have shipped end to end&quot;, which is a fine answer.]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="gallery">
+        <div class="cs-section_file">gallery/</div>
+        <div class="cs-section_body">
+<div class="gallery">
+  <div class="layout-grid_list">
+<div class="layout-grid_item layout-grid_item--video">
+      <figure class="gallery_figure">
+        <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="The YURA promo video">
+        <source src="/assets/yura/yura-vid.webm" type="video/webm">
+      </video>
+    </div>
+        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media wide" src="/assets/yura/yura-hero.webp" alt="The YURA storefront hero" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media wide" src="/assets/yura/yura-checkout.webp" alt="The YURA checkout flow with a working cart" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">// the checkout is the part most brand concepts skip, which is exactly why it is here</figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media portrait" src="/assets/yura/yura-neck.webp" alt="Close-up looking down the HAKKOTAI's neck and fretboard" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media square" src="/assets/yura/yura-cable.webp" alt="A braided pink YURA guitar cable with a branded cable tie" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">// the identity had to survive on an object the size of a cable tie, so the mark is built to read at one centimetre</figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media landscape" src="/assets/yura/yura-guitar.webp" alt="The pink and yellow HAKKOTAI guitar resting on an amp" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media wide" src="/assets/yura/yura-glow.webp" alt="The HAKKOTAI guitar glowing under stage lights" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media wide" src="/assets/yura/yura-footer.webp" alt="The YURA site footer" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
+      </figure>
+    </div>
+  </div>
+</div>
+        </div>
+      </section>
+      <section class="cs-section" id="problem-md">
+        <div class="cs-section_file">problem.md</div>
+        <div class="cs-section_body">
+<div class="prose"><p><!-- TODO(pedro): the problem. &quot;I wanted to show off a guitar&quot; is the honest origin, and it is charming, but the design problem underneath it is something like: how do you make a one-product brand feel like a real company. write that version. --><mark class="todo">[todo: the problem. &quot;I wanted to show off a guitar&quot; is the honest origin, and it is charming, but the design problem underneath it is something like: how do you make a one-product brand feel like a real company. write that version.]</mark></p>
+<p><!-- TODO(pedro): constraints. the photography is of a single physical object, which limits what the storefront can show. that is a real constraint and worth naming. --><mark class="todo">[todo: constraints. the photography is of a single physical object, which limits what the storefront can show. that is a real constraint and worth naming.]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="decisions">
+        <div class="cs-section_file">decisions/</div>
+        <div class="cs-section_body">
+<div class="prose"><p><!-- TODO(pedro): candidates for decisions here: how the mark was built to work at cable-tie size, why you built the full legal and checkout set instead of a landing page, and how the photography of one guitar had to carry an entire catalogue. --><mark class="todo">[todo: candidates for decisions here: how the mark was built to work at cable-tie size, why you built the full legal and checkout set instead of a landing page, and how the photography of one guitar had to carry an entire catalogue.]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="outcome-md">
+        <div class="cs-section_file">outcome.md</div>
+        <div class="cs-section_body">
+<div class="prose"><p><!-- TODO(pedro): results. this is a concept, so there are no sales numbers. what you can say is what you learned building a checkout flow, or what you would reuse. --><mark class="todo">[todo: results. this is a concept, so there are no sales numbers. what you can say is what you learned building a checkout flow, or what you would reuse.]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="next-md">
+        <div class="cs-section_file">next.md</div>
+        <div class="cs-section_body">
+<div class="prose"><p><!-- TODO(pedro): what you would change. --><mark class="todo">[todo: what you would change.]</mark></p></div>
+        </div>
+      </section>
+
+      <nav class="cs-nav">
+        <a class="cs-nav_link cs-nav_prev" href="/work/skrill/" data-slug="skrill">← prev project <span class="cs-nav_name">skrill</span></a>
+        <a class="cs-nav_link cs-nav_next" href="/work/count-me-dead/" data-slug="count-me-dead">next project → <span class="cs-nav_name">count me dead</span></a>
+      </nav>
+    </article>
+  </div>
+
+  <div class="footer">
+    <div class="footer_grid grid-12">
+      <div class="credits-container"><div class="text-color_inverse">work@lope.design</div></div>
+      <div class="copyright-container"><div class="text-color_inverse">2026</div></div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/site.js"></script>
+
+</body>
+
+</html>

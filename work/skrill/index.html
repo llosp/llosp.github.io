@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>skrill / lope.design</title>
+  <meta name="description" content="A social productivity system for a small friend group, part habit tracker and part guild dashboard.">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body class="is--case-study">
+
+  <canvas class="ascii-background" aria-hidden="true"></canvas>
+
+  <div class="background-gridlines" aria-hidden="true">
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+  </div>
+
+  <div class="cursor-pill" aria-hidden="true"></div>
+
+  <div class="navbar">
+    <div class="header grid-12">
+      <a class="nav_button nav_button--home" href="/">
+        <div class="button-square not-blinking"></div>
+        <div class="text-color_inverse name-long">lope.design</div>
+        <div class="text-color_inverse name-short">lope</div>
+      </a>
+      <a class="nav_button" href="/#work">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./work</div>
+      </a>
+      <a class="nav_button" href="/#about">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./about</div>
+      </a>
+      <a class="nav_button" href="/resume.pdf">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">resume.pdf</div>
+        <!-- TODO(pedro): add resume.pdf to the repo root --><mark class="todo">[todo: add resume.pdf to the repo root]</mark>
+      </a>
+    </div>
+  </div>
+
+  <div id="app" data-route="work">
+    <article class="case-study" data-slug="skrill">
+      <header class="cs-hero">
+        <figure class="cs-cover">
+          <div class="cs-cover_frame" data-cover-slot="skrill">
+          <img class="cs-cover_img" src="/assets/skrill/cover.webp" alt="The Skrill title screen, with the mascot above the words improve your skrills"
+            style="object-fit: cover" fetchpriority="high" decoding="async">
+        </div>
+          <figcaption class="caption-code">// the whole thing is dressed as a desktop app from about 1996, which is the joke and also the reason people open it</figcaption>
+        </figure>
+        <div class="cs-hero_text">
+          <nav class="cs-breadcrumb" aria-label="breadcrumb">
+            <a href="/#work">~/work</a>/<span>skrill</span>
+          </nav>
+          <h1 class="cs-title">skrill</h1>
+          <dl class="meta cs-meta">
+          <div class="meta_row">
+            <dt>role</dt>
+            <dd>product design, ui, full stack development</dd>
+          </div>
+          <div class="meta_row">
+            <dt>timeline</dt>
+            <dd><!-- TODO(pedro): when you started and whether it is still running --><mark class="todo">[todo: when you started and whether it is still running]</mark></dd>
+          </div>
+          <div class="meta_row">
+            <dt>team</dt>
+            <dd>solo</dd>
+          </div>
+          <div class="meta_row">
+            <dt>built with</dt>
+            <dd>html, css, javascript, supabase, figma, claude code</dd>
+          </div>
+          <div class="meta_row">
+            <dt>status</dt>
+            <dd>ongoing</dd>
+          </div>
+          <div class="meta_row">
+            <dt>play</dt>
+            <dd><a href="/skrill/demo">lope.design/skrill</a></dd>
+          </div>
+          </dl>
+        </div>
+      </header>
+
+      <section class="cs-section" id="readme-md">
+        <div class="cs-section_file">README.md</div>
+        <div class="cs-section_body">
+<div class="prose"><p>Skrill is a social productivity system for a small friend group, part habit tracker and part guild dashboard. Every season each person declares goals at a difficulty that sets the base points, and progress stays hidden until the weekly meeting, where deliveries get revealed and the group splits a shared bonus pool between each other's work.</p>
+<p>I designed the points economy, built the whole stack solo and made a silly mascot.</p>
+<p><!-- TODO(pedro): what came out of it. how many seasons it has run, whether people still use it, what it changed about how the group works. --><mark class="todo">[todo: what came out of it. how many seasons it has run, whether people still use it, what it changed about how the group works.]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="gallery">
+        <div class="cs-section_file">gallery/</div>
+        <div class="cs-section_body">
+<div class="gallery">
+  <div class="layout-grid_list">
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media wide" src="/assets/skrill/skrill-vid.webp" alt="A walkthrough of the Skrill app" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media landscape" src="/assets/skrill/mockup.webp" alt="Skrill shown as a desktop app mockup" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media wide" src="/assets/skrill/add-goal.webp" alt="The screen for declaring a weekly goal with a difficulty" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">// declaring a goal and its difficulty is one screen, because the difficulty is the price and you should set it before you know how the week goes</figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media wide" src="/assets/skrill/leader-board.webp" alt="The Skrill leaderboard with a podium and rankings" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
+      </figure>
+    </div>
+  </div>
+</div>
+        </div>
+      </section>
+      <section class="cs-section" id="problem-md">
+        <div class="cs-section_file">problem.md</div>
+        <div class="cs-section_body">
+<div class="prose"><p><!-- TODO(pedro): the problem. habit trackers are a crowded category, so the interesting part is why the group needed one at all and why the existing ones did not work. that is the question a studio will have. --><mark class="todo">[todo: the problem. habit trackers are a crowded category, so the interesting part is why the group needed one at all and why the existing ones did not work. that is the question a studio will have.]</mark></p>
+<p><!-- TODO(pedro): constraints. a group small enough that everyone knows everyone changes the design, and so does the fact that you had to run it for real every week. --><mark class="todo">[todo: constraints. a group small enough that everyone knows everyone changes the design, and so does the fact that you had to run it for real every week.]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="decisions">
+        <div class="cs-section_file">decisions/</div>
+        <div class="cs-section_body">
+<div class="prose"><p><!-- TODO(pedro): the points economy is the most designed thing here, and it is the thing you can talk about that nobody else can. candidates for decisions: why difficulty sets the base points, why progress is hidden until the meeting, and how the shared bonus pool gets split. each of those is a real design decision with a reason behind it. --><mark class="todo">[todo: the points economy is the most designed thing here, and it is the thing you can talk about that nobody else can. candidates for decisions: why difficulty sets the base points, why progress is hidden until the meeting, and how the shared bonus pool gets split. each of those is a real design decision with a reason behind it.]</mark></p>
+<p><!-- TODO(pedro): pair each decision with a before and after once you have them. the economy almost certainly got retuned between seasons, and the retune is the story. --><mark class="todo">[todo: pair each decision with a before and after once you have them. the economy almost certainly got retuned between seasons, and the retune is the story.]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="outcome-md">
+        <div class="cs-section_file">outcome.md</div>
+        <div class="cs-section_body">
+<div class="prose"><p><!-- TODO(pedro): results. for this project you genuinely have data, since every season is logged in the database. number of seasons, number of goals declared, completion rate, or how the split changed over time. --><mark class="todo">[todo: results. for this project you genuinely have data, since every season is logged in the database. number of seasons, number of goals declared, completion rate, or how the split changed over time.]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="next-md">
+        <div class="cs-section_file">next.md</div>
+        <div class="cs-section_body">
+<div class="prose"><p><!-- TODO(pedro): what you would change. --><mark class="todo">[todo: what you would change.]</mark></p></div>
+        </div>
+      </section>
+
+      <nav class="cs-nav">
+        <a class="cs-nav_link cs-nav_prev" href="/work/ecoa/" data-slug="ecoa">← prev project <span class="cs-nav_name">ecoa × petrobras</span></a>
+        <a class="cs-nav_link cs-nav_next" href="/work/yura/" data-slug="yura">next project → <span class="cs-nav_name">yura</span></a>
+      </nav>
+    </article>
+  </div>
+
+  <div class="footer">
+    <div class="footer_grid grid-12">
+      <div class="credits-container"><div class="text-color_inverse">work@lope.design</div></div>
+      <div class="copyright-container"><div class="text-color_inverse">2026</div></div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/site.js"></script>
+
+</body>
+
+</html>

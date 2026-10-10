@@ -1,6 +1,6 @@
 ---
 slug: oracle
-order: 1
+order: 2
 title: oracle
 type: product design, ux research
 role: ux research, ux/ui, product design, design system
@@ -13,6 +13,7 @@ cover_ratio: 1 / 1
 summary: Oracle is a phone app that lets a tabletop RPG game master change the room with a tap, built from field research.
 eyebrow: ux research and product design · 2025 to 2026
 cover: assets/oracle/oracle-cover.webm
+nav_image: assets/oracle/oracle-nav.webp
 cover_alt: the Oracle wordmark and a phone showing the live console for a scene called Ice Cave, with the tagline "One tap, whole room."
 ---
 
@@ -26,18 +27,11 @@ Players prefer to play in person, but the tools that add atmosphere are built fo
 
 Oracle is a phone app that lets the game master control the room itself. One tap sets the lights, air conditioner, blinds, TV and sound, using smart devices people already own.
 
-::: media
-items:
-  - compare | ; | ; | the old way ; the oracle way
-:::
-
-[todo: COMPARE PAIR. Left: a flat, silent table with a paper map and a phone playing a playlist, the GM juggling five apps and tabs. Right: the same table with Oracle, one panel, the room already changed. Same angle, same people. Animate the left as a cluttered 5-app switch, the right as one tap]
-
 ## research.md
 
 We started with one question: why does an in-person table feel less immersive than it could, and what could fix that without breaking what makes it social?
 
-To find out we went where RPG happens: a game store (Falha Crítica), Niterói Expo Geek 2025 and CINE RPG, a school for game masters. We interviewed players and professionals aged 18 to 26 and 30 to 45, and checked what we heard against the Censo RPG Brasil 2023.
+To find out we went where RPG happens: at game stores, Niterói Expo Geek 2025 and CINE RPG, a school for game masters. We interviewed players and professionals aged 18 to 26 and 30 to 45, and checked what we heard against the Censo RPG Brasil 2023.
 
 ::: outcomes
 items:
@@ -81,6 +75,8 @@ body:
   Players found tabletop products good but too expensive, so we made nothing to buy. Oracle pairs with the lights, air conditioner, blinds and TV already in the home, grouped by room.
 
   Safety and comfort limits live in the same setup, so the ceiling on flashing and temperature is set once, not mid-scene.
+media:
+  - full | assets/oracle/pairing-devices.webm | Motion recording: Oracle scanning the home and finding devices one by one, choosing which to add and which room they go in, then the setup code and integrations paths | // nothing to buy, just pair what is already there
 :::
 
 ::: decision 02-device-by-device

@@ -72,6 +72,7 @@
 }
 
 html {
+  scroll-behavior: smooth;
   height: 100%;
   -webkit-text-size-adjust: 100%;
 }
@@ -1202,6 +1203,8 @@ video {
     left 0.6s var(--ease-out);
 }
 
+.layout-grid_item[data-span="2"] { --item-span: calc(var(--span, 1) * 2); }
+
 /* clicking a gallery item doubles whatever it already spans */
 .layout-grid_item.is--active {
   --item-span: calc(var(--span, 1) * 2);
@@ -1338,6 +1341,11 @@ a.cs-nav_link:hover .cs-nav_name {
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.5s var(--ease-out), transform 0.5s var(--ease-out);
+}
+
+.reveal--item {
+  transform: translateX(-12px);
+  transition-delay: var(--reveal-delay, 0ms);
 }
 
 .reveal.is--revealed {

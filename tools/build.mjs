@@ -727,7 +727,7 @@ function renderIndex(projects) {
       const { slug, data } = p;
       const meta = [data.type, data.status].filter(Boolean).join(' · ');
 
-      return `<a class="layout-grid_item covers_item" href="/work/${slug}/" data-slug="${slug}" data-index="${i}">
+      return `<a class="layout-grid_item covers_item" href="/work/${slug}/" data-slug="${slug}" data-index="${i}"${data.span ? ` data-span="${data.span}"` : ""}>
           <div class="covers_frame" style="aspect-ratio: ${coverRatio(data)}">
             ${coverMedia(p, i)}
           </div>
@@ -750,7 +750,7 @@ function renderIndex(projects) {
     </div>
 
     <main class="work" id="work">
-      <div class="work-tag">~/work</div>
+      <div class="work-tag">~/selected work</div>
       <div class="covers layout-grid_list">
         ${covers}
       </div>
@@ -885,8 +885,13 @@ ${s.rendered}
     const label = dir === 'prev' ? '← prev project' : 'next project →';
     if (!target) return `<span class="cs-nav_link is--disabled">${label}</span>`;
     const hasCover = target.data.cover && assetExists(target.data.cover);
-    const thumb = hasCover
-      ? `<div class="cs-nav_frame" style="aspect-ratio: ${coverRatio(target.data)}">${coverMedia(target, 1, 'cs-nav_media')}</div>`
+    // these thumbnails never play, and most covers are clips that start on an
+    // empty frame, so a still (nav_image) wins over the cover when there is one
+    const still = target.data.nav_image && assetExists(target.data.nav_image)
+      ? `<img class="cs-nav_media" data-slug="${target.slug}" src="${assetUrl(target.data.nav_image)}" alt="" style="object-fit: cover" loading="lazy" decoding="async">`
+      : null;
+    const thumb = still || hasCover
+      ? `<div class="cs-nav_frame" style="aspect-ratio: ${coverRatio(target.data)}">${still || coverMedia(target, 1, 'cs-nav_media')}</div>`
       : '';
     return `<a class="cs-nav_link cs-nav_${dir}" href="/work/${target.slug}/" data-slug="${target.slug}">${label} <span class="cs-nav_name">${escapeHtml(target.data.title)}</span>${thumb}</a>`;
   };

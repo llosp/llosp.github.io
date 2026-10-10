@@ -1,8 +1,10 @@
 ---
 slug: skrill
-order: 3
+order: 1
+span: 2
+cover_ratio: 5 / 3
 title: skrill
-type: web app, full stack
+type: product design, web app, full stack
 role: product design, ui, full stack development
 status: ongoing
 timeline: june 2026 to now
@@ -16,6 +18,7 @@ live: /skrill/demo
 live_label: play
 live_text: lope.design/skrill
 cover: assets/skrill/skrill-cover.webm
+nav_image: assets/skrill/skrill-nav.webp
 cover_alt: Looping motion piece: the Skrill title screen window closes, then the app plays a declared goal and a Skrill Time reveal, before dissolving back to the start
 cover_caption: // the whole thing is dressed as a desktop app from about 1996, which is the joke and also the reason people open it
 ---
@@ -29,14 +32,6 @@ text: Nobody asks you to practice, so you don't.
 Skrill is a weekly game for people who want to make things they are not paid to make. Each season you declare what you will do and how hard it is. You deliver proof. Everything stays blurred until a short call where the group reveals it together and hands each other points.
 
 I designed the rules, the points economy, the interface and the mascot, and built the whole stack myself. It has run since June 2026 with the five of us it was built for.
-
-::: gallery
-items:
-- assets/skrill/skrill-vid.webp | wide | A walkthrough of the Skrill app | // [todo: write this caption]
-- assets/skrill/mockup.webp | landscape | Skrill shown as a desktop app mockup | // [todo: write this caption]
-- assets/skrill/add-goal.webp | wide | The screen for declaring a weekly goal with a difficulty | // declaring a goal and its difficulty is one screen, because the difficulty is the price and you should set it before you know how the week goes
-- assets/skrill/leader-board.webp | wide | The Skrill leaderboard with a podium and rankings | // [todo: write this caption]
-:::
 
 ## why.md
 
@@ -86,14 +81,14 @@ media:
 :::
 
 ::: decision 04-deliberately-unserious
-title: it looks like a desktop app from 1996
+title: it looks silly on purpose
 subtitle: The friendliness is the product.
 body:
   The pixel fonts, the Windows 95 windows and the mascot are not decoration. They are what keeps this from feeling like work. The mascot walks along the bottom of every page and can be thrown around with a click.
 
   You cannot upload a profile photo. You have to draw one, in a small black and white pixel canvas. It is a limited, slightly clumsy tool, and that is the point.
 media:
-  - full | assets/skrill/draw-your-avatar.webm | Screen recording: drawing a profile picture in the pixel canvas, then the avatar appearing on the leaderboard podium | // [todo: write this caption]
+  - full | assets/skrill/draw-your-avatar.webm | Motion recording: the app switching through its five accent colors, then the edit profile window flipping through pixel art avatars on the drawing canvas | // [todo: write this caption]
 :::
 
 ## outcome.md

@@ -94,42 +94,6 @@
 <p class="statement">Nobody asks you to practice, so you don't.</p>
 <div class="prose"><p>Skrill is a weekly game for people who want to make things they are not paid to make. Each season you declare what you will do and how hard it is. You deliver proof. Everything stays blurred until a short call where the group reveals it together and hands each other points.</p>
 <p>I designed the rules, the points economy, the interface and the mascot, and built the whole stack myself. It has run since June 2026 with the five of us it was built for.</p></div>
-<div class="gallery">
-  <div class="layout-grid_list">
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media wide" src="/assets/skrill/skrill-vid.webp" alt="A walkthrough of the Skrill app" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">skrill-vid.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media landscape" src="/assets/skrill/mockup.webp" alt="Skrill shown as a desktop app mockup" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">mockup.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media wide" src="/assets/skrill/add-goal.webp" alt="The screen for declaring a weekly goal with a difficulty" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">add-goal.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media wide" src="/assets/skrill/leader-board.webp" alt="The Skrill leaderboard with a podium and rankings" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">leader-board.webp</figcaption>
-      </figure>
-    </div>
-  </div>
-</div>
         </div>
       </section>
       <section class="cs-section" id="why-md">
@@ -150,7 +114,7 @@
     <li><a href="#d-01-declare-in-public-deliver-in-secret"><span class="takeaway-index_num">/01</span> everyone sees you delivered, nobody sees what</a></li>
     <li><a href="#d-02-difficulty-is-the-price"><span class="takeaway-index_num">/02</span> you set the difficulty before you know how the week goes</a></li>
     <li><a href="#d-03-points-from-your-friends"><span class="takeaway-index_num">/03</span> part of your score is given to you by the group</a></li>
-    <li><a href="#d-04-deliberately-unserious"><span class="takeaway-index_num">/04</span> it looks like a desktop app from 1996</a></li>
+    <li><a href="#d-04-deliberately-unserious"><span class="takeaway-index_num">/04</span> it looks silly on purpose</a></li>
   </ol>
 </nav>
 <div class="prose"><p>Four decisions carry most of the design.</p></div>
@@ -183,7 +147,11 @@
   <div class="decision_body prose"><p>Choosing the difficulty is part of declaring the goal, on the same screen. That is on purpose. If you could pick afterwards, everyone would call everything hard. Setting it up front makes you price your own ambition, and makes a failed complex goal cost something.</p>
 <p>An extra tier pays no base points at all and scores only through the group, for things you do just because. Some seasons a bounty appears, a prompt for something to make, such as a sci-fi piece, a sticker for the group or a classic painting in your own style. The chance of one rises every season it does not show up, so they stay a surprise. If a friend takes it, you want to as well, because you do not want them to take all the points.</p></div>
   <figure class="media-block media-block--full">
-  <div class="frame frame--empty"><!-- TODO(pedro): add assets/skrill/declare-goal-difficulty.webm --><mark class="todo">[todo: add assets/skrill/declare-goal-difficulty.webm]</mark></div>
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Screen recording: declaring a goal, choosing simple or complex, and the points shown on each">
+        <source src="/assets/skrill/declare-goal-difficulty.webm" type="video/webm">
+      </video>
+    </div>
   <figcaption class="caption-code">declare-goal-difficulty.webm</figcaption>
 </figure>
   
@@ -197,7 +165,11 @@
   <div class="decision_body prose"><p>The base points are fixed, so the interesting part is the bonus. Each person receives a pool of half the number of players, rounded down, and must spend all of it on other people's work, anonymously. You can score yourself, but you are spending from the same pool.</p>
 <p>This stops the leaderboard from being just a count of tasks. It rewards the work the group actually thought was good, and it keeps the reveal alive, because nobody knows who got what until the end.</p></div>
   <figure class="media-block media-block--full">
-  <div class="frame frame--empty"><!-- TODO(pedro): add assets/skrill/peer-bonus-rating.webm --><mark class="todo">[todo: add assets/skrill/peer-bonus-rating.webm]</mark></div>
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Screen recording: a bonus pool being split between four deliveries, with the pool counter running down to zero">
+        <source src="/assets/skrill/peer-bonus-rating.webm" type="video/webm">
+      </video>
+    </div>
   <figcaption class="caption-code">peer-bonus-rating.webm</figcaption>
 </figure>
   
@@ -205,13 +177,17 @@
 <article class="decision" id="d-04-deliberately-unserious">
   <header class="decision_head">
     <span class="decision_file">04-deliberately-unserious.md</span>
-    <h3 class="decision_title">it looks like a desktop app from 1996</h3>
+    <h3 class="decision_title">it looks silly on purpose</h3>
     <p class="decision_subtitle">The friendliness is the product.</p>
   </header>
   <div class="decision_body prose"><p>The pixel fonts, the Windows 95 windows and the mascot are not decoration. They are what keeps this from feeling like work. The mascot walks along the bottom of every page and can be thrown around with a click.</p>
 <p>You cannot upload a profile photo. You have to draw one, in a small black and white pixel canvas. It is a limited, slightly clumsy tool, and that is the point.</p></div>
   <figure class="media-block media-block--full">
-  <div class="frame frame--empty"><!-- TODO(pedro): add assets/skrill/draw-your-avatar.webm --><mark class="todo">[todo: add assets/skrill/draw-your-avatar.webm]</mark></div>
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Motion recording: the app switching through its five accent colors, then the edit profile window flipping through pixel art avatars on the drawing canvas">
+        <source src="/assets/skrill/draw-your-avatar.webm" type="video/webm">
+      </video>
+    </div>
   <figcaption class="caption-code">draw-your-avatar.webm</figcaption>
 </figure>
   
@@ -282,9 +258,8 @@
       </section>
 
       <nav class="cs-nav">
-        <a class="cs-nav_link cs-nav_prev" href="/work/ecoa/" data-slug="ecoa">← prev project <span class="cs-nav_name">ecoa × petrobras</span></a>
-        <a class="cs-nav_link cs-nav_next" href="/work/yura/" data-slug="yura">next project → <span class="cs-nav_name">yura</span><div class="cs-nav_frame" style="aspect-ratio: 1389 / 1016"><img class="cs-nav_media" data-slug="yura" src="/assets/yura/yura-cover.webp" alt=""
-              style="object-fit: cover" loading="lazy" decoding="async"></div></a>
+        <span class="cs-nav_link is--disabled">← prev project</span>
+        <a class="cs-nav_link cs-nav_next" href="/work/oracle/" data-slug="oracle">next project → <span class="cs-nav_name">oracle</span><div class="cs-nav_frame" style="aspect-ratio: 1 / 1"><img class="cs-nav_media" data-slug="oracle" src="/assets/oracle/oracle-nav.webp" alt="" style="object-fit: cover" loading="lazy" decoding="async"></div></a>
       </nav>
         </div>
       </div>

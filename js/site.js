@@ -191,7 +191,8 @@ function layoutMasonryGrids() {
     }
 
     items.forEach((item) => {
-      const wanted = item.classList.contains('is--active') ? baseSpan * 2 : baseSpan;
+      const itemSpan = parseInt(item.dataset.span, 10) || baseSpan;
+      const wanted = item.classList.contains("is--active") ? itemSpan * 2 : itemSpan;
       const span = Math.min(wanted, columns);
 
       let minTop = Infinity;
@@ -286,6 +287,15 @@ function initReveal(scope) {
   if (!('IntersectionObserver' in window) || reduceMotion()) return;
 
   targets.forEach((el) => el.classList.add('reveal'));
+
+  // the takeaway list comes in one line at a time, so it reads as a sequence
+  // rather than a block
+  const items = [...scope.querySelectorAll('.takeaway-index_list li')];
+  items.forEach((li, i) => {
+    li.style.setProperty('--reveal-delay', `${i * 90}ms`);
+    li.classList.add('reveal', 'reveal--item');
+    targets.push(li);
+  });
 
   const observer = new IntersectionObserver(
     (entries) => {

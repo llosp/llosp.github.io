@@ -1,5 +1,4 @@
-// Horizontal card deck: clicking a dot scrolls to its card, and the active dot
-// tracks whichever card is centered in the scroller.
+// Page motion: section reveals and the hero guitar tilt.
 (function () {
   // Prevent every image from being dragged (ghost-drag) out of the page.
   document.querySelectorAll('img').forEach((img) => {
@@ -47,6 +46,24 @@
     );
     closerIO.observe(closer);
   }
+
+  // Story, glow room and build timeline: items carry .rv-item and stagger in
+  // (via --i) the first time their section scrolls into view.
+  document.querySelectorAll('.story, .glowroom, .build').forEach((sec) => {
+    sec.classList.add('reveal');
+    const io = new IntersectionObserver(
+      (entries, obs) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            sec.classList.add('is-in');
+            obs.disconnect();
+          }
+        });
+      },
+      { threshold: 0.12 }
+    );
+    io.observe(sec);
+  });
 
   // Subtle pointer-driven 3D tilt on the hero guitar. Desktop pointers only,
   // and never when the user prefers reduced motion. The guitar leans a few
@@ -103,26 +120,4 @@
   );
   deckIO.observe(deck);
 
-  const cards = Array.from(deck.querySelectorAll('.card'));
-  const dots = Array.from(document.querySelectorAll('.dot'));
-  if (!cards.length || !dots.length) return;
-
-  dots.forEach((dot, i) => {
-    dot.addEventListener('click', () => {
-      cards[i].scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
-    });
-  });
-
-  const setActive = (i) => dots.forEach((d, j) => d.classList.toggle('is-active', j === i));
-
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) setActive(cards.indexOf(entry.target));
-      });
-    },
-    { root: deck, threshold: 0.6 }
-  );
-
-  cards.forEach((card) => io.observe(card));
 })();

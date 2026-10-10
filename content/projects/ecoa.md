@@ -1,6 +1,6 @@
 ---
 slug: ecoa
-order: 2
+order: 6
 title: ecoa × petrobras
 type: product design
 role: product design, development

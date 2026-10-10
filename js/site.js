@@ -312,6 +312,33 @@ function initVideos(scope) {
   videos.forEach((v) => observer.observe(v));
 }
 
+/* ── section rail ─────────────────────────────────────────────────────── */
+
+// the left rail on wide screens. the link for the section currently under
+// the top third of the window is marked, so the rail doubles as a progress
+// readout. the rail is display: none below its breakpoint, so the observer
+// is harmless there.
+function initRail(scope) {
+  const links = [...scope.querySelectorAll('.cs-rail a[href^="#"]')];
+  if (!links.length || !('IntersectionObserver' in window)) return;
+
+  const byId = new Map(links.map((a) => [a.getAttribute('href').slice(1), a]));
+  const sections = [...byId.keys()].map((id) => scope.querySelector(`#${CSS.escape(id)}`)).filter(Boolean);
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        links.forEach((a) => a.removeAttribute('aria-current'));
+        byId.get(entry.target.id).setAttribute('aria-current', 'true');
+      });
+    },
+    { rootMargin: '-20% 0px -70% 0px', threshold: 0 }
+  );
+
+  sections.forEach((el) => observer.observe(el));
+}
+
 /* ── work covers ──────────────────────────────────────────────────────── */
 
 // the covers are the work index. each one is also the element the router
@@ -322,23 +349,34 @@ function initCovers(scope) {
   const items = [...scope.querySelectorAll('.covers_item')];
   if (!items.length) return;
 
-  // a cover that is a video plays only while it is hovered, so the whole
-  // index is never decoding five clips at once just for being on screen
+  // a cover that is a video loops on its own while it is on screen and
+  // pauses when it scrolls away, so clips that nobody can see are not decoding
   if (reduceMotion()) return;
-  items.forEach((item) => {
-    const video = item.querySelector('video.covers_media');
-    if (!video) return;
-    item.addEventListener('mouseenter', () => video.play().catch(() => {}));
-    item.addEventListener('mouseleave', () => {
-      video.pause();
-      video.currentTime = 0;
-    });
-  });
+  const videos = items
+    .map((item) => item.querySelector('video.covers_media'))
+    .filter(Boolean);
+  if (!videos.length) return;
+
+  if (!('IntersectionObserver' in window)) {
+    videos.forEach((v) => v.play().catch(() => {}));
+    return;
+  }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach(({ target, isIntersecting }) => {
+        if (isIntersecting) target.play().catch(() => {});
+        else target.pause();
+      });
+    },
+    { threshold: 0.25 }
+  );
+  videos.forEach((v) => observer.observe(v));
 }
 
 /* ── cursor pill ──────────────────────────────────────────────────────── */
 
-const PILL_TARGETS = '.covers_item';
+const PILL_TARGETS = '.covers_item, a.cs-nav_link';
 
 // replaces the cursor over anything that opens a case study with the command
 // the click runs. hidden on touch and under reduced motion by the stylesheet,
@@ -402,6 +440,7 @@ function initPage() {
   if (!app) return;
 
   initReveal(app);
+  initRail(app);
   initVideos(app);
   initCovers(app);
   initGallery(app);
@@ -424,5 +463,6 @@ window.addEventListener('resize', () => {
 
 initRouter({
   onSwap: initPage,
+  layout: layoutMasonryGrids,
   onTransition: () => ascii.scatter(),
 });

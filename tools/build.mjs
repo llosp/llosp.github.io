@@ -13,6 +13,10 @@ const warnings = [];
 
 /* ── text helpers ─────────────────────────────────────────────────────── */
 
+// a windows checkout turns the content files into crlf, and the parsers
+// below split on \n
+const readSource = (file) => readFileSync(file, 'utf8').replace(/\r\n/g, '\n');
+
 const escapeHtml = (s) =>
   String(s)
     .replace(/&/g, '&amp;')
@@ -240,12 +244,12 @@ const videoType = (src) => (src.endsWith('.webm') ? 'webm' : 'mp4');
 // the cover in the work index. it carries no alt text because the link
 // around it already says the project name, so describing the image here
 // would only make a screen reader read every row twice.
-function coverMedia(project, index) {
+function coverMedia(project, index, cls = 'covers_media') {
   const { slug, data } = project;
 
   if (!data.cover || !assetExists(data.cover)) {
     if (data.cover) warnings.push(`${slug}: missing cover ${data.cover}`);
-    return `<div class="covers_media frame--empty" data-slug="${slug}">${inline(
+    return `<div class="${cls} frame--empty" data-slug="${slug}">${inline(
       `[todo: cover for ${slug}]`,
       slug
     )}</div>`;
@@ -255,7 +259,7 @@ function coverMedia(project, index) {
   const url = assetUrl(data.cover);
 
   if (isVideo(data.cover)) {
-    return `<video class="covers_media" data-slug="${slug}" style="object-fit: ${fit}"
+    return `<video class="${cls}" data-slug="${slug}" style="object-fit: ${fit}"
               muted loop playsinline preload="metadata">
               <source src="${url}" type="video/${videoType(data.cover)}">
             </video>`;
@@ -263,7 +267,7 @@ function coverMedia(project, index) {
 
   // the first cover is the only one near the fold on most screens
   const loading = index === 0 ? 'eager' : 'lazy';
-  return `<img class="covers_media" data-slug="${slug}" src="${url}" alt=""
+  return `<img class="${cls}" data-slug="${slug}" src="${url}" alt=""
               style="object-fit: ${fit}" loading="${loading}" decoding="async">`;
 }
 
@@ -271,7 +275,9 @@ function coverMedia(project, index) {
 // text, because here the image is the subject of the page rather than the
 // label on a link.
 function heroCover(data) {
-  const fit = data.cover_fit || 'cover';
+  // always fills the frame's width and crops the overflow, whatever shape the
+  // cover is. the index shows it at its own ratio, the hero masks it.
+  const fit = 'cover';
   const url = assetUrl(data.cover);
   const alt = escapeHtml(data.cover_alt || '');
 
@@ -289,6 +295,58 @@ function heroCover(data) {
 const caption = (text, where) =>
   text ? `<figcaption class="caption-code">${inline(text, where)}</figcaption>` : '';
 
+/* ── case study media ─────────────────────────────────────────────────── */
+
+const MEDIA_TYPES = new Set(['full', 'side', 'compare', 'diagram']);
+
+// one line per item: type | src | alt | caption
+// compare takes two of each, split by " ; ": src a ; src b | alt a ; alt b | label a ; label b
+function mediaItem(line, where) {
+  const [type = 'full', src = '', alt = '', cap = ''] = line.split('|').map((p) => p.trim());
+  if (!MEDIA_TYPES.has(type)) throw new Error(`${where}: unknown media type "${type}"`);
+  const two = (v) => v.split(';').map((p) => p.trim());
+
+  if (type === 'compare') {
+    const [a = '', b = ''] = two(src);
+    const [altA = '', altB = ''] = two(alt);
+    const [labelA = 'before', labelB = 'after'] = two(cap);
+    const side = (label, file, text) => `<div class="before-after_side">
+      <span class="before-after_label">${escapeHtml(label)}</span>
+      ${mediaFrame({ src: file, alt: text || `${label} image`, where })}
+    </div>`;
+    return `<figure class="before-after media-block">
+  ${side(labelA, a, altA)}
+  ${side(labelB, b, altB)}
+</figure>`;
+  }
+
+  const frame = mediaFrame({
+    src,
+    alt,
+    where,
+    className: type === 'diagram' ? 'frame--diagram' : '',
+  });
+  const text = caption(src ? basename(src) : '', where);
+  if (type === 'side') {
+    return `<figure class="media-block media-block--side">
+  <div class="media-block_media">${frame}</div>
+  ${text}
+</figure>`;
+  }
+  return `<figure class="media-block media-block--${type}">
+  ${frame}
+  ${text}
+</figure>`;
+}
+
+const lines = (text) =>
+  String(text || '')
+    .split('\n')
+    .map((l) => l.trim().replace(/^-\s*/, ''))
+    .filter(Boolean);
+
+const mediaItems = (text, where) => lines(text).map((l) => mediaItem(l, where)).join('\n');
+
 /* ── block renderers ──────────────────────────────────────────────────── */
 
 const blockRenderers = {
@@ -298,14 +356,19 @@ const blockRenderers = {
     const where = `${ctx.slug}/decisions/${block.arg}`;
     const file = `${block.arg}.md`;
     const body = f.body ? paragraphs(f.body, where) : '';
+    if (ctx.decisions) {
+      ctx.decisions.push({ id: `d-${block.arg}`, num: block.arg.match(/^\d+/)?.[0], title: f.title || '' });
+    }
     // prefixed because a decision is named 01-..., and an id that starts
     // with a digit cannot be used in a css selector
     return `<article class="decision" id="d-${block.arg}">
   <header class="decision_head">
     <span class="decision_file">${escapeHtml(file)}</span>
     <h3 class="decision_title">${inline(f.title || '[todo: decision title]', where)}</h3>
+    ${f.subtitle ? `<p class="decision_subtitle">${inline(f.subtitle, where)}</p>` : ''}
   </header>
   ${body ? `<div class="decision_body prose">${body}</div>` : ''}
+  ${f.media ? mediaItems(f.media, where) : ''}
   ${blockRenderers['before-after'](
     { fields: f, arg: '' },
     { ...ctx, where }
@@ -320,12 +383,67 @@ const blockRenderers = {
     const side = (label, src, alt, cap) => `<div class="before-after_side">
       <span class="before-after_label">${label}</span>
       ${mediaFrame({ src, alt: alt || `${label} image`, shape: f.shape || 'wide', where })}
-      ${caption(cap || `[todo: ${label} caption for ${where}]`, where)}
+      ${caption(src ? basename(src) : '', where)}
     </div>`;
     return `<figure class="before-after">
   ${side('before', f.before, f.before_alt, f.before_caption)}
   ${side('after', f.after, f.after_alt, f.after_caption)}
 </figure>`;
+  },
+
+  // the one sentence the section turns on, in display type
+  statement(block, ctx) {
+    const text = block.fields.text;
+    return text ? `<p class="statement">${inline(text, `${ctx.slug}/statement`)}</p>` : '';
+  },
+
+  // value | caption, one per line. a project without hard numbers writes
+  // qualitative outcomes here instead (shipped, placed, used by).
+  outcomes(block, ctx) {
+    const where = `${ctx.slug}/outcomes`;
+    const items = lines(block.fields.items)
+      .map((line) => {
+        const [value = '', label = ''] = line.split('|').map((p) => p.trim());
+        return `<li class="outcome">
+      <span class="outcome_value">${inline(value, where)}</span>
+      <span class="outcome_label">${inline(label, where)}</span>
+    </li>`;
+      })
+      .join('\n');
+    return items ? `<ul class="outcomes">\n${items}\n</ul>` : '';
+  },
+
+  // renders only when there is a real quote, so an empty block never ships
+  quote(block, ctx) {
+    const f = block.fields;
+    if (!f.text) return '';
+    const where = `${ctx.slug}/quote`;
+    const logo = f.logo && assetExists(f.logo)
+      ? `<img class="quote_logo" src="${assetUrl(f.logo)}" alt="" loading="lazy" decoding="async">`
+      : '';
+    return `<figure class="quote">
+  ${logo}
+  <blockquote class="quote_text">${inline(f.text, where)}</blockquote>
+  <figcaption class="quote_by"><span>${inline(f.name || '[todo: name]', where)}</span> <span>${inline(f.role || '', where)}</span></figcaption>
+</figure>`;
+  },
+
+  // name | role, one per line
+  credits(block, ctx) {
+    const rows = lines(block.fields.items)
+      .map((line) => {
+        const [name = '', role = ''] = line.split('|').map((p) => p.trim());
+        return `<div class="toolbox-cat">
+        <span class="toolbox-cat_label">${inline(name, ctx.slug)}</span>
+        <span class="toolbox-cat_items">${inline(role, ctx.slug)}</span>
+      </div>`;
+      })
+      .join('\n');
+    return rows ? `<div class="toolbox-grid">\n${rows}\n</div>` : '';
+  },
+
+  media(block, ctx) {
+    return mediaItems(block.fields.items, `${ctx.slug}/media`);
   },
 
   // presentational depiction of an ai edit flow. no real calls.
@@ -374,7 +492,7 @@ const blockRenderers = {
         return `<div class="layout-grid_item${/\.(webm|mp4)$/.test(src) ? ' layout-grid_item--video' : ''}">
       <figure class="gallery_figure">
         ${mediaFrame({ src, alt, shape, where })}
-        ${caption(cap || `[todo: caption for ${basename(src)}]`, where)}
+        ${caption(basename(src), where)}
       </figure>
     </div>`;
       })
@@ -419,15 +537,37 @@ ${items}
 };
 
 function renderBlocks(text, ctx) {
-  return splitBlocks(text)
-    .map((part) => {
-      if (part.kind === 'prose') return `<div class="prose">${paragraphs(part.text, ctx.slug)}</div>`;
-      const renderer = blockRenderers[part.type];
-      if (!renderer) throw new Error(`${ctx.slug}: unknown block type ":::${part.type}"`);
-      return renderer(part, ctx);
-    })
-    .filter(Boolean)
-    .join('\n');
+  const parts = splitBlocks(text);
+  const out = [];
+  for (let i = 0; i < parts.length; i++) {
+    const part = parts[i];
+    if (part.kind === 'prose') {
+      out.push(`<div class="prose">${paragraphs(part.text, ctx.slug)}</div>`);
+      continue;
+    }
+    const renderer = blockRenderers[part.type];
+    if (!renderer) throw new Error(`${ctx.slug}: unknown block type ":::${part.type}"`);
+    const html = renderer(part, ctx);
+    if (!html) continue;
+    // a media block and the prose right after it are one beat: the words on
+    // the left, the thing they explain on the right
+    if (ctx.beats && part.type === 'media') {
+      const text = [];
+      while (parts[i + 1] && parts[i + 1].kind === 'prose') {
+        text.push(`<div class="prose">${paragraphs(parts[++i].text, ctx.slug)}</div>`);
+      }
+      if (text.length) {
+        ctx.beatCount = (ctx.beatCount || 0) + 1;
+        out.push(`<div class="beat${ctx.beatCount % 2 === 0 ? ' beat--flip' : ''}">
+  <div class="beat_text">${text.join('')}</div>
+  <div class="beat_media">${html}</div>
+</div>`);
+        continue;
+      }
+    }
+    out.push(html);
+  }
+  return out.join('\n');
 }
 
 /* ── shell ────────────────────────────────────────────────────────────── */
@@ -554,7 +694,7 @@ function renderIndex(projects) {
 }
 
 function renderAbout() {
-  const src = readFileSync(join(root, 'content/about.md'), 'utf8');
+  const src = readSource(join(root, 'content/about.md'));
   const { body } = parseFrontmatter(src, 'content/about.md');
   const blocks = splitSections(body)
     .map((section) => {
@@ -576,6 +716,23 @@ function renderAbout() {
 ${blocks}
     </section>`,
   });
+}
+
+// /01 /02 list that links down to each decision. only built when a section
+// has two or more, because an index of one is just a heading.
+function takeawayIndex(items, slug) {
+  const rows = items
+    .map((d, i) => {
+      const num = String(d.num || i + 1).padStart(2, '0');
+      return `<li><a href="#${d.id}"><span class="takeaway-index_num">/${num}</span> ${inline(d.title, slug)}</a></li>`;
+    })
+    .join('\n    ');
+  return `<nav class="takeaway-index" aria-label="takeaways">
+  <p class="takeaway-index_label">what i decided, and why</p>
+  <ol class="takeaway-index_list">
+    ${rows}
+  </ol>
+</nav>`;
 }
 
 function renderCaseStudy(project, prev, next) {
@@ -603,17 +760,48 @@ function renderCaseStudy(project, prev, next) {
           </div>`
     : '';
 
-  const sections = splitSections(project.body)
+  const sectionList = splitSections(project.body)
     .map((section) => {
       const id = section.name.replace(/[^a-z0-9]+/gi, '-').replace(/^-|-$/g, '').toLowerCase();
-      return `      <section class="cs-section" id="${id}">
-        <div class="cs-section_file">${escapeHtml(section.name)}</div>
-        <div class="cs-section_body">
-${renderBlocks(section.text, { slug })}
-        </div>
-      </section>`;
+      const ctx = { slug, decisions: [], beats: !/^(overview|credits|decisions|takeaways)/.test(section.name) };
+      let rendered = renderBlocks(section.text, ctx);
+      // a section whose blocks all rendered nothing (an unwritten quote) is dropped
+      if (!rendered.trim()) return null;
+      if (ctx.decisions.length >= 2) rendered = takeawayIndex(ctx.decisions, slug) + '\n' + rendered;
+      return { id, name: section.name, rendered };
     })
+    .filter(Boolean);
+
+  // role, timeline, team, tools and status close the page, above the credits
+  const metaHtml = `<dl class="meta cs-meta">
+          ${metaRows}
+          ${live}
+          </dl>`;
+  const infoAt = sectionList.findIndex((s) => s.id === 'project-info-md');
+  if (infoAt >= 0) {
+    sectionList[infoAt].rendered = `${metaHtml}
+${sectionList[infoAt].rendered}`;
+  } else {
+    sectionList.push({ id: 'project-info-md', name: 'project-info.md', rendered: metaHtml });
+  }
+
+  const sections = sectionList
+    .map(
+      (s) => `      <section class="cs-section" id="${s.id}">
+        <div class="cs-section_file">${escapeHtml(s.name)}</div>
+        <div class="cs-section_body">
+${s.rendered}
+        </div>
+      </section>`
+    )
     .join('\n');
+
+  const rail = `      <nav class="cs-rail" aria-label="case study sections">
+        <a class="cs-rail_back" href="/#work">← back</a>
+        ${sectionList
+          .map((s) => `<a href="#${s.id}">${escapeHtml(s.name.replace(/\.md$|\/$/g, ''))}</a>`)
+          .join('\n        ')}
+      </nav>`;
 
   const coverMissing = !data.cover || !assetExists(data.cover);
   if (coverMissing && data.cover) warnings.push(`${slug}: missing cover ${data.cover}`);
@@ -626,40 +814,48 @@ ${renderBlocks(section.text, { slug })}
           ${heroCover(data)}
         </div>`;
 
+  // the neighbour's cover rides along in the link, so previous and next use
+  // the same cover-to-cover transition as the index
+  const navLink = (target, dir) => {
+    const label = dir === 'prev' ? '← prev project' : 'next project →';
+    if (!target) return `<span class="cs-nav_link is--disabled">${label}</span>`;
+    const hasCover = target.data.cover && assetExists(target.data.cover);
+    const thumb = hasCover
+      ? `<div class="cs-nav_frame" style="aspect-ratio: ${coverRatio(target.data)}">${coverMedia(target, 1, 'cs-nav_media')}</div>`
+      : '';
+    return `<a class="cs-nav_link cs-nav_${dir}" href="/work/${target.slug}/" data-slug="${target.slug}">${label} <span class="cs-nav_name">${escapeHtml(target.data.title)}</span>${thumb}</a>`;
+  };
+
   const footNav = `      <nav class="cs-nav">
-        ${
-          prev
-            ? `<a class="cs-nav_link cs-nav_prev" href="/work/${prev.slug}/" data-slug="${prev.slug}">← prev project <span class="cs-nav_name">${escapeHtml(prev.data.title)}</span></a>`
-            : '<span class="cs-nav_link is--disabled">← prev project</span>'
-        }
-        ${
-          next
-            ? `<a class="cs-nav_link cs-nav_next" href="/work/${next.slug}/" data-slug="${next.slug}">next project → <span class="cs-nav_name">${escapeHtml(next.data.title)}</span></a>`
-            : '<span class="cs-nav_link is--disabled">next project →</span>'
-        }
+        ${navLink(prev, 'prev')}
+        ${navLink(next, 'next')}
       </nav>`;
 
+  const eyebrow = data.eyebrow || [data.type, data.timeline].filter(Boolean).join(' · ');
+
   const body = `    <article class="case-study" data-slug="${slug}">
-      <header class="cs-hero">
-        <figure class="cs-cover">
-          ${cover}
-          ${caption(data.cover_caption, `${slug}/cover`)}
-        </figure>
-        <div class="cs-hero_text">
+${rail}
+      <div class="cs-main">
+        <header class="cs-head">
           <nav class="cs-breadcrumb" aria-label="breadcrumb">
             <a href="/#work">~/work</a>/<span>${escapeHtml(slug)}</span>
           </nav>
+          <p class="cs-eyebrow">${inline(eyebrow, slug)}</p>
           <h1 class="cs-title">${inline(data.title, slug)}</h1>
-          <dl class="meta cs-meta">
-          ${metaRows}
-          ${live}
-          </dl>
-        </div>
-      </header>
+          ${data.headline ? `<p class="cs-headline">${inline(data.headline, slug)}</p>` : ''}
+        </header>
 
+        <figure class="cs-cover">
+          ${cover}
+          ${caption(data.cover ? basename(data.cover) : '', `${slug}/cover`)}
+        </figure>
+
+        <div class="cs-rest">
 ${sections}
 
 ${footNav}
+        </div>
+      </div>
     </article>`;
 
   return shell({
@@ -678,7 +874,7 @@ const projects = readdirSync(projectsDir)
   .filter((f) => f.endsWith('.md'))
   .map((f) => {
     const where = `content/projects/${f}`;
-    const { data, body } = parseFrontmatter(readFileSync(join(projectsDir, f), 'utf8'), where);
+    const { data, body } = parseFrontmatter(readSource(join(projectsDir, f)), where);
     if (!data.slug) throw new Error(`${where}: missing slug`);
     if (!data.order) throw new Error(`${where}: missing order`);
     return { slug: data.slug, order: Number(data.order), data, body, where };

@@ -41,7 +41,7 @@
   /* --gutter is the screen edge. the nav, the footer, the gridlines and the
      work grid all hug it, so the chrome reads as the frame of a terminal
      window and everything inside measures off the same spine. */
-  --gutter: 10px;
+  --gutter: 20px;
   --gap: 10px;
 
   --font-display: "Grotesk", Arial, sans-serif;
@@ -52,10 +52,12 @@
      study hero, so the morph is a pure scale with no distortion. */
   --cover-ratio: 16 / 9;
 
+  /* the case study hero is a wide, short banner. the cover opens into it
+     from the narrower index card at the end of the page transition. */
+  --hero-ratio: 12 / 5;
+
   --ease-morph: cubic-bezier(0.25, 1, 0.5, 1);
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
-  --morph-duration: 800ms;
-  --fade-duration: 200ms;
 
   --columns: 4;
   --column-gap: 0em;
@@ -553,8 +555,32 @@ video {
   padding: 0 var(--gutter);
 }
 
-.cs-hero {
-  padding-top: 12vh;
+/* the page is title, then hero, then everything else. the first two are the
+   proof, so a visitor gets the point before any process. */
+.cs-head {
+  margin-top: 12vh;
+  margin-bottom: 28px;
+}
+
+.cs-eyebrow {
+  margin-top: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--grey-meta);
+  text-transform: lowercase;
+}
+
+.cs-headline {
+  max-width: none;
+  margin-top: 18px;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 3vw, 2.4rem);
+  line-height: 1.12;
+}
+
+.cs-title:focus,
+.cs-title:focus-visible {
+  outline: none;
 }
 
 .cs-cover {
@@ -563,9 +589,91 @@ video {
 
 .cs-cover_frame {
   width: 100%;
-  aspect-ratio: var(--cover-ratio);
+  aspect-ratio: var(--hero-ratio);
   background: var(--placeholder);
   overflow: hidden;
+}
+
+/* above 1280px the sections get a rail down the left. it is the grid's
+   first column, so the main column simply starts after it. */
+.cs-rail {
+  display: none;
+}
+
+@media screen and (min-width: 1280px) {
+  /* rail on the first grid column, content on the middle two, the last one
+     left open. the gridlines already draw these four columns, so the text
+     starts exactly on a line. */
+  .case-study {
+    display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    align-items: start;
+  }
+
+  /* a white panel over the two middle columns, so the ascii background only
+     shows in the rail and the open column */
+  .case-study .cs-main {
+    grid-column: 2;
+    min-width: 0;
+    padding: 0 var(--gutter);
+    background: var(--white);
+    align-self: stretch;
+  }
+
+  .cs-rail {
+    grid-column: 1;
+    position: sticky;
+    top: 12vh;
+    margin-top: 12vh;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    padding-right: var(--gutter);
+    text-align: right;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    text-transform: lowercase;
+    color: var(--grey-meta);
+  }
+
+  .cs-rail a {
+    align-self: flex-end;
+  }
+
+  .cs-rail a:hover,
+  .cs-rail a:focus-visible {
+    background: var(--black);
+    color: var(--white);
+  }
+
+  .cs-rail a[aria-current="true"] {
+    color: var(--black);
+  }
+
+  .cs-rail_back {
+    margin-bottom: 14px;
+  }
+
+  /* the rail already says where back is, and the eyebrow leads the page */
+  .cs-breadcrumb {
+    display: none;
+  }
+
+  .cs-eyebrow {
+    margin-top: 0;
+  }
+
+  /* the section label sits above its content, like a heading, instead of
+     in a column of its own */
+  .case-study .cs-section {
+    grid-template-columns: 1fr;
+    gap: 18px;
+  }
+
+  .case-study .cs-section_file,
+  .case-study .cs-section_body {
+    grid-column: 1;
+  }
 }
 
 .cs-cover_img {
@@ -581,10 +689,6 @@ video {
   line-height: 1.5;
   color: var(--grey-meta);
   overflow-wrap: anywhere;
-}
-
-.cs-hero_text {
-  margin-top: 32px;
 }
 
 .cs-breadcrumb {
@@ -616,9 +720,13 @@ video {
 }
 
 .cs-meta {
-  margin-top: 28px;
+  margin-top: 24px;
   padding-top: 14px;
-  border-top: 1px solid var(--hairline);
+}
+
+.cs-section_body > .cs-meta {
+  margin: 0 0 32px;
+  padding-top: 0;
 }
 
 .meta_row {
@@ -653,7 +761,7 @@ video {
   display: grid;
   grid-template-columns: repeat(12, 1fr);
   gap: var(--gap);
-  margin-top: 14vh;
+  margin-top: 7vh;
   padding-top: 16px;
   border-top: 1px solid var(--hairline);
 }
@@ -671,7 +779,7 @@ video {
 
 /* body copy is sentence case and sized for reading, not for chrome */
 .prose {
-  max-width: 62ch;
+  max-width: none;
   font-size: 15px;
   line-height: 1.55;
 }
@@ -700,6 +808,165 @@ video {
   position: absolute;
   left: 4px;
   color: var(--grey-meta);
+}
+
+/* ─── statement, outcomes, quote ────────────────────────────────────── */
+
+.statement {
+  max-width: none;
+  margin-bottom: 28px;
+  font-family: var(--font-display);
+  font-size: clamp(1.6rem, 3.6vw, 3rem);
+  line-height: 1.08;
+}
+
+.cs-section_body > .statement + .prose,
+.cs-section_body > .prose + .media-block {
+  margin-top: 0;
+}
+
+.outcomes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 28px var(--gap);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.outcome {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding-top: 12px;
+}
+
+.outcome_value {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 5vw, 4rem);
+  line-height: 1;
+}
+
+.outcome_label {
+  max-width: 34ch;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 1.45;
+  color: var(--grey-meta);
+}
+
+.quote {
+  margin: 0;
+  max-width: none;
+}
+
+.quote_logo {
+  display: block;
+  height: 32px;
+  width: auto;
+  margin-bottom: 20px;
+}
+
+.quote_text {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 2.6vw, 2.2rem);
+  line-height: 1.15;
+}
+
+.quote_by {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  margin-top: 16px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+}
+
+.quote_by span:last-child {
+  color: var(--grey-meta);
+}
+
+/* ─── takeaway index and media blocks ───────────────────────────────── */
+
+.takeaway-index {
+  margin-bottom: 56px;
+}
+
+.takeaway-index_label {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--grey-meta);
+  text-transform: lowercase;
+}
+
+.takeaway-index_list {
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-family: var(--font-display);
+  font-size: 20px;
+  line-height: 1.25;
+}
+
+.takeaway-index_list li + li {
+  margin-top: 6px;
+}
+
+.takeaway-index_list a {
+  display: inline-block;
+}
+
+.takeaway-index_list a:hover,
+.takeaway-index_list a:focus-visible {
+  background: var(--black);
+  color: var(--white);
+}
+
+.takeaway-index_num {
+  margin-right: 8px;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--grey-meta);
+}
+
+.takeaway-index_list a:hover .takeaway-index_num,
+.takeaway-index_list a:focus-visible .takeaway-index_num {
+  color: var(--white);
+}
+
+.decision_subtitle {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  color: var(--grey-meta);
+}
+
+.media-block {
+  margin: 20px 0 0;
+}
+
+.media-block .caption-code {
+  margin-top: 6px;
+}
+
+.media-block--side {
+  display: grid;
+  grid-template-columns: minmax(0, 2fr) minmax(0, 1fr);
+  gap: var(--gap);
+  align-items: end;
+}
+
+.media-block--side .caption-code {
+  margin-top: 0;
+}
+
+.frame--diagram {
+  padding: clamp(16px, 4vw, 48px);
+  background: var(--placeholder);
+}
+
+.frame--diagram .media {
+  background: none;
 }
 
 /* ─── decisions ─────────────────────────────────────────────────────── */
@@ -789,7 +1056,7 @@ video {
 /* ─── ai exchange ───────────────────────────────────────────────────── */
 
 .ai-exchange {
-  max-width: 62ch;
+  max-width: none;
   margin-top: 20px;
   border: 1px solid var(--black);
   font-family: var(--font-mono);
@@ -801,7 +1068,6 @@ video {
   display: flex;
   gap: 8px;
   padding: 10px 12px;
-  border-bottom: 1px solid var(--hairline);
 }
 
 .ai-exchange_tag {
@@ -822,7 +1088,6 @@ video {
   flex-direction: column;
   margin: 0;
   padding: 10px 0;
-  border-bottom: 1px solid var(--hairline);
   font-family: var(--font-mono);
   font-size: 12px;
   overflow-x: auto;
@@ -928,7 +1193,7 @@ video {
   display: flex;
   justify-content: space-between;
   gap: var(--gap);
-  margin-top: 16vh;
+  margin-top: 6vh;
   padding-top: 16px;
   border-top: 1px solid var(--hairline);
   font-family: var(--font-mono);
@@ -958,6 +1223,37 @@ a.cs-nav_link:hover {
   color: var(--black);
 }
 
+/* the neighbour's cover, which is also what the transition carries */
+.cs-nav_frame {
+  width: 220px;
+  max-width: 100%;
+  margin-top: 8px;
+  background: var(--placeholder);
+  overflow: hidden;
+}
+
+.cs-nav_prev .cs-nav_frame {
+  align-self: flex-start;
+}
+
+.cs-nav_next .cs-nav_frame {
+  align-self: flex-end;
+}
+
+.cs-nav_media {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+a.cs-nav_link:hover {
+  cursor: none;
+}
+
+@media (hover: none), (pointer: coarse) {
+  a.cs-nav_link:hover { cursor: pointer; }
+}
+
 a.cs-nav_link:hover .cs-nav_name {
   color: var(--white);
 }
@@ -978,43 +1274,31 @@ a.cs-nav_link:hover .cs-nav_name {
   will-change: transform, width, height, top, left;
 }
 
-/* everything except the morphing cover drops toward white first */
-#app {
-  transition: opacity var(--fade-duration) ease;
-}
-
-#app.is--leaving {
+/* the page is hidden until its beat. the router fades each group in with
+   the web animations api, so these only set the starting state. the hero
+   frame is hidden by .is--morph-target below. */
+.case-study.is--entering .cs-head,
+.case-study.is--entering .cs-rest,
+.case-study.is--entering .cs-rail,
+.case-study.is--entering .cs-cover .caption-code {
   opacity: 0;
 }
 
-#app.is--arriving {
-  opacity: 1;
-}
-
-/* the slot the cover is travelling to stays empty until the morph lands */
+/* the slot the cover is travelling to stays empty until it lands */
 .cs-cover_frame.is--morph-target,
 .covers_frame.is--morph-target {
   opacity: 0;
 }
 
-@keyframes rise {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+/* a page opened directly, with no cover to carry, just fades in */
+@keyframes page-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-.is--staggered .cs-breadcrumb,
-.is--staggered .cs-title,
-.is--staggered .cs-meta,
-.is--staggered .cs-cover + .caption-code,
-.is--staggered .cs-cover .caption-code {
-  opacity: 0;
-  animation: rise 0.45s var(--ease-out) forwards;
+#app {
+  animation: page-in 0.4s ease;
 }
-
-.is--staggered .cs-cover .caption-code { animation-delay: 0ms; }
-.is--staggered .cs-breadcrumb { animation-delay: 60ms; }
-.is--staggered .cs-title { animation-delay: 120ms; }
-.is--staggered .cs-meta { animation-delay: 180ms; }
 
 /* reveal on scroll */
 .reveal {
@@ -1103,8 +1387,12 @@ a.cs-nav_link:hover .cs-nav_name {
     gap: 20px;
   }
 
-  .cs-hero { padding-top: 16vh; }
-  .cs-section { margin-top: 10vh; }
+  :root { --hero-ratio: 16 / 9; }
+
+  .cs-head { margin-top: 16vh; }
+  .outcomes { gap: 24px var(--gap); }
+  .media-block--side { grid-template-columns: 1fr; }
+  .cs-section { margin-top: 5vh; }
   .decision { margin-top: 36px; }
 }
 
@@ -1158,14 +1446,73 @@ a.cs-nav_link:hover .cs-nav_name {
     transform: none;
   }
 
-  .is--staggered .cs-breadcrumb,
-  .is--staggered .cs-title,
-  .is--staggered .cs-meta,
-  .is--staggered .cs-cover .caption-code {
-    opacity: 1;
-    animation: none;
-  }
-
   .cursor-pill { display: none; }
   .covers_item:hover { cursor: pointer; }
+}
+
+/* ─── beats: words on the left, the thing they explain on the right ──────
+   the build wraps a media block and the prose after it in one .beat, in every
+   section except the overview, the decisions and the credits. */
+.beat {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 16px;
+  margin-top: 40px;
+}
+
+.beat .media-block { margin-top: 0; }
+
+.cs-section_body > :first-child { margin-top: 0; }
+
+.cs-section_body > .outcomes + .beat,
+.cs-section_body > .beat + .outcomes { margin-top: 40px; }
+
+@media screen and (min-width: 1024px) {
+  .beat {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: var(--gap);
+    align-items: start;
+  }
+
+  .beat .media-block--side { grid-template-columns: 1fr; }
+
+  .decision {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-auto-flow: dense;
+    column-gap: var(--gap);
+    align-items: start;
+  }
+
+  .decision > .decision_head,
+  .decision > .decision_body {
+    grid-column: 1;
+  }
+
+  .decision > .media-block {
+    grid-column: 2;
+    grid-row: 1 / span 2;
+    margin-top: 0;
+  }
+
+  .decision > .media-block ~ .media-block {
+    grid-row: auto;
+    margin-top: 20px;
+  }
+
+  .decision .media-block--side { grid-template-columns: 1fr; }
+
+  /* every second beat and decision mirrors: media on the left, words on the
+     right, so the page zigzags down the two columns */
+  .beat--flip .beat_text { order: 2; }
+  .beat--flip .beat_media { order: 1; }
+
+  .decision:nth-of-type(even) > .decision_head,
+  .decision:nth-of-type(even) > .decision_body {
+    grid-column: 2;
+  }
+
+  .decision:nth-of-type(even) > .media-block {
+    grid-column: 1;
+  }
 }

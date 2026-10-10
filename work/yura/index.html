@@ -51,20 +51,147 @@
 
   <div id="app" data-route="work">
     <article class="case-study" data-slug="yura">
-      <header class="cs-hero">
+      <nav class="cs-rail" aria-label="case study sections">
+        <a class="cs-rail_back" href="/#work">← back</a>
+        <a href="#readme-md">README</a>
+        <a href="#gallery">gallery</a>
+        <a href="#problem-md">problem</a>
+        <a href="#decisions">decisions</a>
+        <a href="#outcome-md">outcome</a>
+        <a href="#learnings-md">learnings</a>
+        <a href="#project-info-md">project-info</a>
+      </nav>
+      <div class="cs-main">
+        <header class="cs-head">
+          <nav class="cs-breadcrumb" aria-label="breadcrumb">
+            <a href="/#work">~/work</a>/<span>yura</span>
+          </nav>
+          <p class="cs-eyebrow">web design, branding · <!-- TODO(pedro): when --><mark class="todo">[todo: when]</mark></p>
+          <h1 class="cs-title">yura</h1>
+          
+        </header>
+
         <figure class="cs-cover">
           <div class="cs-cover_frame" data-cover-slot="yura">
           <img class="cs-cover_img" src="/assets/yura/yura-cover.webp" alt="The YURA logo over the HAKKOTAI guitar resting on an amp"
             style="object-fit: cover" fetchpriority="high" decoding="async">
         </div>
-          <figcaption class="caption-code">// the brand exists because the guitar does. everything on the storefront is photographed from the instrument I actually built</figcaption>
+          <figcaption class="caption-code">yura-cover.webp</figcaption>
         </figure>
-        <div class="cs-hero_text">
-          <nav class="cs-breadcrumb" aria-label="breadcrumb">
-            <a href="/#work">~/work</a>/<span>yura</span>
-          </nav>
-          <h1 class="cs-title">yura</h1>
-          <dl class="meta cs-meta">
+
+        <div class="cs-rest">
+      <section class="cs-section" id="readme-md">
+        <div class="cs-section_file">README.md</div>
+        <div class="cs-section_body">
+<div class="prose"><p>I built a guitar in real life and wanted a way to show it off, so I invented a brand around it instead of just posting photos. YURA is a mock guitar company built for the HAKKOTAI, the model I built.</p>
+<p>I designed the logo and identity, then built a full storefront site around it: a product page, a checkout flow with a working cart, team and about pages, and the whole set of legal pages a real store would ship with.</p>
+<p><!-- TODO(pedro): what came out of it. for a branding and front-end piece the honest outcome is often &quot;it is the most complete thing I have shipped end to end&quot;, which is a fine answer. --><mark class="todo">[todo: what came out of it. for a branding and front-end piece the honest outcome is often &quot;it is the most complete thing I have shipped end to end&quot;, which is a fine answer.]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="gallery">
+        <div class="cs-section_file">gallery/</div>
+        <div class="cs-section_body">
+<div class="gallery">
+  <div class="layout-grid_list">
+<div class="layout-grid_item layout-grid_item--video">
+      <figure class="gallery_figure">
+        <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="The YURA promo video">
+        <source src="/assets/yura/yura-vid.webm" type="video/webm">
+      </video>
+    </div>
+        <figcaption class="caption-code">yura-vid.webm</figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media wide" src="/assets/yura/yura-hero.webp" alt="The YURA storefront hero" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">yura-hero.webp</figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media wide" src="/assets/yura/yura-checkout.webp" alt="The YURA checkout flow with a working cart" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">yura-checkout.webp</figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media portrait" src="/assets/yura/yura-neck.webp" alt="Close-up looking down the HAKKOTAI's neck and fretboard" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">yura-neck.webp</figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media square" src="/assets/yura/yura-cable.webp" alt="A braided pink YURA guitar cable with a branded cable tie" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">yura-cable.webp</figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media landscape" src="/assets/yura/yura-guitar.webp" alt="The pink and yellow HAKKOTAI guitar resting on an amp" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">yura-guitar.webp</figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media wide" src="/assets/yura/yura-glow.webp" alt="The HAKKOTAI guitar glowing under stage lights" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">yura-glow.webp</figcaption>
+      </figure>
+    </div>
+<div class="layout-grid_item">
+      <figure class="gallery_figure">
+        <div class="frame">
+      <img class="media wide" src="/assets/yura/yura-footer.webp" alt="The YURA site footer" loading="lazy" decoding="async">
+    </div>
+        <figcaption class="caption-code">yura-footer.webp</figcaption>
+      </figure>
+    </div>
+  </div>
+</div>
+        </div>
+      </section>
+      <section class="cs-section" id="problem-md">
+        <div class="cs-section_file">problem.md</div>
+        <div class="cs-section_body">
+<div class="prose"><p><!-- TODO(pedro): the problem. &quot;I wanted to show off a guitar&quot; is the honest origin, and it is charming, but the design problem underneath it is something like: how do you make a one-product brand feel like a real company. write that version. --><mark class="todo">[todo: the problem. &quot;I wanted to show off a guitar&quot; is the honest origin, and it is charming, but the design problem underneath it is something like: how do you make a one-product brand feel like a real company. write that version.]</mark></p>
+<p><!-- TODO(pedro): constraints. the photography is of a single physical object, which limits what the storefront can show. that is a real constraint and worth naming. --><mark class="todo">[todo: constraints. the photography is of a single physical object, which limits what the storefront can show. that is a real constraint and worth naming.]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="decisions">
+        <div class="cs-section_file">decisions/</div>
+        <div class="cs-section_body">
+<div class="prose"><p><!-- TODO(pedro): candidates for decisions here: how the mark was built to work at cable-tie size, why you built the full legal and checkout set instead of a landing page, and how the photography of one guitar had to carry an entire catalogue. --><mark class="todo">[todo: candidates for decisions here: how the mark was built to work at cable-tie size, why you built the full legal and checkout set instead of a landing page, and how the photography of one guitar had to carry an entire catalogue.]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="outcome-md">
+        <div class="cs-section_file">outcome.md</div>
+        <div class="cs-section_body">
+<div class="prose"><p><!-- TODO(pedro): results. this is a concept, so there are no sales numbers. what you can say is what you learned building a checkout flow, or what you would reuse. --><mark class="todo">[todo: results. this is a concept, so there are no sales numbers. what you can say is what you learned building a checkout flow, or what you would reuse.]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="learnings-md">
+        <div class="cs-section_file">learnings.md</div>
+        <div class="cs-section_body">
+<div class="prose"><p><!-- TODO(pedro): what this project taught you. two or three things that changed how you work. --><mark class="todo">[todo: what this project taught you. two or three things that changed how you work.]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="project-info-md">
+        <div class="cs-section_file">project-info.md</div>
+        <div class="cs-section_body">
+<dl class="meta cs-meta">
           <div class="meta_row">
             <dt>role</dt>
             <dd>web design, branding, front-end development</dd>
@@ -91,121 +218,16 @@
           </div>
           </dl>
         </div>
-      </header>
-
-      <section class="cs-section" id="readme-md">
-        <div class="cs-section_file">README.md</div>
-        <div class="cs-section_body">
-<div class="prose"><p>I built a guitar in real life and wanted a way to show it off, so I invented a brand around it instead of just posting photos. YURA is a mock guitar company built for the HAKKOTAI, the model I built.</p>
-<p>I designed the logo and identity, then built a full storefront site around it: a product page, a checkout flow with a working cart, team and about pages, and the whole set of legal pages a real store would ship with.</p>
-<p><!-- TODO(pedro): what came out of it. for a branding and front-end piece the honest outcome is often &quot;it is the most complete thing I have shipped end to end&quot;, which is a fine answer. --><mark class="todo">[todo: what came out of it. for a branding and front-end piece the honest outcome is often &quot;it is the most complete thing I have shipped end to end&quot;, which is a fine answer.]</mark></p></div>
-        </div>
-      </section>
-      <section class="cs-section" id="gallery">
-        <div class="cs-section_file">gallery/</div>
-        <div class="cs-section_body">
-<div class="gallery">
-  <div class="layout-grid_list">
-<div class="layout-grid_item layout-grid_item--video">
-      <figure class="gallery_figure">
-        <div class="frame frame--video">
-      <video class="media wide" playsinline muted loop preload="metadata" aria-label="The YURA promo video">
-        <source src="/assets/yura/yura-vid.webm" type="video/webm">
-      </video>
-    </div>
-        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media wide" src="/assets/yura/yura-hero.webp" alt="The YURA storefront hero" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media wide" src="/assets/yura/yura-checkout.webp" alt="The YURA checkout flow with a working cart" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">// the checkout is the part most brand concepts skip, which is exactly why it is here</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media portrait" src="/assets/yura/yura-neck.webp" alt="Close-up looking down the HAKKOTAI's neck and fretboard" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media square" src="/assets/yura/yura-cable.webp" alt="A braided pink YURA guitar cable with a branded cable tie" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">// the identity had to survive on an object the size of a cable tie, so the mark is built to read at one centimetre</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media landscape" src="/assets/yura/yura-guitar.webp" alt="The pink and yellow HAKKOTAI guitar resting on an amp" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media wide" src="/assets/yura/yura-glow.webp" alt="The HAKKOTAI guitar glowing under stage lights" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media wide" src="/assets/yura/yura-footer.webp" alt="The YURA site footer" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
-      </figure>
-    </div>
-  </div>
-</div>
-        </div>
-      </section>
-      <section class="cs-section" id="problem-md">
-        <div class="cs-section_file">problem.md</div>
-        <div class="cs-section_body">
-<div class="prose"><p><!-- TODO(pedro): the problem. &quot;I wanted to show off a guitar&quot; is the honest origin, and it is charming, but the design problem underneath it is something like: how do you make a one-product brand feel like a real company. write that version. --><mark class="todo">[todo: the problem. &quot;I wanted to show off a guitar&quot; is the honest origin, and it is charming, but the design problem underneath it is something like: how do you make a one-product brand feel like a real company. write that version.]</mark></p>
-<p><!-- TODO(pedro): constraints. the photography is of a single physical object, which limits what the storefront can show. that is a real constraint and worth naming. --><mark class="todo">[todo: constraints. the photography is of a single physical object, which limits what the storefront can show. that is a real constraint and worth naming.]</mark></p></div>
-        </div>
-      </section>
-      <section class="cs-section" id="decisions">
-        <div class="cs-section_file">decisions/</div>
-        <div class="cs-section_body">
-<div class="prose"><p><!-- TODO(pedro): candidates for decisions here: how the mark was built to work at cable-tie size, why you built the full legal and checkout set instead of a landing page, and how the photography of one guitar had to carry an entire catalogue. --><mark class="todo">[todo: candidates for decisions here: how the mark was built to work at cable-tie size, why you built the full legal and checkout set instead of a landing page, and how the photography of one guitar had to carry an entire catalogue.]</mark></p></div>
-        </div>
-      </section>
-      <section class="cs-section" id="outcome-md">
-        <div class="cs-section_file">outcome.md</div>
-        <div class="cs-section_body">
-<div class="prose"><p><!-- TODO(pedro): results. this is a concept, so there are no sales numbers. what you can say is what you learned building a checkout flow, or what you would reuse. --><mark class="todo">[todo: results. this is a concept, so there are no sales numbers. what you can say is what you learned building a checkout flow, or what you would reuse.]</mark></p></div>
-        </div>
-      </section>
-      <section class="cs-section" id="next-md">
-        <div class="cs-section_file">next.md</div>
-        <div class="cs-section_body">
-<div class="prose"><p><!-- TODO(pedro): what you would change. --><mark class="todo">[todo: what you would change.]</mark></p></div>
-        </div>
       </section>
 
       <nav class="cs-nav">
-        <a class="cs-nav_link cs-nav_prev" href="/work/skrill/" data-slug="skrill">← prev project <span class="cs-nav_name">skrill</span></a>
-        <a class="cs-nav_link cs-nav_next" href="/work/count-me-dead/" data-slug="count-me-dead">next project → <span class="cs-nav_name">count me dead</span></a>
+        <a class="cs-nav_link cs-nav_prev" href="/work/skrill/" data-slug="skrill">← prev project <span class="cs-nav_name">skrill</span><div class="cs-nav_frame" style="aspect-ratio: 1389 / 878"><img class="cs-nav_media" data-slug="skrill" src="/assets/skrill/cover.webp" alt=""
+              style="object-fit: cover" loading="lazy" decoding="async"></div></a>
+        <a class="cs-nav_link cs-nav_next" href="/work/count-me-dead/" data-slug="count-me-dead">next project → <span class="cs-nav_name">count me dead</span><div class="cs-nav_frame" style="aspect-ratio: 630 / 500"><img class="cs-nav_media" data-slug="count-me-dead" src="/assets/count-me-dead/cover.webp" alt=""
+              style="object-fit: cover" loading="lazy" decoding="async"></div></a>
       </nav>
+        </div>
+      </div>
     </article>
   </div>
 

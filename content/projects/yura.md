@@ -14,7 +14,6 @@ live: /yura
 live_label: visit
 live_text: lope.design/yura
 cover: assets/yura/yura-cover.webp
-cover_fit: cover
 cover_alt: The YURA logo over the HAKKOTAI guitar resting on an amp
 cover_caption: // the brand exists because the guitar does. everything on the storefront is photographed from the instrument I actually built
 ---
@@ -55,6 +54,6 @@ items:
 
 [todo: results. this is a concept, so there are no sales numbers. what you can say is what you learned building a checkout flow, or what you would reuse.]
 
-## next.md
+## learnings.md
 
-[todo: what you would change.]
+[todo: what this project taught you. two or three things that changed how you work.]

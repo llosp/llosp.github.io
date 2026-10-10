@@ -1,15 +1,15 @@
-// same-origin router with a shared-element cover morph.
+// same-origin router with a shared-element cover transition.
 //
 // why not the view transitions api: it snapshots the page as a static image
 // for the duration of the transition, which freezes the ascii canvas. doing
-// the morph by hand keeps the canvas live so the dots can scatter, and it
-// behaves identically in chrome, safari and firefox rather than needing a
-// separate fallback for the one that lacks support.
+// it by hand keeps the canvas live, and it behaves identically in chrome,
+// safari and firefox rather than needing a separate fallback for the one
+// that lacks support.
+//
+// the choreography itself lives in case-transition.js. this file decides
+// which one to play, builds the clone, and does the dom work in between.
 
-const MORPH_MS = 800;
-const FADE_MS = 200;
-const CROSSFADE_MS = 150;
-const EASE = 'cubic-bezier(0.25, 1, 0.5, 1)';
+import { playForward, playReverse, playFade } from './case-transition.js';
 
 const pageCache = new Map();
 
@@ -41,34 +41,25 @@ async function fetchPage(url) {
   return page;
 }
 
-// the 16:9 box around a cover. the morph measures this rather than the
-// image itself, because the image carries a scale transform on hover and
-// that would otherwise make the clone start a few percent too large.
-const frameOf = (el) => el.closest('.cs-cover_frame, .covers_frame') || el;
+// the box around a cover. the transition measures this rather than the image
+// itself, because the image carries a scale transform on hover and that
+// would otherwise make the clone start a few percent too large.
+const frameOf = (el) => el.closest('.cs-cover_frame, .covers_frame, .cs-nav_frame') || el;
 
-// a cover scrolled out of the window would morph in from somewhere off
+// a cover scrolled out of the window would travel in from somewhere off
 // screen, which reads as a glitch rather than as a transition. partly
 // visible is fine: the clone just starts where it actually sits.
 const onScreen = (r) => r.bottom > 0 && r.top < window.innerHeight;
 
-// the element the morph starts from on the current page
-function sourceCover(slug) {
-  const hero = document.querySelector('.cs-cover_img');
-  if (hero && hasBox(rect(hero))) return hero;
-
-  const cover = document.querySelector(`.covers_media[data-slug="${slug}"]`);
-  if (cover) {
-    const box = rect(frameOf(cover));
-    if (hasBox(box) && onScreen(box)) return cover;
-  }
-  return null;
-}
-
-// the slot the morph lands in on the page we just swapped in
-function targetSlot(route, slug) {
-  if (route === 'work') return document.querySelector('.cs-cover_frame');
-  const cover = document.querySelector(`.covers_media[data-slug="${slug}"]`);
-  return cover ? frameOf(cover) : null;
+// the cover an open starts from: the one inside the link that was clicked,
+// or, for a history traversal, the card for the project on the index
+function sourceCard(link, slug) {
+  const cover =
+    (link && link.querySelector('.covers_media, .cs-nav_media')) ||
+    document.querySelector(`.covers_media[data-slug="${slug}"]`);
+  if (!cover) return null;
+  const box = rect(frameOf(cover));
+  return hasBox(box) && onScreen(box) ? cover : null;
 }
 
 // cloned rather than rebuilt as an img, so that a cover which is a video
@@ -78,6 +69,7 @@ function cloneCover(source, from) {
   const clone = source.cloneNode(true);
   clone.className = 'morph-img';
   clone.removeAttribute('data-slug');
+  clone.removeAttribute('loading');
   if (clone.tagName === 'VIDEO') {
     clone.muted = true;
     clone.play().catch(() => {});
@@ -91,7 +83,29 @@ function cloneCover(source, from) {
   return clone;
 }
 
-export function initRouter({ onSwap, onTransition }) {
+// the size of the card the hero will shrink to, read from the index laid out
+// offscreen. the real index is not in the document yet when the shrink plays.
+function measureCard(page, slug, layout) {
+  const probe = document.createElement('div');
+  probe.setAttribute('aria-hidden', 'true');
+  probe.style.cssText = 'position:absolute;top:0;left:0;width:100%;visibility:hidden;pointer-events:none';
+  probe.innerHTML = page.html;
+  document.body.appendChild(probe);
+  layout();
+  const cover = probe.querySelector(`.covers_media[data-slug="${slug}"]`);
+  const box = cover ? rect(frameOf(cover)) : null;
+  probe.remove();
+  return hasBox(box) ? { width: box.width, height: box.height } : null;
+}
+
+function focusHeading(app) {
+  const heading = app.querySelector('h1');
+  if (!heading) return;
+  heading.setAttribute('tabindex', '-1');
+  heading.focus({ preventScroll: true });
+}
+
+export function initRouter({ onSwap, onTransition, layout }) {
   if (!window.matchMedia) return;
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
@@ -124,10 +138,10 @@ export function initRouter({ onSwap, onTransition }) {
   history.replaceState(state(0), '', window.location.href);
 
   async function swap(url, options) {
-    const { slug, scrollTo = 0, push = true } = options;
+    const { slug, scrollTo = 0, push = true, link = null } = options;
 
     if (busy) {
-      // a click mid-morph is just an impatient reader and is ignored
+      // a click mid-transition is just an impatient reader and is ignored
       if (!push) pending = { url, options };
       return;
     }
@@ -139,87 +153,131 @@ export function initRouter({ onSwap, onTransition }) {
 
     const app = document.querySelector('#app');
     const instant = reduceMotion();
+    const toPath = new URL(url, window.location.origin).pathname;
+    const toWork = toPath.startsWith('/work/');
+    const fromWork = rendered.startsWith('/work/');
 
-    let page;
-    const source = instant ? null : sourceCover(slug);
-    const sourceFrame = source ? frameOf(source) : null;
-    const from = sourceFrame ? rect(sourceFrame) : null;
-    const clone = source && hasBox(from) ? cloneCover(source, from) : null;
-    if (clone) sourceFrame.style.visibility = 'hidden';
+    const load = fetchPage(url);
+    load.catch(() => {});
 
-    // the rest of the page drops toward white while the cover holds still
-    app.classList.add('is--leaving');
+    // which beat sequence plays depends on where we are going from and to
+    let mode = 'fade';
+    let source = null;
+    let sourceFrame = null;
+    let clone = null;
+
+    if (!instant && toWork) {
+      source = sourceCard(link, slug);
+      if (source) mode = 'forward';
+    } else if (!instant && fromWork && toPath === '/') {
+      const img = document.querySelector('.cs-cover_img');
+      const frame = document.querySelector('.cs-cover_frame');
+      const head = document.querySelector('.cs-head');
+      if (img && frame && head && hasBox(rect(frame)) && onScreen(rect(frame))) {
+        source = img;
+        mode = 'reverse';
+      }
+    }
+
+    if (source) {
+      sourceFrame = frameOf(source);
+      clone = cloneCover(source, rect(sourceFrame));
+      sourceFrame.style.visibility = 'hidden';
+    }
+
+    // pushes history, renders the page and runs the per-page wiring. the
+    // scroll is applied again after the wiring because the index only has a
+    // height once the masonry has laid it out.
+    function render(page, entering = false) {
+      if (push) {
+        history.replaceState(state(), '', window.location.href);
+        history.pushState({ scroll: scrollTo, slug }, '', url);
+      }
+      rendered = window.location.pathname;
+
+      app.innerHTML = page.html;
+      app.dataset.route = page.route;
+      document.title = page.title;
+      document.body.className = page.bodyClass;
+      window.scrollTo(0, scrollTo);
+
+      const article = app.querySelector('.case-study');
+      if (article && entering) article.classList.add('is--entering');
+
+      onSwap(slug);
+      window.scrollTo(0, scrollTo);
+      focusHeading(app);
+      return article;
+    }
 
     try {
-      [page] = await Promise.all([
-        fetchPage(url),
-        new Promise((r) => setTimeout(r, instant ? 0 : clone ? FADE_MS : CROSSFADE_MS)),
-      ]);
+      if (mode === 'forward') {
+        await playForward({
+          app,
+          clone,
+          load,
+          onMove: onTransition,
+          swap(page) {
+            const article = render(page, true);
+            if (!article) throw new Error(`no case study in ${url}`);
+            const frame = article.querySelector('.cs-cover_frame');
+            frame.classList.add('is--morph-target');
+            return {
+              head: article.querySelector('.cs-head'),
+              frame,
+              img: article.querySelector('.cs-cover_img'),
+              rest: [...article.querySelectorAll('.cs-rest, .cs-rail, .cs-cover .caption-code')],
+              reveal: () => frame.classList.remove('is--morph-target'),
+              finish() {
+                article.classList.remove('is--entering');
+                frame.classList.remove('is--morph-target');
+              },
+            };
+          },
+        });
+      } else if (mode === 'reverse') {
+        const article = document.querySelector('.case-study');
+        await playReverse({
+          app,
+          clone,
+          load,
+          onMove: onTransition,
+          head: article.querySelector('.cs-head'),
+          rest: [...article.querySelectorAll('.cs-rest, .cs-rail, .cs-cover .caption-code')],
+          measure: (page) => measureCard(page, slug, layout),
+          swap(page) {
+            app.style.opacity = '0';
+            render(page);
+            const cover = app.querySelector(`.covers_media[data-slug="${slug}"]`);
+            const slot = cover ? frameOf(cover) : null;
+            const box = slot ? rect(slot) : null;
+            const usable = hasBox(box) && onScreen(box);
+            if (usable) slot.classList.add('is--morph-target');
+            return {
+              rect: usable ? box : null,
+              finish() {
+                app.style.opacity = '';
+                if (slot) slot.classList.remove('is--morph-target');
+              },
+            };
+          },
+        });
+      } else {
+        await playFade({ app, load, swap: (page) => render(page) });
+      }
     } catch (err) {
       // a failed fetch must not leave the user on a blank faded page
       console.error(err);
       if (clone) clone.remove();
-      app.classList.remove('is--leaving');
+      if (sourceFrame) sourceFrame.style.visibility = '';
+      app.style.opacity = '';
       busy = false;
       window.location.href = url;
       return;
     }
 
-    if (push) {
-      history.replaceState(state(), '', window.location.href);
-      history.pushState({ scroll: scrollTo, slug }, '', url);
-    }
-
-    rendered = window.location.pathname;
-
-    app.innerHTML = page.html;
-    app.dataset.route = page.route;
-    document.title = page.title;
-    document.body.className = page.bodyClass;
-    window.scrollTo(0, scrollTo);
-
-    const article = app.querySelector('.case-study');
-    if (article) article.classList.add('is--entering');
-
-    onSwap(slug);
-
-    const slot = clone ? targetSlot(page.route, slug) : null;
-    const to = slot ? rect(slot) : null;
-
-    app.classList.remove('is--leaving');
-
-    if (clone && hasBox(to)) {
-      slot.classList.add('is--morph-target');
-
-      onTransition();
-
-      const animation = clone.animate(
-        [
-          { top: `${from.top}px`, left: `${from.left}px`, width: `${from.width}px`, height: `${from.height}px` },
-          { top: `${to.top}px`, left: `${to.left}px`, width: `${to.width}px`, height: `${to.height}px` },
-        ],
-        { duration: MORPH_MS, easing: EASE, fill: 'forwards' }
-      );
-
-      // a hidden tab stops advancing the animation, so `finished` would
-      // never resolve and the page would be left mid-morph with the router
-      // locked. the timer is the backstop that always lands the cover.
-      await Promise.race([
-        animation.finished.catch(() => {}),
-        new Promise((r) => setTimeout(r, MORPH_MS + 200)),
-      ]);
-      animation.cancel();
-
-      slot.classList.remove('is--morph-target');
-      clone.remove();
-    } else if (clone) {
-      clone.remove();
-    }
-
-    if (article) {
-      article.classList.remove('is--entering');
-      if (!instant) article.classList.add('is--staggered');
-    }
+    if (clone) clone.remove();
+    document.querySelectorAll('.is--morph-target').forEach((el) => el.classList.remove('is--morph-target'));
 
     busy = false;
 
@@ -248,7 +306,7 @@ export function initRouter({ onSwap, onTransition }) {
     const slug = link.dataset.slug || currentSlug();
     const scrollTo = link.pathname === '/' ? homeScroll : 0;
 
-    swap(link.pathname + link.search, { slug, scrollTo });
+    swap(link.pathname + link.search, { slug, scrollTo, link });
   });
 
   window.addEventListener('popstate', (event) => {

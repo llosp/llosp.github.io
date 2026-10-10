@@ -34,6 +34,6 @@ I design and develop digital products at Ecoa Institute, in partnership with Pet
 
 [todo: results, nda permitting. even a qualitative line from a stakeholder, paraphrased, is worth more than nothing.]
 
-## next.md
+## learnings.md
 
-[todo: what you would change.]
+[todo: what this project taught you. two or three things that changed how you work.]

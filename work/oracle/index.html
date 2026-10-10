@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>oracle / lope.design</title>
-  <meta name="description" content="Oracle is a phone app for tabletop RPG game masters that turns the room into part of the table.">
+  <meta name="description" content="Oracle is a phone app that lets a tabletop RPG game master change the room with a tap, built from field research.">
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
   <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -51,31 +51,189 @@
 
   <div id="app" data-route="work">
     <article class="case-study" data-slug="oracle">
-      <header class="cs-hero">
-        <figure class="cs-cover">
-          <div class="cs-cover_frame" data-cover-slot="oracle">
-          <img class="cs-cover_img" src="/assets/oracle/cover.webp" alt="Three Oracle screens: a session's scene list, the Ice Cave scene editor and the live console"
-            style="object-fit: contain" fetchpriority="high" decoding="async">
-        </div>
-          <figcaption class="caption-code">// three states of one session: picking a scene, building it device by device, and running it live</figcaption>
-        </figure>
-        <div class="cs-hero_text">
+      <nav class="cs-rail" aria-label="case study sections">
+        <a class="cs-rail_back" href="/#work">← back</a>
+        <a href="#overview-md">overview</a>
+        <a href="#research-md">research</a>
+        <a href="#takeaways">takeaways</a>
+        <a href="#project-info-md">project-info</a>
+      </nav>
+      <div class="cs-main">
+        <header class="cs-head">
           <nav class="cs-breadcrumb" aria-label="breadcrumb">
             <a href="/#work">~/work</a>/<span>oracle</span>
           </nav>
+          <p class="cs-eyebrow">ux research and product design · 2025 to 2026</p>
           <h1 class="cs-title">oracle</h1>
-          <dl class="meta cs-meta">
+          
+        </header>
+
+        <figure class="cs-cover">
+          <div class="cs-cover_frame" data-cover-slot="oracle">
+          <video class="cs-cover_img" style="object-fit: cover"
+            muted loop playsinline preload="auto" aria-label="the Oracle wordmark and a phone showing the live console for a scene called Ice Cave, with the tagline &quot;One tap, whole room.&quot;">
+            <source src="/assets/oracle/oracle-cover.webm" type="video/webm">
+          </video>
+        </div>
+          <figcaption class="caption-code">oracle-cover.webm</figcaption>
+        </figure>
+
+        <div class="cs-rest">
+      <section class="cs-section" id="overview-md">
+        <div class="cs-section_file">overview.md</div>
+        <div class="cs-section_body">
+<p class="statement">Game masters could have friends in a room, or atmosphere on a screen. Not both.</p>
+<div class="prose"><p>Players prefer to play in person, but the tools that add atmosphere are built for screens, and screens pull people out of the room.</p>
+<p>Oracle is a phone app that lets the game master control the room itself. One tap sets the lights, air conditioner, blinds, TV and sound, using smart devices people already own.</p></div>
+<figure class="before-after media-block">
+  <div class="before-after_side">
+      <span class="before-after_label">the old way</span>
+      <div class="frame frame--empty"><!-- TODO(pedro): the old way image --><mark class="todo">[todo: the old way image]</mark></div>
+    </div>
+  <div class="before-after_side">
+      <span class="before-after_label">the oracle way</span>
+      <div class="frame frame--empty"><!-- TODO(pedro): the oracle way image --><mark class="todo">[todo: the oracle way image]</mark></div>
+    </div>
+</figure>
+<div class="prose"><p><!-- TODO(pedro): COMPARE PAIR. Left: a flat, silent table with a paper map and a phone playing a playlist, the GM juggling five apps and tabs. Right: the same table with Oracle, one panel, the room already changed. Same angle, same people. Animate the left as a cluttered 5-app switch, the right as one tap --><mark class="todo">[todo: COMPARE PAIR. Left: a flat, silent table with a paper map and a phone playing a playlist, the GM juggling five apps and tabs. Right: the same table with Oracle, one panel, the room already changed. Same angle, same people. Animate the left as a cluttered 5-app switch, the right as one tap]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="research-md">
+        <div class="cs-section_file">research.md</div>
+        <div class="cs-section_body">
+<div class="prose"><p>We went where RPG happens: a game store (Falha Crítica), Niterói Expo Geek 2025 and CINE RPG, a school for game masters. We interviewed players and professionals aged 18 to 26 and 30 to 45, and compared it with the Censo RPG Brasil 2023.</p></div>
+<ul class="outcomes">
+<li class="outcome">
+      <span class="outcome_value">980+</span>
+      <span class="outcome_label">responses in the Censo RPG Brasil 2023</span>
+    </li>
+<li class="outcome">
+      <span class="outcome_value">12M</span>
+      <span class="outcome_label">Brazilian homes with smart devices, per the IBGE</span>
+    </li>
+</ul>
+<div class="beat">
+  <div class="beat_text"><div class="prose"><p>Both age groups prefer in person and treat online as a fallback. They disagree on what makes a table feel alive.</p>
+<ul class="prose-list">
+<li>Younger players want light, sound and visuals.</li>
+<li>Older players are happy with narration and imagination.</li>
+</ul></div></div>
+  <div class="beat_media"><figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Animated chart: in person and online, one pair per age group, both preferring in person">
+        <source src="/assets/oracle/c1-interviews.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">c1-interviews.webm</figcaption>
+</figure></div>
+</div>
+<div class="beat beat--flip">
+  <div class="beat_text"><div class="prose"><p>Online adds sound and image but invites distraction. In person is social and focused, but immersion rests on the GM's voice alone. Nothing affordable does both.</p></div></div>
+  <div class="beat_media"><figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Animated map of immersive tools against physical presence, with Oracle landing in the empty corner">
+        <source src="/assets/oracle/c2-gap.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">c2-gap.webm</figcaption>
+</figure></div>
+</div>
+<div class="beat">
+  <div class="beat_text"><div class="prose"><p>The frustration comes late. A new player arrives expecting the intensity they saw online, and the table they get depends on one voice. That gap is where Oracle sits.</p></div></div>
+  <div class="beat_media"><figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Animated user journey of a new player, from discovery to the frustration where Oracle steps in">
+        <source src="/assets/oracle/c3-journey.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">c3-journey.webm</figcaption>
+</figure></div>
+</div>
+        </div>
+      </section>
+      <section class="cs-section" id="takeaways">
+        <div class="cs-section_file">takeaways/</div>
+        <div class="cs-section_body">
+<nav class="takeaway-index" aria-label="takeaways">
+  <p class="takeaway-index_label">what i decided, and why</p>
+  <ol class="takeaway-index_list">
+    <li><a href="#d-01-use-what-is-already-in-the-room"><span class="takeaway-index_num">/01</span> the room is already a stage</a></li>
+    <li><a href="#d-02-device-by-device"><span class="takeaway-index_num">/02</span> a scene is a set of devices, not one setting</a></li>
+    <li><a href="#d-03-run-the-table"><span class="takeaway-index_num">/03</span> the game master runs the table mid-sentence</a></li>
+    <li><a href="#d-04-describe-a-scene"><span class="takeaway-index_num">/04</span> automate the setup, keep the judgement</a></li>
+  </ol>
+</nav>
+<div class="prose"><p>What the research taught us, and what we built because of it.</p></div>
+<article class="decision" id="d-01-use-what-is-already-in-the-room">
+  <header class="decision_head">
+    <span class="decision_file">01-use-what-is-already-in-the-room.md</span>
+    <h3 class="decision_title">the room is already a stage</h3>
+    <p class="decision_subtitle">Price was the barrier, so Oracle uses what people already own.</p>
+  </header>
+  <div class="decision_body prose"><p>Players found tabletop products good but too expensive, so we made nothing to buy. Oracle pairs with the lights, air conditioner, blinds and TV already in the home, grouped by room.</p>
+<p>Safety and comfort limits live in the same setup, so the ceiling on flashing and temperature is set once, not mid-scene.</p></div>
+  
+  
+</article>
+<article class="decision" id="d-02-device-by-device">
+  <header class="decision_head">
+    <span class="decision_file">02-device-by-device.md</span>
+    <h3 class="decision_title">a scene is a set of devices, not one setting</h3>
+    <p class="decision_subtitle">Each device has its own editor and shows its own state.</p>
+  </header>
+  <div class="decision_body prose"><p>A scene is five or six devices, and they do not take the same input. A light needs a colour and an effect, an air conditioner a temperature, a TV a piece of media.</p>
+<p>Each device gets its own editor, and its tile shows what it will do without opening it. Sounds and images come from a built-in library or the GM's own files, in folders and favourites.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): [todo: SCREEN RECORDING 12s. Build Ice Cave from nothing. Add light, set ice blue and flicker, add AC, set 18C, add TV, pick a frozen cavern from the library, add a wind sound. The scene tiles fill in one by one --><mark class="todo">[todo: [todo: SCREEN RECORDING 12s. Build Ice Cave from nothing. Add light, set ice blue and flicker, add AC, set 18C, add TV, pick a frozen cavern from the library, add a wind sound. The scene tiles fill in one by one]</mark>]</div>
+  
+</figure>
+  
+</article>
+<article class="decision" id="d-03-run-the-table">
+  <header class="decision_head">
+    <span class="decision_file">03-run-the-table.md</span>
+    <h3 class="decision_title">the game master runs the table mid-sentence</h3>
+    <p class="decision_subtitle">Running a session is not the same job as building one.</p>
+  </header>
+  <div class="decision_body prose"><p>The live console puts the effect pads and sound mix up front, because those are what a GM reaches for mid-sentence.</p>
+<p>Applying a scene shows progress device by device. If the fifth stalls, the GM sees which one and can retry it.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): [todo: SCREEN RECORDING 10s. Live console, a scene applies, five devices tick green in turn, the fourth turns red with a retry, a tap, it turns green. Then a wind sound pad and a thunder one-shot, with the sound mix levels moving --><mark class="todo">[todo: [todo: SCREEN RECORDING 10s. Live console, a scene applies, five devices tick green in turn, the fourth turns red with a retry, a tap, it turns green. Then a wind sound pad and a thunder one-shot, with the sound mix levels moving]</mark>]</div>
+  
+</figure>
+  
+</article>
+<article class="decision" id="d-04-describe-a-scene">
+  <header class="decision_head">
+    <span class="decision_file">04-describe-a-scene.md</span>
+    <h3 class="decision_title">automate the setup, keep the judgement</h3>
+    <p class="decision_subtitle">AI drafts the scene from a sentence. The GM reviews it per device.</p>
+  </header>
+  <div class="decision_body prose"><p>Typing a sentence is faster than building six devices by hand.</p>
+<p>The result arrives as a reviewable set of per-device changes, not something the app does to the room on its own. The GM can preview, apply or undo before the lights change on a table full of people.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): [todo: SCREEN RECORDING 12s. Type an ice cave. freezing, blue, water dripping somewhere far off. The agent answers, a per-device diff appears, red lines out and green lines in. Preview runs the scene for two seconds in the room cutaway, then Apply. Undo returns it --><mark class="todo">[todo: [todo: SCREEN RECORDING 12s. Type an ice cave. freezing, blue, water dripping somewhere far off. The agent answers, a per-device diff appears, red lines out and green lines in. Preview runs the scene for two seconds in the room cutaway, then Apply. Undo returns it]</mark>]</div>
+  
+</figure>
+  
+</article>
+        </div>
+      </section>
+      <section class="cs-section" id="project-info-md">
+        <div class="cs-section_file">project-info.md</div>
+        <div class="cs-section_body">
+<dl class="meta cs-meta">
           <div class="meta_row">
             <dt>role</dt>
-            <dd>ux/ui, product design, design system</dd>
+            <dd>ux research, ux/ui, product design, design system</dd>
           </div>
           <div class="meta_row">
             <dt>timeline</dt>
-            <dd>2026</dd>
+            <dd>2025 to 2026</dd>
           </div>
           <div class="meta_row">
             <dt>team</dt>
-            <dd>solo</dd>
+            <dd>group project</dd>
           </div>
           <div class="meta_row">
             <dt>built with</dt>
@@ -83,167 +241,16 @@
           </div>
           <div class="meta_row">
             <dt>status</dt>
-            <dd>in design</dd>
+            <dd>prototype, tested once</dd>
           </div>
           
           </dl>
-        </div>
-      </header>
-
-      <section class="cs-section" id="readme-md">
-        <div class="cs-section_file">README.md</div>
-        <div class="cs-section_body">
-<div class="prose"><p>Oracle is a phone app for tabletop RPG game masters. The GM builds scenes out of smart home states and sounds, so an ice cave sets the air conditioner to 18°C, closes the blinds, drops the lights to a flickering blue, puts a frozen cavern on the TV and starts a howling wind, all with one tap.</p>
-<p>I redesigned it from a version that had drifted into a music player. I rebuilt the scene editor to work device by device, added a live console for actually running a session, gave the app a way to put the house back when the session ends, and drew the design system it is built on.</p>
-<p><!-- TODO(pedro): third line. what came out of it. if you have not tested it with a real GM yet, say that instead of reaching for a number. --><mark class="todo">[todo: third line. what came out of it. if you have not tested it with a real GM yet, say that instead of reaching for a number.]</mark></p></div>
-        </div>
-      </section>
-      <section class="cs-section" id="problem-md">
-        <div class="cs-section_file">problem.md</div>
-        <div class="cs-section_body">
-<div class="prose"><p>The version I started from had drifted into a music player. Sound had taken over the interface, and the smart home side of the product, which is the part that actually makes the room change, had been reduced to an afterthought.</p>
-<p>That shaped three constraints:</p>
-<ul class="prose-list">
-<li>A scene is not one setting, it is five or six devices that each need their own controls. A colour wheel and a flicker effect are not the same kind of input as a target temperature.</li>
-<li>Smart home calls fail in the middle. A scene can apply to four devices and stall on the fifth, and the GM is mid-sentence when it happens.</li>
-<li>The app controls the lights and the air conditioner in a room with people in it, so flashing and temperature need hard limits rather than trust.</li>
-</ul>
-<p><!-- TODO(pedro): the part only you know. who you talked to, what you watched a GM actually struggle with at the table, or that this is a self-directed concept with no user research behind it yet. say which, plainly. --><mark class="todo">[todo: the part only you know. who you talked to, what you watched a GM actually struggle with at the table, or that this is a self-directed concept with no user research behind it yet. say which, plainly.]</mark></p></div>
-        </div>
-      </section>
-      <section class="cs-section" id="decisions">
-        <div class="cs-section_file">decisions/</div>
-        <div class="cs-section_body">
-<article class="decision" id="d-01-device-by-device">
-  <header class="decision_head">
-    <span class="decision_file">01-device-by-device.md</span>
-    <h3 class="decision_title">edit the scene device by device, not as one preset</h3>
-  </header>
-  <div class="decision_body prose"><p>The scene editor lists the devices a scene touches and gives each one its own editor, because the inputs are not interchangeable. The light editor is a colour wheel plus an effect like flicker. The air conditioner editor is a target temperature and a fan speed. The TV is a piece of media and a display mode.</p>
-<p>Adding a device is a separate sheet rather than a hidden menu, so the number of devices a scene drives stays visible while you build it.</p></div>
-  <figure class="before-after">
-  <div class="before-after_side">
-      <span class="before-after_label">before</span>
-      <div class="frame frame--empty"><!-- TODO(pedro): the old scene-wide editor it replaced --><mark class="todo">[todo: the old scene-wide editor it replaced]</mark></div>
-      <figcaption class="caption-code">// <!-- TODO(pedro): export a frame of the version this replaced, even a rough one. the before is what makes the decision legible --><mark class="todo">[todo: export a frame of the version this replaced, even a rough one. the before is what makes the decision legible]</mark></figcaption>
-    </div>
-  <div class="before-after_side">
-      <span class="before-after_label">after</span>
-      <div class="frame">
-      <img class="media wide" src="/assets/oracle/scene-editor.webp" alt="The scene editor with its device tiles, the add-device sheet, the light editor with colour wheel and flicker effect, and the AC editor set to 18°C" loading="lazy" decoding="async">
-    </div>
-      <figcaption class="caption-code">// every device carries its own state on the tile, so the scene is readable without opening anything</figcaption>
-    </div>
-</figure>
-</article>
-<article class="decision" id="d-02-live-console">
-  <header class="decision_head">
-    <span class="decision_file">02-live-console.md</span>
-    <h3 class="decision_title">a separate console for running the game, not the same screen you build on</h3>
-  </header>
-  <div class="decision_body prose"><p>Building a scene and running a session are different jobs with different pressures, so they are different screens. The live console puts the sound mix and the one-shot effect pads up front, because the GM reaches for those while they are mid-sentence and cannot go hunting through an editor.</p>
-<p>Applying a scene shows progress device by device rather than as a single spinner, so a partial failure names the device that stalled and offers a retry instead of leaving the GM guessing which part of the room did not change.</p></div>
-  <figure class="before-after">
-  <div class="before-after_side">
-      <span class="before-after_label">before</span>
-      <div class="frame frame--empty"><!-- TODO(pedro): the previous run-time screen, where sound controls had taken over --><mark class="todo">[todo: the previous run-time screen, where sound controls had taken over]</mark></div>
-      <figcaption class="caption-code">// <!-- TODO(pedro): caption once you have the before frame --><mark class="todo">[todo: caption once you have the before frame]</mark></figcaption>
-    </div>
-  <div class="before-after_side">
-      <span class="before-after_label">after</span>
-      <div class="frame">
-      <img class="media wide" src="/assets/oracle/live-session.webp" alt="Running a session: the live console, a scene applying device by device, a partial failure with a retry, and ending the session by restoring the home" loading="lazy" decoding="async">
-    </div>
-      <figcaption class="caption-code">// the same screen handles the good path and the broken one, so a failed device never becomes a dead end</figcaption>
-    </div>
-</figure>
-</article>
-<article class="decision" id="d-03-put-the-house-back">
-  <header class="decision_head">
-    <span class="decision_file">03-put-the-house-back.md</span>
-    <h3 class="decision_title">ending a session restores the home</h3>
-  </header>
-  <div class="decision_body prose"><p>A session leaves the house in a state nobody wants to sleep in. Ending the session is an explicit action that puts the devices back rather than something the GM has to undo by hand, device by device, at midnight.</p></div>
-  <figure class="before-after">
-  <div class="before-after_side">
-      <span class="before-after_label">before</span>
-      <div class="frame frame--empty"><!-- TODO(pedro): the old end-of-session flow, if there was one --><mark class="todo">[todo: the old end-of-session flow, if there was one]</mark></div>
-      <figcaption class="caption-code">// <!-- TODO(pedro): caption once you have the before frame --><mark class="todo">[todo: caption once you have the before frame]</mark></figcaption>
-    </div>
-  <div class="before-after_side">
-      <span class="before-after_label">after</span>
-      <div class="frame">
-      <img class="media wide" src="/assets/oracle/home-devices.webp" alt="Smart home setup: devices grouped by room, scanning for new devices, linked integrations and the safety and comfort limits" loading="lazy" decoding="async">
-    </div>
-      <figcaption class="caption-code">// safety and comfort limits live in setup, so the ceiling on flashing and temperature is set once rather than negotiated per scene</figcaption>
-    </div>
-</figure>
-</article>
-<article class="decision" id="d-04-the-library-stays-local">
-  <header class="decision_head">
-    <span class="decision_file">04-the-library-stays-local.md</span>
-    <h3 class="decision_title">the library stays on the device</h3>
-  </header>
-  <div class="decision_body prose"><p>Sounds live in folders on the phone, as the GM's own files, with a few official packs alongside them. <!-- TODO(pedro): why local rather than a cloud library. licensing, offline play at a table with bad wifi, or something else. this is the kind of constraint studios read closely, so it is worth a sentence. --><mark class="todo">[todo: why local rather than a cloud library. licensing, offline play at a table with bad wifi, or something else. this is the kind of constraint studios read closely, so it is worth a sentence.]</mark></p></div>
-  <figure class="before-after">
-  <div class="before-after_side">
-      <span class="before-after_label">before</span>
-      <div class="frame frame--empty"><!-- TODO(pedro): the old library, organised as a music player playlist --><mark class="todo">[todo: the old library, organised as a music player playlist]</mark></div>
-      <figcaption class="caption-code">// <!-- TODO(pedro): caption once you have the before frame --><mark class="todo">[todo: caption once you have the before frame]</mark></figcaption>
-    </div>
-  <div class="before-after_side">
-      <span class="before-after_label">after</span>
-      <div class="frame">
-      <img class="media wide" src="/assets/oracle/library.webp" alt="The local library of sounds in folders, a folder after an upload, the official packs list and a pack with its scene templates" loading="lazy" decoding="async">
-    </div>
-      <figcaption class="caption-code">// folders rather than playlists, because a GM files sounds by scene and not by artist</figcaption>
-    </div>
-</figure>
-</article>
-<article class="decision" id="d-05-describe-a-scene">
-  <header class="decision_head">
-    <span class="decision_file">05-describe-a-scene.md</span>
-    <h3 class="decision_title">describe a scene in words and review it per device before it applies</h3>
-  </header>
-  <div class="decision_body prose"><p>Building a six-device scene by hand is slow, and the GM is often doing it between sessions with the next encounter already in their head. Describing it in a sentence is faster.</p>
-<p>The part that matters is what happens next. The result arrives as a reviewable set of per-device changes rather than something the app silently does to the room, so the GM sees exactly which devices are about to move and can preview, apply or undo before the lights change on a table full of people.</p></div>
-  
-</article>
-<div class="ai-exchange" role="figure" aria-label="depiction of an ai scene edit">
-  <div class="ai-exchange_block ai-exchange_prompt">
-    <span class="ai-exchange_tag">&gt; user:</span>
-    <span class="ai-exchange_text">an ice cave. freezing, blue, water dripping somewhere far off</span>
-  </div>
-  <div class="ai-exchange_block ai-exchange_output">
-    <span class="ai-exchange_tag">oracle:</span>
-    <span class="ai-exchange_text">built &quot;ice cave&quot; across 5 devices. review before applying.</span>
-  </div>
-  <pre class="ai-diff"><code><span class="ai-diff_line is--del">- ac.living          cool 22°c, auto fan</span>
-<span class="ai-diff_line is--add">+ ac.living          cool 18°c, high fan</span>
-<span class="ai-diff_line is--del">- lights.ceiling     warm white 2700k</span>
-<span class="ai-diff_line is--add">+ lights.ceiling     ice blue 40%, flicker</span>
-<span class="ai-diff_line is--del">- blinds.living      open</span>
-<span class="ai-diff_line is--add">+ blinds.living      closed</span>
-<span class="ai-diff_line is--add">+ tv.living          &quot;frozen cavern&quot;, full screen</span>
-<span class="ai-diff_line is--add">+ mix.ambience       howling wind, loop, 60%</span></code></pre>
-  <div class="ai-exchange_actions"><span class="ai-action">[preview]</span>
-<span class="ai-action">[apply]</span>
-<span class="ai-action">[undo]</span></div>
-  <p class="ai-exchange_note"><!-- TODO(pedro): say whether this is built, prototyped in figma, or a proposed direction. be explicit. a studio will ask. --><mark class="todo">[todo: say whether this is built, prototyped in figma, or a proposed direction. be explicit. a studio will ask.]</mark></p>
+<div class="toolbox-grid">
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">Pedro Lopes</span>
+        <span class="toolbox-cat_items">ux research, ux/ui, product design, design system</span>
+      </div>
 </div>
-        </div>
-      </section>
-      <section class="cs-section" id="outcome-md">
-        <div class="cs-section_file">outcome.md</div>
-        <div class="cs-section_body">
-<div class="prose"><p><!-- TODO(pedro): results. if there are none yet because it is still in design, write that sentence instead of leaving this empty. &quot;not yet tested with GMs&quot; is a real answer and reads better than a gap. --><mark class="todo">[todo: results. if there are none yet because it is still in design, write that sentence instead of leaving this empty. &quot;not yet tested with GMs&quot; is a real answer and reads better than a gap.]</mark></p>
-<p><!-- TODO(pedro): if you ran any kind of check at all, even showing it to one GM friend, that is worth more here than nothing. --><mark class="todo">[todo: if you ran any kind of check at all, even showing it to one GM friend, that is worth more here than nothing.]</mark></p></div>
-        </div>
-      </section>
-      <section class="cs-section" id="next-md">
-        <div class="cs-section_file">next.md</div>
-        <div class="cs-section_body">
-<div class="prose"><p><!-- TODO(pedro): what you would change. two or three things. the honest ones, including anything you think is still wrong with it. --><mark class="todo">[todo: what you would change. two or three things. the honest ones, including anything you think is still wrong with it.]</mark></p></div>
         </div>
       </section>
 
@@ -251,6 +258,8 @@
         <span class="cs-nav_link is--disabled">← prev project</span>
         <a class="cs-nav_link cs-nav_next" href="/work/ecoa/" data-slug="ecoa">next project → <span class="cs-nav_name">ecoa × petrobras</span></a>
       </nav>
+        </div>
+      </div>
     </article>
   </div>
 

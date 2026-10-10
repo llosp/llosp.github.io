@@ -51,48 +51,35 @@
 
   <div id="app" data-route="work">
     <article class="case-study" data-slug="count-me-dead">
-      <header class="cs-hero">
-        <figure class="cs-cover">
-          <div class="cs-cover_frame" data-cover-slot="count-me-dead">
-          <img class="cs-cover_img" src="/assets/count-me-dead/cover.webp" alt="Count Me Dead cover art, showing an accountant in a wide hat"
-            style="object-fit: contain" fetchpriority="high" decoding="async">
-        </div>
-          <figcaption class="caption-code">// the player character is an accountant collecting debts, which is where the whole countdown conceit comes from</figcaption>
-        </figure>
-        <div class="cs-hero_text">
+      <nav class="cs-rail" aria-label="case study sections">
+        <a class="cs-rail_back" href="/#work">← back</a>
+        <a href="#readme-md">README</a>
+        <a href="#gallery">gallery</a>
+        <a href="#problem-md">problem</a>
+        <a href="#decisions">decisions</a>
+        <a href="#outcome-md">outcome</a>
+        <a href="#learnings-md">learnings</a>
+        <a href="#project-info-md">project-info</a>
+      </nav>
+      <div class="cs-main">
+        <header class="cs-head">
           <nav class="cs-breadcrumb" aria-label="breadcrumb">
             <a href="/#work">~/work</a>/<span>count-me-dead</span>
           </nav>
+          <p class="cs-eyebrow">game design, ui · 72 hours, gmtk jam 2026</p>
           <h1 class="cs-title">count me dead</h1>
-          <dl class="meta cs-meta">
-          <div class="meta_row">
-            <dt>role</dt>
-            <dd>game design, ui, programming, audio</dd>
-          </div>
-          <div class="meta_row">
-            <dt>timeline</dt>
-            <dd>72 hours, gmtk jam 2026</dd>
-          </div>
-          <div class="meta_row">
-            <dt>team</dt>
-            <dd>three people. i did game design, programming and audio, frovio and zumate made the art</dd>
-          </div>
-          <div class="meta_row">
-            <dt>built with</dt>
-            <dd>godot, gdscript</dd>
-          </div>
-          <div class="meta_row">
-            <dt>status</dt>
-            <dd>shipped</dd>
-          </div>
-          <div class="meta_row">
-            <dt>play</dt>
-            <dd><a href="https://lopen.itch.io/count-me-dead" target="_blank" rel="noopener">lopen.itch.io/count-me-dead</a></dd>
-          </div>
-          </dl>
-        </div>
-      </header>
+          
+        </header>
 
+        <figure class="cs-cover">
+          <div class="cs-cover_frame" data-cover-slot="count-me-dead">
+          <img class="cs-cover_img" src="/assets/count-me-dead/cover.webp" alt="Count Me Dead cover art, showing an accountant in a wide hat"
+            style="object-fit: cover" fetchpriority="high" decoding="async">
+        </div>
+          <figcaption class="caption-code">cover.webp</figcaption>
+        </figure>
+
+        <div class="cs-rest">
       <section class="cs-section" id="readme-md">
         <div class="cs-section_file">README.md</div>
         <div class="cs-section_body">
@@ -111,7 +98,7 @@
         <div class="frame">
       <img class="media wide" src="/assets/count-me-dead/gameplay-1.webp" alt="A duel against Hoarse Ryder: the timer still reads 9 when the player fires, and TOO EARLY! flashes across the screen" loading="lazy" decoding="async">
     </div>
-        <figcaption class="caption-code">// failure states are loud and instant, because in a one-button game the feedback is the entire teaching mechanism</figcaption>
+        <figcaption class="caption-code">gameplay-1.webp</figcaption>
       </figure>
     </div>
 <div class="layout-grid_item">
@@ -119,7 +106,7 @@
         <div class="frame">
       <img class="media wide" src="/assets/count-me-dead/gameplay-2.webp" alt="Mid-duel against Danny D. Vile, the timer at 18, reading Let's see you count without me" loading="lazy" decoding="async">
     </div>
-        <figcaption class="caption-code">// each outlaw breaks the count in a way that fits who they are, so the tell is characterisation and rule at the same time</figcaption>
+        <figcaption class="caption-code">gameplay-2.webp</figcaption>
       </figure>
     </div>
 <div class="layout-grid_item">
@@ -127,7 +114,7 @@
         <div class="frame">
       <img class="media wide" src="/assets/count-me-dead/gameplay-3.webp" alt="Hoarse Ryder in the sheriff's office, bullying a frightened Conny Calzone and mangling an idiom" loading="lazy" decoding="async">
     </div>
-        <figcaption class="caption-code">// <!-- TODO(pedro): write this caption --><mark class="todo">[todo: write this caption]</mark></figcaption>
+        <figcaption class="caption-code">gameplay-3.webp</figcaption>
       </figure>
     </div>
 <div class="layout-grid_item">
@@ -135,7 +122,7 @@
         <div class="frame">
       <img class="media wide" src="/assets/count-me-dead/gameplay-4.webp" alt="The town map, where each location is a name on the ledger and unlocks the next outlaw" loading="lazy" decoding="async">
     </div>
-        <figcaption class="caption-code">// the map is a ledger, so progression reads as collecting debts rather than clearing levels</figcaption>
+        <figcaption class="caption-code">gameplay-4.webp</figcaption>
       </figure>
     </div>
   </div>
@@ -165,17 +152,51 @@
 <p><!-- TODO(pedro): anything a player said that told you the one-button idea landed. --><mark class="todo">[todo: anything a player said that told you the one-button idea landed.]</mark></p></div>
         </div>
       </section>
-      <section class="cs-section" id="next-md">
-        <div class="cs-section_file">next.md</div>
+      <section class="cs-section" id="learnings-md">
+        <div class="cs-section_file">learnings.md</div>
         <div class="cs-section_body">
-<div class="prose"><p><!-- TODO(pedro): what you would change. for a 72 hour game there is always a clear answer here. --><mark class="todo">[todo: what you would change. for a 72 hour game there is always a clear answer here.]</mark></p></div>
+<div class="prose"><p><!-- TODO(pedro): what this project taught you. two or three things that changed how you work. --><mark class="todo">[todo: what this project taught you. two or three things that changed how you work.]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="project-info-md">
+        <div class="cs-section_file">project-info.md</div>
+        <div class="cs-section_body">
+<dl class="meta cs-meta">
+          <div class="meta_row">
+            <dt>role</dt>
+            <dd>game design, ui, programming, audio</dd>
+          </div>
+          <div class="meta_row">
+            <dt>timeline</dt>
+            <dd>72 hours, gmtk jam 2026</dd>
+          </div>
+          <div class="meta_row">
+            <dt>team</dt>
+            <dd>three people. i did game design, programming and audio, frovio and zumate made the art</dd>
+          </div>
+          <div class="meta_row">
+            <dt>built with</dt>
+            <dd>godot, gdscript</dd>
+          </div>
+          <div class="meta_row">
+            <dt>status</dt>
+            <dd>shipped</dd>
+          </div>
+          <div class="meta_row">
+            <dt>play</dt>
+            <dd><a href="https://lopen.itch.io/count-me-dead" target="_blank" rel="noopener">lopen.itch.io/count-me-dead</a></dd>
+          </div>
+          </dl>
         </div>
       </section>
 
       <nav class="cs-nav">
-        <a class="cs-nav_link cs-nav_prev" href="/work/yura/" data-slug="yura">← prev project <span class="cs-nav_name">yura</span></a>
+        <a class="cs-nav_link cs-nav_prev" href="/work/yura/" data-slug="yura">← prev project <span class="cs-nav_name">yura</span><div class="cs-nav_frame" style="aspect-ratio: 1389 / 1016"><img class="cs-nav_media" data-slug="yura" src="/assets/yura/yura-cover.webp" alt=""
+              style="object-fit: cover" loading="lazy" decoding="async"></div></a>
         <span class="cs-nav_link is--disabled">next project →</span>
       </nav>
+        </div>
+      </div>
     </article>
   </div>
 

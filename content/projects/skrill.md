@@ -14,7 +14,6 @@ live: /skrill/demo
 live_label: play
 live_text: lope.design/skrill
 cover: assets/skrill/cover.webp
-cover_fit: cover
 cover_alt: The Skrill title screen, with the mascot above the words improve your skrills
 cover_caption: // the whole thing is dressed as a desktop app from about 1996, which is the joke and also the reason people open it
 ---
@@ -53,6 +52,6 @@ items:
 
 [todo: results. for this project you genuinely have data, since every season is logged in the database. number of seasons, number of goals declared, completion rate, or how the split changed over time.]
 
-## next.md
+## learnings.md
 
-[todo: what you would change.]
+[todo: what this project taught you. two or three things that changed how you work.]

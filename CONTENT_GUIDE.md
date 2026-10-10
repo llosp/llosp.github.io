@@ -37,15 +37,12 @@ live: https://example.com
 live_label: visit
 live_text: example.com
 cover: assets/my-project/cover.webp
-cover_fit: cover
 cover_alt: what is in the cover image
 cover_caption: // a code comment about why the cover is this image
 ---
 ```
 
-`order` sets the position in the work index. `cover_fit` is `cover` or
-`contain`: use `contain` when the cover is artwork that must not be cropped,
-`cover` when it is a photograph or a centred mark that crops safely. The
+`order` sets the position in the work index. The
 `live_*` fields are optional and only appear if `live` is set.
 
 The work index is the covers and nothing else. Each cover is a link straight
@@ -68,10 +65,11 @@ nothing to declare and nothing to keep in sync when you replace a file. If
 you need to override it, `cover_ratio: 4 / 3` wins. A missing cover or a
 video one falls back to 16:9.
 
-The case study hero is always 16:9 regardless, and the cover morphs between
-the two shapes on the way in. `cover_fit` is what keeps that from distorting,
-so it has to be right: `contain` artwork rescales inside the growing box,
-`cover` photography re-crops.
+The case study hero is always 16:9 regardless. The cover morphs from its own
+shape into that frame, filling the frame's width at its original proportion and
+cropping whatever overflows the height. There is no `cover_fit` any more: every
+cover is treated the same, so frame the important part of the image toward the
+middle, because the top and bottom are what get masked.
 
 ## sections
 
@@ -93,7 +91,7 @@ The constraint you were actually designing against.
 
 ## outcome.md
 
-## next.md
+## learnings.md
 ```
 
 Plain paragraphs render as body copy. Body copy is sentence case. Lowercase
@@ -176,18 +174,63 @@ hole.
 `::: toolbox` takes `label | items` rows, `::: meta` takes plain key/value
 pairs. Both are used in `content/about.md`.
 
+### case study blocks
+
+Optional frontmatter: `eyebrow` (context and year, e.g. `personal project · 2026`,
+defaults to `type · timeline`) and `headline` (one or two lines that state the
+result, shown under the title). The hero is a 12:5 banner, so prefer a cover
+that survives a wide crop.
+
+One item per line in every `items:` field, indented.
+
+```md
+::: statement
+text: the problem, in one big sentence
+:::
+
+::: outcomes
+items:
+  - 21st of 10,587 | placed at gmtk jam 2026
+  - shipped | used by the whole jam
+:::
+
+::: quote
+text: only renders when this is filled in
+name: who said it
+role: what they do
+logo: assets/my-project/logo.webp
+:::
+
+::: credits
+items:
+  - Name | role
+:::
+
+::: media
+items:
+  - full | assets/p/a.webp | alt text | // caption
+  - side | assets/p/b.webp | alt text | // caption, shown to the right
+  - compare | assets/p/old.webp ; assets/p/new.webp | alt a ; alt b | before ; after
+  - diagram | assets/p/c.webp | alt text | // caption
+:::
+```
+
+`media` also works as a `media:` field inside a `decision`, and a decision
+takes an optional `subtitle:`. A `## section` with two or more decisions gets a
+`/01 /02` index above them. A section whose blocks render nothing (an empty
+quote) is dropped, and every section appears in the left rail on wide screens.
+
+The cover-to-cover page transition lives in `js/case-transition.js`. Every
+timing is in the `CASE_TRANSITION` object at the top of that file.
+
 ## captions
 
-Captions are code comments, not filenames. They should say why the image is
-there, not what it is.
-
-```
-// the live console puts the effect pads up front, because the gm reaches
-// for those while they are mid-sentence
-```
-
-Not `cover.webp`. Not "screenshot of the console". The alt text is where you
-describe what is in the picture.
+Images and videos on case studies are captioned with their file name and
+nothing else. The build prints it under the hero, media, gallery and
+before/after images, so a caption written in the markdown (`cover_caption`,
+the fourth field of a media line, `before_caption`) is ignored. Name files
+for what they show, because the name is what the reader sees. Alt text is
+still where you describe the picture.
 
 ## placeholders
 
@@ -228,7 +271,7 @@ choosing one.
 
 A `cover` may be a `.webm` or `.mp4` instead of a `.webp`, and nothing else
 in the frontmatter changes. In the work index it becomes a muted looping clip
-that plays only while the cursor is over it. On the case study it fills the
+that plays on its own while it is on screen. On the case study it fills the
 hero and plays whenever it is on screen, because there the clip is the
 subject of the page rather than a label on a link. The morph between the two
 carries the video, not a still frame.

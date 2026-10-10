@@ -14,7 +14,6 @@ live: https://lopen.itch.io/count-me-dead
 live_label: play
 live_text: lopen.itch.io/count-me-dead
 cover: assets/count-me-dead/cover.webp
-cover_fit: contain
 cover_alt: Count Me Dead cover art, showing an accountant in a wide hat
 cover_caption: // the player character is an accountant collecting debts, which is where the whole countdown conceit comes from
 ---
@@ -59,6 +58,6 @@ It placed 21st out of 10,587 entries at GMTK Jam 2026.
 
 [todo: anything a player said that told you the one-button idea landed.]
 
-## next.md
+## learnings.md
 
-[todo: what you would change. for a 72 hour game there is always a clear answer here.]
+[todo: what this project taught you. two or three things that changed how you work.]

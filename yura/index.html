@@ -23,303 +23,300 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link rel="stylesheet"
-    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;800&family=M+PLUS+1p:wght@700&family=Martian+Mono:wght@400;500&display=swap">
+    href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:opsz,wght@14..32,400..800&family=M+PLUS+1p:wght@500;700&family=Martian+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/home.css">
+  <script>document.documentElement.classList.add('js');</script>
 </head>
 
-<body>
-  <div class="smoke" aria-hidden="true">
-    <span></span><span></span><span></span><span></span>
-    <span></span><span></span><span></span><span></span>
-  </div>
-
-  <header class="nav">
-    <nav class="nav-pill" aria-label="Main">
-      <a class="brand" href="index.html">
-        <img class="brand-mark" src="assets/img/logo.svg" alt="" width="30" height="27">
-        <span class="brand-name">YURA</span>
+<body class="home">
+  <!-- Product bar: the page's only nav. Sticky, glass, Apple-style local nav. -->
+  <header class="pbar" id="pbar">
+    <div class="pbar-inner">
+      <a class="pbar-brand" href="#top" aria-label="YURA, back to top">
+        <img src="assets/img/logo.svg" alt="" width="22" height="20">
+        <span class="pbar-brand-name">YURA</span>
+        <span class="pbar-sep" aria-hidden="true"></span>
+        <span class="pbar-product">HAKKOTAI</span>
       </a>
 
-      <ul class="nav-links">
-        <li><a href="#top">Shop</a></li>
-        <li><a href="team.html">Team</a></li>
-        <li><a href="about.html">About</a></li>
-      </ul>
+      <nav class="pbar-links" aria-label="On this page">
+        <a href="#glow" data-spy="glow">Glow</a>
+        <a href="#meaning" data-spy="meaning">The name</a>
+        <a href="#design" data-spy="design">Design</a>
+        <a href="#build" data-spy="build">Handmade</a>
+        <a href="#specs" data-spy="specs">Specs</a>
+        <a href="team.html">Team</a>
+        <a href="about.html">About</a>
+      </nav>
 
-      <div class="nav-actions">
-        <a class="nav-icon" href="#" aria-label="Search" data-search-open>
+      <div class="pbar-actions">
+        <a class="pbar-icon" href="#" aria-label="Search" data-search-open>
           <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2" />
-            <line x1="15.4" y1="15.4" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8" />
+            <line x1="15.4" y1="15.4" x2="21" y2="21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
           </svg>
         </a>
-        <a class="nav-icon nav-icon-cart" href="#" aria-label="Cart" data-cart-open>
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"
+        <a class="pbar-icon pbar-bag" href="#" aria-label="Bag" data-cart-open>
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"
             stroke-linecap="round" stroke-linejoin="round">
-            <path d="M1.6 2.2h2.9l2.6 11.2h10l2.6-7.6H6.2" />
-            <circle cx="9" cy="19.4" r="1.9" />
-            <circle cx="17.4" cy="19.4" r="1.9" />
+            <path d="M5 8h14l-1.2 12H6.2z" />
+            <path d="M9 8V6.5a3 3 0 0 1 6 0V8" />
           </svg>
           <span class="cart-badge" data-cart-badge hidden>0</span>
         </a>
-        <a class="nav-icon" href="#" aria-label="Account" data-account-open>
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-            <circle cx="12" cy="7.3" r="4.3" />
-            <path d="M3.6 20.6c0-4.2 3.8-6.6 8.4-6.6s8.4 2.4 8.4 6.6z" />
+        <a class="pbar-icon" href="#" aria-label="Account" data-account-open>
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7">
+            <circle cx="12" cy="8" r="3.8" />
+            <path d="M4.5 20.5c.6-3.9 3.6-6 7.5-6s6.9 2.1 7.5 6" stroke-linecap="round" />
           </svg>
         </a>
+        <a class="btn btn-sm" href="checkout.html" data-buy-now>Buy</a>
       </div>
-    </nav>
+    </div>
   </header>
 
-  <main class="hero" id="top">
-    <div class="splash" aria-hidden="true"></div>
-    <div class="hero-stage">
-    <img class="hero-guitar" src="assets/img/hakkotai.webp"
-      alt="HAKKOTAI superstrat in magenta and glow-green with a skull graphic" width="1560" height="532">
+  <main id="top">
 
-    <div class="hero-copy">
-      <h1 class="hero-title">
-        <span class="hero-title-latin">Hakkotai</span>
-        <span class="hero-title-kanji" lang="ja">発光体</span>
-      </h1>
-      <p class="hero-tagline">Legendary Grade Superstrat</p>
-      <a class="hero-cta" href="checkout.html" data-buy-now>Order now</a>
-      <p class="hero-finance">From $300 or $33.99 mo. for 9 mo.</p>
-    </div>
-    </div>
-  </main>
+    <!-- Hero -->
+    <section class="h-hero" aria-labelledby="hero-title">
+      <div class="h-hero-copy">
+        <p class="h-hero-kanji" lang="ja">発光体</p>
+        <h1 class="h-hero-title" id="hero-title">HAKKOTAI</h1>
+        <p class="h-hero-sub">Loud in the light. Luminous in the dark.</p>
+        <div class="h-cta-row">
+          <a class="btn" href="checkout.html" data-buy-now>Buy</a>
+          <a class="link-more" href="#glow">Watch it glow</a>
+        </div>
+        <p class="h-hero-price">From $300 or $33.99/mo. for 9 mo.</p>
+      </div>
+      <div class="h-hero-stage">
+        <div class="h-hero-halo" aria-hidden="true"></div>
+        <img class="h-hero-guitar" src="assets/img/hakkotai.webp"
+          alt="The HAKKOTAI superstrat: pink body, cream and pink skull art, rosewood neck" width="1560" height="532"
+          fetchpriority="high">
+      </div>
+    </section>
 
-  <section class="showcase" aria-label="Product highlights">
-    <div class="showcase-head">
-      <p class="story-eyebrow showcase-model">Model № 00002</p>
-      <h2 class="showcase-title">Features.</h2>
-    </div>
+    <!-- Statement: words light up as you scroll -->
+    <section class="h-statement" aria-label="The idea">
+      <p class="h-statement-text" data-words>
+        Take away the blood. The sweat. The tears. What remains is <em>pure, and luminous.</em>
+        HAKKOTAI is a guitar built from a song, painted by hand and wrapped in light.
+      </p>
+    </section>
 
-    <div class="deck">
+    <!-- Glow: sticky scroll scene, lit to dark -->
+    <section class="h-glow" id="glow" aria-labelledby="glow-title">
+      <div class="h-glow-sticky">
+        <div class="h-glow-dark" aria-hidden="true"></div>
+        <div class="h-glow-bloom" aria-hidden="true"></div>
+        <div class="h-glow-head">
+          <p class="eyebrow">Glow in the dark</p>
+          <h2 class="h-glow-title" id="glow-title">
+            <span class="h-glow-a">Loud in the light.</span>
+            <span class="h-glow-b">Luminous in the dark.</span>
+          </h2>
+        </div>
+        <div class="h-glow-stage">
+          <img class="h-glow-img h-glow-lit" src="assets/img/guitar-card-lit.webp"
+            alt="The HAKKOTAI body in normal light: hot pink with cream skull art" width="1099" height="1024">
+          <img class="h-glow-img h-glow-on" src="assets/img/guitar-card-glow.webp"
+            alt="The same body in the dark, its cream art glowing pale green" width="1099" height="1024">
+        </div>
+        <p class="h-glow-note">The green is a rechargeable photoluminescent vinyl. Give it light, turn the lights off,
+          and it keeps shining.</p>
+        <p class="h-glow-hint" aria-hidden="true">Scroll to turn the lights off</p>
+      </div>
+    </section>
 
-      <!-- Card 1 — interactive lit / glow feature -->
-      <article class="card card-feature is-lit" id="card-1">
-        <input type="checkbox" id="glow-toggle" class="glow-check" hidden>
+    <section class="h-proof" aria-label="Photographed in the dark">
+      <div class="h-proof-grid">
+        <figure data-reveal><img src="assets/img/story/glow-1.webp" alt="The HAKKOTAI glowing green in a dark room, seen at an angle" width="461" height="614" loading="lazy"></figure>
+        <figure data-reveal style="--d:1"><img src="assets/img/story/glow-2.webp" alt="The body from above, the green splash glowing against black" width="461" height="614" loading="lazy"></figure>
+        <figure data-reveal style="--d:2"><img src="assets/img/story/glow-3.webp" alt="The guitar on its side, green glowing and the pink fading into the dark" width="461" height="614" loading="lazy"></figure>
+      </div>
+      <p class="h-proof-cap" data-reveal>Not a render. Photographed in a dark room.</p>
+    </section>
 
-        <div class="card-media" aria-hidden="true">
-          <div class="card-lime">
-            <div class="card-panel"></div>
-            <img class="card-ink card-ink-top" src="assets/img/ink.svg" alt="">
-            <img class="card-ink card-ink-bottom" src="assets/img/ink.svg" alt="">
+    <!-- The name -->
+    <section class="h-section h-meaning" id="meaning" aria-labelledby="meaning-title">
+      <div class="h-head" data-reveal>
+        <p class="eyebrow">The name</p>
+        <h2 class="h-title" id="meaning-title">Three characters.<br>One idea.</h2>
+      </div>
+      <ol class="h-kanji">
+        <li data-reveal style="--d:0">
+          <span class="h-kanji-char" lang="ja">発</span>
+          <span class="h-kanji-read">hatsu</span>
+          <strong>Emission.</strong>
+          <span>To discharge. To set out.</span>
+        </li>
+        <li data-reveal style="--d:1">
+          <span class="h-kanji-char" lang="ja">光</span>
+          <span class="h-kanji-read">kō</span>
+          <strong>Light.</strong>
+          <span>A ray. A shine.</span>
+        </li>
+        <li data-reveal style="--d:2">
+          <span class="h-kanji-char" lang="ja">体</span>
+          <span class="h-kanji-read">tai</span>
+          <strong>Body.</strong>
+          <span>A substance. An object.</span>
+        </li>
+      </ol>
+      <p class="h-kanji-sum" data-reveal><span lang="ja">発光体</span> A luminous body.</p>
+    </section>
+
+    <!-- Design bento -->
+    <section class="h-section h-design" id="design" aria-labelledby="design-title">
+      <div class="h-head" data-reveal>
+        <p class="eyebrow">Design</p>
+        <h2 class="h-title" id="design-title">Visceral by design.</h2>
+        <p class="h-lead">A cracked skull. Goo bursting out. Pink where the blood should be red.</p>
+      </div>
+
+      <div class="bento">
+        <article class="tile tile-pink" data-reveal>
+          <div class="tile-copy">
+            <h3>Pink, not red.</h3>
+            <p>Change the colour of the blood and the tragedy turns into a party.</p>
           </div>
-          <div class="card-glow"></div>
-          <div class="card-glow card-glow-2"></div>
-          <img class="card-guitar card-guitar-lit" src="assets/img/guitar-card-lit.webp" alt=""
-            width="1099" height="1024">
-          <img class="card-guitar card-guitar-glow" src="assets/img/guitar-card-glow.webp" alt=""
-            width="1099" height="1024">
-        </div>
+          <img class="tile-cut" src="assets/img/guitar-card-lit.webp" alt="" width="1099" height="1024" loading="lazy">
+        </article>
 
-        <div class="card-body">
-          <div class="copy-stack">
-            <div class="copy copy-lit">
-              <h2 class="card-title">Astonishing body.</h2>
-              <p>A loud, eye-catching design on a lightweight basswood body that is easy to play for hours.
-                Two humbuckers keep the sound powerful and sturdy.</p>
-              <p>A presence worthy of a rock star.</p>
-            </div>
-            <div class="copy copy-glow">
-              <h2 class="card-title">It glows in the dark.</h2>
-              <p>Not even darkness can extinguish its glow.</p>
-              <p>The green is a rechargeable photoluminescent vinyl. Give it light, turn the lights off,
-                and it keeps shining.</p>
-            </div>
+        <article class="tile tile-photo" data-reveal style="--d:1">
+          <img class="tile-bg" src="assets/img/photo/neck.webp" alt="Looking down the HAKKOTAI neck toward the pickups" width="1022" height="1538" loading="lazy">
+          <div class="tile-copy">
+            <h3>24 jumbo frets.</h3>
+            <p>Room to run, all the way up the neck.</p>
           </div>
-
-          <label class="switch" for="glow-toggle" role="switch" aria-label="Toggle glow-in-the-dark view">
-            <span class="switch-track">
-              <span class="switch-knob">
-                <svg class="ico ico-sun" viewBox="0 0 24 24" aria-hidden="true" fill="none"
-                  stroke="currentColor" stroke-width="2" stroke-linecap="round">
-                  <circle cx="12" cy="12" r="4.2" />
-                  <path d="M12 2.5v2.6M12 18.9v2.6M2.5 12h2.6M18.9 12h2.6M5.2 5.2l1.9 1.9M16.9 16.9l1.9 1.9M18.8 5.2l-1.9 1.9M7.1 16.9l-1.9 1.9" />
-                </svg>
-                <svg class="ico ico-moon" viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-                  <path d="M20 14.6A8.3 8.3 0 0 1 9.4 4a8.3 8.3 0 1 0 10.6 10.6z" />
-                </svg>
-              </span>
-            </span>
-          </label>
-        </div>
-      </article>
-
-      <!-- Card 2 — ergonomics photo -->
-      <article class="card card-photo" id="card-2">
-        <img class="photo-man" src="assets/img/man-with-guitar.webp"
-          alt="Musician seated, playing the HAKKOTAI guitar" width="1053" height="1015" loading="lazy">
-        <div class="card-body">
-          <h2 class="card-title">Keep playing for hours.</h2>
-          <p>A light, contoured basswood body for long sets, and Gotoh tuners that hold their pitch without you thinking
-            about it.</p>
-        </div>
-      </article>
-
-      <!-- Card 3 — specs -->
-      <article class="card card-specs" id="card-3">
-        <div class="card-body">
-          <h2 class="card-title">Specs.</h2>
-          <dl class="spec-grid">
-            <div class="spec">
-              <dt>Frets</dt>
-              <dd><span class="spec-big">24</span> jumbo</dd>
-            </div>
-            <div class="spec">
-              <dt>Scale</dt>
-              <dd><span class="spec-big">25.5″</span> 648 mm</dd>
-            </div>
-            <div class="spec">
-              <dt>Pickups</dt>
-              <dd><span class="spec-big">H–H</span> humbuckers</dd>
-            </div>
-            <div class="spec">
-              <dt>Controls</dt>
-              <dd><span class="spec-big">1V·1T</span> volume, tone</dd>
-            </div>
-          </dl>
-          <ul class="spec-rows">
-            <li><span>Body</span><span>Basswood, gloss</span></li>
-            <li><span>Neck</span><span>Maple</span></li>
-            <li><span>Fingerboard</span><span>Rosewood</span></li>
-            <li><span>Bridge</span><span>Hardtail</span></li>
-            <li><span>Strings</span><span>6</span></li>
-          </ul>
-        </div>
-      </article>
-
-    </div>
-  </section>
-
-  <!-- Story — the idea behind the object (motto, kanji, three principles) -->
-  <section class="story" id="story" aria-labelledby="story-title">
-    <div class="story-inner">
-      <p class="story-eyebrow rv-item" style="--i:0">The idea</p>
-      <h2 class="story-motto rv-item" id="story-title" style="--i:1">In the absence of everything, what remains is <em>pure and luminous.</em></h2>
-      <p class="story-lead rv-item" style="--i:2">Take away the blood, the sweat, the tears. What is left is a little green goo, and it glows.</p>
-
-      <ul class="kanji-row" aria-label="What 発光体 means">
-        <li class="kanji rv-item" style="--i:3" tabindex="0">
-          <span class="kanji-char" lang="ja">発</span>
-          <span class="kanji-read">hatsu</span>
-          <span class="kanji-mean">Emission</span>
-          <span class="kanji-note">Discharge. A departure.</span>
-        </li>
-        <li class="kanji rv-item" style="--i:4" tabindex="0">
-          <span class="kanji-char" lang="ja">光</span>
-          <span class="kanji-read">kō</span>
-          <span class="kanji-mean">Light</span>
-          <span class="kanji-note">A ray. A shine.</span>
-        </li>
-        <li class="kanji rv-item" style="--i:5" tabindex="0">
-          <span class="kanji-char" lang="ja">体</span>
-          <span class="kanji-read">tai</span>
-          <span class="kanji-mean">Body</span>
-          <span class="kanji-note">Substance. An object.</span>
-        </li>
-      </ul>
-      <p class="kanji-sum rv-item" style="--i:6"><span lang="ja">発光体</span> A luminous body. A glowing thing.</p>
-
-      <div class="principles">
-        <article class="principle rv-item" style="--i:7">
-          <h3>It’s visceral.</h3>
-          <p>A cracked skull, goo bursting out of it. Loud on purpose.</p>
         </article>
-        <article class="principle rv-item" style="--i:8">
-          <h3>It has no depth.</h3>
-          <p>A guitar is just a guitar. A skull is just a skull. Goo is just goo. Nothing hidden.</p>
+
+        <article class="tile tile-text" data-reveal style="--d:2">
+          <div class="tile-copy">
+            <p class="tile-kicker">No hidden meaning</p>
+            <h3 class="tile-big">A guitar is just a guitar.</h3>
+            <p>A skull is just a skull. Goo is just goo. On purpose.</p>
+          </div>
         </article>
-        <article class="principle rv-item" style="--i:9">
-          <h3>The blood is pink.</h3>
-          <p>Red blood is tragedy. Pink blood is a party. Emptiness, celebrated.</p>
+
+        <article class="tile tile-stat" data-reveal style="--d:1">
+          <div class="tile-copy">
+            <span class="tile-num">H–H</span>
+            <h3>Two humbuckers.</h3>
+            <p>Thick, powerful and sturdy, with a wide range of tones from one volume and one tone knob.</p>
+          </div>
+        </article>
+
+        <article class="tile tile-photo tile-player" data-reveal style="--d:2">
+          <img class="tile-bg" src="assets/img/man-with-guitar.webp" alt="A musician seated, playing the HAKKOTAI" width="1053" height="1015" loading="lazy">
+          <div class="tile-copy">
+            <h3>Light basswood body.</h3>
+            <p>Comfortable for hours, not minutes.</p>
+          </div>
+        </article>
+
+        <article class="tile tile-stat" data-reveal style="--d:3">
+          <div class="tile-copy">
+            <span class="tile-num">Gotoh</span>
+            <h3>Stays in tune.</h3>
+            <p>Gotoh tuners and a hardtail bridge hold their pitch, set after set.</p>
+          </div>
         </article>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- Glow room — real photos taken in the dark -->
-  <section class="glowroom" id="glow" aria-labelledby="glow-title">
-    <div class="glowroom-head">
-      <h2 class="glowroom-title rv-item" id="glow-title" style="--i:0">Lights out.</h2>
-      <p class="glowroom-sub rv-item" style="--i:1">Photographed in the dark. The green is the vinyl’s own light.</p>
-    </div>
-    <div class="glow-grid">
-      <figure class="glow-shot rv-item" style="--i:2">
-        <img src="assets/img/story/glow-1.webp" alt="The HAKKOTAI body glowing green in a dark room, seen at an angle" width="461" height="614" loading="lazy">
-      </figure>
-      <figure class="glow-shot rv-item" style="--i:3">
-        <img src="assets/img/story/glow-2.webp" alt="The HAKKOTAI body from above, the green splash glowing against black" width="461" height="614" loading="lazy">
-      </figure>
-      <figure class="glow-shot rv-item" style="--i:4">
-        <img src="assets/img/story/glow-3.webp" alt="The HAKKOTAI lying on its side, the green parts glowing and the pink fading into the dark" width="461" height="614" loading="lazy">
-      </figure>
-    </div>
-  </section>
+    <!-- Handmade -->
+    <section class="h-section h-build" id="build" aria-labelledby="build-title">
+      <div class="h-head" data-reveal>
+        <p class="eyebrow">Handmade</p>
+        <h2 class="h-title" id="build-title">Made by hand.<br>Every single step.</h2>
+        <p class="h-lead">It started as an ordinary red guitar. It was stripped, sanded, sprayed, wrapped and wired
+          back together by hand.</p>
+      </div>
+      <ol class="h-steps">
+        <li data-reveal style="--d:0"><img src="assets/img/story/build-01-stock.webp" alt="The original red guitar on a patterned bedspread" width="461" height="614" loading="lazy"><span>01</span>Start with a red one.</li>
+        <li data-reveal style="--d:1"><img src="assets/img/story/build-02-strip.webp" alt="The red guitar taken apart, electronics laid out in labelled piles" width="819" height="614" loading="lazy"><span>02</span>Strip the electronics.</li>
+        <li data-reveal style="--d:2"><img src="assets/img/story/build-03-sand.webp" alt="A hand covered in orange dust sanding the body" width="461" height="614" loading="lazy"><span>03</span>Sand it bare.</li>
+        <li data-reveal style="--d:3"><img src="assets/img/story/build-04-primer.webp" alt="Body and neck hanging in a spray booth, coated in grey primer" width="461" height="614" loading="lazy"><span>04</span>Prime it.</li>
+        <li data-reveal style="--d:0"><img src="assets/img/story/build-05-sand-primer.webp" alt="A hand sanding the grey primer coat" width="461" height="614" loading="lazy"><span>05</span>Sand it again.</li>
+        <li data-reveal style="--d:1"><img src="assets/img/story/build-06-paint.webp" alt="The freshly painted pink body hanging next to the neck" width="461" height="614" loading="lazy"><span>06</span>Layer on the pink.</li>
+        <li data-reveal style="--d:2"><img src="assets/img/story/build-07-vinyl.webp" alt="Cream and pink vinyl art going onto the body" width="461" height="614" loading="lazy"><span>07</span>Wrap it in vinyl.</li>
+        <li data-reveal style="--d:3"><img src="assets/img/story/build-08-night.webp" alt="The finished guitar held up on a street at night" width="461" height="614" loading="lazy"><span>08</span>Clear coat. Rewire. Play.</li>
+      </ol>
+      <p class="h-footnote-inline" data-reveal>Some stickers had weak glue. Others were too thick and the cutter tore
+        them. The scars stayed in. It is handmade, not a catalogue photo.</p>
+    </section>
 
-  <!-- Build — made by hand -->
-  <section class="build" id="build" aria-labelledby="build-title">
-    <div class="build-head">
-      <p class="story-eyebrow rv-item" style="--i:0">Handmade</p>
-      <h2 class="build-title rv-item" id="build-title" style="--i:1">Made by hand.</h2>
-      <p class="build-sub rv-item" style="--i:2">Every HAKKOTAI starts as an ordinary red guitar. This one was stripped, sanded, sprayed and wired by hand.</p>
-    </div>
+    <!-- Tech specs -->
+    <section class="h-section h-specs" id="specs" aria-labelledby="specs-title">
+      <div class="h-head" data-reveal>
+        <p class="eyebrow">Tech specs</p>
+        <h2 class="h-title" id="specs-title">HAKKOTAI</h2>
+      </div>
+      <img class="h-specs-guitar" src="assets/img/hakkotai.webp" alt="" width="1560" height="532" loading="lazy" data-reveal>
+      <dl class="h-spec-table" data-reveal>
+        <div><dt>Body</dt><dd>Basswood, gloss finish</dd></div>
+        <div><dt>Neck</dt><dd>Maple</dd></div>
+        <div><dt>Fingerboard</dt><dd>Rosewood, 24 jumbo frets</dd></div>
+        <div><dt>Scale length</dt><dd>648 mm (25.5″)</dd></div>
+        <div><dt>Pickups</dt><dd>Two humbuckers (H–H)</dd></div>
+        <div><dt>Controls</dt><dd>1 volume, 1 tone</dd></div>
+        <div><dt>Bridge</dt><dd>Hardtail</dd></div>
+        <div><dt>Tuners</dt><dd>Gotoh</dd></div>
+        <div><dt>Strings</dt><dd>6</dd></div>
+        <div><dt>Finish</dt><dd>Hand-painted pink, photoluminescent vinyl art</dd></div>
+      </dl>
+    </section>
 
-    <ol class="build-steps">
-      <li class="step rv-item" style="--i:3">
-        <img src="assets/img/story/build-01-stock.webp" alt="The original red guitar lying on a patterned bedspread" width="461" height="614" loading="lazy">
-        <span class="step-n">01</span><span class="step-t">Start with a red one</span>
-      </li>
-      <li class="step rv-item" style="--i:4">
-        <img src="assets/img/story/build-02-strip.webp" alt="The red guitar taken apart, with the electronics laid out in labeled piles" width="819" height="614" loading="lazy">
-        <span class="step-n">02</span><span class="step-t">Strip and catalog the electronics</span>
-      </li>
-      <li class="step rv-item" style="--i:5">
-        <img src="assets/img/story/build-03-sand.webp" alt="A hand covered in orange dust sanding the guitar body" width="461" height="614" loading="lazy">
-        <span class="step-n">03</span><span class="step-t">Sand the body down</span>
-      </li>
-      <li class="step rv-item" style="--i:6">
-        <img src="assets/img/story/build-04-primer.webp" alt="The body and neck hanging in a spray booth, coated in grey primer" width="461" height="614" loading="lazy">
-        <span class="step-n">04</span><span class="step-t">Prime it</span>
-      </li>
-      <li class="step rv-item" style="--i:7">
-        <img src="assets/img/story/build-05-sand-primer.webp" alt="A hand sanding the grey primer coat on the body" width="461" height="614" loading="lazy">
-        <span class="step-n">05</span><span class="step-t">Sand the primer</span>
-      </li>
-      <li class="step rv-item" style="--i:8">
-        <img src="assets/img/story/build-06-paint.webp" alt="The freshly painted pink body hanging next to the neck" width="461" height="614" loading="lazy">
-        <span class="step-n">06</span><span class="step-t">Layer on the pink</span>
-      </li>
-      <li class="step rv-item" style="--i:9">
-        <img src="assets/img/story/build-07-vinyl.webp" alt="Cream and pink vinyl art being applied to the body" width="461" height="614" loading="lazy">
-        <span class="step-n">07</span><span class="step-t">Apply the vinyl art</span>
-      </li>
-      <li class="step rv-item" style="--i:10">
-        <img src="assets/img/story/build-08-night.webp" alt="The finished guitar held up on a street at night" width="461" height="614" loading="lazy">
-        <span class="step-n">08</span><span class="step-t">Clear coat, rewire, play</span>
-      </li>
-    </ol>
+    <!-- Accessories -->
+    <section class="h-section h-acc" aria-labelledby="acc-title">
+      <div class="h-head" data-reveal>
+        <p class="eyebrow">Accessories</p>
+        <h2 class="h-title" id="acc-title">Complete the rig.</h2>
+      </div>
+      <div class="h-acc-grid">
+        <article class="acc" data-reveal style="--d:0">
+          <div class="acc-media"><img src="assets/img/strap.webp" alt="A pink YURA strap with lime and black stripes" width="600" height="400" loading="lazy"></div>
+          <h3>YURA Strap</h3>
+          <p>Coming soon</p>
+        </article>
+        <article class="acc" data-reveal style="--d:1">
+          <div class="acc-media"><img src="assets/img/photo/amp.webp" alt="A pink YURA combo amplifier" width="1644" height="1536" loading="lazy"></div>
+          <h3>YURA Combo Amp</h3>
+          <p>Coming soon</p>
+        </article>
+        <article class="acc acc-photo" data-reveal style="--d:2">
+          <div class="acc-media"><img src="assets/img/photo/cable.webp" alt="A braided pink YURA cable with a branded cable tie" width="1244" height="1246" loading="lazy"></div>
+          <h3>YURA Braided Cable</h3>
+          <p>Coming soon</p>
+        </article>
+      </div>
+    </section>
 
-    <p class="build-note rv-item" style="--i:11">
-      <strong>Known imperfections.</strong> A few stickers had weak glue and fought back. Others were too thick for the cutting machine and tore. We left the scars in.
-    </p>
-    <p class="build-credit rv-item" style="--i:12">
-      Named after <cite>HAKKOTAI</cite> (1998) by Yura Yura Teikoku. Built for a PUC-Rio design course, 2024.2.
-    </p>
-  </section>
+    <!-- Closer -->
+    <section class="h-closer" aria-labelledby="closer-title">
+      <img class="h-closer-bg" src="assets/img/photo/on-amp.webp" alt="" width="1536" height="1024" loading="lazy">
+      <div class="h-closer-copy" data-reveal>
+        <p class="h-hero-kanji" lang="ja">発光体</p>
+        <h2 class="h-title" id="closer-title">Bring the glow home.</h2>
+        <p class="h-hero-price">From $300 or $33.99/mo. for 9 mo.</p>
+        <div class="h-cta-row">
+          <a class="btn" href="checkout.html" data-buy-now>Buy</a>
+          <a class="link-more" href="about.html">About YURA</a>
+        </div>
+      </div>
+    </section>
 
-  <section class="closer" aria-label="Order the HAKKOTAI">
-    <span class="closer-kanji" lang="ja" aria-hidden="true">発光体</span>
-    <div class="closer-inner">
-      <p class="closer-eyebrow">HAKKOTAI · 発光体</p>
-      <h2 class="closer-title">Bring the glow home.</h2>
-      <p class="closer-sub">From $300 or $33.99&nbsp;mo. for 9&nbsp;mo.</p>
-      <a class="closer-cta" href="checkout.html" data-buy-now>Order now</a>
-    </div>
-  </section>
+    <aside class="h-footnotes" aria-label="Notes">
+      <ol>
+        <li>Named after <cite>HAKKOTAI</cite> (1998) by Yura Yura Teikoku.</li>
+        <li>Built for a PUC-Rio design course, 2024.2.</li>
+        <li>YURA is a concept brand. The store works end to end, but nothing is ever charged or shipped.</li>
+      </ol>
+    </aside>
+  </main>
 
   <footer class="site-footer">
     <a class="back-to-top" href="#top">
@@ -496,7 +493,7 @@
   </div>
 
   <script src="js/store.js"></script>
-  <script src="js/showcase.js"></script>
+  <script src="js/home.js"></script>
 </body>
 
 </html>

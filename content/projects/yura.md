@@ -52,25 +52,28 @@ media:
   - full | assets/yura/hakkotai-glowing-in-the-dark.webp | The HAKKOTAI in a dark room, only the green vinyl visible and glowing
 :::
 
-::: decision 02-one-toggle-tells-the-story
-title: the product page lets you turn the lights off
+::: decision 02-scroll-turns-the-lights-off
+title: the product page turns the lights off as you scroll
 subtitle: The best feature is the one you cannot see in a normal photo.
 body:
-  A store can say "glows in the dark" in a spec list and nobody will feel it. So the first feature card has a switch. Flip it and the lime panel wipes away, the guitar swaps to its glowing state, the light behind it starts to drift, and the copy changes with it.
+  A store can say "glows in the dark" in a spec list and nobody will feel it. So the page has a scene that does it. The guitar sits on a bright background under "Loud in the light." As you scroll, the room fades to black, the pink drops away and the cream art lights up green under "Luminous in the dark."
 
-  The rest of the features sit in one grid under it: a studio photo of someone playing it, and a spec sheet built to be scanned, with the four numbers a guitarist checks first in large type.
+  It is scrubbed by scroll position, not triggered, so you control the lights with your thumb or your wheel. Photos of the real guitar glowing in a dark room follow it, to show it is not a render.
 media:
-  - compare | assets/yura/yura-glow-toggle-lights-on.webp ; assets/yura/yura-glow-toggle-lights-off.webp | The feature card with the lights on, the guitar on a lime splash ; the same card with the lights off, the guitar glowing on black | lights on ; lights off
-  - full | assets/yura/yura-features-grid.webp | The features section: the glow card on top, a studio photo and a spec sheet below it
+  - compare | assets/yura/yura-glow-scene-lights-on.webp ; assets/yura/yura-glow-scene-lights-off.webp | The glow scene with the lights on, the guitar pink on a white page ; the same scene scrolled to dark, the guitar glowing green | lights on ; lights off
 :::
 
-::: decision 03-tell-them-what-it-means
-title: the store explains the name
-subtitle: A real brand would hide the school project. This one leads with it.
+::: decision 03-quiet-like-a-product-page
+title: the layout steps back so the guitar can be loud
+subtitle: A sticky product bar, big type, one idea per screen.
 body:
-  Most of what makes the HAKKOTAI interesting is invisible on a product page: the song, the kanji, the reason it glows. So the store has a section that reads like the manifesto. The motto in display type, the three kanji broken down one by one, and the three ideas written in the brand's voice, flat and a little deadpan.
+  The old page tried to be as loud as the guitar. The new one does the opposite. A slim glass bar stays pinned and highlights where you are, the headline is set tight and large, and each section makes one point and then gets out of the way. The statement under the hero lights up word by word as you scroll past it.
+
+  The design section is a bento grid: pink-not-red, the neck, the humbuckers, the tuners and a player shot. Below it sit the name, broken into its three kanji, and the build in eight photos.
 media:
-  - full | assets/yura/yura-manifesto-section.webp | The manifesto section: the motto, the three kanji with their meanings, and three principle cards
+  - full | assets/yura/yura-product-page-hero.webp | The product page hero: HAKKOTAI in large type over the guitar
+  - full | assets/yura/yura-the-name-section.webp | The name section: the three kanji with their meanings
+  - full | assets/yura/yura-design-bento.webp | The design section as a bento grid of photo and text tiles
 :::
 
 ::: decision 04-show-the-hands

@@ -67,16 +67,16 @@
       <div class="modal-body">
         <div id="delivery-goal-title" style="font-size:24px;font-weight:700;margin-bottom:14px;color:var(--text)"></div>
         <div id="current-images-section" class="hidden">
-          <div class="form-label" style="margin-bottom:6px">Imagens atuais</div>
+          <div class="form-label" style="margin-bottom:6px">Arquivos atuais</div>
           <div id="current-images-list" style="margin-bottom:12px"></div>
         </div>
         <div class="form-group">
           <label class="form-label">Prova de entrega <span style="color:var(--amber)">*</span></label>
-          <input id="delivery-files" type="file" multiple accept="image/*" required style="display:none" onchange="updateFileList()"/>
+          <input id="delivery-files" type="file" multiple accept="image/*,video/*,audio/*" required style="display:none" onchange="updateFileList()"/>
           <button type="button" class="btn btn-ghost btn-full" onclick="document.getElementById('delivery-files').click()">
-            Selecionar imagens
+            Selecionar imagem, vídeo ou áudio
           </button>
-          <div id="delivery-file-list" style="margin-top:8px;font-size:22px;color:var(--text-muted)">Nenhuma imagem selecionada</div>
+          <div id="delivery-file-list" style="margin-top:8px;font-size:22px;color:var(--text-muted)">Nenhum arquivo selecionado</div>
         </div>
         <div id="delivery-error" class="form-error hidden"></div>
       </div>
@@ -95,11 +95,11 @@
         <div id="bounty-modal-title" style="font-size:24px;font-weight:700;margin-bottom:14px;color:var(--text)"></div>
         <div class="form-group">
           <label class="form-label">Prova de entrega <span style="color:var(--amber)">*</span></label>
-          <input id="bounty-files" type="file" multiple accept="image/*" required style="display:none" onchange="updateBountyFileList()"/>
+          <input id="bounty-files" type="file" multiple accept="image/*,video/*,audio/*" required style="display:none" onchange="updateBountyFileList()"/>
           <button type="button" class="btn btn-ghost btn-full" onclick="document.getElementById('bounty-files').click()">
-            Selecionar imagens
+            Selecionar imagem, vídeo ou áudio
           </button>
-          <div id="bounty-file-list" style="margin-top:8px;font-size:22px;color:var(--text-muted)">Nenhuma imagem selecionada</div>
+          <div id="bounty-file-list" style="margin-top:8px;font-size:22px;color:var(--text-muted)">Nenhum arquivo selecionado</div>
         </div>
         <div id="bounty-error" class="form-error hidden"></div>
       </div>
@@ -122,12 +122,12 @@
           <div id="attempt-char-count" style="font-size:20px;color:var(--text-muted);text-align:right;margin-top:2px">0/500</div>
         </div>
         <div class="form-group">
-          <label class="form-label">Imagem da tentativa <span style="color:var(--amber)">*</span></label>
-          <input id="attempt-files" type="file" multiple accept="image/*" style="display:none" onchange="updateAttemptFileList()"/>
+          <label class="form-label">Prova da tentativa <span style="color:var(--amber)">*</span></label>
+          <input id="attempt-files" type="file" multiple accept="image/*,video/*,audio/*" style="display:none" onchange="updateAttemptFileList()"/>
           <button type="button" class="btn btn-ghost btn-full" onclick="document.getElementById('attempt-files').click()">
-            Selecionar imagens
+            Selecionar imagem, vídeo ou áudio
           </button>
-          <div id="attempt-file-list" style="margin-top:8px;font-size:22px;color:var(--text-muted)">Nenhuma imagem selecionada</div>
+          <div id="attempt-file-list" style="margin-top:8px;font-size:22px;color:var(--text-muted)">Nenhum arquivo selecionado</div>
         </div>
         <div id="attempt-error" class="form-error hidden"></div>
       </div>
@@ -140,6 +140,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="/skrill/js/bounties.js"></script>
+  <script src="/skrill/js/i18n.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
   if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
@@ -218,7 +219,7 @@
     let weekLabel = `Temporada ${week.week_number}`;
     const s = new Date(week.start_date);
     const e = new Date(week.end_date);
-    const weekSub = ` · ${s.toLocaleDateString('pt-BR',{month:'short',day:'numeric'})} – ${e.toLocaleDateString('pt-BR',{month:'short',day:'numeric'})}`;
+    const weekSub = ` · ${s.toLocaleDateString(LOCALE,{month:'short',day:'numeric'})} – ${e.toLocaleDateString(LOCALE,{month:'short',day:'numeric'})}`;
 
     app.innerHTML = `
       <div style="width:100%">
@@ -282,7 +283,7 @@
 
     const imagesHTML = (isDone || isAttempted) && imgs.length
       ? `<div class="delivery-images">
-          ${imgs.map(u => `<img class="delivery-img${(isDone || isAttempted) && !revealed ? ' blurred' : ''}" src="${u}" alt="${isAttempted ? 'tentativa' : 'entrega'}">`).join('')}
+          ${imgs.map(u => mediaHTML(u, { blurred: !revealed, alt: isAttempted ? 'tentativa' : 'entrega' })).join('')}
         </div>`
       : '';
 
@@ -331,16 +332,14 @@
   function updateBountyFileList() {
     const files = document.getElementById('bounty-files').files;
     const list  = document.getElementById('bounty-file-list');
-    if (!files.length) { list.textContent = 'Nenhuma imagem selecionada'; return; }
-    list.innerHTML = Array.from(files).map(f =>
-      `<div style="padding:2px 0;border-bottom:1px solid var(--border)">${f.name} <span style="color:var(--text-light)">(${(f.size/1024).toFixed(0)} KB)</span></div>`
-    ).join('');
+    if (!files.length) { list.textContent = 'Nenhum arquivo selecionado'; return; }
+    list.innerHTML = fileListHTML(files);
   }
 
   function openBountyModal() {
     document.getElementById('bounty-modal-title').textContent = currentWeek?.bounty_title ?? '';
     document.getElementById('bounty-files').value = '';
-    document.getElementById('bounty-file-list').textContent = 'Nenhuma imagem selecionada';
+    document.getElementById('bounty-file-list').textContent = 'Nenhum arquivo selecionado';
     document.getElementById('bounty-error').classList.add('hidden');
     document.getElementById('bounty-modal').classList.remove('hidden');
   }
@@ -356,7 +355,7 @@
     errEl.classList.add('hidden');
 
     if (!filesInput.files.length) {
-      errEl.textContent = 'Selecione pelo menos uma imagem.';
+      errEl.textContent = 'Selecione pelo menos um arquivo.';
       errEl.classList.remove('hidden');
       return;
     }
@@ -365,15 +364,7 @@
     try {
       const urls = [];
       for (const file of filesInput.files) {
-        const isGif = file.type === 'image/gif';
-        const uploadFile = isGif ? file : await convertToWebP(file);
-        const ext  = isGif ? 'gif' : 'webp';
-        const mime = isGif ? 'image/gif' : 'image/webp';
-        const path = `bounty/${currentWeek.id}/${currentProfile.id}/${Date.now()}.${ext}`;
-        const { error: upErr } = await sb.storage.from('deliveries').upload(path, uploadFile, { contentType: mime });
-        if (upErr) throw upErr;
-        const { data: pub } = sb.storage.from('deliveries').getPublicUrl(path);
-        urls.push(pub.publicUrl);
+        urls.push(await uploadMedia(file, `bounty/${currentWeek.id}/${currentProfile.id}`, t => { btn.textContent = t; }));
       }
 
       const { data: row, error: insErr } = await sb.from('bounty_submissions').upsert(
@@ -434,12 +425,10 @@
     const files = document.getElementById('delivery-files').files;
     const list  = document.getElementById('delivery-file-list');
     if (!files.length) {
-      list.textContent = 'Nenhuma imagem selecionada';
+      list.textContent = 'Nenhum arquivo selecionado';
       return;
     }
-    list.innerHTML = Array.from(files).map(f =>
-      `<div style="padding:2px 0;border-bottom:1px solid var(--border)">${f.name} <span style="color:var(--text-light)">(${(f.size/1024).toFixed(0)} KB)</span></div>`
-    ).join('');
+    list.innerHTML = fileListHTML(files);
   }
 
   function openDeliveryModal(goalId) {
@@ -447,7 +436,7 @@
     const goal = allGoals.find(g => g.id === goalId);
     document.getElementById('delivery-goal-title').textContent = goal?.title ?? '';
     document.getElementById('delivery-files').value = '';
-    document.getElementById('delivery-file-list').textContent = 'Nenhuma imagem selecionada';
+    document.getElementById('delivery-file-list').textContent = 'Nenhum arquivo selecionado';
     document.getElementById('delivery-error').classList.add('hidden');
     document.getElementById('delivery-modal').classList.remove('hidden');
   }
@@ -471,7 +460,7 @@
     document.querySelector('#delivery-modal .modal-title').textContent = ' Editar Entrega';
     document.getElementById('delivery-submit').textContent = 'Salvar Alteracoes';
     document.getElementById('delivery-files').value = '';
-    document.getElementById('delivery-file-list').textContent = 'Nenhuma imagem selecionada';
+    document.getElementById('delivery-file-list').textContent = 'Nenhum arquivo selecionado';
     document.getElementById('delivery-error').classList.add('hidden');
     renderKeptImages();
     document.getElementById('current-images-section').classList.remove('hidden');
@@ -481,12 +470,16 @@
   function renderKeptImages() {
     const el = document.getElementById('current-images-list');
     if (!keptUrls.length) {
-      el.innerHTML = '<div style="color:var(--text-muted);font-size:24px;padding:4px 0">Nenhuma imagem mantida</div>';
+      el.innerHTML = '<div style="color:var(--text-muted);font-size:24px;padding:4px 0">Nenhum arquivo mantido</div>';
       return;
     }
     el.innerHTML = keptUrls.map((u, i) => `
       <div class="kept-img-row">
-        <img src="${u}" class="kept-img-thumb" alt="imagem ${i+1}" onclick="openImageLightbox('${u}')">
+        ${mediaKind(u) === 'image'
+          ? `<img src="${u}" class="kept-img-thumb" alt="arquivo ${i+1}" onclick="openImageLightbox('${u}')">`
+          : mediaKind(u) === 'video'
+            ? `<video src="${u}#t=0.1" class="kept-img-thumb" preload="metadata" muted onclick="openImageLightbox('${u}')"></video>`
+            : `<audio src="${u}" controls preload="none" style="height:36px;max-width:220px"></audio>`}
         <button type="button" class="btn btn-ghost btn-sm" onclick="removeKeptImage(${i})">Remover</button>
       </div>`).join('');
   }
@@ -505,7 +498,7 @@
     // ── Edit mode: merge kept URLs + new uploads ──────────────────────────────
     if (isEditMode) {
       if (!keptUrls.length && !filesInput.files.length) {
-        errEl.textContent = 'A entrega precisa ter pelo menos uma imagem.';
+        errEl.textContent = 'A entrega precisa ter pelo menos um arquivo.';
         errEl.classList.remove('hidden');
         return;
       }
@@ -513,15 +506,7 @@
       try {
         const newUrls = [];
         for (const file of filesInput.files) {
-          const isGif = file.type === 'image/gif';
-          const uploadFile = isGif ? file : await convertToWebP(file);
-          const ext  = isGif ? 'gif' : 'webp';
-          const mime = isGif ? 'image/gif' : 'image/webp';
-          const path = `${pendingGoalId}/${Date.now()}.${ext}`;
-          const { error: upErr } = await sb.storage.from('deliveries').upload(path, uploadFile, { contentType: mime });
-          if (upErr) throw upErr;
-          const { data: pub } = sb.storage.from('deliveries').getPublicUrl(path);
-          newUrls.push(pub.publicUrl);
+          newUrls.push(await uploadMedia(file, `${pendingGoalId}`, t => { btn.textContent = t; }));
         }
         const finalUrls = [...keptUrls, ...newUrls];
         const { error: updErr } = await sb.from('goals').update({ image_urls: finalUrls }).eq('id', pendingGoalId);
@@ -540,7 +525,7 @@
     // ── Original delivery flow ─────────────────────────────────────────────────
 
     if (!filesInput.files.length) {
-      errEl.textContent = 'Selecione pelo menos uma imagem.';
+      errEl.textContent = 'Selecione pelo menos um arquivo.';
       errEl.classList.remove('hidden');
       return;
     }
@@ -550,15 +535,7 @@
     try {
       const urls = [];
       for (const file of filesInput.files) {
-        const isGif = file.type === 'image/gif';
-        const uploadFile = isGif ? file : await convertToWebP(file);
-        const ext  = isGif ? 'gif' : 'webp';
-        const mime = isGif ? 'image/gif' : 'image/webp';
-        const path = `${pendingGoalId}/${Date.now()}.${ext}`;
-        const { error: upErr } = await sb.storage.from('deliveries').upload(path, uploadFile, { contentType: mime });
-        if (upErr) throw upErr;
-        const { data: pub } = sb.storage.from('deliveries').getPublicUrl(path);
-        urls.push(pub.publicUrl);
+        urls.push(await uploadMedia(file, `${pendingGoalId}`, t => { btn.textContent = t; }));
       }
 
       const { error: updErr } = await sb.from('goals').update({
@@ -588,10 +565,8 @@
   function updateAttemptFileList() {
     const files = document.getElementById('attempt-files').files;
     const list  = document.getElementById('attempt-file-list');
-    if (!files.length) { list.textContent = 'Nenhuma imagem selecionada'; return; }
-    list.innerHTML = Array.from(files).map(f =>
-      `<div style="padding:2px 0;border-bottom:1px solid var(--border)">${f.name} <span style="color:var(--text-light)">(${(f.size/1024).toFixed(0)} KB)</span></div>`
-    ).join('');
+    if (!files.length) { list.textContent = 'Nenhum arquivo selecionado'; return; }
+    list.innerHTML = fileListHTML(files);
   }
 
   function openAttemptModal(goalId) {
@@ -601,7 +576,7 @@
     document.getElementById('attempt-text').value = '';
     document.getElementById('attempt-char-count').textContent = '0/500';
     document.getElementById('attempt-files').value = '';
-    document.getElementById('attempt-file-list').textContent = 'Nenhuma imagem selecionada';
+    document.getElementById('attempt-file-list').textContent = 'Nenhum arquivo selecionado';
     document.getElementById('attempt-error').classList.add('hidden');
     document.getElementById('attempt-modal').classList.remove('hidden');
   }
@@ -625,7 +600,7 @@
       return;
     }
     if (!filesInput.files.length) {
-      errEl.textContent = 'Selecione pelo menos uma imagem da tentativa.';
+      errEl.textContent = 'Selecione pelo menos um arquivo da tentativa.';
       errEl.classList.remove('hidden');
       return;
     }
@@ -634,15 +609,7 @@
     try {
       const urls = [];
       for (const file of filesInput.files) {
-        const isGif = file.type === 'image/gif';
-        const uploadFile = isGif ? file : await convertToWebP(file);
-        const ext  = isGif ? 'gif' : 'webp';
-        const mime = isGif ? 'image/gif' : 'image/webp';
-        const path = `${pendingAttemptId}/attempt/${Date.now()}.${ext}`;
-        const { error: upErr } = await sb.storage.from('deliveries').upload(path, uploadFile, { contentType: mime });
-        if (upErr) throw upErr;
-        const { data: pub } = sb.storage.from('deliveries').getPublicUrl(path);
-        urls.push(pub.publicUrl);
+        urls.push(await uploadMedia(file, `${pendingAttemptId}/attempt`, t => { btn.textContent = t; }));
       }
 
       const { error: updErr } = await sb.from('goals').update({

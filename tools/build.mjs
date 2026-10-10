@@ -191,14 +191,71 @@ function webpSize(file) {
   return null;
 }
 
-// a video cover, a missing file or one this cannot parse all fall back to
+// webm keeps the pixel size inside Segment > Tracks > TrackEntry > Video, as
+// two plain elements (0xB0 width, 0xBA height). a tiny EBML walk is enough to
+// find them, so a video cover also keeps the shape of its own frames.
+function webmSize(file) {
+  let buf;
+  try {
+    buf = readFileSync(file);
+  } catch {
+    return null;
+  }
+  const readId = (pos) => {
+    const first = buf[pos];
+    if (first === undefined) return null;
+    let len = 1;
+    while (len <= 4 && !(first & (0x80 >> (len - 1)))) len++;
+    if (len > 4) return null;
+    let id = 0;
+    for (let i = 0; i < len; i++) id = id * 256 + buf[pos + i];
+    return { id, len };
+  };
+  const readSize = (pos) => {
+    const first = buf[pos];
+    if (first === undefined) return null;
+    let len = 1;
+    while (len <= 8 && !(first & (0x80 >> (len - 1)))) len++;
+    if (len > 8) return null;
+    let val = first & (0xff >> len);
+    for (let i = 1; i < len; i++) val = val * 256 + buf[pos + i];
+    const unknown = val === Math.pow(2, 7 * len) - 1;
+    return { size: unknown ? Infinity : val, len };
+  };
+  const PARENTS = new Set([0x18538067, 0x1654ae6b, 0xae, 0xe0]);
+  let w = null;
+  let h = null;
+  const walk = (start, end) => {
+    let pos = start;
+    while (pos < end && w === null || pos < end && h === null) {
+      const id = readId(pos);
+      if (!id) return;
+      const sz = readSize(pos + id.len);
+      if (!sz) return;
+      const body = pos + id.len + sz.len;
+      const stop = Math.min(end, body + sz.size);
+      if (PARENTS.has(id.id)) walk(body, stop);
+      else if (id.id === 0xb0) w = buf.readUIntBE(body, sz.size);
+      else if (id.id === 0xba) h = buf.readUIntBE(body, sz.size);
+      if (w !== null && h !== null) return;
+      pos = stop;
+    }
+  };
+  const head = readId(0);
+  const headSize = head && readSize(head.len);
+  if (!head || !headSize || head.id !== 0x1a45dfa3) return null;
+  walk(head.len + headSize.len + headSize.size, buf.length);
+  return w && h ? { w, h } : null;
+}
+
+// a missing file or one this cannot parse (an mp4, say) falls back to
 // the ratio the case study hero uses, so a frame is never zero height.
 function coverRatio(data) {
   if (data.cover_ratio) return data.cover_ratio;
-  if (!data.cover || !assetExists(data.cover) || !/\.webp$/i.test(data.cover)) return '16 / 9';
+  if (!data.cover || !assetExists(data.cover) || !/\.(webp|webm)$/i.test(data.cover)) return '16 / 9';
 
   const file = join(root, data.cover.replace(/^\//, ''));
-  if (!sizeCache.has(file)) sizeCache.set(file, webpSize(file));
+  if (!sizeCache.has(file)) sizeCache.set(file, /\.webm$/i.test(file) ? webmSize(file) : webpSize(file));
   const size = sizeCache.get(file);
   return size ? `${size.w} / ${size.h}` : '16 / 9';
 }
@@ -616,6 +673,14 @@ function shell({ title, description, route, body, cls = '' }) {
 </head>
 
 <body${cls ? ` class="${cls}"` : ''}>
+
+  <div class="page-transition${route === 'home' ? ' is--cover' : ''}" aria-hidden="true">
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+  </div>
+  <noscript><style>.page-transition { display: none; }</style></noscript>
 
   <canvas class="ascii-background" aria-hidden="true"></canvas>
 

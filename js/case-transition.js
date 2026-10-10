@@ -6,7 +6,7 @@
 // swapped out from under it.
 //
 //   open:  fade out, hold, swap, move, hold, header in, expand, content in
-//   close: the same beats backwards, at REVERSE_SCALE of the timings
+//   close: the curtain, the same one the homepage opens with
 //
 // this file knows nothing about routing. the router hands it a clone, a
 // promise for the next page, and a `swap` that does the dom work.
@@ -24,21 +24,10 @@ export const CASE_TRANSITION = {
   easeInOut: 'cubic-bezier(0.65, 0, 0.35, 1)',
 };
 
-// going back plays the same beats at this fraction of the time
-export const REVERSE_SCALE = 0.6;
-
 // pages that have no cover to carry just crossfade
 export const FALLBACK_FADE = 150;
 
 const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const scaled = (cfg, k) =>
-  Object.fromEntries(
-    Object.entries(cfg).map(([key, value]) => [
-      key,
-      typeof value === 'number' && key !== 'headerOffset' ? Math.round(value * k) : value,
-    ])
-  );
 
 // a hidden tab stops advancing animations, so `finished` would never resolve
 // and the router would stay locked. the timer is the backstop.
@@ -137,55 +126,52 @@ export async function playForward({ app, clone, load, swap, onMove, cfg = CASE_T
 
 /* ── close ────────────────────────────────────────────────────────────── */
 
-// measure(page) returns the size of the card the cover will shrink to.
-// swap(page) renders the list hidden, restores the scroll, and returns
-// { rect, finish } where rect is the card's viewport box or null.
-export async function playReverse({ app, clone, head, rest, load, measure, swap, onMove, cfg = CASE_TRANSITION }) {
-  const c = scaled(cfg, REVERSE_SCALE);
-  const held = [];
-  let landing = null;
+// going home from a case study is the curtain the homepage opens with: four
+// black columns rise over the page, the page is swapped behind them, and
+// they lift off to reveal it. the columns are staggered right to left.
+export const CURTAIN = { ms: 700, stagger: 80, ease: 'cubic-bezier(0.76, 0, 0.24, 1)' };
 
+// leaving a case study is a quick cut rather than the full opening sweep
+export const CURTAIN_FAST = { ...CURTAIN, ms: 350, stagger: 40 };
+
+const columns = (curtain) => [...curtain.querySelectorAll('.transition_column-background')];
+
+function sweep(curtain, from, to, cfg = CURTAIN) {
+  const all = columns(curtain);
+  return all.map((bar, i) =>
+    bar.animate([{ transform: from }, { transform: to }], {
+      duration: cfg.ms,
+      delay: (all.length - 1 - i) * cfg.stagger,
+      easing: cfg.ease,
+      fill: 'forwards',
+    })
+  );
+}
+
+const curtainTime = (cfg = CURTAIN) => cfg.ms + 3 * cfg.stagger;
+
+// lifts a covered curtain away, used on first load of the homepage
+export async function openCurtain(curtain) {
+  const lift = sweep(curtain, 'translateY(0)', 'translateY(-100%)');
+  await Promise.all(lift.map((a) => settle(a, curtainTime())));
+  curtain.classList.remove('is--cover');
+  lift.forEach((a) => a.cancel());
+}
+
+export async function playCurtain({ curtain, load, swap }) {
+  curtain.classList.remove('is--cover');
+  const rise = sweep(curtain, 'translateY(101%)', 'translateY(0)', CURTAIN_FAST);
+  let lift = [];
   try {
-    // content out, while the list is fetched
-    const out = rest.map((el) => fade(el, 1, 0, c.content));
-    held.push(...out);
-    await Promise.all(out.map((a) => settle(a, c.content)));
-    const page = await load;
-
-    // the hero shrinks to card width
-    const card = measure(page);
-    if (card) await tween(clone, { width: card.width, height: card.height }, c.expand, c.easeInOut);
-
-    // header out, and the clone rises to where the header was
-    const headTop = Math.max(head.getBoundingClientRect().top, 0);
-    const headAnim = fade(head, 1, 0, c.header, c.easeOut, ['translateY(0)', `translateY(${c.headerOffset}px)`]);
-    held.push(headAnim);
-    await Promise.all([settle(headAnim, c.header), tween(clone, { top: headTop }, c.header, c.easeOut)]);
-
-    await wait(c.hold2);
-
-    // hidden swap, scroll restored, card measured in its real position
-    landing = swap(page);
-    if (landing.rect) {
-      onMove && onMove();
-      const to = landing.rect;
-      await tween(
-        clone,
-        { left: to.left, top: to.top, width: to.width, height: to.height },
-        c.move,
-        c.easeOut
-      );
-      await wait(c.hold1);
-    }
-
-    // the list fades in around the cover
-    const inAnim = fade(app, 0, 1, c.fadeOut);
-    held.push(inAnim);
-    await settle(inAnim, c.fadeOut);
+    const [page] = await Promise.all([load, ...rise.map((a) => settle(a, curtainTime(CURTAIN_FAST)))]);
+    swap(page);
+    // hold the swapped page behind the bars for a beat so it can paint
+    await wait(60);
+    lift = sweep(curtain, 'translateY(0)', 'translateY(-100%)', CURTAIN_FAST);
+    await Promise.all(lift.map((a) => settle(a, curtainTime(CURTAIN_FAST))));
   } finally {
-    if (landing) landing.finish();
-    clone.remove();
-    held.forEach((a) => a.cancel());
+    rise.forEach((a) => a.cancel());
+    lift.forEach((a) => a.cancel());
   }
 }
 

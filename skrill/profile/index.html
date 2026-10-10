@@ -44,12 +44,17 @@
                 style="margin-left:auto;padding:6px 12px;border:2px solid var(--border-dark);cursor:pointer;font-family:'Micro 5',monospace;font-size:24px;background:var(--surface);color:var(--text);box-shadow:2px 2px 0 var(--border-dark);text-transform:uppercase;">
                 Limpar
               </button>
+              <button type="button" id="edit-history-btn" onclick="toggleAvatarHistory()"
+                style="padding:6px 12px;border:2px solid var(--border-dark);cursor:pointer;font-family:'Micro 5',monospace;font-size:24px;background:var(--surface);color:var(--text);box-shadow:2px 2px 0 var(--border-dark);text-transform:uppercase;">
+                Histórico
+              </button>
             </div>
             <div style="display:flex;align-items:flex-start;gap:10px;width:100%;max-width:min(500px,calc(100vw - 64px))">
-              <div class="pixel-canvas-wrap" style="flex:1;min-width:0">
+              <div id="edit-history-panel" class="avatar-history-panel hidden"></div>
+              <div class="pixel-canvas-wrap" id="edit-canvas-wrap" style="flex:1;min-width:0">
                 <canvas id="edit-pixel-canvas" style="display:block;width:100%;image-rendering:pixelated;user-select:none;"></canvas>
               </div>
-              <div style="display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:2px">
+              <div id="edit-slider-col" style="display:flex;flex-direction:column;align-items:center;gap:4px;padding-top:2px">
                 <span style="font-family:'Micro 5',monospace;font-size:24px;color:var(--text-muted)">15</span>
                 <input type="range" id="edit-brush-slider" min="2" max="15" value="2" step="1"
                   style="writing-mode:vertical-lr;direction:rtl;width:24px;height:140px;cursor:pointer;accent-color:#000;">
@@ -70,8 +75,10 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="/skrill/js/bounties.js"></script>
+  <script src="/skrill/js/i18n.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
+  const SVG_TRASH = `<svg viewBox="0 0 16 16" width="20" height="20" fill="currentColor" shape-rendering="crispEdges"><path d="M5 1h6v2h4v2H1V3h4V1zm1 2h4V2H6v1zM2 6h12l-1 9H3L2 6zm3 2v5h2V8H5zm4 0v5h2V8H9z"/></svg>`;
   if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
   else if (!getStoredProfile()) { window.location.href = '/skrill/select-profile/'; }
 
@@ -242,7 +249,7 @@
     const imgs = g.image_urls ?? [];
     const imagesHTML = imgs.length
       ? `<div class="delivery-images">
-          ${imgs.map(u => `<img class="delivery-img${revealed ? '' : ' blurred'}" src="${u}" alt="entrega">`).join('')}
+          ${imgs.map(u => mediaHTML(u, { blurred: !revealed })).join('')}
         </div>`
       : '';
     return `
@@ -352,7 +359,7 @@
     }
     if (!items.length) return `<div class="empty-state"><div class="empty-icon"><img src="/skrill/img/image.svg" alt="galeria" style="width:48px;height:48px"></div><h3>Nenhuma imagem ainda</h3></div>`;
     return `<div class="profile-gallery">${items.map(it =>
-      `<img class="delivery-img${it.revealed ? '' : ' blurred'}" src="${it.url}" alt="entrega">`
+      mediaHTML(it.url, { blurred: !it.revealed })
     ).join('')}</div>`;
   }
 
@@ -631,7 +638,62 @@
     document.getElementById('edit-brush-label').textContent = '2px';
     editSelectColor(true);
     loadAvatarToCanvas(viewedProfile.avatar_data);
+    setHistoryMode(false);
     setTimeout(() => document.getElementById('edit-name').focus(), 50);
+  }
+
+  // ── Histórico de fotos (tabela avatar_history; só aparece neste modal, do dono) ──
+  let avatarHistory = [];
+  let historyOpen = false;
+
+  function setHistoryMode(open) {
+    historyOpen = open;
+    document.getElementById('edit-history-panel').classList.toggle('hidden', !open);
+    document.getElementById('edit-canvas-wrap').classList.toggle('hidden', open);
+    document.getElementById('edit-slider-col').style.visibility = open ? 'hidden' : '';
+    document.getElementById('edit-history-btn').textContent = open ? 'Desenhar' : 'Histórico';
+  }
+
+  async function toggleAvatarHistory() {
+    if (historyOpen) { setHistoryMode(false); return; }
+    setHistoryMode(true);
+    const panel = document.getElementById('edit-history-panel');
+    panel.innerHTML = '<div class="avatar-history-empty">...</div>';
+    const { data, error } = await sb.from('avatar_history')
+      .select('id, avatar_data, created_at')
+      .eq('profile_id', viewedProfile.id)
+      .order('created_at', { ascending: false });
+    avatarHistory = error ? [] : (data ?? []);
+    renderAvatarHistory(error ? 'Histórico indisponível.' : null);
+  }
+
+  function renderAvatarHistory(msg) {
+    const panel = document.getElementById('edit-history-panel');
+    if (!avatarHistory.length) {
+      panel.innerHTML = `<div class="avatar-history-empty">${msg ?? 'Nenhuma foto salva ainda.'}</div>`;
+      return;
+    }
+    panel.innerHTML = avatarHistory.map(r => `
+      <div class="avatar-history-item" onclick="loadFromHistory('${r.id}')" title="${new Date(r.created_at).toLocaleDateString(LOCALE)}">
+        <img src="${r.avatar_data}" alt="foto anterior">
+        <button type="button" class="avatar-history-del" onclick="event.stopPropagation();deleteFromHistory('${r.id}')" aria-label="Excluir">${SVG_TRASH}</button>
+      </div>`).join('');
+  }
+
+  function loadFromHistory(id) {
+    const r = avatarHistory.find(x => x.id === id);
+    if (!r) return;
+    if (!confirm('Carregar esta foto? Ela vai substituir o desenho atual no editor.')) return;
+    loadAvatarToCanvas(r.avatar_data);
+    setHistoryMode(false);
+  }
+
+  async function deleteFromHistory(id) {
+    if (!confirm('Excluir esta foto do histórico? Não dá para desfazer.')) return;
+    const { error } = await sb.from('avatar_history').delete().eq('id', id);
+    if (error) { toast(error.message, '#ef4444'); return; }
+    avatarHistory = avatarHistory.filter(x => x.id !== id);
+    renderAvatarHistory();
   }
 
   function closeEditModal() {
@@ -651,6 +713,17 @@
     btn.disabled = true;
     btn.textContent = '...';
     const avatar = editGetAvatarDataURL();
+    // guarda no historico a foto que esta sendo salva (e a anterior, se ainda nao estiver la)
+    if (avatar !== viewedProfile.avatar_data) {
+      const old = viewedProfile.avatar_data;
+      const rows = [];
+      if (old) {
+        const { data: hist } = await sb.from('avatar_history').select('avatar_data').eq('profile_id', viewedProfile.id);
+        if (!(hist ?? []).some(h => h.avatar_data === old)) rows.push({ profile_id: viewedProfile.id, avatar_data: old });
+      }
+      rows.push({ profile_id: viewedProfile.id, avatar_data: avatar });
+      for (const r of rows) await sb.from('avatar_history').insert(r);
+    }
     const { data, error } = await sb
       .from('profiles')
       .update({ name, avatar_data: avatar })

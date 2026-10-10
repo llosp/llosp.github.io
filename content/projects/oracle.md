@@ -35,7 +35,9 @@ items:
 
 ## research.md
 
-We went where RPG happens: a game store (Falha Crítica), Niterói Expo Geek 2025 and CINE RPG, a school for game masters. We interviewed players and professionals aged 18 to 26 and 30 to 45, and compared it with the Censo RPG Brasil 2023.
+We started with one question: why does an in-person table feel less immersive than it could, and what could fix that without breaking what makes it social?
+
+To find out we went where RPG happens: a game store (Falha Crítica), Niterói Expo Geek 2025 and CINE RPG, a school for game masters. We interviewed players and professionals aged 18 to 26 and 30 to 45, and checked what we heard against the Censo RPG Brasil 2023.
 
 ::: outcomes
 items:
@@ -43,33 +45,34 @@ items:
   - 12M | Brazilian homes with smart devices, per the IBGE
 :::
 
+**What we found.** Three things came out of the interviews.
+
 ::: media
 items:
   - full | assets/oracle/c1-interviews.webm | Animated chart: in person and online, one pair per age group, both preferring in person
 :::
 
-Both age groups prefer in person and treat online as a fallback. They disagree on what makes a table feel alive.
-
-- Younger players want light, sound and visuals.
-- Older players are happy with narration and imagination.
+**01. Everyone wants the in-person table.** Both age groups prefer it and treat online as a fallback. What they disagree on is atmosphere: younger players want light, sound and visuals, while older players are happy with narration and imagination. Any tool had to be optional, never the center of the table.
 
 ::: media
 items:
   - full | assets/oracle/c2-gap.webm | Animated map of immersive tools against physical presence, with Oracle landing in the empty corner
 :::
 
-Online adds sound and image but invites distraction. In person is social and focused, but immersion rests on the GM's voice alone. Nothing affordable does both.
+**02. The atmosphere exists, but not in the room.** Online adds sound and image but invites distraction. In person is social and focused, but immersion rests on the GM's voice alone. Tools like Foundry and Roll20 put a screen in the middle of the table, and the hardware that avoids that is expensive. Players also called tabletop products good but too pricey, since most are imported. Nothing affordable does both.
 
 ::: media
 items:
   - full | assets/oracle/c3-journey.webm | Animated user journey of a new player, from discovery to the frustration where Oracle steps in
 :::
 
-The frustration comes late. A new player arrives expecting the intensity they saw online, and the table they get depends on one voice. That gap is where Oracle sits.
+**03. The disappointment comes late.** A new player arrives expecting the intensity they saw online, and the table they get depends on one voice. Long, flat sessions wear on their motivation to keep playing. That gap is where Oracle sits.
+
+So the brief became: add atmosphere to the in-person table, cheaply, without a screen in the middle. Four decisions followed.
 
 ## takeaways/
 
-What the research taught us, and what we built because of it.
+Each decision answers one of those findings.
 
 ::: decision 01-use-what-is-already-in-the-room
 title: the room is already a stage

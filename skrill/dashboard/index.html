@@ -21,6 +21,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="/skrill/js/bounties.js"></script>
+  <script src="/skrill/js/i18n.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
   if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
@@ -247,7 +248,7 @@
             </div>
           </div>
           ${imgs.length ? `<div class="delivery-images">
-            ${imgs.map(u => `<img class="delivery-img${revealed ? '' : ' blurred'}" src="${u}" alt="entrega">`).join('')}
+            ${imgs.map(u => mediaHTML(u, { blurred: !revealed })).join('')}
           </div>` : ''}
         </div>`;
     }).join('');
@@ -301,8 +302,8 @@
     return `
       <div class="meeting-card">
         <div class="meeting-lbl">Próxima Reunião</div>
-        <div class="meeting-date">${d.toLocaleDateString('pt-BR', { weekday: 'short', month: 'short', day: 'numeric' })}</div>
-        <div class="meeting-time">${d.toLocaleTimeString('pt-BR', { hour: 'numeric', minute: '2-digit' })}</div>
+        <div class="meeting-date">${d.toLocaleDateString(LOCALE, { weekday: 'short', month: 'short', day: 'numeric' })}</div>
+        <div class="meeting-time">${d.toLocaleTimeString(LOCALE, { hour: 'numeric', minute: '2-digit' })}</div>
         ${meeting.discord_link ? `<a href="${meeting.discord_link}" target="_blank" class="btn btn-sm btn-purple-soft" style="margin-top:10px">Entrar Discord →</a>` : ''}
         <a href="/skrill/skrill-time/" class="btn btn-primary btn-full" style="margin-top:8px">Ir para Skrill Time →</a>
       </div>`;

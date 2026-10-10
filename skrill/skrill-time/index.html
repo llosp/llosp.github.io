@@ -21,6 +21,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="/skrill/js/bounties.js"></script>
+  <script src="/skrill/js/i18n.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
   if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
@@ -418,7 +419,7 @@
             ${showPoints ? `<span class="xp-earned">+${bpts}pts</span>` : ''}
           </div>
           ${imgs.length ? `<div class="delivery-images">
-            ${imgs.map(u => `<div class="bounty-img-wrap"><img class="reveal-img" src="${u}" alt="bounty">${profile ? avatarHTML(profile, 'avatar-corner') : ''}</div>`).join('')}
+            ${imgs.map(u => `<div class="bounty-img-wrap">${mediaHTML(u, { cls: 'reveal-img', alt: 'bounty' })}${profile ? avatarHTML(profile, 'avatar-corner') : ''}</div>`).join('')}
           </div>` : ''}
         </div>`;
     }).join('');
@@ -488,7 +489,7 @@
             </div>
           </div>
           ${imgs.length ? `<div class="delivery-images">
-            ${imgs.map(u => `<img class="reveal-img" src="${u}" alt="entrega">`).join('')}
+            ${imgs.map(u => mediaHTML(u, { cls: 'reveal-img' })).join('')}
           </div>` : ''}
         </div>`;
     }).join('');
@@ -572,7 +573,7 @@
               </span>
             </div>
             ${imgs.length ? `<div class="delivery-images">
-              ${imgs.map(u => `<img class="reveal-img" src="${u}" alt="entrega">`).join('')}
+              ${imgs.map(u => mediaHTML(u, { cls: 'reveal-img' })).join('')}
             </div>` : ''}
           </div>`;
       }).join('');
@@ -666,7 +667,7 @@
             ${difficultyChip(g.difficulty)}
           </div>
           ${g.attempt_text ? `<div class="attempt-reflection">"${g.attempt_text}"</div>` : ''}
-          ${imgs.length ? `<div class="delivery-images" style="margin-top:8px">${imgs.map(u => `<img class="reveal-img" src="${u}" alt="tentativa">`).join('')}</div>` : ''}
+          ${imgs.length ? `<div class="delivery-images" style="margin-top:8px">${imgs.map(u => mediaHTML(u, { cls: 'reveal-img', alt: 'tentativa' })).join('')}</div>` : ''}
           ${resultRow}
         </div>`;
 
@@ -739,7 +740,7 @@
             ${difficultyChip(g.difficulty)}
           </div>
           ${g.attempt_text ? `<div class="attempt-reflection">"${g.attempt_text}"</div>` : ''}
-          ${imgs.length ? `<div class="delivery-images" style="margin-top:8px">${imgs.map(u => `<img class="reveal-img" src="${u}" alt="tentativa">`).join('')}</div>` : ''}
+          ${imgs.length ? `<div class="delivery-images" style="margin-top:8px">${imgs.map(u => mediaHTML(u, { cls: 'reveal-img', alt: 'tentativa' })).join('')}</div>` : ''}
           ${voteRow}
         </div>`;
     }).join('');

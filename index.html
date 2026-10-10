@@ -14,6 +14,14 @@
 
 <body>
 
+  <div class="page-transition is--cover" aria-hidden="true">
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+  </div>
+  <noscript><style>.page-transition { display: none; }</style></noscript>
+
   <canvas class="ascii-background" aria-hidden="true"></canvas>
 
   <div class="background-gridlines" aria-hidden="true">
@@ -86,15 +94,17 @@
           <div class="covers_outcome"><!-- TODO(pedro): one line, nda-safe --><mark class="todo">[todo: one line, nda-safe]</mark></div>
         </a>
         <a class="layout-grid_item covers_item" href="/work/skrill/" data-slug="skrill" data-index="2">
-          <div class="covers_frame" style="aspect-ratio: 1389 / 878">
-            <img class="covers_media" data-slug="skrill" src="/assets/skrill/cover.webp" alt=""
-              style="object-fit: cover" loading="lazy" decoding="async">
+          <div class="covers_frame" style="aspect-ratio: 1454 / 1116">
+            <video class="covers_media" data-slug="skrill" style="object-fit: cover"
+              muted loop playsinline preload="metadata">
+              <source src="/assets/skrill/skrill-cover.webm" type="video/webm">
+            </video>
           </div>
           <div class="covers_label">
             <span class="covers_name">skrill</span>
             <span class="covers_meta">web app, full stack · ongoing</span>
           </div>
-          <div class="covers_outcome"><!-- TODO(pedro): one line. how many seasons have run, or how many people use it --><mark class="todo">[todo: one line. how many seasons have run, or how many people use it]</mark></div>
+          <div class="covers_outcome">13 seasons in four months, with the group it was built for.</div>
         </a>
         <a class="layout-grid_item covers_item" href="/work/yura/" data-slug="yura" data-index="3">
           <div class="covers_frame" style="aspect-ratio: 1389 / 1016">

@@ -56,6 +56,7 @@ Produtividade social em grupo. Reunião semanal ("Skrill Time") é o evento cent
 | `peer_rating_submissions` | `week_id, rater_id` UNIQUE — marca quem finalizou a avaliação |
 | `attempt_votes` | `week_id, goal_id, voter_id, vote('up'/'down')` UNIQUE(goal_id, voter_id) — voto de consolação (toggle/desmarcável até confirmar) |
 | `attempt_vote_submissions` | `week_id, voter_id` UNIQUE — marca quem confirmou os votos de tentativa |
+| `avatar_history` | `profile_id, avatar_data, created_at` — fotos anteriores do perfil (SQL em `avatar_history.sql`); só aparece no modal Editar Perfil (botão Histórico) |
 | `delivery_reports` | `week_id, goal_id, reporter_id` UNIQUE(goal_id, reporter_id) — denúncias de entrega |
 
 RLS desativado em todas as tabelas.
@@ -84,6 +85,10 @@ Storage bucket `deliveries` (público) — path: `{goal_id}/{timestamp}-{filenam
 - `switchTab(tabId)` — troca tab ativa (`.tab-btn` + `.tab-panel`)
 - `openImageLightbox(url)` / `closeImageLightbox()` — lightbox estilo Windows 95 (ícone `image.svg`)
 - Constantes: `SVG_CHECK`, `SVG_EMPTY`, `SVG_S` — SVGs inline para checkboxes e ícone de Skrill Time
+
+## Mídia de entrega e idioma
+- `uploadMedia(file, prefix, onStatus)` — imagem→WebP (GIF intacto), vídeo→WebM (máx 1600x900, MediaRecorder em tempo real; fallback: original), áudio intacto. `mediaHTML(url, {cls, blurred, alt})` renderiza img/video/audio por extensão (`mediaKind`). Nunca usar `<img>` direto para entregas.
+- `js/i18n.js` (carregar antes de `client.js`): idioma PT (padrão) ou EN, escolhido na engrenagem (`localStorage['skrill_lang']`, recarrega ao trocar). O código segue em PT; em EN um MutationObserver traduz texto exato (`EN`) e regras com número (`EN_RULES`). Texto novo na UI = adicionar entrada em `EN`. Datas usam `LOCALE`. Conteúdo de usuário fica fora (`SKIP_SEL`, `data-i18n-skip`). Admin/demo não são traduzidos.
 
 ## Ícones (SVG em /skrill/img/)
 | Arquivo | Uso |

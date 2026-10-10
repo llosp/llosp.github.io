@@ -33,6 +33,7 @@
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
   <script src="/skrill/js/bounties.js"></script>
+  <script src="/skrill/js/i18n.js"></script>
   <script src="/skrill/js/client.js"></script>
   <script>
   if (!isAppUnlocked()) { window.location.href = '/skrill/login/'; }
@@ -192,7 +193,7 @@
               ${statusBadge(x.status, x.points_earned ?? 0)}
             </div>
             <div class="delivery-images">
-              ${x.image_urls.map(u => `<img class="delivery-img${revealed ? '' : ' blurred'}" src="${u}" alt="entrega">`).join('')}
+              ${x.image_urls.map(u => mediaHTML(u, { blurred: !revealed })).join('')}
             </div>
           </div>`).join('');
 
@@ -207,7 +208,7 @@
               <span class="bounty-chip"><img src="/skrill/img/bounty.svg" alt="bounty" style="width:18px;height:18px;vertical-align:middle;margin-right:4px">Bounty</span>
             </div>
             <div class="delivery-images">
-              ${b.image_urls.map(u => `<img class="delivery-img${revealed ? '' : ' blurred'}" src="${u}" alt="bounty">`).join('')}
+              ${b.image_urls.map(u => mediaHTML(u, { blurred: !revealed, alt: 'bounty' })).join('')}
             </div>
           </div>`).join('');
 
@@ -222,7 +223,7 @@
               ${statusBadge('attempted', 1)}
             </div>
             <div class="delivery-images">
-              ${x.attempt_images.map(u => `<img class="delivery-img${revealed ? '' : ' blurred'}" src="${u}" alt="tentativa">`).join('')}
+              ${x.attempt_images.map(u => mediaHTML(u, { blurred: !revealed, alt: 'tentativa' })).join('')}
             </div>
           </div>`).join('');
 

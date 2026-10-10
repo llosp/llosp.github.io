@@ -60,10 +60,10 @@ The index is four columns of covers, and each cover keeps the shape of its own
 image. That is what staggers the columns, so a set of covers that are all the
 same shape will produce four flat columns with no rhythm. Vary them.
 
-The build reads the width and height out of the `.webp` itself, so there is
+The build reads the width and height out of the `.webp` (or `.webm`) itself, so there is
 nothing to declare and nothing to keep in sync when you replace a file. If
-you need to override it, `cover_ratio: 4 / 3` wins. A missing cover or a
-video one falls back to 16:9.
+you need to override it, `cover_ratio: 4 / 3` wins. A missing cover or an
+mp4 one falls back to 16:9. A `.webm` is read for its own size too.
 
 The case study hero is always 16:9 regardless. The cover morphs from its own
 shape into that frame, filling the frame's width at its original proportion and

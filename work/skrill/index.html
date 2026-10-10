@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>skrill / lope.design</title>
-  <meta name="description" content="A social productivity system for a small friend group, part habit tracker and part guild dashboard.">
+  <meta name="description" content="A weekly game that gets a small group of creative friends to make things nobody is making them make.">
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
   <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -13,6 +13,14 @@
 </head>
 
 <body class="is--case-study">
+
+  <div class="page-transition" aria-hidden="true">
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+  </div>
+  <noscript><style>.page-transition { display: none; }</style></noscript>
 
   <canvas class="ascii-background" aria-hidden="true"></canvas>
 
@@ -53,12 +61,10 @@
     <article class="case-study" data-slug="skrill">
       <nav class="cs-rail" aria-label="case study sections">
         <a class="cs-rail_back" href="/#work">← back</a>
-        <a href="#readme-md">README</a>
-        <a href="#gallery">gallery</a>
-        <a href="#problem-md">problem</a>
-        <a href="#decisions">decisions</a>
+        <a href="#overview-md">overview</a>
+        <a href="#why-md">why</a>
+        <a href="#how-it-works">how-it-works</a>
         <a href="#outcome-md">outcome</a>
-        <a href="#learnings-md">learnings</a>
         <a href="#project-info-md">project-info</a>
       </nav>
       <div class="cs-main">
@@ -66,31 +72,28 @@
           <nav class="cs-breadcrumb" aria-label="breadcrumb">
             <a href="/#work">~/work</a>/<span>skrill</span>
           </nav>
-          <p class="cs-eyebrow">web app, full stack · <!-- TODO(pedro): when you started and whether it is still running --><mark class="todo">[todo: when you started and whether it is still running]</mark></p>
+          <p class="cs-eyebrow">personal project · product design and development</p>
           <h1 class="cs-title">skrill</h1>
-          
+          <p class="cs-headline">A weekly game that gets a group of friends to actually do the creative work nobody is asking them for.</p>
         </header>
 
         <figure class="cs-cover">
           <div class="cs-cover_frame" data-cover-slot="skrill">
-          <img class="cs-cover_img" src="/assets/skrill/cover.webp" alt="The Skrill title screen, with the mascot above the words improve your skrills"
-            style="object-fit: cover" fetchpriority="high" decoding="async">
+          <video class="cs-cover_img" style="object-fit: cover"
+            muted loop playsinline preload="auto" aria-label="Looping motion piece: the Skrill title screen window closes, then the app plays a declared goal and a Skrill Time reveal, before dissolving back to the start">
+            <source src="/assets/skrill/skrill-cover.webm" type="video/webm">
+          </video>
         </div>
-          <figcaption class="caption-code">cover.webp</figcaption>
+          <figcaption class="caption-code">skrill-cover.webm</figcaption>
         </figure>
 
         <div class="cs-rest">
-      <section class="cs-section" id="readme-md">
-        <div class="cs-section_file">README.md</div>
+      <section class="cs-section" id="overview-md">
+        <div class="cs-section_file">overview.md</div>
         <div class="cs-section_body">
-<div class="prose"><p>Skrill is a social productivity system for a small friend group, part habit tracker and part guild dashboard. Every season each person declares goals at a difficulty that sets the base points, and progress stays hidden until the weekly meeting, where deliveries get revealed and the group splits a shared bonus pool between each other's work.</p>
-<p>I designed the points economy, built the whole stack solo and made a silly mascot.</p>
-<p><!-- TODO(pedro): what came out of it. how many seasons it has run, whether people still use it, what it changed about how the group works. --><mark class="todo">[todo: what came out of it. how many seasons it has run, whether people still use it, what it changed about how the group works.]</mark></p></div>
-        </div>
-      </section>
-      <section class="cs-section" id="gallery">
-        <div class="cs-section_file">gallery/</div>
-        <div class="cs-section_body">
+<p class="statement">Nobody asks you to practice, so you don't.</p>
+<div class="prose"><p>Skrill is a weekly game for people who want to make things they are not paid to make. Each season you declare what you will do and how hard it is. You deliver proof. Everything stays blurred until a short call where the group reveals it together and hands each other points.</p>
+<p>I designed the rules, the points economy, the interface and the mascot, and built the whole stack myself. It has run since June 2026 with the five of us it was built for.</p></div>
 <div class="gallery">
   <div class="layout-grid_list">
 <div class="layout-grid_item">
@@ -129,30 +132,115 @@
 </div>
         </div>
       </section>
-      <section class="cs-section" id="problem-md">
-        <div class="cs-section_file">problem.md</div>
+      <section class="cs-section" id="why-md">
+        <div class="cs-section_file">why.md</div>
         <div class="cs-section_body">
-<div class="prose"><p><!-- TODO(pedro): the problem. habit trackers are a crowded category, so the interesting part is why the group needed one at all and why the existing ones did not work. that is the question a studio will have. --><mark class="todo">[todo: the problem. habit trackers are a crowded category, so the interesting part is why the group needed one at all and why the existing ones did not work. that is the question a studio will have.]</mark></p>
-<p><!-- TODO(pedro): constraints. a group small enough that everyone knows everyone changes the design, and so does the fact that you had to run it for real every week. --><mark class="todo">[todo: constraints. a group small enough that everyone knows everyone changes the design, and so does the fact that you had to run it for real every week.]</mark></p></div>
+<div class="prose"><p>I make games with an artist friend. Our paid work comes with deadlines. Practice does not: drawing for fun, writing a track, learning a new tool. No client wants it, so it loses to everything that does have a client.</p>
+<p>We already met every week to show what we had made, but we had no way to count it. A goal that lives in your head is easy to drop, and a vague intention with no date is the easiest of all. About half of us have ADHD, me included, and for us a vague plan with a distant payoff is the easiest thing in the world to drop. I needed something with a short loop, other people in it and a reason to show up on a specific day. Skrill is that, and it changed how much I make.</p>
+<p>What the research I found agrees on is simple. Writing down what you will do, and by when, makes you more likely to do it: a meta-analysis of 94 tests found a medium to large effect for this kind of plan (Gollwitzer and Sheeran, 2006). Telling someone makes it stronger. In a study at Dominican University, people who wrote their goals and sent a friend weekly updates completed 76% of them, against 43% for people who only thought about them. That study was small and self-reported, so I treat it as a direction, not a law.</p>
+<p>The tools for this were all wrong. Notion boards and ClickUp lists feel like work, and this was the opposite of work. The brief became a system with a deadline, a bit of rivalry and a reason to show up, that felt like play and not like a spreadsheet.</p></div>
         </div>
       </section>
-      <section class="cs-section" id="decisions">
-        <div class="cs-section_file">decisions/</div>
+      <section class="cs-section" id="how-it-works">
+        <div class="cs-section_file">how-it-works/</div>
         <div class="cs-section_body">
-<div class="prose"><p><!-- TODO(pedro): the points economy is the most designed thing here, and it is the thing you can talk about that nobody else can. candidates for decisions: why difficulty sets the base points, why progress is hidden until the meeting, and how the shared bonus pool gets split. each of those is a real design decision with a reason behind it. --><mark class="todo">[todo: the points economy is the most designed thing here, and it is the thing you can talk about that nobody else can. candidates for decisions: why difficulty sets the base points, why progress is hidden until the meeting, and how the shared bonus pool gets split. each of those is a real design decision with a reason behind it.]</mark></p>
-<p><!-- TODO(pedro): pair each decision with a before and after once you have them. the economy almost certainly got retuned between seasons, and the retune is the story. --><mark class="todo">[todo: pair each decision with a before and after once you have them. the economy almost certainly got retuned between seasons, and the retune is the story.]</mark></p></div>
+<nav class="takeaway-index" aria-label="takeaways">
+  <p class="takeaway-index_label">what i decided, and why</p>
+  <ol class="takeaway-index_list">
+    <li><a href="#d-01-declare-in-public-deliver-in-secret"><span class="takeaway-index_num">/01</span> everyone sees you delivered, nobody sees what</a></li>
+    <li><a href="#d-02-difficulty-is-the-price"><span class="takeaway-index_num">/02</span> you set the difficulty before you know how the week goes</a></li>
+    <li><a href="#d-03-points-from-your-friends"><span class="takeaway-index_num">/03</span> part of your score is given to you by the group</a></li>
+    <li><a href="#d-04-deliberately-unserious"><span class="takeaway-index_num">/04</span> it looks like a desktop app from 1996</a></li>
+  </ol>
+</nav>
+<div class="prose"><p>Four decisions carry most of the design.</p></div>
+<article class="decision" id="d-01-declare-in-public-deliver-in-secret">
+  <header class="decision_head">
+    <span class="decision_file">01-declare-in-public-deliver-in-secret.md</span>
+    <h3 class="decision_title">everyone sees you delivered, nobody sees what</h3>
+    <p class="decision_subtitle">The reveal is the reason the meeting exists.</p>
+  </header>
+  <div class="decision_body prose"><p>You declare a goal with what and by when, which is the cheapest nudge there is. When you deliver, the proof appears in everyone's feed, but blurred until the weekly call. You can see that your friends are working. You cannot see what they made.</p>
+<p>That gives the group pressure without spoilers, and it turns a status check into a ritual. The call, called Skrill Time, is 15 minutes at most: everyone marks ready, the blur drops, you react and the points are handed out.</p></div>
+  <figure class="before-after media-block">
+  <div class="before-after_side">
+      <span class="before-after_label">before the reveal</span>
+      <div class="frame frame--empty"><!-- TODO(pedro): add assets/skrill/feed-blurred.webp --><mark class="todo">[todo: add assets/skrill/feed-blurred.webp]</mark></div>
+    </div>
+  <div class="before-after_side">
+      <span class="before-after_label">after the reveal</span>
+      <div class="frame frame--empty"><!-- TODO(pedro): add assets/skrill/feed-revealed.webp --><mark class="todo">[todo: add assets/skrill/feed-revealed.webp]</mark></div>
+    </div>
+</figure>
+  
+</article>
+<article class="decision" id="d-02-difficulty-is-the-price">
+  <header class="decision_head">
+    <span class="decision_file">02-difficulty-is-the-price.md</span>
+    <h3 class="decision_title">you set the difficulty before you know how the week goes</h3>
+    <p class="decision_subtitle">Simple goals pay 2 points, complex ones pay 5.</p>
+  </header>
+  <div class="decision_body prose"><p>Choosing the difficulty is part of declaring the goal, on the same screen. That is on purpose. If you could pick afterwards, everyone would call everything hard. Setting it up front makes you price your own ambition, and makes a failed complex goal cost something.</p>
+<p>An extra tier pays no base points at all and scores only through the group, for things you do just because. Some seasons a bounty appears, a prompt for something to make, such as a sci-fi piece, a sticker for the group or a classic painting in your own style. The chance of one rises every season it does not show up, so they stay a surprise. If a friend takes it, you want to as well, because you do not want them to take all the points.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): add assets/skrill/declare-goal-difficulty.webm --><mark class="todo">[todo: add assets/skrill/declare-goal-difficulty.webm]</mark></div>
+  <figcaption class="caption-code">declare-goal-difficulty.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-03-points-from-your-friends">
+  <header class="decision_head">
+    <span class="decision_file">03-points-from-your-friends.md</span>
+    <h3 class="decision_title">part of your score is given to you by the group</h3>
+    <p class="decision_subtitle">Every person gets a small pool of bonus points to hand out.</p>
+  </header>
+  <div class="decision_body prose"><p>The base points are fixed, so the interesting part is the bonus. Each person receives a pool of half the number of players, rounded down, and must spend all of it on other people's work, anonymously. You can score yourself, but you are spending from the same pool.</p>
+<p>This stops the leaderboard from being just a count of tasks. It rewards the work the group actually thought was good, and it keeps the reveal alive, because nobody knows who got what until the end.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): add assets/skrill/peer-bonus-rating.webm --><mark class="todo">[todo: add assets/skrill/peer-bonus-rating.webm]</mark></div>
+  <figcaption class="caption-code">peer-bonus-rating.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-04-deliberately-unserious">
+  <header class="decision_head">
+    <span class="decision_file">04-deliberately-unserious.md</span>
+    <h3 class="decision_title">it looks like a desktop app from 1996</h3>
+    <p class="decision_subtitle">The friendliness is the product.</p>
+  </header>
+  <div class="decision_body prose"><p>The pixel fonts, the Windows 95 windows and the mascot are not decoration. They are what keeps this from feeling like work. The mascot walks along the bottom of every page and can be thrown around with a click.</p>
+<p>You cannot upload a profile photo. You have to draw one, in a small black and white pixel canvas. It is a limited, slightly clumsy tool, and that is the point.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): add assets/skrill/draw-your-avatar.webm --><mark class="todo">[todo: add assets/skrill/draw-your-avatar.webm]</mark></div>
+  <figcaption class="caption-code">draw-your-avatar.webm</figcaption>
+</figure>
+  
+</article>
         </div>
       </section>
       <section class="cs-section" id="outcome-md">
         <div class="cs-section_file">outcome.md</div>
         <div class="cs-section_body">
-<div class="prose"><p><!-- TODO(pedro): results. for this project you genuinely have data, since every season is logged in the database. number of seasons, number of goals declared, completion rate, or how the split changed over time. --><mark class="todo">[todo: results. for this project you genuinely have data, since every season is logged in the database. number of seasons, number of goals declared, completion rate, or how the split changed over time.]</mark></p></div>
-        </div>
-      </section>
-      <section class="cs-section" id="learnings-md">
-        <div class="cs-section_file">learnings.md</div>
-        <div class="cs-section_body">
-<div class="prose"><p><!-- TODO(pedro): what this project taught you. two or three things that changed how you work. --><mark class="todo">[todo: what this project taught you. two or three things that changed how you work.]</mark></p></div>
+<ul class="outcomes">
+<li class="outcome">
+      <span class="outcome_value">13</span>
+      <span class="outcome_label">seasons revealed since june 2026, with the same five people</span>
+    </li>
+<li class="outcome">
+      <span class="outcome_value">119</span>
+      <span class="outcome_label">goals declared across them</span>
+    </li>
+<li class="outcome">
+      <span class="outcome_value">85%</span>
+      <span class="outcome_label">delivered, 101 of 119</span>
+    </li>
+</ul>
+<div class="prose"><p>The system has held up for the people it was built for. The weekly call used to be a chat with nothing to count. Now it is a reveal of what each person made, with points on it. I make more than I did before it existed.</p></div>
+<figure class="quote">
+  
+  <blockquote class="quote_text"><!-- TODO(pedro): one line from a member of the group about what Skrill changed --><mark class="todo">[todo: one line from a member of the group about what Skrill changed]</mark></blockquote>
+  <figcaption class="quote_by"><span><!-- TODO(pedro): who said it --><mark class="todo">[todo: who said it]</mark></span> <span><!-- TODO(pedro): what they do --><mark class="todo">[todo: what they do]</mark></span></figcaption>
+</figure>
         </div>
       </section>
       <section class="cs-section" id="project-info-md">
@@ -165,7 +253,7 @@
           </div>
           <div class="meta_row">
             <dt>timeline</dt>
-            <dd><!-- TODO(pedro): when you started and whether it is still running --><mark class="todo">[todo: when you started and whether it is still running]</mark></dd>
+            <dd>june 2026 to now</dd>
           </div>
           <div class="meta_row">
             <dt>team</dt>
@@ -184,6 +272,12 @@
             <dd><a href="/skrill/demo">lope.design/skrill</a></dd>
           </div>
           </dl>
+<div class="toolbox-grid">
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">Pedro Lopes</span>
+        <span class="toolbox-cat_items">product design, ui, full stack development, mascot</span>
+      </div>
+</div>
         </div>
       </section>
 

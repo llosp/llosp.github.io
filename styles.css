@@ -556,6 +556,17 @@ video {
   padding: 0 var(--gutter);
 }
 
+/* below 1280px there is no rail or open column, so the white panel covers the
+   full width and keeps the ascii background from fighting the text */
+.case-study .cs-main {
+  background: var(--white);
+  margin: 0 calc(var(--gutter) * -1);
+  padding: 0 var(--gutter);
+  /* the head's top margin would collapse out of the panel and leave a bare
+     ascii strip with a hard edge under the nav, so it lives inside as padding */
+  display: flow-root;
+}
+
 /* the page is title, then hero, then everything else. the first two are the
    proof, so a visitor gets the point before any process. */
 .cs-head {
@@ -616,6 +627,7 @@ video {
   .case-study .cs-main {
     grid-column: 2;
     min-width: 0;
+    margin: 0;
     padding: 0 var(--gutter);
     background: var(--white);
     align-self: stretch;
@@ -1544,4 +1556,38 @@ a.cs-nav_link:hover .cs-nav_name {
   .decision:nth-of-type(even) > .media-block {
     grid-column: 1;
   }
+}
+
+/* ─── curtain ───────────────────────────────────────────────────────── */
+
+/* four black columns that sweep the page. at rest they sit below the window;
+   the router raises them over the page and lifts them off again. a page
+   opened cold on the home route starts covered (.is--cover) and opens. */
+.page-transition {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  pointer-events: none;
+}
+
+.transition_column {
+  width: 25%;
+  height: 100%;
+  overflow: hidden;
+}
+
+.transition_column-background {
+  width: 100%;
+  height: 100%;
+  background-color: var(--black);
+  transform: translateY(101%);
+}
+
+.page-transition.is--cover .transition_column-background {
+  transform: translateY(0);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .page-transition { display: none; }
 }

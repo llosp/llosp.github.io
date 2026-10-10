@@ -3,6 +3,7 @@
 // it after the router swaps a page in.
 
 import { initRouter } from './router.js';
+import { smoothScrollTo } from './scroll.js';
 
 const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 const finePointer = () => window.matchMedia('(hover: hover) and (pointer: fine)').matches;
@@ -180,6 +181,15 @@ function layoutMasonryGrids() {
     const colHeights = new Array(columns).fill(0);
     const items = [...container.children].filter((el) => el.classList.contains('layout-grid_item'));
 
+    // a grid laid out for the first time (a fresh page swap) must place its
+    // items instantly. otherwise every tile glides in from the top left, and
+    // the router measures a card's slot while the card is still on the way.
+    const fresh = !container.dataset.laid && items.length > 0;
+    if (fresh) {
+      container.dataset.laid = '1';
+      items.forEach((el) => (el.style.transition = 'none'));
+    }
+
     items.forEach((item) => {
       const wanted = item.classList.contains('is--active') ? baseSpan * 2 : baseSpan;
       const span = Math.min(wanted, columns);
@@ -206,6 +216,11 @@ function layoutMasonryGrids() {
       const newHeight = bestTop + item.offsetHeight + rowGap;
       for (let k = bestCol; k < bestCol + span; k++) colHeights[k] = newHeight;
     });
+
+    if (fresh) {
+      void container.offsetHeight;
+      items.forEach((el) => (el.style.transition = ''));
+    }
 
     const maxHeight = Math.max(0, ...colHeights);
     container.style.height = `${Math.max(maxHeight - rowGap, 0)}px`;
@@ -348,24 +363,7 @@ function initRail(scope) {
       if (!target) return;
       event.preventDefault();
 
-      const to = Math.max(0, target.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.08);
-      if (reduceMotion()) {
-        window.scrollTo(0, to);
-        return;
-      }
-
-      const from = window.scrollY;
-      const distance = to - from;
-      const duration = Math.min(1100, 450 + Math.abs(distance) * 0.25);
-      const start = performance.now();
-      const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
-
-      const step = (now) => {
-        const t = Math.min(1, (now - start) / duration);
-        window.scrollTo(0, from + distance * ease(t));
-        if (t < 1) requestAnimationFrame(step);
-      };
-      requestAnimationFrame(step);
+      smoothScrollTo(Math.max(0, target.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.08));
     });
   });
 }

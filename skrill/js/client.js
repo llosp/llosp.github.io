@@ -10,7 +10,7 @@ const DemoDB = (function () {
   const DB_KEY = 'skrill_demo_db';
   const TABLES = ['profiles','weeks','goals','season_participants','bounty_submissions',
     'peer_ratings','peer_rating_submissions','week_ready','attempt_votes',
-    'attempt_vote_submissions','delivery_reports','point_history','meetings'];
+    'attempt_vote_submissions','delivery_reports','point_history','meetings','avatar_history'];
 
   function blankStore() { const s = { __storage: {} }; for (const t of TABLES) s[t] = []; return s; }
   function load() { try { const s = JSON.parse(localStorage.getItem(DB_KEY)); if (s) return s; } catch (_) {} return null; }
@@ -179,6 +179,7 @@ const DemoDB = (function () {
     }
     async _run() {
       ensure();
+      if (!store[this.table]) store[this.table] = [];   // tabela adicionada depois do seed
       try {
         if (this._action === 'select') {
           let rows = (store[this.table] || []).filter(r => this._match(r));
@@ -334,7 +335,7 @@ function getInitials(name) {
 }
 
 function formatDate(d) {
-  return new Date(d).toLocaleDateString('pt-BR', { month: 'short', day: 'numeric' });
+  return new Date(d).toLocaleDateString(LOCALE, { month: 'short', day: 'numeric' });
 }
 
 function timeAgo(d) {
@@ -762,6 +763,8 @@ function openImageLightbox(url) {
         </div>
         <div class="win-body">
           <img id="win-lightbox-img" src="" alt="entrega">
+          <video id="win-lightbox-video" controls playsinline class="hidden"></video>
+          <div id="win-lightbox-audio" class="win-audio hidden">${SVG_NOTES}<audio controls></audio></div>
         </div>
         <div class="win-statusbar">
           <span id="win-lightbox-status">Pronto</span>
@@ -772,7 +775,30 @@ function openImageLightbox(url) {
     document.addEventListener('keydown', e => { if (e.key === 'Escape') closeImageLightbox(); });
   }
   const img = document.getElementById('win-lightbox-img');
-  img.src = url;
+  const vid = document.getElementById('win-lightbox-video');
+  const aud = document.querySelector('#win-lightbox-audio audio');
+  const kind = mediaKind(url);
+  const status = document.getElementById('win-lightbox-status');
+  img.classList.toggle('hidden', kind !== 'image');
+  vid.classList.toggle('hidden', kind !== 'video');
+  document.getElementById('win-lightbox-audio').classList.toggle('hidden', kind !== 'audio');
+  vid.pause(); aud.pause();
+  vid.removeAttribute('src'); aud.removeAttribute('src');
+  img.removeAttribute('src');
+  if (kind === 'video') {
+    vid.src = url;
+    vid.onloadedmetadata = () => { status.textContent = `${vid.videoWidth} x ${vid.videoHeight}px`; };
+    vid.play().catch(() => {});
+  } else if (kind === 'audio') {
+    aud.src = url;
+    aud.onloadedmetadata = () => {
+      const d = Math.round(aud.duration);
+      status.textContent = isFinite(d) ? `${Math.floor(d / 60)}:${String(d % 60).padStart(2, '0')}` : 'Audio';
+    };
+    aud.play().catch(() => {});
+  } else {
+    img.src = url;
+  }
   img.onload = () => {
     document.getElementById('win-lightbox-status').textContent =
       `${img.naturalWidth} x ${img.naturalHeight}px`;
@@ -784,6 +810,8 @@ function openImageLightbox(url) {
 function closeImageLightbox() {
   const overlay = document.getElementById('win-lightbox');
   if (overlay) overlay.classList.add('hidden');
+  document.getElementById('win-lightbox-video')?.pause();
+  document.querySelector('#win-lightbox-audio audio')?.pause();
 }
 
 function initSkrillWalker() {
@@ -1041,6 +1069,11 @@ function initConfigButton() {
         <button id="config-walker-row" class="config-row" onclick="toggleWalkerSetting()">
           ${configWalkerRowInner()}
         </button>
+        <div class="config-section-label" style="margin-top:12px" data-i18n-skip>${LANG === 'en' ? 'Language' : 'Idioma'}</div>
+        <div class="lang-select" data-i18n-skip>
+          <button class="config-row${LANG === 'pt' ? ' active' : ''}" onclick="setLang('pt')"><span class="config-row-label">Português</span><span class="config-check">${LANG === 'pt' ? SVG_CHECK : SVG_EMPTY}</span></button>
+          <button class="config-row${LANG === 'en' ? ' active' : ''}" onclick="setLang('en')"><span class="config-row-label">English</span><span class="config-check">${LANG === 'en' ? SVG_CHECK : SVG_EMPTY}</span></button>
+        </div>
         ${isAdmin() ? `
         <div class="config-section-label" style="margin-top:12px">Admin</div>
         <a href="/skrill/admin/" class="config-row" style="text-decoration:none;color:inherit">
@@ -1324,10 +1357,195 @@ async function convertToWebP(file, quality = 0.85) {
   });
 }
 
+// Reencoda o video em WebM (VP9/VP8 + Opus), no maximo 1600x900, via MediaRecorder.
+// Roda em tempo real (duracao do video). Sem suporte no navegador ou erro: devolve o original.
+async function convertVideoToWebM(file, onProgress) {
+  const mimes = ['video/webm;codecs=vp9,opus', 'video/webm;codecs=vp8,opus', 'video/webm'];
+  const mimeType = window.MediaRecorder && mimes.find(m => MediaRecorder.isTypeSupported(m));
+  if (!mimeType) return file;
+
+  const url = URL.createObjectURL(file);
+  const video = document.createElement('video');
+  video.src = url; video.playsInline = true; video.preload = 'auto';
+  let audioCtx;
+  try {
+    await new Promise((res, rej) => { video.onloadedmetadata = res; video.onerror = () => rej(new Error('Vídeo inválido')); });
+    const w0 = video.videoWidth, h0 = video.videoHeight;
+    if (!w0) { URL.revokeObjectURL(url); return await convertAudioToWebM(file, onProgress); }   // mp4 so com audio
+    const scale = Math.min(1, VIDEO_MAX_W / w0, VIDEO_MAX_H / h0);
+    if (file.type === 'video/webm' && scale === 1) return file;   // ja esta no formato
+    const w = Math.max(2, Math.round(w0 * scale / 2) * 2), h = Math.max(2, Math.round(h0 * scale / 2) * 2);
+
+    const canvas = document.createElement('canvas');
+    canvas.width = w; canvas.height = h;
+    const ctx = canvas.getContext('2d');
+    const stream = canvas.captureStream(30);
+
+    // audio: so para o grafo (nao sai no alto-falante)
+    audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+    const dest = audioCtx.createMediaStreamDestination();
+    audioCtx.createMediaElementSource(video).connect(dest);
+    dest.stream.getAudioTracks().forEach(t => stream.addTrack(t));
+
+    const rec = new MediaRecorder(stream, { mimeType, videoBitsPerSecond: 2_500_000, audioBitsPerSecond: 96_000 });
+    const chunks = [];
+    rec.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+    const done = new Promise(res => { rec.onstop = res; });
+
+    let raf;
+    const draw = () => {
+      ctx.drawImage(video, 0, 0, w, h);
+      if (video.duration > 0) onProgress?.(Math.min(99, Math.floor(video.currentTime / video.duration * 100)));
+      raf = video.requestVideoFrameCallback ? video.requestVideoFrameCallback(draw) : requestAnimationFrame(draw);
+    };
+    const ended = new Promise((res, rej) => { video.onended = res; video.onerror = () => rej(new Error('Falha ao ler o vídeo')); });
+
+    await audioCtx.resume();
+    rec.start(1000);
+    await video.play();
+    draw();
+    await ended;
+    rec.stop();
+    await done;
+    if (video.cancelVideoFrameCallback) video.cancelVideoFrameCallback(raf); else cancelAnimationFrame(raf);
+
+    const blob = new Blob(chunks, { type: 'video/webm' });
+    return new File([blob], file.name.replace(/\.[^.]+$/, '') + '.webm', { type: 'video/webm' });
+  } catch (err) {
+    console.warn('[video] conversao falhou, enviando original', err);
+    return file;
+  } finally {
+    video.pause(); audioCtx?.close?.(); URL.revokeObjectURL(url);
+  }
+}
+
+// Decodifica qualquer audio que o navegador entenda (mp3, wav, m4a, mp4, ogg, flac...) e
+// reencoda em Opus/WebM (~64 kbps), o formato mais leve disponivel. Tempo real.
+// Formato que o navegador nao decodifica: lanca erro amigavel. Sem MediaRecorder: original.
+async function convertAudioToWebM(file, onProgress) {
+  const mimeType = window.MediaRecorder && ['audio/webm;codecs=opus', 'audio/webm'].find(m => MediaRecorder.isTypeSupported(m));
+  const Ctx = window.AudioContext || window.webkitAudioContext;
+  if (!mimeType || !Ctx) return file;
+  const ctx = new Ctx();
+  try {
+    let buf;
+    try { buf = await ctx.decodeAudioData(await file.arrayBuffer()); }
+    catch (_) { throw new Error(`Não consigo ler "${file.name}". Use MP3, WAV, M4A ou MP4.`); }
+    await ctx.resume();
+    const dest = ctx.createMediaStreamDestination();
+    const src = ctx.createBufferSource();
+    src.buffer = buf; src.connect(dest);
+    const rec = new MediaRecorder(dest.stream, { mimeType, audioBitsPerSecond: 64000 });
+    const chunks = [];
+    rec.ondataavailable = e => { if (e.data.size) chunks.push(e.data); };
+    const stopped = new Promise(res => { rec.onstop = res; });
+    const ended = new Promise(res => { src.onended = res; });
+    rec.start(1000);
+    src.start();
+    const iv = setInterval(() => onProgress?.(Math.min(99, Math.floor(ctx.currentTime / buf.duration * 100))), 500);
+    await ended;
+    clearInterval(iv);
+    await new Promise(r => setTimeout(r, 150));   // deixa o ultimo trecho chegar ao recorder
+    rec.stop();
+    await stopped;
+    return new File([new Blob(chunks, { type: 'audio/webm' })], file.name.replace(/\.[^.]+$/, '') + '.weba', { type: 'audio/webm' });
+  } finally {
+    ctx.close?.();
+  }
+}
+
+// ── Midia de entrega (imagem / video / audio) ────────────────────────────────
+const MEDIA_ACCEPT = 'image/*,video/*,audio/*';
+const VIDEO_MAX_W = 1600, VIDEO_MAX_H = 900;
+const VIDEO_EXT = ['mp4', 'webm', 'mov', 'm4v', 'ogv'];
+const AUDIO_EXT = ['mp3', 'wav', 'ogg', 'oga', 'm4a', 'aac', 'opus', 'weba', 'flac'];
+
+function mediaKind(urlOrFile) {
+  if (typeof urlOrFile !== 'string') {
+    const t = urlOrFile.type || '';
+    if (t.startsWith('video/')) return 'video';
+    if (t.startsWith('audio/')) return 'audio';
+    if (t.startsWith('image/')) return 'image';
+    return mediaKind(urlOrFile.name || '');   // type vazio (ex.: .opus/.flac no Windows)
+  }
+  if (urlOrFile.startsWith('data:video/')) return 'video';
+  if (urlOrFile.startsWith('data:audio/')) return 'audio';
+  const ext = (urlOrFile.split(/[?#]/)[0].match(/\.([a-z0-9]+)$/i)?.[1] ?? '').toLowerCase();
+  if (VIDEO_EXT.includes(ext)) return 'video';
+  if (AUDIO_EXT.includes(ext)) return 'audio';
+  return 'image';
+}
+
+const SVG_PLAY  = `<svg viewBox="0 0 10 12" shape-rendering="crispEdges" fill="currentColor"><path d="M1 0h2v12H1zM3 1h2v10H3zM5 2h2v8H5zM7 4h2v4H7z"/></svg>`;
+const SVG_NOTES = `<svg viewBox="0 0 15 15" shape-rendering="crispEdges" fill="currentColor"><path d="M4 1h9v2H4zM4 3h1v7H4zM12 3h1v7h-1zM2 9h3v1H2zM1 10h4v2H1zM2 12h3v1H2zM10 9h3v1h-3zM9 10h4v2H9zM10 12h3v1h-3z"/></svg>`;
+
+// Tile de audio abre o player no lightbox (com timeline)
 document.addEventListener('click', e => {
-  const img = e.target.closest('img.delivery-img, img.reveal-img');
+  const tile = e.target.closest('.media-audio-tile');
+  if (!tile || tile.classList.contains('blurred')) return;
+  openImageLightbox(tile.querySelector('audio').getAttribute('src'));
+});
+
+// cls: 'delivery-img' (grids) ou 'reveal-img' (Skrill Time). blurred = ainda nao revelado.
+function mediaHTML(url, { cls = 'delivery-img', blurred = false, alt = 'entrega' } = {}) {
+  const kind = mediaKind(url);
+  const blur = blurred ? ' blurred' : '';
+  if (kind === 'video') {
+    return `<div class="media-tile"><video class="${cls} media-video${blur}" src="${url}#t=0.1" preload="metadata" muted playsinline></video><span class="media-play">${SVG_PLAY}</span></div>`;
+  }
+  if (kind === 'audio') {
+    return `<div class="${cls} media-audio-tile${blur}" role="button" aria-label="audio">${SVG_NOTES}<audio preload="none" src="${url}"></audio></div>`;
+  }
+  return `<img class="${cls}${blur}" src="${url}" alt="${alt}">`;
+}
+
+// Sobe um arquivo para o bucket 'deliveries' e devolve a URL publica.
+// Imagens viram WebP (GIF passa direto); video/audio sobem como estao.
+async function uploadMedia(file, pathPrefix, onStatus) {
+  const kind = mediaKind(file);
+  let upFile = file, ext, mime = file.type;
+  if (kind === 'image') {
+    const isGif = file.type === 'image/gif';
+    try { upFile = isGif ? file : await convertToWebP(file); }
+    catch (_) { throw new Error(`Não consigo ler "${file.name}". Formato não suportado.`); }
+    ext  = isGif ? 'gif' : 'webp';
+    mime = isGif ? 'image/gif' : 'image/webp';
+  } else if (kind === 'video') {
+    onStatus?.('Convertendo vídeo...');
+    upFile = await convertVideoToWebM(file, pct => onStatus?.(`Convertendo vídeo ${pct}%`));
+    if (upFile === file) {
+      ext = (file.name.match(/\.([a-z0-9]+)$/i)?.[1] ?? 'mp4').toLowerCase();
+      mime = file.type || 'video/mp4';
+    } else if (upFile.type.startsWith('audio/')) {   // mp4 so com audio
+      ext = 'weba'; mime = 'audio/webm';
+    } else { ext = 'webm'; mime = 'video/webm'; }
+    onStatus?.('Enviando...');
+  } else {
+    onStatus?.('Convertendo áudio...');
+    upFile = await convertAudioToWebM(file, pct => onStatus?.(`Convertendo áudio ${pct}%`));
+    if (upFile === file) {
+      ext = (file.name.match(/\.([a-z0-9]+)$/i)?.[1] ?? 'mp3').toLowerCase();
+      mime = file.type || `audio/${ext}`;
+    } else { ext = 'weba'; mime = 'audio/webm'; }
+    onStatus?.('Enviando...');
+  }
+  const path = `${pathPrefix}/${Date.now()}-${Math.random().toString(36).slice(2, 6)}.${ext}`;
+  const { error } = await sb.storage.from('deliveries').upload(path, upFile, { contentType: mime });
+  if (error) throw error;
+  return sb.storage.from('deliveries').getPublicUrl(path).data.publicUrl;
+}
+
+// Lista de arquivos escolhidos (nome + tamanho)
+function fileListHTML(files) {
+  return Array.from(files).map(f =>
+    `<div style="padding:2px 0;border-bottom:1px solid var(--border)">${f.name} <span style="color:var(--text-light)">(${(f.size/1024).toFixed(0)} KB)</span></div>`
+  ).join('');
+}
+
+document.addEventListener('click', e => {
+  const img = e.target.closest('img.delivery-img, img.reveal-img, video.delivery-img, video.reveal-img');
   if (!img || img.classList.contains('blurred')) return;
-  openImageLightbox(img.src);
+  openImageLightbox(img.currentSrc || img.src);
 });
 
 // ── Confetti ─────────────────────────────────────────────────────────────────
@@ -1675,6 +1893,9 @@ const Motion = (function () {
       list.classList.add('m-has-ink');
       animate = false;
     }
+    // contadores animados / idioma / fontes mudam a largura das abas depois do render
+    if (!list._mRO && window.ResizeObserver) list._mRO = new ResizeObserver(() => syncInk(list, false));
+    if (list._mRO) { list._mRO.observe(list); list.querySelectorAll('.tab-btn').forEach(b => list._mRO.observe(b)); }
     if (!animate) ink.style.transition = 'none';
     ink.style.width = active.offsetWidth + 'px';
     ink.style.transform = `translateX(${active.offsetLeft}px)`;
@@ -1814,7 +2035,7 @@ const Motion = (function () {
 
     document.addEventListener('pointerdown', e => { lastPointer = { x: e.clientX, y: e.clientY }; }, true);
     document.addEventListener('click', e => {
-      const thumb = e.target.closest?.('img.delivery-img, img.reveal-img');
+      const thumb = e.target.closest?.('img.delivery-img, img.reveal-img, video.delivery-img, video.reveal-img');
       if (thumb) lastThumb = thumb.getBoundingClientRect();
 
       const t = e.target.closest?.('[data-float], .btn-primary, .vote-btn, .diff-pill, [data-burst]');

@@ -9,7 +9,8 @@
 // the choreography itself lives in case-transition.js. this file decides
 // which one to play, builds the clone, and does the dom work in between.
 
-import { playForward, playReverse, playFade } from './case-transition.js';
+import { playForward, playCurtain, playFade, openCurtain } from './case-transition.js';
+import { smoothScrollTo, workTop } from './scroll.js';
 
 const pageCache = new Map();
 
@@ -83,21 +84,6 @@ function cloneCover(source, from) {
   return clone;
 }
 
-// the size of the card the hero will shrink to, read from the index laid out
-// offscreen. the real index is not in the document yet when the shrink plays.
-function measureCard(page, slug, layout) {
-  const probe = document.createElement('div');
-  probe.setAttribute('aria-hidden', 'true');
-  probe.style.cssText = 'position:absolute;top:0;left:0;width:100%;visibility:hidden;pointer-events:none';
-  probe.innerHTML = page.html;
-  document.body.appendChild(probe);
-  layout();
-  const cover = probe.querySelector(`.covers_media[data-slug="${slug}"]`);
-  const box = cover ? rect(frameOf(cover)) : null;
-  probe.remove();
-  return hasBox(box) ? { width: box.width, height: box.height } : null;
-}
-
 function focusHeading(app) {
   const heading = app.querySelector('h1');
   if (!heading) return;
@@ -110,6 +96,10 @@ export function initRouter({ onSwap, onTransition, layout }) {
   if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
 
   let busy = false;
+
+  // a homepage opened cold starts behind the curtain and lifts it
+  const opening = document.querySelector('.page-transition.is--cover');
+  if (opening) openCurtain(opening);
 
   // a back or forward that arrived while a swap was still running. the
   // browser changes the url for a traversal before we hear about it, so
@@ -157,6 +147,8 @@ export function initRouter({ onSwap, onTransition, layout }) {
     const toWork = toPath.startsWith('/work/');
     const fromWork = rendered.startsWith('/work/');
 
+    const curtain = document.querySelector('.page-transition');
+
     const load = fetchPage(url);
     load.catch(() => {});
 
@@ -169,14 +161,8 @@ export function initRouter({ onSwap, onTransition, layout }) {
     if (!instant && toWork) {
       source = sourceCard(link, slug);
       if (source) mode = 'forward';
-    } else if (!instant && fromWork && toPath === '/') {
-      const img = document.querySelector('.cs-cover_img');
-      const frame = document.querySelector('.cs-cover_frame');
-      const head = document.querySelector('.cs-head');
-      if (img && frame && head && hasBox(rect(frame)) && onScreen(rect(frame))) {
-        source = img;
-        mode = 'reverse';
-      }
+    } else if (!instant && fromWork && toPath === '/' && curtain) {
+      mode = 'curtain';
     }
 
     if (source) {
@@ -235,31 +221,14 @@ export function initRouter({ onSwap, onTransition, layout }) {
             };
           },
         });
-      } else if (mode === 'reverse') {
-        const article = document.querySelector('.case-study');
-        await playReverse({
-          app,
-          clone,
+      } else if (mode === 'curtain') {
+        await playCurtain({
+          curtain,
           load,
-          onMove: onTransition,
-          head: article.querySelector('.cs-head'),
-          rest: [...article.querySelectorAll('.cs-rest, .cs-rail, .cs-cover .caption-code')],
-          measure: (page) => measureCard(page, slug, layout),
           swap(page) {
-            app.style.opacity = '0';
             render(page);
-            const cover = app.querySelector(`.covers_media[data-slug="${slug}"]`);
-            const slot = cover ? frameOf(cover) : null;
-            const box = slot ? rect(slot) : null;
-            const usable = hasBox(box) && onScreen(box);
-            if (usable) slot.classList.add('is--morph-target');
-            return {
-              rect: usable ? box : null,
-              finish() {
-                app.style.opacity = '';
-                if (slot) slot.classList.remove('is--morph-target');
-              },
-            };
+            // ./work from a case study lands on the work index itself
+            if (options.anchor === 'work') window.scrollTo(0, workTop());
           },
         });
       } else {
@@ -297,16 +266,24 @@ export function initRouter({ onSwap, onTransition, layout }) {
     const link = event.target.closest('a');
     if (!isInternal(link)) return;
 
-    // same page: let the browser do its own thing, so `/#work` from the
-    // homepage jumps to the anchor instead of re-rendering the page
-    if (link.pathname === window.location.pathname) return;
+    // same page: `/#work` from the homepage glides to the work index
+    // instead of re-rendering the page
+    if (link.pathname === window.location.pathname) {
+      if (link.hash === '#work' && document.querySelector('#work')) {
+        event.preventDefault();
+        smoothScrollTo(workTop());
+        history.replaceState(history.state, '', link.pathname + link.hash);
+      }
+      return;
+    }
 
     event.preventDefault();
 
     const slug = link.dataset.slug || currentSlug();
     const scrollTo = link.pathname === '/' ? homeScroll : 0;
 
-    swap(link.pathname + link.search, { slug, scrollTo, link });
+    const anchor = link.pathname === '/' && link.hash === '#work' ? 'work' : null;
+    swap(link.pathname + link.search, { slug, scrollTo, link, anchor });
   });
 
   window.addEventListener('popstate', (event) => {

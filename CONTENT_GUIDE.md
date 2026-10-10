@@ -215,6 +215,12 @@ items:
 :::
 ```
 
+Media sits beside the prose it explains, zigzagging down the page. `diagram`
+adds a white ground and a hairline edge and is for charts and maps; `full` is
+for screens and recordings. Both are 16:9 and show the whole frame (never
+cropped), so export diagrams with margin built in and keep their type large:
+they render about 320px wide on desktop.
+
 `media` also works as a `media:` field inside a `decision`, and a decision
 takes an optional `subtitle:`. A `## section` with two or more decisions gets a
 `/01 /02` index above them. A section whose blocks render nothing (an empty

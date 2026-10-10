@@ -4,7 +4,7 @@ order: 1
 title: oracle
 type: product design, ux research
 role: ux research, ux/ui, product design, design system
-status: prototype, tested once
+status: prototype
 timeline: 2025 to 2026
 team: group project
 built_with: figma, claude code
@@ -88,7 +88,7 @@ body:
 
   Each device gets its own editor, and its tile shows what it will do without opening it. Sounds and images come from a built-in library or the GM's own files, in folders and favourites.
 media:
-  - full | | [todo: SCREEN RECORDING 12s. Build Ice Cave from nothing. Add light, set ice blue and flicker, add AC, set 18C, add TV, pick a frozen cavern from the library, add a wind sound. The scene tiles fill in one by one] | // each tile carries its state, so the scene reads without opening anything
+  - full | assets/oracle/ice-cave-build.webm | Screen recording: the Ice Cave scene built from empty on a phone, with the light, air conditioner, TV and sound tiles filling in one by one | // each tile carries its state, so the scene reads without opening anything
 :::
 
 ::: decision 03-run-the-table
@@ -99,7 +99,7 @@ body:
 
   Applying a scene shows progress device by device. If the fifth stalls, the GM sees which one and can retry it.
 media:
-  - full | | [todo: SCREEN RECORDING 10s. Live console, a scene applies, five devices tick green in turn, the fourth turns red with a retry, a tap, it turns green. Then a wind sound pad and a thunder one-shot, with the sound mix levels moving] | // the broken path is designed too, so a failed device never ends the scene
+  - full | assets/oracle/live-console.webm | Screen recording: the live console applying a scene, five devices ticking green, the fourth failing and recovering on retry, then the wind pad and the sound mix | // the broken path is designed too, so a failed device never ends the scene
 :::
 
 ::: decision 04-describe-a-scene
@@ -110,7 +110,7 @@ body:
 
   The result arrives as a reviewable set of per-device changes, not something the app does to the room on its own. The GM can preview, apply or undo before the lights change on a table full of people.
 media:
-  - full | | [todo: SCREEN RECORDING 12s. Type an ice cave. freezing, blue, water dripping somewhere far off. The agent answers, a per-device diff appears, red lines out and green lines in. Preview runs the scene for two seconds in the room cutaway, then Apply. Undo returns it] | // automate the setup, keep the judgement
+  - full | assets/oracle/describe-it.webm | Screen recording: a sentence typed into Oracle, the drafted per-device diff, a preview in the room, then apply and undo | // automate the setup, keep the judgement
 :::
 
 ## project-info.md

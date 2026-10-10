@@ -174,6 +174,8 @@ function layoutMasonryGrids() {
     const columnGap = parseFloat(style.columnGap) || 0;
     const rowGap = parseFloat(style.rowGap) || 0;
     const baseSpan = parseInt(style.getPropertyValue('--span'), 10) || 1;
+    // columns on the left that stay empty, so a gallery can start further in
+    const skip = Math.min(parseInt(style.getPropertyValue('--skip'), 10) || 0, columns - 1);
     const columnWidth = (container.clientWidth - (columns - 1) * columnGap) / columns;
     const colHeights = new Array(columns).fill(0);
     const items = [...container.children].filter((el) => el.classList.contains('layout-grid_item'));
@@ -183,13 +185,13 @@ function layoutMasonryGrids() {
       const span = Math.min(wanted, columns);
 
       let minTop = Infinity;
-      for (let i = 0; i <= columns - span; i++) {
+      for (let i = skip; i <= columns - span; i++) {
         minTop = Math.min(minTop, Math.max(...colHeights.slice(i, i + span)));
       }
 
-      let bestCol = 0;
+      let bestCol = skip;
       let bestTop = minTop;
-      for (let j = 0; j <= columns - span; j++) {
+      for (let j = skip; j <= columns - span; j++) {
         const top = Math.max(...colHeights.slice(j, j + span));
         if (top <= minTop + rowGap) {
           bestCol = j;
@@ -337,6 +339,35 @@ function initRail(scope) {
   );
 
   sections.forEach((el) => observer.observe(el));
+
+  // a rail link glides to its section instead of jumping. done by hand so the
+  // easing and length are ours, and so the router never sees a hash change.
+  links.forEach((a) => {
+    a.addEventListener('click', (event) => {
+      const target = scope.querySelector(`#${CSS.escape(a.getAttribute('href').slice(1))}`);
+      if (!target) return;
+      event.preventDefault();
+
+      const to = Math.max(0, target.getBoundingClientRect().top + window.scrollY - window.innerHeight * 0.08);
+      if (reduceMotion()) {
+        window.scrollTo(0, to);
+        return;
+      }
+
+      const from = window.scrollY;
+      const distance = to - from;
+      const duration = Math.min(1100, 450 + Math.abs(distance) * 0.25);
+      const start = performance.now();
+      const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
+      const step = (now) => {
+        const t = Math.min(1, (now - start) / duration);
+        window.scrollTo(0, from + distance * ease(t));
+        if (t < 1) requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  });
 }
 
 /* ── work covers ──────────────────────────────────────────────────────── */

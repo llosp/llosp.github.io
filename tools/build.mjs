@@ -369,9 +369,9 @@ function mediaItem(line, where) {
     const [labelA = 'before', labelB = 'after'] = two(cap);
     const side = (label, file, text) => `<div class="before-after_side">
       <span class="before-after_label">${escapeHtml(label)}</span>
-      ${mediaFrame({ src: file, alt: text || `${label} image`, where })}
+      ${mediaFrame({ src: file, alt: text || `${label} image`, shape: 'natural', where })}
     </div>`;
-    return `<figure class="before-after media-block">
+    return `<figure class="before-after before-after--stack media-block">
   ${side(labelA, a, altA)}
   ${side(labelB, b, altB)}
 </figure>`;

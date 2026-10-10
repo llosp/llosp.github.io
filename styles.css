@@ -1044,6 +1044,11 @@ video {
   margin: 20px 0 0;
 }
 
+/* media-line compares keep each image's own ratio, one above the other */
+.before-after--stack {
+  grid-template-columns: 1fr;
+}
+
 .before-after_side {
   display: flex;
   flex-direction: column;

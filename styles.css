@@ -839,6 +839,11 @@ video {
   margin-top: 0;
 }
 
+.cs-section_body > .prose + .outcomes,
+.cs-section_body > .outcomes + .prose {
+  margin-top: 28px;
+}
+
 .outcomes {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1089,6 +1094,7 @@ video {
 .media.wide { aspect-ratio: 16 / 9; object-fit: cover; }
 .media.landscape { aspect-ratio: 4 / 3; object-fit: cover; }
 .media.portrait { aspect-ratio: 4 / 5; object-fit: cover; }
+.media.tall { aspect-ratio: 9 / 10; object-fit: cover; }
 .media.square { aspect-ratio: 1; object-fit: cover; }
 .media.natural { aspect-ratio: auto; object-fit: contain; }
 
@@ -1546,6 +1552,7 @@ a.cs-nav_link:hover .cs-nav_name {
   .decision > .media-block {
     grid-column: 2;
     grid-row: 1 / span 2;
+    align-self: center;
     margin-top: 0;
   }
 

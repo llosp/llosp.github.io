@@ -76,7 +76,7 @@ body:
 
   Safety and comfort limits live in the same setup, so the ceiling on flashing and temperature is set once, not mid-scene.
 media:
-  - full | assets/oracle/pairing-devices.webm | Motion recording: Oracle scanning the home and finding devices one by one, choosing which to add and which room they go in, then the setup code and integrations paths | // nothing to buy, just pair what is already there
+  - full | assets/oracle/pairing-devices.webm | Motion recording: Oracle scanning the home and finding devices one by one, choosing which to add and which room they go in, then the setup code and integrations paths | // nothing to buy, just pair what is already there | tall
 :::
 
 ::: decision 02-device-by-device
@@ -87,7 +87,7 @@ body:
 
   Each device gets its own editor, and its tile shows what it will do without opening it. Sounds and images come from a built-in library or the GM's own files, in folders and favourites.
 media:
-  - full | assets/oracle/ice-cave-build.webm | Screen recording: the Ice Cave scene built from empty on a phone, with the light, air conditioner, TV and sound tiles filling in one by one | // each tile carries its state, so the scene reads without opening anything
+  - full | assets/oracle/ice-cave-build.webm | Screen recording: the Ice Cave scene built from empty on a phone, with the light, air conditioner, TV and sound tiles filling in one by one | // each tile carries its state, so the scene reads without opening anything | tall
 :::
 
 ::: decision 03-run-the-table
@@ -98,7 +98,7 @@ body:
 
   Applying a scene shows progress device by device. If the fifth stalls, the GM sees which one and can retry it.
 media:
-  - full | assets/oracle/live-console.webm | Screen recording: the live console applying a scene, five devices ticking green, the fourth failing and recovering on retry, then the wind pad and the sound mix | // the broken path is designed too, so a failed device never ends the scene
+  - full | assets/oracle/live-console.webm | Screen recording: the live console applying a scene, five devices ticking green, the fourth failing and recovering on retry, then the wind pad and the sound mix | // the broken path is designed too, so a failed device never ends the scene | tall
 :::
 
 ::: decision 04-describe-a-scene
@@ -109,7 +109,7 @@ body:
 
   The result arrives as a reviewable set of per-device changes, not something the app does to the room on its own. The GM can preview, apply or undo before the lights change on a table full of people.
 media:
-  - full | assets/oracle/describe-it.webm | Screen recording: a sentence typed into Oracle, the drafted per-device diff, a preview in the room, then apply and undo | // automate the setup, keep the judgement
+  - full | assets/oracle/describe-it.webm | Screen recording: a sentence typed into Oracle, the drafted per-device diff, a preview in the room, then apply and undo | // automate the setup, keep the judgement | tall
 :::
 
 ## project-info.md

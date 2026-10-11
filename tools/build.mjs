@@ -157,7 +157,7 @@ function splitBlocks(text) {
 
 /* ── media ────────────────────────────────────────────────────────────── */
 
-const SHAPES = new Set(['wide', 'landscape', 'portrait', 'square', 'natural']);
+const SHAPES = new Set(['wide', 'landscape', 'portrait', 'tall', 'square', 'natural']);
 
 function assetExists(src) {
   if (!src || src.startsWith('http')) return true;
@@ -356,10 +356,11 @@ const caption = (text, where) =>
 
 const MEDIA_TYPES = new Set(['full', 'side', 'compare', 'diagram']);
 
-// one line per item: type | src | alt | caption
+// one line per item: type | src | alt | caption | shape
 // compare takes two of each, split by " ; ": src a ; src b | alt a ; alt b | label a ; label b
+// shape defaults to wide (16:9); see SHAPES for the other options
 function mediaItem(line, where) {
-  const [type = 'full', src = '', alt = '', cap = ''] = line.split('|').map((p) => p.trim());
+  const [type = 'full', src = '', alt = '', cap = '', shape = 'wide'] = line.split('|').map((p) => p.trim());
   if (!MEDIA_TYPES.has(type)) throw new Error(`${where}: unknown media type "${type}"`);
   const two = (v) => v.split(';').map((p) => p.trim());
 
@@ -381,6 +382,7 @@ function mediaItem(line, where) {
     src,
     alt,
     where,
+    shape,
     className: type === 'diagram' ? 'frame--diagram' : '',
   });
   const text = caption(src ? basename(src) : '', where);

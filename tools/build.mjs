@@ -420,6 +420,13 @@ const blockRenderers = {
     }
     // prefixed because a decision is named 01-..., and an id that starts
     // with a digit cannot be used in a css selector
+    const mediaLines = f.media ? lines(f.media) : [];
+    const mediaHtml = mediaLines.length ? mediaItems(f.media, where) : '';
+    // a single hero item is centered beside the text as one grid cell. two or
+    // more get wrapped so the whole stack is one grid cell too: internal gaps
+    // then come from flexbox, consistent, instead of being warped by the grid
+    // row heights the text column happens to need.
+    const mediaOut = mediaLines.length > 1 ? `<div class="decision_media">${mediaHtml}</div>` : mediaHtml;
     return `<article class="decision" id="d-${block.arg}">
   <header class="decision_head">
     <span class="decision_file">${escapeHtml(file)}</span>
@@ -427,7 +434,7 @@ const blockRenderers = {
     ${f.subtitle ? `<p class="decision_subtitle">${inline(f.subtitle, where)}</p>` : ''}
   </header>
   ${body ? `<div class="decision_body prose">${body}</div>` : ''}
-  ${f.media ? mediaItems(f.media, where) : ''}
+  ${mediaOut}
   ${blockRenderers['before-after'](
     { fields: f, arg: '' },
     { ...ctx, where }

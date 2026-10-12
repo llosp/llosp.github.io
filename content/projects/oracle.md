@@ -113,8 +113,3 @@ media:
 :::
 
 ## project-info.md
-
-::: credits
-items:
-  - Pedro Lopes | ux research, ux/ui, product design, design system
-:::

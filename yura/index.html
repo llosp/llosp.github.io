@@ -40,16 +40,6 @@
         <span class="pbar-product">HAKKOTAI</span>
       </a>
 
-      <nav class="pbar-links" aria-label="On this page">
-        <a href="#glow" data-spy="glow">Glow</a>
-        <a href="#meaning" data-spy="meaning">The name</a>
-        <a href="#design" data-spy="design">Design</a>
-        <a href="#build" data-spy="build">Handmade</a>
-        <a href="#specs" data-spy="specs">Specs</a>
-        <a href="team.html">Team</a>
-        <a href="about.html">About</a>
-      </nav>
-
       <div class="pbar-actions">
         <a class="pbar-icon" href="#" aria-label="Search" data-search-open>
           <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -80,30 +70,49 @@
 
     <!-- Hero -->
     <section class="h-hero" aria-labelledby="hero-title">
-      <div class="h-hero-copy">
-        <p class="h-hero-kanji" lang="ja">発光体</p>
-        <h1 class="h-hero-title" id="hero-title">HAKKOTAI</h1>
-        <p class="h-hero-sub">Loud in the light. Luminous in the dark.</p>
-        <div class="h-cta-row">
-          <a class="btn" href="checkout.html" data-buy-now>Buy</a>
-          <a class="link-more" href="#glow">Watch it glow</a>
-        </div>
-        <p class="h-hero-price">From $300 or $33.99/mo. for 9 mo.</p>
+      <div class="smoke h-hero-smoke" aria-hidden="true">
+        <span></span><span></span><span></span><span></span>
+        <span></span><span></span><span></span><span></span>
       </div>
       <div class="h-hero-stage">
         <div class="h-hero-halo" aria-hidden="true"></div>
+        <div class="h-hero-splash" aria-hidden="true"></div>
         <img class="h-hero-guitar" src="assets/img/hakkotai.webp"
           alt="The HAKKOTAI superstrat: pink body, cream and pink skull art, rosewood neck" width="1560" height="532"
           fetchpriority="high">
+        <div class="h-hero-copy">
+          <h1 class="h-hero-title" id="hero-title">
+            <span class="h-hero-title-latin">Hakkotai</span>
+            <span class="h-hero-title-kanji" lang="ja">発光体</span>
+          </h1>
+          <p class="h-hero-sub">Loud in the light. Luminous in the dark.</p>
+          <div class="h-cta-row">
+            <a class="btn" href="checkout.html" data-buy-now>Buy</a>
+            <a class="link-more" href="#glow">Watch it glow</a>
+          </div>
+          <p class="h-hero-price">From $300 or $33.99/mo. for 9 mo.</p>
+        </div>
       </div>
     </section>
 
-    <!-- Statement: words light up as you scroll -->
+    <!-- Statement: a pinned plate that lights up, then shatters -->
     <section class="h-statement" aria-label="The idea">
-      <p class="h-statement-text" data-words>
-        Take away the blood. The sweat. The tears. What remains is <em>pure, and luminous.</em>
+      <p class="sr-only">
+        Take away the blood. The sweat. The tears. What remains is pure, and luminous.
         HAKKOTAI is a guitar built from a song, painted by hand and wrapped in light.
       </p>
+      <div class="h-statement-sticky">
+        <div class="h-statement-reveal" aria-hidden="true"></div>
+        <div class="h-statement-wash" aria-hidden="true"></div>
+        <div class="h-statement-burst" aria-hidden="true"></div>
+        <div class="h-statement-plate" data-plate aria-hidden="true">
+          <p class="h-statement-text" data-words>
+            Take away the blood. The sweat. The tears. What remains is <em>pure, and luminous.</em>
+            HAKKOTAI is a guitar built from a song, painted by hand and wrapped in light.
+          </p>
+          <div class="h-shatter" data-shatter></div>
+        </div>
+      </div>
     </section>
 
     <!-- Glow: sticky scroll scene, lit to dark -->
@@ -317,6 +326,37 @@
       </ol>
     </aside>
   </main>
+
+  <!-- Floating nav. Hidden until the numbered build steps, then it carries the
+       whole page index behind one button so the top bar can stay bare. -->
+  <nav class="fnav" data-fnav aria-label="HAKKOTAI">
+    <div class="fnav-panel" id="fnav-panel">
+      <p class="fnav-heading">On this page</p>
+      <div class="fnav-list">
+        <a href="#glow" data-spy="glow">Glow in the dark</a>
+        <a href="#meaning" data-spy="meaning">The name</a>
+        <a href="#design" data-spy="design">Design</a>
+        <a href="#build" data-spy="build">Handmade</a>
+        <a href="#specs" data-spy="specs">Tech specs</a>
+      </div>
+      <p class="fnav-heading">More from YURA</p>
+      <div class="fnav-list">
+        <a href="team.html">Team</a>
+        <a href="about.html">About</a>
+      </div>
+      <a class="btn btn-sm fnav-buy" href="checkout.html" data-buy-now>Buy</a>
+    </div>
+    <div class="fnav-bar">
+      <a class="fnav-brand" href="#top">HAKKOTAI</a>
+      <button class="fnav-toggle" type="button" aria-expanded="false" aria-controls="fnav-panel" data-fnav-toggle>
+        <span>Explore</span>
+        <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="2"
+          stroke-linecap="round" stroke-linejoin="round">
+          <path d="M7 14l5-5 5 5" />
+        </svg>
+      </button>
+    </div>
+  </nav>
 
   <footer class="site-footer">
     <a class="back-to-top" href="#top">

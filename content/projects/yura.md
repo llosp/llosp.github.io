@@ -137,8 +137,3 @@ Making something physical meant learning skills I had never used. Painting, poli
 Finish takes more time than you plan for. Given another pass I would spend it on the small imperfections in the paint, and I would test the vinyl before cutting it, since weak adhesive and sheets too thick for the machine cost me the most rework.
 
 ## project-info.md
-
-::: credits
-items:
-  - Pedro Lopes | guitar build, concept, branding, web design, front-end development
-:::

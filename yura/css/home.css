@@ -105,15 +105,18 @@ body.home::after {
   font-weight: 500;
   letter-spacing: -.01em;
   text-decoration: none;
-  transition: background .25s ease, transform .2s ease;
+  transition: background .25s ease, transform .22s var(--h-ease);
 }
 
 .btn:hover {
   background: #ff3d90;
 }
 
+/* Asymmetric on purpose: the press lands almost instantly so the button feels
+   connected to the finger, then releases on the slower default above. */
 .btn:active {
-  transform: scale(.97);
+  transform: scale(.96);
+  transition-duration: .25s, .06s;
 }
 
 .btn-sm {
@@ -127,6 +130,12 @@ body.home::after {
   font-weight: 500;
   color: var(--h-pink-soft);
   text-decoration: none;
+  transition: opacity .22s var(--h-ease);
+}
+
+.link-more:active {
+  opacity: .55;
+  transition-duration: .06s;
 }
 
 .link-more::after {
@@ -226,32 +235,11 @@ body.home::after {
   color: var(--h-muted);
 }
 
-.pbar-links {
-  display: flex;
-  gap: 22px;
-  margin-left: auto;
-}
-
-.pbar-links a {
-  font-size: 12px;
-  color: rgba(255, 255, 255, .78);
-  text-decoration: none;
-  transition: color .2s ease;
-}
-
-.pbar-links a:hover,
-.pbar-links a.is-active {
-  color: #fff;
-}
-
-.pbar-links a.is-active {
-  font-weight: 600;
-}
-
 .pbar-actions {
   display: flex;
   align-items: center;
   gap: 16px;
+  margin-left: auto;
 }
 
 .pbar-icon {
@@ -279,25 +267,266 @@ body.home::after {
   right: -8px;
 }
 
-/* ---------- hero ---------- */
+/* ---------- floating nav ----------
+   A pill that rides the bottom of the viewport from the build steps onward.
+   Closed it is just the product name and a way in; open it is the full index,
+   which is why the top bar can afford to carry nothing. */
+
+.fnav {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  z-index: 30;
+  transform: translate(-50%, 140%);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  gap: 8px;
+  width: max-content;
+  max-width: calc(100vw - 32px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform .5s cubic-bezier(.22, 1, .36, 1), opacity .4s ease;
+}
+
+.fnav.is-visible {
+  transform: translate(-50%, 0);
+  opacity: 1;
+  pointer-events: auto;
+}
+
+.fnav-bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 7px 8px 7px 18px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 999px;
+  background: rgba(22, 22, 23, .72);
+  -webkit-backdrop-filter: saturate(180%) blur(20px);
+  backdrop-filter: saturate(180%) blur(20px);
+  box-shadow: 0 12px 40px rgba(0, 0, 0, .45);
+}
+
+.fnav-brand {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: .06em;
+  color: var(--h-text);
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.fnav-toggle {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, .1);
+  font: inherit;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--h-text);
+  cursor: pointer;
+  transition: background .2s ease;
+}
+
+.fnav-toggle:hover {
+  background: rgba(255, 255, 255, .18);
+}
+
+.fnav-toggle svg {
+  width: 14px;
+  height: 14px;
+  transition: transform .3s ease;
+}
+
+.fnav-toggle[aria-expanded="false"] svg {
+  transform: rotate(180deg);
+}
+
+.fnav-panel {
+  order: -1;
+  padding: 16px 18px 18px;
+  border: 1px solid rgba(255, 255, 255, .14);
+  border-radius: 20px;
+  background: rgba(22, 22, 23, .82);
+  -webkit-backdrop-filter: saturate(180%) blur(24px);
+  backdrop-filter: saturate(180%) blur(24px);
+  box-shadow: 0 16px 50px rgba(0, 0, 0, .5);
+  visibility: hidden;
+  opacity: 0;
+  transform: translateY(10px) scale(.97);
+  transform-origin: 50% 100%;
+  transition: opacity .25s ease, transform .3s cubic-bezier(.22, 1, .36, 1), visibility .3s;
+}
+
+.fnav.is-open .fnav-panel {
+  visibility: visible;
+  opacity: 1;
+  transform: none;
+}
+
+.fnav-heading {
+  margin: 0 0 8px;
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  color: var(--h-muted);
+}
+
+.fnav-list {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 16px;
+}
+
+.fnav-list a {
+  padding: 7px 10px;
+  border-radius: 9px;
+  font-size: 14px;
+  color: rgba(255, 255, 255, .8);
+  text-decoration: none;
+  transition: background .2s ease, color .2s ease;
+}
+
+.fnav-list a:hover {
+  background: rgba(255, 255, 255, .08);
+  color: #fff;
+}
+
+.fnav-list a.is-active {
+  color: var(--h-glow);
+  font-weight: 600;
+}
+
+.fnav-buy {
+  display: block;
+  text-align: center;
+}
+
+/* ---------- hero ----------
+   The classic asymmetric composition, reprised: the guitar bleeds off the
+   left edge under pointer-driven 3D tilt, the wordmark slides in from the
+   right, paint and smoke carry the energy behind them. container-type: size
+   on the stage means every child can be sized in cqw, so the whole scene
+   scales as one locked unit instead of each part drifting at its own
+   breakpoint. Collapses to the simpler stacked layout below 835px. */
 
 .h-hero {
   position: relative;
-  min-height: calc(100svh - var(--h-bar));
-  padding: clamp(56px, 10vh, 110px) 22px 0;
+  z-index: 1;
+  height: calc(100svh - var(--h-bar));
+  min-height: 560px;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+}
+
+/* A fixed-aspect stage sized by whichever of width/height is the tighter
+   constraint, so the guitar and all the copy always fill the frame together
+   instead of floating in a void. Children are driven by cqw (1% of the stage
+   width), so every internal ratio stays locked as the stage scales. */
+.h-hero-stage {
+  position: relative;
+  z-index: 1;
+  width: min(94vw, (100svh - var(--h-bar)) * 1.45);
+  aspect-ratio: 1478 / 958;
+  container-type: size;
+  /* The camera for the pointer tilt. Without it rotateX/Y are flat skews. */
+  perspective: 1400px;
+}
+
+.h-hero-guitar {
+  position: absolute;
+  left: 4.38%;
+  top: 40%;
+  z-index: 1;
+  display: block;
+  width: 88.34%;
+  height: auto;
+  margin-top: .6cqw;
+  transform: translateY(-50%) rotateX(var(--gx, 0deg)) rotateY(var(--gy, 0deg));
+  transform-style: preserve-3d;
+  filter: drop-shadow(0 2.4cqw 3cqw rgba(0, 0, 0, .5));
+  animation: h-guitar-in 1.8s var(--h-ease) .15s both;
+  will-change: transform;
+}
+
+/* Sits low and right of centre so the wordmark clears the neck instead of
+   colliding with the headstock. */
+.h-hero-copy {
+  position: absolute;
+  left: 71.92%;
+  top: 40%;
+  z-index: 2;
+  margin-top: 5.2cqw;
+  transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  overflow: hidden;
+  width: max-content;
 }
 
-.h-hero-copy {
-  position: relative;
-  z-index: 2;
-  animation: h-rise 1.2s var(--h-ease) both;
+.h-hero-title {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-weight: 400;
 }
 
+/* line-height .82 puts the cap line exactly on the element's top edge */
+.h-hero-title-latin {
+  font-family: var(--font-display);
+  font-size: 13.6cqw;
+  line-height: .82;
+  letter-spacing: .045em;
+  text-transform: uppercase;
+  background: linear-gradient(180deg, #fff 34%, #9a9aa0 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  animation: h-title-slide-in .55s var(--h-ease) .16s both;
+}
+
+.h-hero-title-kanji {
+  font-family: var(--font-kanji);
+  font-weight: 700;
+  font-size: 13cqw;
+  line-height: .82;
+  margin-top: 12.2cqw;
+  color: var(--h-text);
+  animation: h-title-slide-in .55s var(--h-ease) .26s both;
+}
+
+.h-hero-sub {
+  margin: 3.38cqw 0 0;
+  font-size: clamp(14px, 1.45cqw, 22px);
+  font-weight: 500;
+  letter-spacing: -.01em;
+  color: var(--h-muted);
+  animation: h-rise 1s var(--h-ease) .62s both;
+}
+
+/* Shared with the closer, which overrides its own size and spacing. */
+.h-hero-price {
+  margin: 18px 0 0;
+  font-size: 14px;
+  color: var(--h-muted);
+}
+
+.h-hero .h-hero-price {
+  margin: 1.6cqw 0 0;
+  animation: h-rise 1s var(--h-ease) .78s both;
+}
+
+/* Small pink wordmark label. The hero now runs its own full-size kanji line,
+   so this is the version the closer reprises. */
 .h-hero-kanji {
   margin: 0 0 6px;
   font-family: var(--font-kanji);
@@ -307,74 +536,89 @@ body.home::after {
   color: var(--h-pink-soft);
 }
 
-.h-hero-title {
-  margin: 0;
-  font-size: clamp(68px, 14vw, 196px);
-  font-weight: 700;
-  line-height: .92;
-  letter-spacing: -.055em;
-  background: linear-gradient(180deg, #fff 30%, #9a9aa0 100%);
-  -webkit-background-clip: text;
-  background-clip: text;
-  color: transparent;
-}
-
-.h-hero-sub {
-  margin: 18px 0 28px;
-  font-size: clamp(21px, 2.4vw, 32px);
-  font-weight: 600;
-  letter-spacing: -.02em;
-  color: var(--h-text);
-}
-
-.h-hero-price {
-  margin: 18px 0 0;
-  font-size: 14px;
-  color: var(--h-muted);
-}
-
-.h-hero-stage {
-  position: relative;
-  /* Fit the guitar above the fold: its height (width / 2.93) gets whatever
-     the copy block leaves of the viewport. */
-  width: min(1180px, 96vw, (100svh - var(--h-bar) - 540px) * 2.93);
-  min-width: min(560px, 96vw);
-  margin-top: clamp(24px, 5vh, 56px);
-}
-
-.h-hero-guitar {
-  position: relative;
-  z-index: 1;
-  display: block;
-  width: 100%;
-  height: auto;
-  filter: drop-shadow(0 40px 60px rgba(0, 0, 0, .6));
-  animation: h-guitar-in 1.8s var(--h-ease) .15s both;
+.h-hero-copy .h-cta-row {
+  margin-top: 1.69cqw;
+  animation: h-rise 1s var(--h-ease) .7s both;
 }
 
 .h-hero-halo {
   position: absolute;
-  left: 10%;
-  right: 10%;
-  top: 25%;
-  bottom: -10%;
-  background: radial-gradient(50% 50% at 50% 50%, rgba(236, 30, 121, .45), transparent 70%);
+  left: -4%;
+  right: 42%;
+  top: 10%;
+  bottom: 14%;
+  z-index: 0;
+  background: radial-gradient(50% 50% at 50% 50%, rgba(236, 30, 121, .42), transparent 70%);
   filter: blur(40px);
   animation: h-fade 2.4s ease .4s both;
+}
+
+/* Paint splash, reprised from the old hero: an organic spray of droplets
+   masked in behind the guitar. The source SVG is cropped with a hard,
+   man-made edge on its left (dozens of droplets end flush at x=0 instead of
+   tapering), so a second gradient mask layer is combined with
+   mask-composite: intersect to dissolve that cut into a soft fade — this
+   works regardless of how the shape is sized, rotated or positioned, unlike
+   the original's trick of just bleeding it past the viewport edge. Colour
+   and blend mode borrow the glow-in-the-dark palette used later on the page,
+   so the hero quietly previews that payoff. */
+.h-hero-splash {
+  position: absolute;
+  left: -11%;
+  top: 50%;
+  width: 92%;
+  aspect-ratio: 1689 / 877;
+  margin-top: 2.4cqw;
+  transform: translateY(-50%) rotate(-4deg);
+  z-index: 0;
+  opacity: .9;
+  mix-blend-mode: screen;
+  filter: blur(1px);
+  background:
+    radial-gradient(44% 56% at 38% 44%, #fff 0%, var(--h-glow) 26%, rgba(228, 255, 190, 0) 72%),
+    linear-gradient(100deg, var(--h-glow) 4%, var(--h-lime) 34%, #6f8a1e 62%, rgba(111, 138, 30, 0) 86%);
+  mask-image: url(../assets/img/splash.svg), linear-gradient(90deg, transparent 0%, #000 28%, #000 100%);
+  mask-repeat: no-repeat, no-repeat;
+  mask-position: center, center;
+  mask-size: contain, 100% 100%;
+  mask-composite: intersect;
+  -webkit-mask-image: url(../assets/img/splash.svg), linear-gradient(90deg, transparent 0%, #000 28%, #000 100%);
+  -webkit-mask-repeat: no-repeat, no-repeat;
+  -webkit-mask-position: center, center;
+  -webkit-mask-size: contain, 100% 100%;
+  -webkit-mask-composite: source-in;
+  animation: h-splash-bloom 1.5s var(--h-ease) .35s both;
+}
+
+/* The sitewide smoke column, scoped to the hero instead of the full
+   viewport: every other section here controls its own light, so the ambient
+   wash stays behind the one scene that earns it. .smoke's own rules supply
+   the spans' animation; this only swaps the container from fixed to
+   absolute so it clips to the hero instead of floating over the page. */
+.h-hero-smoke {
+  position: absolute;
+  z-index: 0;
 }
 
 @keyframes h-rise {
   from {
     opacity: 0;
-    transform: translateY(30px);
+    transform: translateY(16px);
   }
 }
 
 @keyframes h-guitar-in {
   from {
     opacity: 0;
-    transform: translateX(12%) rotate(-5deg) scale(.96);
+    transform: translateY(-50%) translateX(10%) rotate(-5deg) scale(.96);
     filter: drop-shadow(0 40px 60px rgba(0, 0, 0, .6)) blur(8px);
+  }
+}
+
+@keyframes h-splash-bloom {
+  from {
+    opacity: 0;
+    transform: translateY(-50%) rotate(-12deg) scale(.84);
   }
 }
 
@@ -384,15 +628,86 @@ body.home::after {
   }
 }
 
-/* ---------- statement (scroll-lit words) ---------- */
+@keyframes h-title-slide-in {
+  from {
+    opacity: 0;
+    transform: translateX(28%);
+  }
+}
 
+/* ---------- statement (pinned plate: scroll-lit, then shattered) ---------- */
+
+/* The section is three screens tall and the plate is pinned for all of it, so
+   the words cannot be scrolled past until the sweep has lit every letter. The
+   scroll that is left over breaks the plate and hands off to the glow scene. */
 .h-statement {
-  padding: clamp(120px, 22vh, 240px) 22px;
+  position: relative;
+  height: 300vh;
+  height: 300svh;
+}
+
+.h-statement-sticky {
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+/* The light surface the glow scene opens on, waiting behind the plate so the
+   fragments break away onto the next section instead of onto a hole. */
+.h-statement-reveal {
+  position: absolute;
+  inset: 0;
+  background: #f5f5f7;
+  opacity: var(--reveal, 0);
+}
+
+/* First light of that surface bleeding up off the floor as the sweep finishes:
+   the fade sits low and only arrives with the last few letters. */
+.h-statement-wash {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, transparent 88%, #f5f5f7 100%);
+  opacity: var(--wash, 0);
+}
+
+/* What comes through the cracks first: the guitar's own light, at the point
+   the plate breaks from. It peaks mid-break and is gone by the time the white
+   has taken the screen. */
+.h-statement-burst {
+  position: absolute;
+  left: 50%;
+  top: 46%;
+  width: min(1100px, 150vw);
+  aspect-ratio: 1;
+  transform: translate(-50%, -50%);
+  background: radial-gradient(closest-side, rgba(203, 242, 58, .55), rgba(203, 242, 58, .12) 55%, transparent 72%);
+  filter: blur(20px);
+  opacity: var(--burst, 0);
+}
+
+/* Fragments repeat the plate's own box so their copy of the text wraps and
+   lands on exactly the same pixels. */
+.h-statement-plate,
+.h-shatter-piece {
+  display: grid;
+  place-items: center;
+  padding: var(--h-bar) 22px;
+}
+
+.h-statement-plate {
+  position: absolute;
+  inset: 0;
+}
+
+.h-statement-plate.is-broken > .h-statement-text {
+  opacity: 0;
 }
 
 .h-statement-text {
   max-width: 980px;
-  margin: 0 auto;
+  margin: 0;
   font-size: clamp(32px, 4.8vw, 64px);
   font-weight: 700;
   line-height: 1.12;
@@ -405,19 +720,74 @@ body.home::after {
 }
 
 .h-statement-text .w {
-  transition: color .5s ease, text-shadow .5s ease;
+  transition: color .45s ease, text-shadow .45s ease;
 }
 
-.h-statement-text .w.is-lit {
+.h-statement-text .w.is-lit,
+.h-statement-text.is-all-lit {
   color: var(--h-text);
 }
 
-.h-statement-text em .w.is-lit {
+.h-statement-text em .w.is-lit,
+.h-statement-text.is-all-lit em {
   color: var(--h-glow);
   text-shadow: 0 0 28px rgba(203, 242, 58, .45);
 }
 
-/* No JS: the words are simply readable. */
+/* ---------- shatter ---------- */
+
+.h-shatter {
+  position: absolute;
+  inset: 0;
+  visibility: hidden;
+  perspective: 1100px;
+}
+
+.h-statement-plate.is-broken .h-shatter {
+  visibility: visible;
+}
+
+/* Every fragment is the whole plate - black ground, full text - clipped to one
+   shard, so each one carries its own slice of the sentence as it flies. */
+.h-shatter-piece {
+  position: absolute;
+  inset: 0;
+  background: var(--h-bg);
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+}
+
+.h-shatter-piece .h-statement-text {
+  transition: none;
+}
+
+/* No JS, or no motion: nothing is pinned and the words are simply readable. */
+html:not(.js) .h-statement,
+.h-statement.is-static {
+  height: auto;
+}
+
+html:not(.js) .h-statement-sticky,
+.h-statement.is-static .h-statement-sticky {
+  position: static;
+  height: auto;
+}
+
+html:not(.js) .h-statement-plate,
+.h-statement.is-static .h-statement-plate {
+  position: static;
+  padding: clamp(120px, 22vh, 240px) 22px;
+}
+
+html:not(.js) .h-statement-reveal,
+html:not(.js) .h-statement-wash,
+html:not(.js) .h-statement-burst,
+.h-statement.is-static .h-statement-reveal,
+.h-statement.is-static .h-statement-wash,
+.h-statement.is-static .h-statement-burst {
+  display: none;
+}
+
 html:not(.js) .h-statement-text {
   color: var(--h-text);
 }
@@ -1057,6 +1427,98 @@ html:not(.js) .h-statement-text {
     display: none;
   }
 
+  /* Shorter lock: the text takes more of the screen here, so the sweep and the
+     break need less travel to read. */
+  .h-statement {
+    height: 240vh;
+    height: 240svh;
+  }
+
+  /* Stage steps out of its fixed aspect-ratio box and the asymmetric overlay
+     collapses to the stacked flow: guitar, then wordmark, centred in the
+     viewport so the hero doesn't leave a dead band under the copy. */
+  .h-hero {
+    height: auto;
+    min-height: calc(100svh - var(--h-bar));
+    padding: 3vh 22px 5vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .h-hero-stage {
+    width: 100%;
+    aspect-ratio: auto;
+    container-type: normal;
+    perspective: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2vh;
+  }
+
+  .h-hero-smoke {
+    display: none;
+  }
+
+  /* Bleeds a little past both edges so the crop reads as deliberate full-bleed
+     rather than a headstock that accidentally ran out of room. */
+  .h-hero-guitar {
+    position: static;
+    width: 116%;
+    max-width: none;
+    margin: 0 0 0 -8%;
+    transform: none;
+    filter: drop-shadow(0 14px 22px rgba(0, 0, 0, .5));
+    animation: h-rise 1.2s var(--h-ease) .1s both;
+  }
+
+  .h-hero-splash {
+    left: -14%;
+    width: 128%;
+    margin-top: 0;
+    opacity: .75;
+  }
+
+  .h-hero-halo {
+    left: 0;
+    right: 0;
+    top: 8%;
+    bottom: 8%;
+  }
+
+  .h-hero-copy {
+    position: static;
+    transform: none;
+    margin: 0;
+    width: auto;
+  }
+
+  .h-hero-title-latin,
+  .h-hero-title-kanji {
+    font-size: 25vw;
+    animation: h-rise 1.2s var(--h-ease) both;
+  }
+
+  .h-hero-title-kanji {
+    margin-top: 7vw;
+    animation: h-rise 1.2s var(--h-ease) .08s both;
+  }
+
+  .h-hero-sub {
+    margin-top: 4vw;
+    font-size: clamp(15px, 4vw, 20px);
+  }
+
+  .h-hero-copy .h-cta-row {
+    margin-top: 5vw;
+  }
+
+  .h-hero .h-hero-price {
+    margin-top: 4vw;
+  }
+
   .pbar-actions {
     margin-left: auto;
   }
@@ -1162,17 +1624,17 @@ html:not(.js) .h-statement-text {
   .h-cta-row {
     gap: 20px;
   }
-
-  .h-hero-stage {
-    width: 100vw;
-    min-width: 0;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .h-hero-copy,
   .h-hero-guitar,
-  .h-hero-halo {
+  .h-hero-halo,
+  .h-hero-splash,
+  .h-hero-title-latin,
+  .h-hero-title-kanji,
+  .h-hero-sub,
+  .h-hero .h-hero-price,
+  .h-hero-copy .h-cta-row {
     animation: none;
   }
 
@@ -1184,7 +1646,8 @@ html:not(.js) .h-statement-text {
 
   .tile-cut,
   .tile-bg,
-  .acc-media img {
+  .acc-media img,
+  .h-statement-text .w {
     transition: none;
   }
 }

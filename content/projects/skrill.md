@@ -35,13 +35,11 @@ I designed the rules, the points economy, the interface and the mascot, and buil
 
 ## why.md
 
-I make games with an artist friend. Our paid work comes with deadlines. Practice does not: drawing for fun, writing a track, learning a new tool. No client wants it, so it loses to everything that does have a client.
+I make games with an artist friend, and the work that keeps us sharp has no deadline: drawing for fun, a new track, a tool nobody asked for. It loses every time to the work that does have a client.
 
-We already met every week to show what we had made, but we had no way to count it. A goal that lives in your head is easy to drop, and a vague intention with no date is the easiest of all. About half of us have ADHD, me included, and for us a vague plan with a distant payoff is the easiest thing in the world to drop. I needed something with a short loop, other people in it and a reason to show up on a specific day. Skrill is that, and it changed how much I make.
+We already met every week to show what we had made, but a goal that only lives in your head is easy to drop, especially with no date on it. I needed something with a short loop, other people in it, and a reason to show up on a specific day.
 
-What the research I found agrees on is simple. Writing down what you will do, and by when, makes you more likely to do it: a meta-analysis of 94 tests found a medium to large effect for this kind of plan (Gollwitzer and Sheeran, 2006). Telling someone makes it stronger. In a study at Dominican University, people who wrote their goals and sent a friend weekly updates completed 76% of them, against 43% for people who only thought about them. That study was small and self-reported, so I treat it as a direction, not a law.
-
-The tools for this were all wrong. Notion boards and ClickUp lists feel like work, and this was the opposite of work. The brief became a system with a deadline, a bit of rivalry and a reason to show up, that felt like play and not like a spreadsheet.
+Notion boards and ClickUp lists feel like work, the opposite of what I wanted. So the brief became a system with a deadline, a bit of rivalry and a reason to show up, built to feel like play, not a spreadsheet.
 
 ## how-it-works/
 
@@ -67,6 +65,8 @@ body:
   An extra tier pays no base points at all and scores only through the group, for things you do just because. Some seasons a bounty appears, a prompt for something to make, such as a sci-fi piece, a sticker for the group or a classic painting in your own style. The chance of one rises every season it does not show up, so they stay a surprise. If a friend takes it, you want to as well, because you do not want them to take all the points.
 media:
   - full | assets/skrill/declare-goal-difficulty.webm | Screen recording: declaring a goal, choosing simple or complex, and the points shown on each | // [todo: write this caption]
+  - full | assets/skrill/declare-goal-modal.webp | The new goal modal, with difficulty set to extra, simple or complex, plus a title and an optional description | // the difficulty picker, up close | square
+  - full | assets/skrill/bounty-goal.webp | A season's goals list showing a bounty card, "make art about fishing", with a deliver bounty button | // a bounty prompt waiting to be claimed | natural
 :::
 
 ::: decision 03-points-from-your-friends
@@ -103,14 +103,8 @@ items:
 The system has held up for the people it was built for. The weekly call used to be a chat with nothing to count. Now it is a reveal of what each person made, with points on it. I make more than I did before it existed.
 
 ::: quote
-text: [todo: one line from a member of the group about what Skrill changed]
-name: [todo: who said it]
-role: [todo: what they do]
+text: I get that Monday dread, like god, I didn't hit my goal, so I just go and do it.
+name: a friend in the group
 :::
 
 ## project-info.md
-
-::: credits
-items:
-  - Pedro Lopes | product design, ui, full stack development, mascot
-:::

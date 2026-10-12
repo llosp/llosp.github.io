@@ -844,6 +844,11 @@ video {
   margin-top: 28px;
 }
 
+.cs-section_body > .prose + .quote,
+.cs-section_body > .outcomes + .quote {
+  margin-top: 40px;
+}
+
 .outcomes {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -1552,6 +1557,8 @@ a.cs-nav_link:hover .cs-nav_name {
     grid-column: 1;
   }
 
+  /* a single hero item is its own grid cell, vertically centered beside
+     the two text rows. */
   .decision > .media-block {
     grid-column: 2;
     grid-row: 1 / span 2;
@@ -1559,9 +1566,25 @@ a.cs-nav_link:hover .cs-nav_name {
     margin-top: 0;
   }
 
-  .decision > .media-block ~ .media-block {
-    grid-row: auto;
-    margin-top: 20px;
+  /* two or more media items are wrapped (see build.mjs) into one
+     .decision_media cell, stacked top-down with flexbox instead of each
+     being a separate grid item. that keeps every gap in the stack an
+     equal --split-gap, matching the column gutter, instead of being
+     warped by whatever row height the text column happens to need. */
+  .decision > .decision_media {
+    grid-column: 2;
+    grid-row: 1 / -1;
+    align-self: start;
+    display: flex;
+    flex-direction: column;
+    gap: var(--split-gap);
+  }
+
+  /* flex gap is the only spacing in the stack; each item's own default
+     top margin would otherwise add on top of it and offset the stack
+     from the text's top edge. */
+  .decision > .decision_media > .media-block {
+    margin-top: 0;
   }
 
   .decision .media-block--side { grid-template-columns: 1fr; }
@@ -1576,7 +1599,8 @@ a.cs-nav_link:hover .cs-nav_name {
     grid-column: 2;
   }
 
-  .decision:nth-of-type(even) > .media-block {
+  .decision:nth-of-type(even) > .media-block,
+  .decision:nth-of-type(even) > .decision_media {
     grid-column: 1;
   }
 }

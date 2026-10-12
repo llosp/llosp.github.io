@@ -251,6 +251,7 @@
 
   // ---------- glow scene ----------
   const glow = document.querySelector('.h-glow');
+  const glowSticky = document.querySelector('.h-glow-sticky');
 
   // ---------- product bar ----------
   const bar = document.getElementById('pbar');
@@ -291,13 +292,73 @@
 
     if (glow) {
       const r = glow.getBoundingClientRect();
-      const travel = r.height - vh;
+      // Measured off the pinned panel rather than innerHeight. The panel is
+      // 100vh, and on mobile browsers 100vh is the viewport with the URL bar
+      // *collapsed* while innerHeight reports it expanded. Using innerHeight
+      // meant the scene finished a bar's height before the panel actually
+      // unpinned, so the last beat was spent on a frozen, fully charged frame.
+      const vhp = glowSticky ? glowSticky.getBoundingClientRect().height : vh;
+      const travel = r.height - vhp;
       const p = clamp(-r.top / travel);
-      // Hold the lit state for the first stretch, cross to dark through the
-      // middle, then hold dark so the glow can be looked at.
-      const t = clamp((p - 0.22) / 0.42);
-      const k = t * t * (3 - 2 * t);
-      glow.style.setProperty('--k', k.toFixed(4));
+
+      // Four overlapping beats rather than one crossfade: hold the lit room,
+      // kill it from the edges in, let the last light leave the guitar, then
+      // let the vinyl charge. The overlaps are what stop the middle of the
+      // section from being a flat grey screen with nothing on it.
+      // The room commits to black inside the headline swap rather than over a
+      // long slow fade. That is not a pacing preference, it is what keeps the
+      // type legible: a text colour that ramps while the backdrop ramps will
+      // always cross it somewhere and vanish for a few frames. Darkening fast,
+      // during the window where one line is already leaving and the other has
+      // not arrived, means each line only ever lives over one kind of room --
+      // the outgoing one over a lit room, the incoming one over a dark one.
+      const vigRaw = smoothstep((p - 0.12) / 0.26);
+      const dim = smoothstep((p - 0.325) / 0.085);
+      const charge = smoothstep((p - 0.42) / 0.26);
+
+      // The headline swaps rather than crossfades. These are two different
+      // sentences stacked in one grid cell, so a slow dissolve just renders
+      // both at once as mush; a fast swap landed on the flicker reads as the
+      // sign changing when the lights cut.
+      const tLit = 1 - smoothstep((p - 0.325) / 0.055);
+      const tOn = smoothstep((p - 0.345) / 0.055);
+
+      // The lamps stutter before they give out. Two short dips, placed just
+      // before the room commits to black; at any scroll speed each one is a
+      // valid frame, so parking mid-flicker reads as a dim room, not a glitch.
+      const dip = (c, w) => {
+        const u = (p - c) / w;
+        return Math.abs(u) > 1 ? 0 : Math.cos((u * Math.PI) / 2);
+      };
+      // The second dip is parked on the swap itself, so the sign changes on the
+      // same beat the lamp stutters.
+      const flicker = 1 - 0.5 * dip(0.285, 0.03) - 0.4 * dip(0.352, 0.022);
+
+      // The stutter is published on its own so a black layer can carry it over
+      // the whole room. The guitar takes the same beat through its brightness,
+      // so subject and room lose the light together; dipping only the guitar
+      // read as the photo going dark rather than as the lamps giving out.
+      const flick = clamp((1 - flicker) * 0.82);
+      const vig = clamp(1 - (1 - vigRaw) * flicker);
+      const lit = clamp((1 - dim) * flicker);
+
+      // How dark the room is *right now*, by either route. The caption lives
+      // through the whole scene, so unlike the two headlines it cannot dodge
+      // the crossover by being absent for it -- it has to flip to light type
+      // the moment the room drops, whether that is the flicker or the real
+      // blackout doing it.
+      const inkFlip = clamp(Math.max(dim, flick * 1.1));
+
+      glow.style.setProperty('--ink-flip', inkFlip.toFixed(4));
+      glow.style.setProperty('--flick', flick.toFixed(4));
+      glow.style.setProperty('--vig', vig.toFixed(4));
+      glow.style.setProperty('--dim', dim.toFixed(4));
+      glow.style.setProperty('--charge', charge.toFixed(4));
+      glow.style.setProperty('--lit', lit.toFixed(4));
+      glow.style.setProperty('--t-lit', tLit.toFixed(4));
+      glow.style.setProperty('--t-on', tOn.toFixed(4));
+      // Kept for the parts that should track the scene as a whole.
+      glow.style.setProperty('--k', smoothstep((p - 0.22) / 0.42).toFixed(4));
     }
   };
 

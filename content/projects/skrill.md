@@ -66,7 +66,6 @@ body:
 media:
   - full | assets/skrill/declare-goal-difficulty.webm | Screen recording: declaring a goal, choosing simple or complex, and the points shown on each | // [todo: write this caption]
   - full | assets/skrill/declare-goal-modal.webp | The new goal modal, with difficulty set to extra, simple or complex, plus a title and an optional description | // the difficulty picker, up close | square
-  - full | assets/skrill/bounty-goal.webp | A season's goals list showing a bounty card, "make art about fishing", with a deliver bounty button | // a bounty prompt waiting to be claimed | natural
 :::
 
 ::: decision 03-points-from-your-friends
@@ -77,6 +76,7 @@ body:
 
   This stops the leaderboard from being just a count of tasks. It rewards the work the group actually thought was good, and it keeps the reveal alive, because nobody knows who got what until the end.
 media:
+  - full | assets/skrill/bounty-goal.webp | A season's goals list showing a bounty card, "make art about fishing", with a deliver bounty button | // a bounty prompt waiting to be claimed | natural
   - full | assets/skrill/peer-bonus-rating.webm | Screen recording: a bonus pool being split between four deliveries, with the pool counter running down to zero | // [todo: write this caption]
 :::
 

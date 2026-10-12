@@ -414,16 +414,43 @@ body.home::after {
    right, paint and smoke carry the energy behind them. container-type: size
    on the stage means every child can be sized in cqw, so the whole scene
    scales as one locked unit instead of each part drifting at its own
-   breakpoint. Collapses to the simpler stacked layout below 835px. */
+   breakpoint. Collapses to a stacked portrait layout below 835px. */
 
 .h-hero {
   position: relative;
   z-index: 1;
   height: calc(100svh - var(--h-bar));
-  min-height: 560px;
+  /* Deliberately low. Everything in the scene is sized off svh, so a taller
+     floor than this only pushes the lock-up below the fold in a landscape
+     phone or a short desktop window. */
+  min-height: 360px;
   overflow: hidden;
   display: grid;
   place-items: center;
+  /* The scene blends against this, not against the page, so the smoke and the
+     light rig can use blend modes without bleeding into the sections below. */
+  isolation: isolate;
+  /* Base light. The stage is capped by the shorter axis, so on wide or short
+     windows it can't reach the frame edges; this wash and the vignette below
+     turn that surround into depth instead of empty black. */
+  background:
+    radial-gradient(104% 78% at 32% 50%, rgba(236, 30, 121, .09), transparent 64%),
+    radial-gradient(86% 60% at 44% 118%, rgba(203, 242, 58, .05), transparent 72%),
+    var(--h-bg);
+}
+
+/* Vignette. Pulls the corners to true black. It sits *under* the smoke video so
+   it shapes the backdrop the smoke is lit against instead of covering it. */
+.h-hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  opacity: .9;
+  pointer-events: none;
+  background:
+    radial-gradient(116% 92% at 50% 44%, transparent 34%, rgba(0, 0, 0, .5) 74%, #000 100%),
+    linear-gradient(180deg, rgba(0, 0, 0, .55) 0%, transparent 16%, transparent 70%, rgba(0, 0, 0, .8) 100%);
 }
 
 /* A fixed-aspect stage sized by whichever of width/height is the tighter
@@ -433,13 +460,16 @@ body.home::after {
 .h-hero-stage {
   position: relative;
   z-index: 1;
-  width: min(94vw, (100svh - var(--h-bar)) * 1.45);
+  width: min(96vw, (100svh - var(--h-bar)) * 1.58);
   aspect-ratio: 1478 / 958;
   container-type: size;
   /* The camera for the pointer tilt. Without it rotateX/Y are flat skews. */
   perspective: 1400px;
 }
 
+/* Three shadows do three jobs: a tight one to seat the body against the
+   backdrop, a long soft one for the room, and a pink one so the key light in
+   .h-hero-halo reads as light the guitar is actually sitting in. */
 .h-hero-guitar {
   position: absolute;
   left: 4.38%;
@@ -451,25 +481,52 @@ body.home::after {
   margin-top: .6cqw;
   transform: translateY(-50%) rotateX(var(--gx, 0deg)) rotateY(var(--gy, 0deg));
   transform-style: preserve-3d;
-  filter: drop-shadow(0 2.4cqw 3cqw rgba(0, 0, 0, .5));
+  filter:
+    drop-shadow(0 .5cqw .8cqw rgba(0, 0, 0, .55))
+    drop-shadow(0 2.4cqw 3cqw rgba(0, 0, 0, .5))
+    drop-shadow(0 0 2.2cqw rgba(236, 30, 121, .2));
   animation: h-guitar-in 1.8s var(--h-ease) .15s both;
   will-change: transform;
 }
 
-/* Sits low and right of centre so the wordmark clears the neck instead of
-   colliding with the headstock. */
+/* Sits low and right of centre so the neck runs through the gap in the
+   wordmark lock-up and the headstock clears the kanji. */
 .h-hero-copy {
   position: absolute;
   left: 71.92%;
   top: 40%;
   z-index: 2;
-  margin-top: 5.2cqw;
+  margin-top: 6.6cqw;
   transform: translate(-50%, -50%);
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
   width: max-content;
+}
+
+/* Local scrim so the type always separates from whatever part of the guitar
+   happens to sit behind it. Soft and off-centre enough to read as shadow. */
+.h-hero-copy::before {
+  content: "";
+  position: absolute;
+  inset: -14% -18%;
+  z-index: -1;
+  background: radial-gradient(52% 54% at 50% 56%, rgba(0, 0, 0, .72), rgba(0, 0, 0, .3) 56%, transparent 78%);
+  filter: blur(20px);
+  animation: h-fade 2s ease .3s both;
+}
+
+.h-hero-eyebrow {
+  margin: 0 0 1.9cqw;
+  font-family: var(--font-mono);
+  font-size: clamp(9px, .86cqw, 13px);
+  font-weight: 500;
+  letter-spacing: .36em;
+  text-indent: .36em;
+  text-transform: uppercase;
+  color: rgba(245, 245, 247, .56);
+  animation: h-rise 1s var(--h-ease) .5s both;
 }
 
 .h-hero-title {
@@ -480,36 +537,45 @@ body.home::after {
   font-weight: 400;
 }
 
-/* line-height .82 puts the cap line exactly on the element's top edge */
+/* line-height .82 puts the cap line exactly on the element's top edge; the
+   negative right margin cancels the trailing letter-space so the word centres
+   on its glyphs rather than on its box. */
 .h-hero-title-latin {
   font-family: var(--font-display);
   font-size: 13.6cqw;
   line-height: .82;
   letter-spacing: .045em;
+  margin-right: -.045em;
   text-transform: uppercase;
-  background: linear-gradient(180deg, #fff 34%, #9a9aa0 100%);
+  background: linear-gradient(177deg, #fff 8%, #f4f4f7 36%, #b9b9c0 74%, #85858d 100%);
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  text-shadow: 0 0 1.4cqw rgba(255, 255, 255, .13);
   animation: h-title-slide-in .55s var(--h-ease) .16s both;
 }
 
+/* 発光体 means "a luminous body", so the kanji is the one word on the page
+   that gets the glow-in-the-dark treatment the product is named for. */
 .h-hero-title-kanji {
   font-family: var(--font-kanji);
   font-weight: 700;
-  font-size: 13cqw;
+  font-size: 12.6cqw;
   line-height: .82;
-  margin-top: 12.2cqw;
-  color: var(--h-text);
+  margin-top: 11.5cqw;
+  color: #fff;
+  text-shadow:
+    0 0 .7cqw rgba(228, 255, 190, .2),
+    0 0 2.6cqw rgba(203, 242, 58, .12);
   animation: h-title-slide-in .55s var(--h-ease) .26s both;
 }
 
 .h-hero-sub {
-  margin: 3.38cqw 0 0;
-  font-size: clamp(14px, 1.45cqw, 22px);
+  margin: 3.1cqw 0 0;
+  font-size: clamp(14px, 1.5cqw, 23px);
   font-weight: 500;
-  letter-spacing: -.01em;
-  color: var(--h-muted);
+  letter-spacing: -.012em;
+  color: #c9c9cf;
   animation: h-rise 1s var(--h-ease) .62s both;
 }
 
@@ -521,7 +587,9 @@ body.home::after {
 }
 
 .h-hero .h-hero-price {
-  margin: 1.6cqw 0 0;
+  margin: 1.8cqw 0 0;
+  font-size: clamp(12px, .95cqw, 15px);
+  color: var(--h-dim);
   animation: h-rise 1s var(--h-ease) .78s both;
 }
 
@@ -537,19 +605,23 @@ body.home::after {
 }
 
 .h-hero-copy .h-cta-row {
-  margin-top: 1.69cqw;
+  margin-top: 2.1cqw;
   animation: h-rise 1s var(--h-ease) .7s both;
 }
 
+/* The key light. A hot pink core on the body with a deeper magenta falloff
+   around it, so the guitar is lit from behind rather than pasted on black. */
 .h-hero-halo {
   position: absolute;
-  left: -4%;
-  right: 42%;
-  top: 10%;
-  bottom: 14%;
+  left: -8%;
+  right: 46%;
+  top: 8%;
+  bottom: 10%;
   z-index: 0;
-  background: radial-gradient(50% 50% at 50% 50%, rgba(236, 30, 121, .42), transparent 70%);
-  filter: blur(40px);
+  background:
+    radial-gradient(44% 46% at 50% 50%, rgba(236, 30, 121, .42), transparent 72%),
+    radial-gradient(70% 70% at 46% 54%, rgba(104, 10, 60, .3), transparent 76%);
+  filter: blur(44px);
   animation: h-fade 2.4s ease .4s both;
 }
 
@@ -590,14 +662,33 @@ body.home::after {
   animation: h-splash-bloom 1.5s var(--h-ease) .35s both;
 }
 
-/* The sitewide smoke column, scoped to the hero instead of the full
-   viewport: every other section here controls its own light, so the ambient
-   wash stays behind the one scene that earns it. .smoke's own rules supply
-   the spans' animation; this only swaps the container from fixed to
-   absolute so it clips to the hero instead of floating over the page. */
-.h-hero-smoke {
+/* Real smoke footage, full-bleed behind the guitar and copy (both sit in
+   .h-hero-stage at z-index 1+). Screen blend drops the footage's own black to
+   nothing and keeps only the lit smoke, so the frame stays true black instead
+   of going grey the way a luminosity blend does; the mask fades the clip's
+   edges so no part of the video's rectangle meets a page edge. */
+.h-hero-smoke-video {
   position: absolute;
-  z-index: 0;
+  inset: 0;
+  /* Above the vignette, below the stage (z-index 1, but later in the DOM). */
+  z-index: 1;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  opacity: .64;
+  mix-blend-mode: screen;
+  /* The source clip is very underexposed — it peaks around luminance 70/255 for
+     its whole duration — so it has to be lifted before it is shaped. Contrast
+     first would only crush it, since contrast pivots on mid grey. */
+  filter: grayscale(1) brightness(3.1) contrast(1.15);
+  /* Radial pass dissolves the clip's rectangle; the linear pass pulls the
+     densest part of the bank off the bottom edge, where it would otherwise sit
+     behind the price line and form a bright band against the next section. */
+  mask-image:
+    radial-gradient(118% 100% at 50% 46%, #000 22%, rgba(0, 0, 0, .55) 62%, transparent 88%),
+    linear-gradient(180deg, #000 0%, #000 62%, rgba(0, 0, 0, .45) 86%, transparent 100%);
+  mask-composite: intersect;
+  pointer-events: none;
 }
 
 @keyframes h-rise {
@@ -612,6 +703,15 @@ body.home::after {
     opacity: 0;
     transform: translateY(-50%) translateX(10%) rotate(-5deg) scale(.96);
     filter: drop-shadow(0 40px 60px rgba(0, 0, 0, .6)) blur(8px);
+  }
+}
+
+/* The portrait guitar carries its layout in the transform, so its entrance has
+   to animate from the same rotation rather than from h-rise's plain offset. */
+@keyframes h-guitar-stand {
+  from {
+    opacity: 0;
+    transform: rotate(-90deg) scale(2.74);
   }
 }
 
@@ -663,13 +763,15 @@ body.home::after {
   opacity: var(--reveal, 0);
 }
 
-/* First light of that surface bleeding up off the floor as the sweep finishes:
-   the fade sits low and only arrives with the last few letters. */
+/* Previously bled a white fade up from the floor as the last words lit, off
+   the --wash custom property JS still sets. Killed per feedback: the section
+   stays solid black while the text reveals; the floor only opens later, in
+   the actual shatter (.h-statement-reveal). */
 .h-statement-wash {
   position: absolute;
   inset: 0;
   background: linear-gradient(180deg, transparent 88%, #f5f5f7 100%);
-  opacity: var(--wash, 0);
+  opacity: 0;
 }
 
 /* What comes through the cracks first: the guitar's own light, at the point
@@ -794,17 +896,41 @@ html:not(.js) .h-statement-text {
 
 /* ---------- glow scene (scroll-scrubbed, --k: 0 lit -> 1 dark) ---------- */
 
+/* The scene is driven by five scrubbed values, not one, because "the lights go
+   out" is not a single crossfade: the room darkens from the edges in (--vig)
+   before the last light leaves the guitar (--dim), and the vinyl only starts
+   charging once it is actually dark (--charge). Fading one black layer over
+   white instead would spend the whole middle of the section at flat 50% grey. */
 .h-glow {
   --k: 0;
+  --vig: 0;
+  --dim: 0;
+  --charge: 0;
+  --flick: 0;
+  --ink-flip: 0;
+  --lit: 1;
+  --t-lit: 1;
+  --t-on: 0;
   position: relative;
-  height: 300vh;
-  background: #f5f5f7;
+  height: 340vh;
+  /* Only a flat fill here, and it tracks the room. The lit-room gradient lives
+     on the pinned panel instead. The panel is 100vh, which on mobile is the
+     viewport with the URL bar collapsed -- so while the bar is showing, a strip
+     of this section is visible below the panel. When this held the light
+     gradient, that strip stayed near-white under a scene that had gone black. */
+  background: color-mix(in srgb, #ececed calc(100% - (var(--dim) * .55 + var(--vig) * .45) * 100%), #000);
 }
 
+/* A lit room, not a flat fill: a soft key above the guitar falling off to a
+   cooler floor. Without it there is no light in the scene for the scrub to
+   take away, and the opening frame reads as an empty slide. */
 .h-glow-sticky {
   position: sticky;
   top: 0;
   height: 100vh;
+  background:
+    radial-gradient(72% 56% at 50% 26%, #fff 0%, rgba(255, 255, 255, 0) 70%),
+    radial-gradient(90% 70% at 50% 108%, #d9d9e0 0%, rgba(217, 217, 224, 0) 68%);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -815,23 +941,63 @@ html:not(.js) .h-statement-text {
   text-align: center;
 }
 
+/* The flat black. It commits late and fast, so it reads as the last lamp being
+   switched off rather than as a dissolve. */
 .h-glow-dark {
   position: absolute;
   inset: 0;
   background: #000;
-  opacity: var(--k);
+  opacity: var(--dim);
+}
+
+/* The room closing in. Two different beats drive two different properties here,
+   and the split matters. Opacity rides --vig, early and gentle: the corners
+   sink while the middle of the room -- where the headline and the caption sit
+   -- stays lit, so both stay readable in ink. The *size* rides --dim, so the
+   pool only collapses onto the guitar at the moment the room actually dies.
+   Driving both from --vig swallowed the type in black a third of the section
+   before anything else had moved.
+
+   It hangs off the sticky rather than off .h-glow-dark, because nesting it
+   there would multiply it by that layer's own opacity (--dim), which is still
+   ~0 at the point this needs to be drawn. */
+.h-glow-sticky::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(calc(94% - var(--dim) * 48%) calc(104% - var(--dim) * 56%) at 50% 57%,
+      transparent 0%,
+      transparent 26%,
+      rgba(0, 0, 0, .34) 46%,
+      rgba(0, 0, 0, .88) 74%,
+      #000 92%);
+  opacity: calc(var(--vig) * .5 + var(--dim) * .5);
+  pointer-events: none;
+}
+
+/* The stutter before the lamps give out. It has to be a layer over the whole
+   room rather than a dip on the guitar alone: dimming only the subject while
+   the room behind it stays bright reads as the photo going dark, not as the
+   light going out. Driving the backdrop and the guitar from the same beat is
+   what makes it read as one room losing power. */
+.h-glow-flash {
+  position: absolute;
+  inset: 0;
+  background: #000;
+  opacity: var(--flick);
+  pointer-events: none;
 }
 
 .h-glow-bloom {
   position: absolute;
   left: 50%;
-  top: 55%;
-  width: min(900px, 120vw);
+  top: 57%;
+  width: min(1000px, 130vw);
   aspect-ratio: 1;
-  transform: translate(-50%, -50%) scale(calc(.7 + var(--k) * .3));
-  background: radial-gradient(closest-side, rgba(203, 242, 58, .32), rgba(203, 242, 58, .08) 55%, transparent 75%);
-  opacity: var(--k);
-  filter: blur(30px);
+  transform: translate(-50%, -50%) scale(calc(.62 + var(--charge) * .42));
+  background: radial-gradient(closest-side, rgba(203, 242, 58, .4), rgba(203, 242, 58, .1) 52%, transparent 74%);
+  opacity: var(--charge);
+  filter: blur(34px);
 }
 
 .h-glow-head,
@@ -842,8 +1008,12 @@ html:not(.js) .h-statement-text {
   z-index: 1;
 }
 
+/* Stays pink the whole way down. Interpolating it to lime dragged it through
+   orange around the halfway mark, and the product does the same thing anyway --
+   the body is still magenta in the dark shot; it is only the vinyl that turns
+   green. */
 .h-glow-head .eyebrow {
-  color: color-mix(in srgb, var(--h-pink) calc(100% - var(--k) * 100%), var(--h-lime));
+  color: var(--h-pink);
 }
 
 .h-glow-title {
@@ -860,22 +1030,55 @@ html:not(.js) .h-statement-text {
   grid-area: 1 / 1;
 }
 
+/* The two lines overlap on purpose. Crossing them at zero left a hole where the
+   headline was simply absent for the most important beat of the section. */
+/* Both lines dissolve through a blur on the way out and in, so the frames where
+   they do overlap read as a transition instead of as two sentences printed on
+   top of each other. */
+/* Fixed ink, deliberately. This line only exists while the room is still lit --
+   it has blurred out before --dim lands -- so there is nothing for a colour
+   ramp to do here except introduce a few frames where it matches whatever is
+   behind it. */
 .h-glow-a {
   color: var(--h-ink);
-  opacity: calc(1 - var(--k) * 2);
+  opacity: var(--t-lit);
+  filter: blur(calc((1 - var(--t-lit)) * 9px));
 }
 
+/* Comes up unlit and only then blooms, which is what the vinyl itself does.
+   The unlit end is a muted sage rather than the deep olive it wants to be,
+   because this line arrives a few frames before the room finishes going black
+   and has to survive both backdrops on the way through. */
 .h-glow-b {
-  color: var(--h-glow);
-  text-shadow: 0 0 40px rgba(203, 242, 58, .4);
-  opacity: calc(var(--k) * 2 - 1);
+  color: color-mix(in srgb, #97a67c calc(100% - var(--charge) * 100%), var(--h-glow));
+  text-shadow:
+    0 0 calc(var(--charge) * 14px) rgba(228, 255, 190, calc(var(--charge) * .5)),
+    0 0 calc(var(--charge) * 54px) rgba(203, 242, 58, calc(var(--charge) * .45));
+  opacity: var(--t-on);
+  filter: blur(calc((1 - var(--t-on)) * 9px));
 }
 
 .h-glow-stage {
   position: relative;
   width: min(560px, 74vw, 52vh * 1.07);
   aspect-ratio: 1099 / 1024;
-  transform: scale(calc(.94 + var(--k) * .06)) rotate(calc(-4deg + var(--k) * 4deg));
+  transform: scale(calc(.9 + var(--charge) * .12)) rotate(calc(-6deg + var(--k) * 6deg));
+}
+
+/* Once the room is gone the guitar has to be the only light in it, so it casts
+   onto the floor instead of floating on black. */
+.h-glow-stage::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6%;
+  width: 86%;
+  height: 22%;
+  transform: translateX(-50%);
+  background: radial-gradient(closest-side, rgba(203, 242, 58, .3), transparent 76%);
+  opacity: var(--charge);
+  filter: blur(26px);
+  pointer-events: none;
 }
 
 .h-glow-img {
@@ -886,14 +1089,24 @@ html:not(.js) .h-statement-text {
   object-fit: contain;
 }
 
+/* Dimmed with brightness, not opacity. Opacity fades the guitar toward whatever
+   is behind it, and for most of this scene that is still a lit room — so the
+   flicker read as the photo turning translucent rather than as a lamp giving
+   out. Brightness darkens it instead, which is what losing light actually looks
+   like, and it lands on black at the end without a separate fade. Opacity is
+   left to do the one job it is right for: handing over to the charged version. */
 .h-glow-lit {
-  opacity: calc(1 - var(--k));
-  filter: drop-shadow(0 30px 40px rgba(0, 0, 0, .25));
+  opacity: calc(1 - var(--charge));
+  filter:
+    brightness(var(--lit))
+    drop-shadow(0 30px 40px rgba(0, 0, 0, calc(.25 * var(--lit))));
 }
 
 .h-glow-on {
-  opacity: var(--k);
-  filter: drop-shadow(0 0 40px rgba(228, 255, 190, .35));
+  opacity: var(--charge);
+  filter:
+    drop-shadow(0 0 calc(16px + var(--charge) * 30px) rgba(228, 255, 190, calc(.2 + var(--charge) * .3)))
+    drop-shadow(0 0 4px rgba(203, 242, 58, .3));
 }
 
 .h-glow-note {
@@ -902,7 +1115,16 @@ html:not(.js) .h-statement-text {
   font-size: clamp(17px, 1.5vw, 21px);
   font-weight: 500;
   line-height: 1.4;
-  color: color-mix(in srgb, #6e6e73 calc(100% - var(--k) * 100%), #a1a1a6);
+  /* Tracks the room, not the master curve: the backdrop behind it goes dark
+     well before the scene finishes, and mid-grey on near-black is unreadable.
+     The halo is what makes that survivable. This line sits low in the frame,
+     where the vignette is deepest, so the backdrop sweeps through every value
+     from near-white to black — any single colour ramp crosses it somewhere and
+     goes invisible for a few frames. A dark halo that fades in with the room
+     keeps the light text separated from the backdrop the whole way down, and
+     costs nothing at the start, when the text is still dark on white. */
+  color: color-mix(in srgb, #6e6e73 calc(100% - var(--ink-flip) * 100%), #d6d6dc);
+  text-shadow: 0 0 calc(var(--ink-flip) * 18px) rgba(0, 0, 0, calc(var(--ink-flip) * .75));
 }
 
 .h-glow-hint {
@@ -915,11 +1137,69 @@ html:not(.js) .h-statement-text {
   font-weight: 500;
   letter-spacing: .02em;
   color: #86868b;
-  opacity: calc(1 - var(--k) * 3);
+  opacity: calc(1 - var(--vig) * 3);
 }
 
+/* No JS: nothing scrubs, so the scene settles into the state it is actually
+   about -- the dark room with the vinyl lit -- and stops reserving three
+   viewports of scroll it can no longer spend. Both headlines are shown, since
+   without the swap there is nothing to stack them for. */
+html:not(.js) .h-glow {
+  --k: 1;
+  --vig: 1;
+  --dim: 1;
+  --charge: 1;
+  --ink-flip: 1;
+  --lit: 0;
+  --t-lit: 1;
+  --t-on: 1;
+  height: auto;
+}
+
+html:not(.js) .h-glow-sticky {
+  position: static;
+  height: auto;
+  padding: clamp(80px, 16vh, 160px) 22px;
+}
+
+html:not(.js) .h-glow-title {
+  display: block;
+}
+
+html:not(.js) .h-glow-a,
+html:not(.js) .h-glow-b {
+  display: block;
+}
+
+/* Its scrubbed colour is ink, which is correct over a lit room and invisible
+   over this one. */
+html:not(.js) .h-glow-a {
+  color: #e8e8ec;
+}
+
+html:not(.js) .h-glow-hint {
+  display: none;
+}
+
+/* The glow scene unpins on black and this section used to start on black too,
+   so the handoff read as a cut. The bloom carries over the fold instead, as if
+   the dark room the photos were taken in is the same one we just left. */
 .h-proof {
+  position: relative;
   padding: clamp(60px, 10vh, 110px) 22px 0;
+}
+
+.h-proof::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: min(1100px, 140vw);
+  aspect-ratio: 2 / 1;
+  transform: translate(-50%, -62%);
+  background: radial-gradient(closest-side, rgba(203, 242, 58, .17), rgba(203, 242, 58, .05) 48%, transparent 72%);
+  filter: blur(40px);
+  pointer-events: none;
 }
 
 .h-proof-grid {
@@ -931,19 +1211,41 @@ html:not(.js) .h-statement-text {
 }
 
 .h-proof-grid figure {
+  position: relative;
   margin: 0;
   border-radius: 28px;
   overflow: hidden;
   aspect-ratio: 3 / 4;
   background: #000;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, .06) inset;
+  box-shadow:
+    0 0 0 1px rgba(255, 255, 255, .06) inset,
+    0 0 0 rgba(203, 242, 58, 0);
+  transition: box-shadow 1.4s var(--h-ease);
+  transition-delay: calc(var(--d, 0) * 90ms + 260ms);
 }
 
+.h-proof-grid figure.is-in {
+  box-shadow:
+    0 0 0 1px rgba(203, 242, 58, .16) inset,
+    0 0 44px rgba(203, 242, 58, .1);
+}
+
+/* The photos come up the way the vinyl does: dim first, then charged. */
 .h-proof-grid img {
   width: 100%;
   height: 100%;
   object-fit: cover;
   display: block;
+}
+
+.js .h-proof-grid img {
+  filter: brightness(.45) saturate(.7);
+  transition: filter 1.6s var(--h-ease);
+  transition-delay: calc(var(--d, 0) * 90ms + 200ms);
+}
+
+.h-proof-grid figure.is-in img {
+  filter: none;
 }
 
 .h-proof-cap {
@@ -1434,75 +1736,101 @@ html:not(.js) .h-statement-text {
     height: 240svh;
   }
 
-  /* Stage steps out of its fixed aspect-ratio box and the asymmetric overlay
-     collapses to the stacked flow: guitar, then wordmark, centred in the
-     viewport so the hero doesn't leave a dead band under the copy. */
+  /* A 2.9:1 guitar laid flat on a portrait screen is a sliver, so the hero
+     re-composes rather than just reflowing: the guitar stands up, cropped so
+     the neck runs out of the top of the frame, and the lock-up sits below it
+     on clean black. The stage becomes the grid that splits those two. */
   .h-hero {
-    height: auto;
-    min-height: calc(100svh - var(--h-bar));
-    padding: 3vh 22px 5vh;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+    height: calc(100svh - var(--h-bar));
+    min-height: 560px;
+    padding: 0;
   }
 
   .h-hero-stage {
-    width: 100%;
+    position: absolute;
+    inset: 0;
+    width: auto;
     aspect-ratio: auto;
     container-type: normal;
     perspective: none;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 2vh;
+    display: grid;
+    grid-template-rows: minmax(0, 1fr) auto;
+    justify-items: center;
+    padding: 0 22px 5vh;
+    overflow: hidden;
   }
 
-  .h-hero-smoke {
+  /* The image keeps a layout box the size of its own rotated footprint, so it
+     sizes and aligns in the grid like any other block; rotate then puts the
+     picture into that box, and the scale makes the contained strip fill it.
+     2.9323 is the image's own 1560/532 aspect, so the two always agree. */
+  .h-hero-guitar {
+    position: static;
+    grid-row: 1;
+    align-self: end;
+    width: min(76vw, 320px);
+    height: auto;
+    aspect-ratio: 532 / 1560;
+    object-fit: contain;
+    margin: 0 0 3vh;
+    transform: rotate(-90deg) scale(2.9323);
+    transform-origin: 50% 50%;
+    /* Offsets would rotate with the image, so the shadows here are centred. */
+    filter:
+      drop-shadow(0 0 5px rgba(0, 0, 0, .7))
+      drop-shadow(0 0 22px rgba(236, 30, 121, .3));
+    animation: h-guitar-stand 1.2s var(--h-ease) .1s both;
+  }
+
+  /* The splash is drawn for the horizontal body and reads as mud behind
+     portrait type, so the glow carries the colour on its own here. */
+  .h-hero-splash {
     display: none;
   }
 
-  /* Bleeds a little past both edges so the crop reads as deliberate full-bleed
-     rather than a headstock that accidentally ran out of room. */
-  .h-hero-guitar {
-    position: static;
-    width: 116%;
-    max-width: none;
-    margin: 0 0 0 -8%;
-    transform: none;
-    filter: drop-shadow(0 14px 22px rgba(0, 0, 0, .5));
-    animation: h-rise 1.2s var(--h-ease) .1s both;
-  }
-
-  .h-hero-splash {
-    left: -14%;
-    width: 128%;
-    margin-top: 0;
-    opacity: .75;
-  }
-
   .h-hero-halo {
-    left: 0;
-    right: 0;
-    top: 8%;
-    bottom: 8%;
+    left: 50%;
+    right: auto;
+    top: auto;
+    bottom: 30%;
+    width: 124vw;
+    height: 56vw;
+    opacity: .6;
+    transform: translateX(-50%);
+    filter: blur(54px);
   }
 
   .h-hero-copy {
     position: static;
+    grid-row: 2;
     transform: none;
     margin: 0;
-    width: auto;
+    width: 100%;
   }
 
-  .h-hero-title-latin,
-  .h-hero-title-kanji {
-    font-size: 25vw;
+  .h-hero-copy::before {
+    display: none;
+  }
+
+  .h-hero-eyebrow {
+    margin-bottom: 3vw;
+    font-size: 10px;
+  }
+
+  /* cqw has no container to resolve against here, so it falls back to the
+     viewport and the glows balloon on a tablet. Pinned to px instead. */
+  .h-hero-title-latin {
+    font-size: min(21vw, 118px);
+    text-shadow: 0 0 6px rgba(255, 255, 255, .12);
     animation: h-rise 1.2s var(--h-ease) both;
   }
 
   .h-hero-title-kanji {
-    margin-top: 7vw;
+    margin-top: 2.5vw;
+    font-size: min(18vw, 100px);
+    text-shadow:
+      0 0 4px rgba(228, 255, 190, .22),
+      0 0 16px rgba(203, 242, 58, .14);
     animation: h-rise 1.2s var(--h-ease) .08s both;
   }
 
@@ -1517,6 +1845,7 @@ html:not(.js) .h-statement-text {
 
   .h-hero .h-hero-price {
     margin-top: 4vw;
+    font-size: 13px;
   }
 
   .pbar-actions {
@@ -1624,12 +1953,56 @@ html:not(.js) .h-statement-text {
   .h-cta-row {
     gap: 20px;
   }
+
+  /* One line or it stops reading as a label and starts reading as a sentence. */
+  .h-hero-eyebrow {
+    font-size: 9px;
+    letter-spacing: .26em;
+    text-indent: .26em;
+    white-space: nowrap;
+  }
+}
+
+/* Short phones and landscape: the lock-up has to give up height before the
+   guitar does, so the price stays above the fold. */
+@media (max-width: 834px) and (max-height: 700px) {
+  .h-hero {
+    min-height: 0;
+  }
+
+  .h-hero-guitar {
+    width: min(62vw, 270px);
+    margin-bottom: 2vh;
+  }
+
+  .h-hero-title-latin {
+    font-size: min(17vw, 92px);
+  }
+
+  .h-hero-title-kanji {
+    font-size: min(14.5vw, 78px);
+  }
+
+  .h-hero-sub {
+    margin-top: 3vw;
+    font-size: 15px;
+  }
+
+  .h-hero-copy .h-cta-row {
+    margin-top: 4vw;
+  }
+
+  .h-hero .h-hero-price {
+    margin-top: 3vw;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .h-hero-guitar,
   .h-hero-halo,
   .h-hero-splash,
+  .h-hero-copy::before,
+  .h-hero-eyebrow,
   .h-hero-title-latin,
   .h-hero-title-kanji,
   .h-hero-sub,
@@ -1647,7 +2020,17 @@ html:not(.js) .h-statement-text {
   .tile-cut,
   .tile-bg,
   .acc-media img,
+  .h-proof-grid figure,
+  .js .h-proof-grid img,
   .h-statement-text .w {
     transition: none;
+  }
+
+  .js .h-proof-grid img {
+    filter: none;
+  }
+
+  .h-hero-smoke-video {
+    display: none;
   }
 }

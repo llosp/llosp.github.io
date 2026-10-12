@@ -1548,6 +1548,9 @@ a.cs-nav_link:hover .cs-nav_name {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     grid-auto-flow: dense;
+    /* title row hugs its content, the body row soaks up any extra height
+       a tall media stack adds, so the text stays at the top */
+    grid-template-rows: auto 1fr;
     column-gap: var(--split-gap);
     align-items: start;
   }
@@ -1573,7 +1576,9 @@ a.cs-nav_link:hover .cs-nav_name {
      warped by whatever row height the text column happens to need. */
   .decision > .decision_media {
     grid-column: 2;
-    grid-row: 1 / -1;
+    /* not 1 / -1: with no explicit rows, -1 is line 1, so this only spanned
+       the title row and pushed the body text below the whole stack */
+    grid-row: 1 / span 2;
     align-self: start;
     display: flex;
     flex-direction: column;

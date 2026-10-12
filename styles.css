@@ -1425,7 +1425,10 @@ a.cs-nav_link:hover .cs-nav_name {
 
   .layout-grid_item.is--active { width: 100%; }
 
+  /* two columns leave no room for the empty left one, and the span-2 tile
+     would not fit past it and be pushed off screen */
   .covers {
+    --skip: 0;
     margin-top: 24px;
     row-gap: 32px;
   }

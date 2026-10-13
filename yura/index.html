@@ -101,8 +101,10 @@
         Take away the blood. The sweat. The tears. What remains is pure, and luminous.
         HAKKOTAI is a guitar built from a song, painted by hand and wrapped in light.
       </p>
+      <!-- Outside the sticky so it can be fixed: this is the same room the glow
+           scene opens in, and the two layers have to agree pixel for pixel. -->
+      <div class="h-statement-reveal" aria-hidden="true"></div>
       <div class="h-statement-sticky">
-        <div class="h-statement-reveal" aria-hidden="true"></div>
         <div class="h-statement-wash" aria-hidden="true"></div>
         <div class="h-statement-burst" aria-hidden="true"></div>
         <div class="h-statement-plate" data-plate aria-hidden="true">
@@ -117,6 +119,9 @@
 
     <!-- Glow: sticky scroll scene, lit to dark -->
     <section class="h-glow" id="glow" aria-labelledby="glow-title">
+      <!-- Outside the sticky, and fixed: the lit room has to hold still while
+           the shattered statement scrolls away and this panel rises in. -->
+      <div class="h-glow-room" aria-hidden="true"></div>
       <div class="h-glow-sticky">
         <div class="h-glow-dark" aria-hidden="true"></div>
         <div class="h-glow-flash" aria-hidden="true"></div>

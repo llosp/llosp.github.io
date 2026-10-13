@@ -252,6 +252,12 @@
   // ---------- glow scene ----------
   const glow = document.querySelector('.h-glow');
   const glowSticky = document.querySelector('.h-glow-sticky');
+  // Reduced motion: the statement never pins, so there is no shatter for the
+  // fixed room to take over from and nothing for it to cover while a panel
+  // slides away -- left on, it would just white out the static statement above.
+  // The panel carries its own room again and the entrance is skipped. The scene
+  // still goes dark on scroll; it simply does not fly anything in.
+  if (glow && reduceMotion) glow.classList.add('is-plain');
 
   // ---------- product bar ----------
   const bar = document.getElementById('pbar');
@@ -262,6 +268,13 @@
     const vh = window.innerHeight;
 
     if (bar) bar.classList.toggle('is-scrolled', window.scrollY > 8);
+
+    // Whether the break has fully landed, hoisted out of the block because the
+    // glow scene reads it: that is the moment its room takes over from the
+    // statement's. It stays 1 for the whole run-up afterwards, since `b` is
+    // clamped, so the handover never falls into a frame where neither layer is
+    // holding the room.
+    let shatterTail = 0;
 
     // The plate is pinned for the whole section: the first stretch of scroll
     // only lights letters, the last stretch spends itself breaking the plate.
@@ -274,12 +287,28 @@
       // The break spends itself before the end of its scroll, so the screen is
       // clear - and the glow scene ready - by the time the plate unpins.
       const b = clamp(broken / 0.8);
+      // A hard switch, not a crossfade, and that is the point. The two layers
+      // holding the room are the same gradient on the same pixels, so swapping
+      // which one is up changes nothing on screen -- whereas dissolving between
+      // them would briefly show both at partial alpha and composite to about
+      // three quarters of one, reading as a quick dip. b reaches exactly 1 on
+      // the frame the last shard fades out, so there is nothing left to cover.
+      shatterTail = b >= 1 ? 1 : 0;
       setLit(lit * (chars.length + 6) - 3);
-      sticky.style.setProperty('--wash', (lit * lit * (1 - b)).toFixed(3));
+      // Set on the section rather than the panel: .h-statement-reveal had to
+      // leave the panel to be fixed, and it still needs to inherit these.
+      statementSection.style.setProperty('--wash', (lit * lit * (1 - b)).toFixed(3));
       // The cracks open onto the dark and the guitar's own light first, and
       // only then flood white, so the break reads as a break and not a cut.
-      sticky.style.setProperty('--reveal', smoothstep((b - 0.12) / 0.62).toFixed(3));
-      sticky.style.setProperty('--burst', (b > 0 ? Math.sin(Math.PI * clamp(b / 0.85)) : 0).toFixed(3));
+      // Dropped the moment the glow scene's own room takes over, so this one is
+      // not still painting a lit room under a scene that has gone black -- it
+      // is fixed now, and would otherwise show in the strip of window the
+      // 100vh panel does not reach.
+      statementSection.style.setProperty(
+        '--reveal',
+        (shatterTail ? 0 : smoothstep((b - 0.12) / 0.62)).toFixed(3)
+      );
+      statementSection.style.setProperty('--burst', (b > 0 ? Math.sin(Math.PI * clamp(b / 0.85)) : 0).toFixed(3));
 
       if (broken > 0) {
         if (!shards.length) buildShards();
@@ -312,9 +341,34 @@
       // during the window where one line is already leaving and the other has
       // not arrived, means each line only ever lives over one kind of room --
       // the outgoing one over a lit room, the incoming one over a dark one.
-      const vigRaw = smoothstep((p - 0.12) / 0.26);
+      const vigRaw = smoothstep((p - 0.14) / 0.24);
       const dim = smoothstep((p - 0.325) / 0.085);
       const charge = smoothstep((p - 0.42) / 0.26);
+
+      // The scene builds itself out of the room rather than riding up already
+      // composed. Four staggered ramps, not one: the eyebrow sets the beat, the
+      // headline lands on it out of focus and resolves, the guitar swings in
+      // behind that, and the caption comes last. All of it is spent inside the
+      // first tenth of the section -- about a quarter screen of scroll -- so it
+      // is finished before --vig starts taking the room away.
+      const arrive = (at, over) => (reduceMotion ? 1 : smoothstep((p - at) / over));
+      const eBrow = arrive(0, 0.040);
+      const eTitle = arrive(0.018, 0.048);
+      const eStage = arrive(0.034, 0.054);
+      const eNote = arrive(0.062, 0.048);
+
+      // The room goes up as the shards land and stays up until this panel is
+      // pinned, which is when the two windows meet. Tested on r.top rather than
+      // on whether the section intersects the viewport: on a mobile browser
+      // showing its URL bar, innerHeight is larger than the 100svh panels, so
+      // an intersection test reports this section on screen while the plate is
+      // still visibly breaking -- and the room would slam over the shards.
+      // Dropped once the section is wholly above the window so a full-viewport
+      // layer is not left composited over everything below it. --dim is 1 well
+      // before that point, so it is already invisible and there is no pop.
+      const room = reduceMotion || r.bottom <= 0
+        ? 0
+        : Math.max(shatterTail, r.top <= 0 ? 1 : 0);
 
       // The headline swaps rather than crossfades. These are two different
       // sentences stacked in one grid cell, so a slow dissolve just renders
@@ -357,6 +411,11 @@
       glow.style.setProperty('--lit', lit.toFixed(4));
       glow.style.setProperty('--t-lit', tLit.toFixed(4));
       glow.style.setProperty('--t-on', tOn.toFixed(4));
+      glow.style.setProperty('--room', room.toFixed(4));
+      glow.style.setProperty('--e-brow', eBrow.toFixed(4));
+      glow.style.setProperty('--e-title', eTitle.toFixed(4));
+      glow.style.setProperty('--e-stage', eStage.toFixed(4));
+      glow.style.setProperty('--e-note', eNote.toFixed(4));
       // Kept for the parts that should track the scene as a whole.
       glow.style.setProperty('--k', smoothstep((p - 0.22) / 0.42).toFixed(4));
     }

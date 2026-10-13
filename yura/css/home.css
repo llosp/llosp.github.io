@@ -21,6 +21,17 @@
   --h-ease: cubic-bezier(.16, 1, .3, 1);
   --h-max: 1180px;
   --h-bar: 52px;
+
+  /* The lit room: a soft key above the guitar falling off to a cooler floor.
+     It is declared here rather than on .h-glow-sticky because it is one
+     surface across two sections -- the statement shatters onto it and the glow
+     scene opens in it. Two elements paint it (.h-statement-reveal and
+     .h-glow-room) and they have to agree pixel for pixel, or the handoff shows
+     a seam where one white slides over a slightly different white. */
+  --h-room:
+    radial-gradient(72% 56% at 50% 26%, #fff 0%, rgba(255, 255, 255, 0) 70%),
+    radial-gradient(90% 70% at 50% 108%, #d9d9e0 0%, rgba(217, 217, 224, 0) 68%),
+    linear-gradient(#ececed, #ececed);
 }
 
 body.home {
@@ -755,12 +766,27 @@ body.home::after {
 }
 
 /* The light surface the glow scene opens on, waiting behind the plate so the
-   fragments break away onto the next section instead of onto a hole. */
+   fragments break away onto the next section instead of onto a hole. It is the
+   glow scene's actual room, not a stand-in white: the plate only breaks while
+   this panel is pinned, and a pinned 100svh panel's inset-0 box *is* the
+   viewport -- so the gradient here lands on exactly the pixels .h-glow-room
+   will hold it on once the fixed layer takes over. */
+/* Fixed, and sitting outside .h-statement-sticky to be allowed to be. Both
+   facts are load-bearing. Fixed, because the two layers that paint this room
+   have to land on identical pixels for the handover between them to be
+   invisible, and no length unit gets there: in a browser whose URL bar is
+   showing, 100vh resolves to the collapsed viewport while a fixed box fills the
+   real one -- here, 812 against 975. Outside the panel, because the panel's
+   overflow: hidden clips a fixed descendant back to its own 812.
+
+   It still paints under the plate and the shards: .h-statement is the stacking
+   context and this comes first in it. */
 .h-statement-reveal {
-  position: absolute;
+  position: fixed;
   inset: 0;
-  background: #f5f5f7;
+  background: var(--h-room);
   opacity: var(--reveal, 0);
+  pointer-events: none;
 }
 
 /* Previously bled a white fade up from the floor as the last words lit, off
@@ -911,26 +937,70 @@ html:not(.js) .h-statement-text {
   --lit: 1;
   --t-lit: 1;
   --t-on: 0;
+  --room: 0;
+  /* Default to fully arrived. These only count down under JS, and no-JS has no
+     entrance to play -- it needs the content simply there. */
+  --e-brow: 1;
+  --e-title: 1;
+  --e-stage: 1;
+  --e-note: 1;
   position: relative;
   height: 340vh;
-  /* Only a flat fill here, and it tracks the room. The lit-room gradient lives
-     on the pinned panel instead. The panel is 100vh, which on mobile is the
-     viewport with the URL bar collapsed -- so while the bar is showing, a strip
-     of this section is visible below the panel. When this held the light
-     gradient, that strip stayed near-white under a scene that had gone black. */
-  background: color-mix(in srgb, #ececed calc(100% - (var(--dim) * .55 + var(--vig) * .45) * 100%), #000);
+  /* Pulled up by exactly one panel so this section is already in place when the
+     statement unpins, instead of spending a full screen of scroll rising into
+     view. That screen was dead: the room is fixed and does not move, the panel
+     is transparent and its content has not arrived yet, so the whole climb was
+     a static frame you had to scroll through before anything could happen.
+
+     Nothing of this section paints during the overlap -- no background here, the
+     panel has none either, and every layer inside it is driven to zero at
+     p = 0 -- so the statement lights and breaks underneath it untouched. */
+  margin-top: -100vh;
+  margin-top: -100svh;
+  /* Deliberately no background. Anything opaque here would cover the bottom of
+     the statement panel through that overlap, and there is nothing left for it
+     to do: the fixed room fades out to the black body rather than having black
+     faded in over it. */
 }
 
-/* A lit room, not a flat fill: a soft key above the guitar falling off to a
-   cooler floor. Without it there is no light in the scene for the scrub to
-   take away, and the opening frame reads as an empty slide. */
+/* The room itself, and it is fixed on purpose.
+
+   The statement's plate shatters onto this gradient and then the statement
+   panel has a full viewport of scroll to get out of the way before the glow
+   panel pins. If the room belonged to either panel it would travel with it,
+   and that stretch read as exactly what the feedback called it: a white that
+   does not meet the next white. Fixed, the room does not move at all -- the
+   broken panel leaves and the glow panel arrives behind a surface that never
+   flinches, so the shatter appears to open straight onto this scene.
+
+   It comes before .h-glow-sticky in the DOM and both are z-index: auto, so the
+   scene's layers and content paint over it. It covers the whole viewport while
+   it is up, including the statement panel still sliding away underneath -- that
+   is the point, and it is why --room only lifts once the shards have landed.
+   The product bar sits at z-index 20 and stays clear of it. */
+.h-glow-room {
+  position: fixed;
+  inset: 0;
+  background: var(--h-room);
+  /* The blackout is this layer leaving, not a black layer arriving: the body
+     under it is already true black, so fading the room out and fading black in
+     over it are the same arithmetic -- and this way it happens at window scale
+     rather than only across the 100vh panel. */
+  opacity: calc(var(--room) * (1 - var(--dim)));
+  pointer-events: none;
+}
+
+/* Deliberately transparent. The room it sits in is painted by .h-glow-room,
+   which is fixed, so it does not slide while this panel rises into place.
+   When the room lived here instead, the panel brought its own copy of the
+   gradient up from below the fold and for one whole viewport of scroll you
+   watched two near-whites travel across each other -- the statement's reveal
+   going up, this one coming down. There is no room left for the scrub to take
+   away on this element; it only holds the scene's layers and content. */
 .h-glow-sticky {
   position: sticky;
   top: 0;
   height: 100vh;
-  background:
-    radial-gradient(72% 56% at 50% 26%, #fff 0%, rgba(255, 255, 255, 0) 70%),
-    radial-gradient(90% 70% at 50% 108%, #d9d9e0 0%, rgba(217, 217, 224, 0) 68%);
   overflow: hidden;
   display: flex;
   flex-direction: column;
@@ -1013,9 +1083,34 @@ html:not(.js) .h-statement-text {
    the body is still magenta in the dark shot; it is only the vinyl that turns
    green. */
 .h-glow-head .eyebrow {
+  position: relative;
   color: var(--h-pink);
+  opacity: var(--e-brow);
+  transform: translateY(calc((1 - var(--e-brow)) * 20px));
 }
 
+/* A magenta rule that strikes out from the centre as the eyebrow lands. It is
+   the one hard edge in a section made entirely of soft light, which is what
+   makes the arrival read as a cut rather than a fade. */
+.h-glow-head .eyebrow::after {
+  content: "";
+  position: absolute;
+  left: 50%;
+  bottom: -6px;
+  width: 64px;
+  height: 2px;
+  margin-left: -32px;
+  background: var(--h-pink);
+  transform: scaleX(var(--e-brow));
+  opacity: calc(var(--e-brow) * (1 - var(--vig)));
+}
+
+/* The loud part. Both lines arrive as one block, oversized and out of focus,
+   and resolve down onto the layout -- so the headline reads as rushing at the
+   viewport rather than fading up into it. The blur and the scale have to move
+   together: scale alone is a zoom, blur alone is a dissolve, and only the pair
+   reads as something coming into focus. The spans keep their own blur for the
+   mid-scene swap; these multiply cleanly with it because this is the parent. */
 .h-glow-title {
   display: grid;
   margin: 0;
@@ -1023,6 +1118,11 @@ html:not(.js) .h-statement-text {
   font-weight: 700;
   line-height: 1.05;
   letter-spacing: -.035em;
+  opacity: var(--e-title);
+  transform:
+    translateY(calc((1 - var(--e-title)) * 40px))
+    scale(calc(1 + (1 - var(--e-title)) * .18));
+  filter: blur(calc((1 - var(--e-title)) * 18px));
 }
 
 .h-glow-a,
@@ -1058,11 +1158,19 @@ html:not(.js) .h-statement-text {
   filter: blur(calc((1 - var(--t-on)) * 9px));
 }
 
+/* The guitar swings in rather than fading in: it arrives smaller, tilted
+   further over and low, and settles into the -6deg the scene holds it at. The
+   rotation is the whole trick -- it is the only element here that is allowed to
+   move on an axis the rest of the page never uses, so it carries the weight. */
 .h-glow-stage {
   position: relative;
   width: min(560px, 74vw, 52vh * 1.07);
   aspect-ratio: 1099 / 1024;
-  transform: scale(calc(.9 + var(--charge) * .12)) rotate(calc(-6deg + var(--k) * 6deg));
+  opacity: var(--e-stage);
+  transform:
+    translateY(calc((1 - var(--e-stage)) * 56px))
+    scale(calc((.9 + var(--charge) * .12) * (1 - (1 - var(--e-stage)) * .14)))
+    rotate(calc(-6deg + var(--k) * 6deg - (1 - var(--e-stage)) * 9deg));
 }
 
 /* Once the room is gone the guitar has to be the only light in it, so it casts
@@ -1125,6 +1233,8 @@ html:not(.js) .h-statement-text {
      costs nothing at the start, when the text is still dark on white. */
   color: color-mix(in srgb, #6e6e73 calc(100% - var(--ink-flip) * 100%), #d6d6dc);
   text-shadow: 0 0 calc(var(--ink-flip) * 18px) rgba(0, 0, 0, calc(var(--ink-flip) * .75));
+  opacity: var(--e-note);
+  transform: translateY(calc((1 - var(--e-note)) * 24px));
 }
 
 .h-glow-hint {
@@ -1137,7 +1247,10 @@ html:not(.js) .h-statement-text {
   font-weight: 500;
   letter-spacing: .02em;
   color: #86868b;
-  opacity: calc(1 - var(--vig) * 3);
+  /* Last in, and gated on the entrance as well as the room: telling someone to
+     keep scrolling while the scene is still assembling itself competes with
+     the thing it is asking them to look at. */
+  opacity: calc(var(--e-note) * (1 - var(--vig) * 3));
 }
 
 /* No JS: nothing scrubs, so the scene settles into the state it is actually
@@ -1160,6 +1273,28 @@ html:not(.js) .h-glow-sticky {
   position: static;
   height: auto;
   padding: clamp(80px, 16vh, 160px) 22px;
+}
+
+/* No fixed layer in either degraded path. Without JS nothing ever sets --room,
+   and under reduced motion the handoff it exists for does not happen; in both
+   cases a viewport-covering element is only a liability. The panel takes the
+   room back, and the overlap goes with it -- there is no pinned statement left
+   above for this section to tuck under. */
+html:not(.js) .h-glow-room,
+.h-glow.is-plain .h-glow-room {
+  display: none;
+}
+
+html:not(.js) .h-glow,
+.h-glow.is-plain {
+  margin-top: 0;
+}
+
+/* Only the reduced-motion path needs it back: that one still scrubs lit to dark,
+   it just does it on a panel-bound room. The no-JS path settles straight into
+   the dark end, where .h-glow-dark covers the section anyway. */
+.h-glow.is-plain .h-glow-sticky {
+  background: var(--h-room);
 }
 
 html:not(.js) .h-glow-title {

@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>yura / lope.design</title>
-  <meta name="description" content="A mock guitar company built around the HAKKOTAI, a guitar I built in real life.">
+  <meta name="description" content="The storefront built to sell one guitar I made by hand, with a working cart, checkout and accounts, not a landing page.">
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
   <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -64,8 +64,6 @@
         <a href="#overview-md">overview</a>
         <a href="#why-md">why</a>
         <a href="#decisions">decisions</a>
-        <a href="#gallery">gallery</a>
-        <a href="#outcome-md">outcome</a>
         <a href="#learnings-md">learnings</a>
         <a href="#project-info-md">project-info</a>
       </nav>
@@ -74,35 +72,29 @@
           <nav class="cs-breadcrumb" aria-label="breadcrumb">
             <a href="/#work">~/work</a>/<span>yura</span>
           </nav>
-          <p class="cs-eyebrow">physical object, branding and web · 2024 to 2026</p>
+          <p class="cs-eyebrow">web design, branding and front-end development · 2024 to 2026</p>
           <h1 class="cs-title">yura</h1>
-          <p class="cs-headline">I turned a song into a guitar, then built a fake company to sell it.</p>
+          <p class="cs-headline">A single-product storefront, built to sell a guitar I made by hand.</p>
         </header>
 
         <figure class="cs-cover">
-          <div class="cs-cover_frame" data-cover-slot="yura">
-          <img class="cs-cover_img" src="/assets/yura/yura-cover.webp" alt="The YURA logo over the HAKKOTAI guitar resting on an amp"
-            style="object-fit: cover" fetchpriority="high" decoding="async">
-        </div>
-          <figcaption class="caption-code">yura-cover.webp</figcaption>
+          <div class="cs-cover_frame frame--empty" data-cover-slot="yura"><!-- TODO(pedro): add a cover image for yura --><mark class="todo">[todo: add a cover image for yura]</mark></div>
+          
         </figure>
 
         <div class="cs-rest">
       <section class="cs-section" id="overview-md">
         <div class="cs-section_file">overview.md</div>
         <div class="cs-section_body">
-<p class="statement">In the absence of everything, what remains is pure and luminous.</p>
-<div class="prose"><p>The HAKKOTAI is a real guitar. I took an ordinary red one apart, sanded it down, painted it pink, covered it in vinyl art that glows in the dark and wired it back together.</p>
-<p>YURA is the company I invented to sell it. I designed the identity and built the whole storefront: a product page, a cart and checkout that work, team and about pages, and the legal pages a real store ships with. Every product photo on it is of the instrument I built.</p></div>
+<div class="prose"><p>HAKKOTAI is a guitar. One unit, hand-painted and rewired for a design course in 2024. There is no second one to sell, which means there is no stock to point to and no catalogue to disappear into if a buyer does not believe what they are looking at.</p>
+<p>This case study is the storefront built to sell it. Not a page with a buy button bolted on, but a store: a cart and checkout that actually complete a purchase, and the accounts, search and legal pages a buyer expects to exist before they trust a stranger with a card number.</p></div>
         </div>
       </section>
       <section class="cs-section" id="why-md">
         <div class="cs-section_file">why.md</div>
         <div class="cs-section_body">
-<div class="prose"><p>The guitar started as a design course assignment at PUC-Rio in 2024: pick a song, write a manifesto about it, and build an object that carries the manifesto. I picked HAKKOTAI by Yura Yura Teikoku, a 1998 Japanese psychedelic garage rock track and my most played song that year.</p>
-<p>The title is three kanji. 発 means emission, 光 means light and 体 means body or substance. Together they read as something like &quot;luminous substance&quot;. The lyrics squeeze a person until everything is gone, blood, sweat and tears, and what is left is a little green goo. The song calls it stupid, and then admits it is shining, and a bit beautiful.</p>
-<p>That became the motto, and the motto became the brief. Strip it all away and what remains should glow, literally.</p>
-<p>When the course ended I had a guitar I was proud of and nowhere to show it. Photos on a feed would have shown the object and lost the idea. The design problem underneath was this: how do you make a one-product brand feel like a real company, when the whole catalogue is one physical object you photographed yourself?</p></div>
+<div class="prose"><p>The guitar came out of a design course assignment at PUC-Rio in 2024: pick a song, write a manifesto about it, and build an object that carries it. I picked HAKKOTAI by Yura Yura Teikoku, and the idea that survived the manifesto was simple: strip everything away and what remains should glow.</p>
+<p>Once the course ended, the guitar needed a way to be sold, and that is where the real design problem started. A one-off object has no catalogue to hide inside and no other buyers to vouch for it. A landing page can only ask someone to admire it. Selling it means building the parts a landing page skips: a product page that proves its claim instead of stating it, a cart and checkout that complete a purchase, and the accounts, regions and search a buyer expects from a real store before they trust it with a card number.</p></div>
         </div>
       </section>
       <section class="cs-section" id="decisions">
@@ -111,271 +103,121 @@
 <nav class="takeaway-index" aria-label="takeaways">
   <p class="takeaway-index_label">what i decided, and why</p>
   <ol class="takeaway-index_list">
-    <li><a href="#d-01-the-glow-is-the-concept"><span class="takeaway-index_num">/01</span> the green parts actually glow in the dark</a></li>
-    <li><a href="#d-02-scroll-turns-the-lights-off"><span class="takeaway-index_num">/02</span> the product page turns the lights off as you scroll</a></li>
-    <li><a href="#d-03-quiet-like-a-product-page"><span class="takeaway-index_num">/03</span> the layout steps back so the guitar can be loud</a></li>
-    <li><a href="#d-04-show-the-hands"><span class="takeaway-index_num">/04</span> the build is on the storefront</a></li>
-    <li><a href="#d-05-build-the-boring-parts"><span class="takeaway-index_num">/05</span> it has a checkout, a cart and terms of service</a></li>
+    <li><a href="#d-01-the-layout-steps-back"><span class="takeaway-index_num">/01</span> the layout steps back so the guitar does the selling</a></li>
+    <li><a href="#d-02-the-cart-and-checkout-work"><span class="takeaway-index_num">/02</span> the cart and checkout have to complete the sale</a></li>
+    <li><a href="#d-03-accounts-regions-and-search"><span class="takeaway-index_num">/03</span> accounts, regions and search make it a store, not a demo</a></li>
+    <li><a href="#d-04-the-build-is-the-only-proof"><span class="takeaway-index_num">/04</span> the build is the only proof a one-off object has</a></li>
   </ol>
 </nav>
-<article class="decision" id="d-01-the-glow-is-the-concept">
+<article class="decision" id="d-01-the-layout-steps-back">
   <header class="decision_head">
-    <span class="decision_file">01-the-glow-is-the-concept.md</span>
-    <h3 class="decision_title">the green parts actually glow in the dark</h3>
-    <p class="decision_subtitle">The motto had to be true of the object, not just written about it.</p>
+    <span class="decision_file">01-the-layout-steps-back.md</span>
+    <h3 class="decision_title">the layout steps back so the guitar does the selling</h3>
+    <p class="decision_subtitle">A store that competes with its own product for attention loses the sale.</p>
   </header>
-  <div class="decision_body prose"><p>The manifesto rests on three ideas. It is visceral: a cracked skull with goo bursting out. It rejects depth: a guitar is just a guitar, a skull is just a skull, goo is just goo. And it celebrates the void: emptiness, treated as a party.</p>
-<p>The blood is painted pink instead of red, which takes the tragedy out of it and makes it sweet. The green is a rechargeable photoluminescent vinyl, so when the lights go out the pink disappears and only the goo is left, glowing. That is the motto, made physical.</p></div>
-  <figure class="media-block media-block--full">
-  <div class="frame">
-      <img class="media wide" src="/assets/yura/hakkotai-glowing-in-the-dark.webp" alt="The HAKKOTAI in a dark room, only the green vinyl visible and glowing" loading="lazy" decoding="async">
-    </div>
-  <figcaption class="caption-code">hakkotai-glowing-in-the-dark.webp</figcaption>
-</figure>
-  
-</article>
-<article class="decision" id="d-02-scroll-turns-the-lights-off">
-  <header class="decision_head">
-    <span class="decision_file">02-scroll-turns-the-lights-off.md</span>
-    <h3 class="decision_title">the product page turns the lights off as you scroll</h3>
-    <p class="decision_subtitle">The best feature is the one you cannot see in a normal photo.</p>
-  </header>
-  <div class="decision_body prose"><p>A store can say &quot;glows in the dark&quot; in a spec list and nobody will feel it. So the page has a scene that does it. The guitar sits on a bright background under &quot;Loud in the light.&quot; As you scroll, the room fades to black, the pink drops away and the cream art lights up green under &quot;Luminous in the dark.&quot;</p>
-<p>It is scrubbed by scroll position, not triggered, so you control the lights with your thumb or your wheel. Photos of the real guitar glowing in a dark room follow it, to show it is not a render.</p></div>
-  <figure class="before-after before-after--stack media-block">
-  <div class="before-after_side">
-      <span class="before-after_label">lights on</span>
-      <div class="frame">
-      <img class="media natural" src="/assets/yura/yura-glow-scene-lights-on.webp" alt="The glow scene with the lights on, the guitar pink on a white page" loading="lazy" decoding="async">
-    </div>
-    </div>
-  <div class="before-after_side">
-      <span class="before-after_label">lights off</span>
-      <div class="frame">
-      <img class="media natural" src="/assets/yura/yura-glow-scene-lights-off.webp" alt="the same scene scrolled to dark, the guitar glowing green" loading="lazy" decoding="async">
-    </div>
-    </div>
-</figure>
-  
-</article>
-<article class="decision" id="d-03-quiet-like-a-product-page">
-  <header class="decision_head">
-    <span class="decision_file">03-quiet-like-a-product-page.md</span>
-    <h3 class="decision_title">the layout steps back so the guitar can be loud</h3>
-    <p class="decision_subtitle">A sticky product bar, big type, one idea per screen.</p>
-  </header>
-  <div class="decision_body prose"><p>The old page tried to be as loud as the guitar. The new one does the opposite. A slim glass bar stays pinned and highlights where you are, the headline is set tight and large, and each section makes one point and then gets out of the way. The statement under the hero lights up word by word as you scroll past it.</p>
-<p>The design section is a bento grid: pink-not-red, the neck, the humbuckers, the tuners and a player shot. Below it sit the name, broken into its three kanji, and the build in eight photos.</p></div>
+  <div class="decision_body prose"><p>The old page tried to be as loud as the guitar and ended up competing with it. The new one steps back: a slim glass bar stays pinned and shows where the buyer is, the headline is set tight and large, and each section makes one point about the guitar and then gets out of the way for the next.</p>
+<p>The design section lays out what is actually for sale: pink-not-red vinyl, the neck, the humbuckers, the tuners, a player shot. The name gets its own section too, broken into the three kanji it is built from, because a buyer paying this much attention to a guitar's wiring will read its name as well.</p></div>
   <div class="decision_media"><figure class="media-block media-block--full">
-  <div class="frame">
-      <img class="media wide" src="/assets/yura/yura-product-page-hero.webp" alt="The product page hero: HAKKOTAI in large type over the guitar" loading="lazy" decoding="async">
-    </div>
-  <figcaption class="caption-code">yura-product-page-hero.webp</figcaption>
+  <div class="frame frame--empty"><!-- TODO(pedro): the product page hero, HAKKOTAI in large type over the guitar --><mark class="todo">[todo: the product page hero, HAKKOTAI in large type over the guitar]</mark></div>
+  
 </figure>
 <figure class="media-block media-block--full">
-  <div class="frame">
-      <img class="media wide" src="/assets/yura/yura-the-name-section.webp" alt="The name section: the three kanji with their meanings" loading="lazy" decoding="async">
-    </div>
-  <figcaption class="caption-code">yura-the-name-section.webp</figcaption>
+  <div class="frame frame--empty"><!-- TODO(pedro): the name section: the three kanji with their meanings --><mark class="todo">[todo: the name section: the three kanji with their meanings]</mark></div>
+  
 </figure>
 <figure class="media-block media-block--full">
-  <div class="frame">
-      <img class="media wide" src="/assets/yura/yura-design-bento.webp" alt="The design section as a bento grid of photo and text tiles" loading="lazy" decoding="async">
-    </div>
-  <figcaption class="caption-code">yura-design-bento.webp</figcaption>
+  <div class="frame frame--empty"><!-- TODO(pedro): the design section as a bento grid of photo and text tiles --><mark class="todo">[todo: the design section as a bento grid of photo and text tiles]</mark></div>
+  
 </figure></div>
   
 </article>
-<article class="decision" id="d-04-show-the-hands">
+<article class="decision" id="d-02-the-cart-and-checkout-work">
   <header class="decision_head">
-    <span class="decision_file">04-show-the-hands.md</span>
-    <h3 class="decision_title">the build is on the storefront</h3>
-    <p class="decision_subtitle">A handmade object is the one thing a mock brand cannot fake.</p>
+    <span class="decision_file">02-the-cart-and-checkout-work.md</span>
+    <h3 class="decision_title">the cart and checkout have to complete the sale</h3>
+    <p class="decision_subtitle">There is one guitar for sale. If the cart drops it, there is no sale left to recover.</p>
   </header>
-  <div class="decision_body prose"><p>Below the glow section the store walks through the build in eight photos: the stock red guitar, the electronics stripped out and catalogued, sanding, primer, sanding again, pink paint, the vinyl art and the finished guitar out at night.</p>
-<p>It ends with a note on what went wrong. Some stickers had weak glue and would not stay down. Others were too thick and the cutting machine tore them. A real catalogue would leave that out. Here it is part of the point.</p></div>
-  <figure class="media-block media-block--full">
-  <div class="frame">
-      <img class="media wide" src="/assets/yura/yura-build-timeline.webp" alt="The build timeline on the storefront: eight photos from a red stock guitar to the finished HAKKOTAI" loading="lazy" decoding="async">
-    </div>
-  <figcaption class="caption-code">yura-build-timeline.webp</figcaption>
+  <div class="decision_body prose"><p>Adding the guitar to the bag opens a real drawer: quantity, a running subtotal, a link straight to checkout. That state is written to localStorage, so it survives a reload or a closed tab, the way an actual store's cart has to.</p>
+<p>Checkout is a shipping form and a payment form, both with real validation, feeding a summary that recalculates as the buyer fills it in. Finishing an order clears the cart, generates an order number, and lands on a confirmation screen instead of going quiet, because a store that stops responding after &quot;submit&quot; is not one anyone trusts with a second purchase.</p></div>
+  <div class="decision_media"><figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): the cart drawer open with the HAKKOTAI added, quantity and subtotal shown --><mark class="todo">[todo: the cart drawer open with the HAKKOTAI added, quantity and subtotal shown]</mark></div>
+  
 </figure>
+<figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): the checkout page with shipping and payment filled in and a live order summary --><mark class="todo">[todo: the checkout page with shipping and payment filled in and a live order summary]</mark></div>
+  
+</figure>
+<figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): the order confirmation screen after a successful checkout, with an order number --><mark class="todo">[todo: the order confirmation screen after a successful checkout, with an order number]</mark></div>
+  
+</figure></div>
   
 </article>
-<article class="decision" id="d-05-build-the-boring-parts">
+<article class="decision" id="d-03-accounts-regions-and-search">
   <header class="decision_head">
-    <span class="decision_file">05-build-the-boring-parts.md</span>
-    <h3 class="decision_title">it has a checkout, a cart and terms of service</h3>
-    <p class="decision_subtitle">The parts most brand concepts skip are the parts that make it believable.</p>
+    <span class="decision_file">03-accounts-regions-and-search.md</span>
+    <h3 class="decision_title">accounts, regions and search make it a store, not a demo</h3>
+    <p class="decision_subtitle">The parts a brand concept usually skips are the parts a buyer checks before trusting it with a card.</p>
   </header>
-  <div class="decision_body prose"><p>A landing page would have shown the guitar. A store with a cart that counts, a checkout that validates and pages for privacy, accessibility and counterfeit warnings makes YURA feel like a company that exists. The mark is drawn to hold up at the size of a cable tie, because a guitar brand ends up on cables, straps and headstocks, not just on websites.</p></div>
-  <figure class="media-block media-block--full">
-  <div class="frame">
-      <img class="media wide" src="/assets/yura/yura-checkout.webp" alt="The YURA checkout flow with a working cart" loading="lazy" decoding="async">
+  <div class="decision_body prose"><p>A sign-in modal and a create-account modal sit behind the same icon, switching tabs instead of navigating away. A region modal swaps the storefront between six currencies. A search overlay filters the one-item catalogue live as the buyer types, because a real store's search has to work even when there is barely anything to find.</p>
+<p>None of this changes what is for sale. It changes whether a buyer reads the site as software or as a mockup of software, and that read decides whether they trust the next page enough to put a card number into it.</p></div>
+  <div class="decision_media"><figure class="before-after before-after--stack media-block">
+  <div class="before-after_side">
+      <span class="before-after_label">sign in</span>
+      <div class="frame frame--empty"><!-- TODO(pedro): the account modal on its sign-in tab --><mark class="todo">[todo: the account modal on its sign-in tab]</mark></div>
     </div>
-  <figcaption class="caption-code">yura-checkout.webp</figcaption>
+  <div class="before-after_side">
+      <span class="before-after_label">create account</span>
+      <div class="frame frame--empty"><!-- TODO(pedro): the same modal on its create-account tab --><mark class="todo">[todo: the same modal on its create-account tab]</mark></div>
+    </div>
 </figure>
+<figure class="before-after before-after--stack media-block">
+  <div class="before-after_side">
+      <span class="before-after_label">region</span>
+      <div class="frame frame--empty"><!-- TODO(pedro): the region modal swapping the store between six currencies --><mark class="todo">[todo: the region modal swapping the store between six currencies]</mark></div>
+    </div>
+  <div class="before-after_side">
+      <span class="before-after_label">search</span>
+      <div class="frame frame--empty"><!-- TODO(pedro): the search overlay filtering the catalogue live as you type --><mark class="todo">[todo: the search overlay filtering the catalogue live as you type]</mark></div>
+    </div>
+</figure></div>
   
 </article>
-        </div>
-      </section>
-      <section class="cs-section" id="gallery">
-        <div class="cs-section_file">gallery/</div>
-        <div class="cs-section_body">
-<div class="gallery">
-  <div class="layout-grid_list">
-<div class="layout-grid_item layout-grid_item--video">
-      <figure class="gallery_figure">
-        <div class="frame frame--video">
-      <video class="media wide" playsinline muted loop preload="metadata" aria-label="The YURA promo video">
-        <source src="/assets/yura/yura-vid.webm" type="video/webm">
-      </video>
-    </div>
-        <figcaption class="caption-code">yura-vid.webm</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media wide" src="/assets/yura/yura-hero.webp" alt="The YURA storefront hero" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">yura-hero.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media portrait" src="/assets/yura/hakkotai-build-01-stock-red-guitar.webp" alt="The guitar before the build: a stock red superstrat on a bedspread" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">hakkotai-build-01-stock-red-guitar.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media landscape" src="/assets/yura/hakkotai-build-02-stripped-electronics.webp" alt="The red guitar taken apart, its electronics laid out and labelled" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">hakkotai-build-02-stripped-electronics.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media portrait" src="/assets/yura/hakkotai-build-03-sanding-the-body.webp" alt="A hand covered in orange dust sanding the body" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">hakkotai-build-03-sanding-the-body.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media portrait" src="/assets/yura/hakkotai-build-04-primer.webp" alt="The body and neck hanging in a spray booth, coated in grey primer" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">hakkotai-build-04-primer.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media portrait" src="/assets/yura/hakkotai-build-05-pink-paint.webp" alt="The freshly painted pink body hanging next to the neck" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">hakkotai-build-05-pink-paint.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media portrait" src="/assets/yura/hakkotai-build-06-vinyl-art.webp" alt="Cream and pink vinyl art going onto the body" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">hakkotai-build-06-vinyl-art.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media portrait" src="/assets/yura/hakkotai-build-07-headstock-vinyl.webp" alt="The pink headstock with the band name in vinyl" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">hakkotai-build-07-headstock-vinyl.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media portrait" src="/assets/yura/hakkotai-build-08-rewired.webp" alt="The finished guitar, rewired, lying on a cutting mat" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">hakkotai-build-08-rewired.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media portrait" src="/assets/yura/yura-neck.webp" alt="Close-up looking down the HAKKOTAI's neck and fretboard" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">yura-neck.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media square" src="/assets/yura/yura-cable.webp" alt="A braided pink YURA guitar cable with a branded cable tie" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">yura-cable.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media landscape" src="/assets/yura/yura-guitar.webp" alt="The pink and yellow HAKKOTAI guitar resting on an amp" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">yura-guitar.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media wide" src="/assets/yura/yura-glow.webp" alt="The HAKKOTAI guitar glowing under stage lights" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">yura-glow.webp</figcaption>
-      </figure>
-    </div>
-<div class="layout-grid_item">
-      <figure class="gallery_figure">
-        <div class="frame">
-      <img class="media wide" src="/assets/yura/yura-footer.webp" alt="The YURA site footer" loading="lazy" decoding="async">
-    </div>
-        <figcaption class="caption-code">yura-footer.webp</figcaption>
-      </figure>
-    </div>
-  </div>
-</div>
-        </div>
-      </section>
-      <section class="cs-section" id="outcome-md">
-        <div class="cs-section_file">outcome.md</div>
-        <div class="cs-section_body">
-<ul class="outcomes">
-<li class="outcome">
-      <span class="outcome_value">1</span>
-      <span class="outcome_label">guitar, stripped, painted, glow-wrapped and rewired by hand</span>
-    </li>
-<li class="outcome">
-      <span class="outcome_value">10</span>
-      <span class="outcome_label">storefront pages, from the product to the legal fine print</span>
-    </li>
-<li class="outcome">
-      <span class="outcome_value">8</span>
-      <span class="outcome_label">build steps shown on the store, red stock guitar to glowing</span>
-    </li>
-</ul>
-<div class="prose"><p>What came out of it is the most complete thing I have made end to end. It runs from a song, to a written concept, to a physical object, to an identity, to a store you can click all the way through to checkout.</p></div>
+<article class="decision" id="d-04-the-build-is-the-only-proof">
+  <header class="decision_head">
+    <span class="decision_file">04-the-build-is-the-only-proof.md</span>
+    <h3 class="decision_title">the build is the only proof a one-off object has</h3>
+    <p class="decision_subtitle">There is no factory and no reviews to borrow trust from. The work itself has to be the evidence.</p>
+  </header>
+  <div class="decision_body prose"><p>A mass-produced guitar sells on a spec sheet and other people's reviews. A hand-painted one-off has neither, so the storefront walks through the build instead, in the same order it actually happened: stripped electronics, sanding, pink paint, vinyl art.</p>
+<p>A couple of steps did not go as planned. Some vinyl had weak adhesive and lifted, and a thicker sheet tore in the cutting machine. A spec sheet would hide that. Proof of a handmade object does not get to.</p></div>
+  <div class="decision_media"><figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): the body with its original electronics stripped out --><mark class="todo">[todo: the body with its original electronics stripped out]</mark></div>
+  
+</figure>
+<figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): the body sanded down to bare wood --><mark class="todo">[todo: the body sanded down to bare wood]</mark></div>
+  
+</figure>
+<figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): the body in pink paint --><mark class="todo">[todo: the body in pink paint]</mark></div>
+  
+</figure>
+<figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): vinyl art applied to the body --><mark class="todo">[todo: vinyl art applied to the body]</mark></div>
+  
+</figure></div>
+  
+</article>
         </div>
       </section>
       <section class="cs-section" id="learnings-md">
         <div class="cs-section_file">learnings.md</div>
         <div class="cs-section_body">
-<div class="prose"><p>Giving meaning to things is the hard part for me. Pinning an abstract idea down to three words and a motto took longer than any of the painting, and it is the part I am proudest of, because every later decision, the pink, the glow, the voice of the store, could be checked against it.</p>
-<p>Making something physical meant learning skills I had never used. Painting, polishing a finish and soldering the electronics back in were all new to me.</p>
-<p>Finish takes more time than you plan for. Given another pass I would spend it on the small imperfections in the paint, and I would test the vinyl before cutting it, since weak adhesive and sheets too thick for the machine cost me the most rework.</p></div>
+<div class="prose"><p>The pages that took the longest were not the hero or the glow scene. They were the boring ones: the cart logic, the checkout validation and the legal pages had to work and read like a real store, not a mockup, or no buyer would trust the page past the homepage.</p>
+<p>Cart and account state live in localStorage and have to survive a reload without duplicating a line item or losing the selected currency. Getting that boring reliability right took more iterations than any single visual decision on the site.</p>
+<p>The physical build is the smaller half of the project. Painting, finishing and soldering the electronics back in were all new skills, learned mostly by redoing steps that went wrong the first time.</p>
+<p>Given another pass, the next test is a second product. Right now the storefront only has to sell a catalogue of one, and adding a second item would be the real test of whether the selling logic generalizes or was only ever built to fit this one guitar.</p></div>
         </div>
       </section>
       <section class="cs-section" id="project-info-md">
@@ -384,7 +226,7 @@
 <dl class="meta cs-meta">
           <div class="meta_row">
             <dt>role</dt>
-            <dd>guitar build, branding, web design, front-end development</dd>
+            <dd>branding, web design, front-end development, guitar build</dd>
           </div>
           <div class="meta_row">
             <dt>timeline</dt>
@@ -396,7 +238,7 @@
           </div>
           <div class="meta_row">
             <dt>built with</dt>
-            <dd>spray paint, vinyl, a soldering iron, html, css, javascript, figma, claude code</dd>
+            <dd>html, css, javascript, figma, claude code, spray paint, vinyl, a soldering iron</dd>
           </div>
           <div class="meta_row">
             <dt>status</dt>

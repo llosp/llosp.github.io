@@ -3,137 +3,94 @@ slug: yura
 order: 4
 title: yura
 type: web design, branding
-role: guitar build, branding, web design, front-end development
+role: branding, web design, front-end development, guitar build
 status: concept
 timeline: 2024 to 2026
 team: solo
-built_with: spray paint, vinyl, a soldering iron, html, css, javascript, figma, claude code
-outcome: A guitar I built by hand, and a ten-page store that sells it.
-summary: A mock guitar company built around the HAKKOTAI, a guitar I built in real life.
-eyebrow: physical object, branding and web · 2024 to 2026
-headline: I turned a song into a guitar, then built a fake company to sell it.
+built_with: html, css, javascript, figma, claude code, spray paint, vinyl, a soldering iron
+outcome: A storefront built to sell one guitar I made by hand, cart, checkout and all.
+summary: The storefront built to sell one guitar I made by hand, with a working cart, checkout and accounts, not a landing page.
 live: /yura
 live_label: visit
 live_text: lope.design/yura
-cover: assets/yura/yura-cover.webp
-cover_alt: The YURA logo over the HAKKOTAI guitar resting on an amp
+eyebrow: web design, branding and front-end development · 2024 to 2026
+headline: A single-product storefront, built to sell a guitar I made by hand.
 ---
 
 ## overview.md
 
-::: statement
-text: In the absence of everything, what remains is pure and luminous.
-:::
+HAKKOTAI is a guitar. One unit, hand-painted and rewired for a design course in 2024. There is no second one to sell, which means there is no stock to point to and no catalogue to disappear into if a buyer does not believe what they are looking at.
 
-The HAKKOTAI is a real guitar. I took an ordinary red one apart, sanded it down, painted it pink, covered it in vinyl art that glows in the dark and wired it back together.
-
-YURA is the company I invented to sell it. I designed the identity and built the whole storefront: a product page, a cart and checkout that work, team and about pages, and the legal pages a real store ships with. Every product photo on it is of the instrument I built.
+This case study is the storefront built to sell it. Not a page with a buy button bolted on, but a store: a cart and checkout that actually complete a purchase, and the accounts, search and legal pages a buyer expects to exist before they trust a stranger with a card number.
 
 ## why.md
 
-The guitar started as a design course assignment at PUC-Rio in 2024: pick a song, write a manifesto about it, and build an object that carries the manifesto. I picked HAKKOTAI by Yura Yura Teikoku, a 1998 Japanese psychedelic garage rock track and my most played song that year.
+The guitar came out of a design course assignment at PUC-Rio in 2024: pick a song, write a manifesto about it, and build an object that carries it. I picked HAKKOTAI by Yura Yura Teikoku, and the idea that survived the manifesto was simple: strip everything away and what remains should glow.
 
-The title is three kanji. 発 means emission, 光 means light and 体 means body or substance. Together they read as something like "luminous substance". The lyrics squeeze a person until everything is gone, blood, sweat and tears, and what is left is a little green goo. The song calls it stupid, and then admits it is shining, and a bit beautiful.
-
-That became the motto, and the motto became the brief. Strip it all away and what remains should glow, literally.
-
-When the course ended I had a guitar I was proud of and nowhere to show it. Photos on a feed would have shown the object and lost the idea. The design problem underneath was this: how do you make a one-product brand feel like a real company, when the whole catalogue is one physical object you photographed yourself?
+Once the course ended, the guitar needed a way to be sold, and that is where the real design problem started. A one-off object has no catalogue to hide inside and no other buyers to vouch for it. A landing page can only ask someone to admire it. Selling it means building the parts a landing page skips: a product page that proves its claim instead of stating it, a cart and checkout that complete a purchase, and the accounts, regions and search a buyer expects from a real store before they trust it with a card number.
 
 ## decisions/
 
-::: decision 01-the-glow-is-the-concept
-title: the green parts actually glow in the dark
-subtitle: The motto had to be true of the object, not just written about it.
+::: decision 01-the-layout-steps-back
+title: the layout steps back so the guitar does the selling
+subtitle: A store that competes with its own product for attention loses the sale.
 body:
-  The manifesto rests on three ideas. It is visceral: a cracked skull with goo bursting out. It rejects depth: a guitar is just a guitar, a skull is just a skull, goo is just goo. And it celebrates the void: emptiness, treated as a party.
+  The old page tried to be as loud as the guitar and ended up competing with it. The new one steps back: a slim glass bar stays pinned and shows where the buyer is, the headline is set tight and large, and each section makes one point about the guitar and then gets out of the way for the next.
 
-  The blood is painted pink instead of red, which takes the tragedy out of it and makes it sweet. The green is a rechargeable photoluminescent vinyl, so when the lights go out the pink disappears and only the goo is left, glowing. That is the motto, made physical.
+  The design section lays out what is actually for sale: pink-not-red vinyl, the neck, the humbuckers, the tuners, a player shot. The name gets its own section too, broken into the three kanji it is built from, because a buyer paying this much attention to a guitar's wiring will read its name as well.
 media:
-  - full | assets/yura/hakkotai-glowing-in-the-dark.webp | The HAKKOTAI in a dark room, only the green vinyl visible and glowing
+  - full | | the product page hero, HAKKOTAI in large type over the guitar
+  - full | | the name section: the three kanji with their meanings
+  - full | | the design section as a bento grid of photo and text tiles
 :::
 
-::: decision 02-scroll-turns-the-lights-off
-title: the product page turns the lights off as you scroll
-subtitle: The best feature is the one you cannot see in a normal photo.
+::: decision 02-the-cart-and-checkout-work
+title: the cart and checkout have to complete the sale
+subtitle: There is one guitar for sale. If the cart drops it, there is no sale left to recover.
 body:
-  A store can say "glows in the dark" in a spec list and nobody will feel it. So the page has a scene that does it. The guitar sits on a bright background under "Loud in the light." As you scroll, the room fades to black, the pink drops away and the cream art lights up green under "Luminous in the dark."
+  Adding the guitar to the bag opens a real drawer: quantity, a running subtotal, a link straight to checkout. That state is written to localStorage, so it survives a reload or a closed tab, the way an actual store's cart has to.
 
-  It is scrubbed by scroll position, not triggered, so you control the lights with your thumb or your wheel. Photos of the real guitar glowing in a dark room follow it, to show it is not a render.
+  Checkout is a shipping form and a payment form, both with real validation, feeding a summary that recalculates as the buyer fills it in. Finishing an order clears the cart, generates an order number, and lands on a confirmation screen instead of going quiet, because a store that stops responding after "submit" is not one anyone trusts with a second purchase.
 media:
-  - compare | assets/yura/yura-glow-scene-lights-on.webp ; assets/yura/yura-glow-scene-lights-off.webp | The glow scene with the lights on, the guitar pink on a white page ; the same scene scrolled to dark, the guitar glowing green | lights on ; lights off
+  - full | | the cart drawer open with the HAKKOTAI added, quantity and subtotal shown
+  - full | | the checkout page with shipping and payment filled in and a live order summary
+  - full | | the order confirmation screen after a successful checkout, with an order number
 :::
 
-::: decision 03-quiet-like-a-product-page
-title: the layout steps back so the guitar can be loud
-subtitle: A sticky product bar, big type, one idea per screen.
+::: decision 03-accounts-regions-and-search
+title: accounts, regions and search make it a store, not a demo
+subtitle: The parts a brand concept usually skips are the parts a buyer checks before trusting it with a card.
 body:
-  The old page tried to be as loud as the guitar. The new one does the opposite. A slim glass bar stays pinned and highlights where you are, the headline is set tight and large, and each section makes one point and then gets out of the way. The statement under the hero lights up word by word as you scroll past it.
+  A sign-in modal and a create-account modal sit behind the same icon, switching tabs instead of navigating away. A region modal swaps the storefront between six currencies. A search overlay filters the one-item catalogue live as the buyer types, because a real store's search has to work even when there is barely anything to find.
 
-  The design section is a bento grid: pink-not-red, the neck, the humbuckers, the tuners and a player shot. Below it sit the name, broken into its three kanji, and the build in eight photos.
+  None of this changes what is for sale. It changes whether a buyer reads the site as software or as a mockup of software, and that read decides whether they trust the next page enough to put a card number into it.
 media:
-  - full | assets/yura/yura-product-page-hero.webp | The product page hero: HAKKOTAI in large type over the guitar
-  - full | assets/yura/yura-the-name-section.webp | The name section: the three kanji with their meanings
-  - full | assets/yura/yura-design-bento.webp | The design section as a bento grid of photo and text tiles
+  - compare | | the account modal on its sign-in tab ; the same modal on its create-account tab | sign in ; create account
+  - compare | | the region modal swapping the store between six currencies ; the search overlay filtering the catalogue live as you type | region ; search
 :::
 
-::: decision 04-show-the-hands
-title: the build is on the storefront
-subtitle: A handmade object is the one thing a mock brand cannot fake.
+::: decision 04-the-build-is-the-only-proof
+title: the build is the only proof a one-off object has
+subtitle: There is no factory and no reviews to borrow trust from. The work itself has to be the evidence.
 body:
-  Below the glow section the store walks through the build in eight photos: the stock red guitar, the electronics stripped out and catalogued, sanding, primer, sanding again, pink paint, the vinyl art and the finished guitar out at night.
+  A mass-produced guitar sells on a spec sheet and other people's reviews. A hand-painted one-off has neither, so the storefront walks through the build instead, in the same order it actually happened: stripped electronics, sanding, pink paint, vinyl art.
 
-  It ends with a note on what went wrong. Some stickers had weak glue and would not stay down. Others were too thick and the cutting machine tore them. A real catalogue would leave that out. Here it is part of the point.
+  A couple of steps did not go as planned. Some vinyl had weak adhesive and lifted, and a thicker sheet tore in the cutting machine. A spec sheet would hide that. Proof of a handmade object does not get to.
 media:
-  - full | assets/yura/yura-build-timeline.webp | The build timeline on the storefront: eight photos from a red stock guitar to the finished HAKKOTAI
+  - full | | the body with its original electronics stripped out
+  - full | | the body sanded down to bare wood
+  - full | | the body in pink paint
+  - full | | vinyl art applied to the body
 :::
-
-::: decision 05-build-the-boring-parts
-title: it has a checkout, a cart and terms of service
-subtitle: The parts most brand concepts skip are the parts that make it believable.
-body:
-  A landing page would have shown the guitar. A store with a cart that counts, a checkout that validates and pages for privacy, accessibility and counterfeit warnings makes YURA feel like a company that exists. The mark is drawn to hold up at the size of a cable tie, because a guitar brand ends up on cables, straps and headstocks, not just on websites.
-media:
-  - full | assets/yura/yura-checkout.webp | The YURA checkout flow with a working cart
-:::
-
-## gallery/
-
-::: gallery
-items:
-- assets/yura/yura-vid.webm | wide | The YURA promo video
-- assets/yura/yura-hero.webp | wide | The YURA storefront hero
-- assets/yura/hakkotai-build-01-stock-red-guitar.webp | portrait | The guitar before the build: a stock red superstrat on a bedspread
-- assets/yura/hakkotai-build-02-stripped-electronics.webp | landscape | The red guitar taken apart, its electronics laid out and labelled
-- assets/yura/hakkotai-build-03-sanding-the-body.webp | portrait | A hand covered in orange dust sanding the body
-- assets/yura/hakkotai-build-04-primer.webp | portrait | The body and neck hanging in a spray booth, coated in grey primer
-- assets/yura/hakkotai-build-05-pink-paint.webp | portrait | The freshly painted pink body hanging next to the neck
-- assets/yura/hakkotai-build-06-vinyl-art.webp | portrait | Cream and pink vinyl art going onto the body
-- assets/yura/hakkotai-build-07-headstock-vinyl.webp | portrait | The pink headstock with the band name in vinyl
-- assets/yura/hakkotai-build-08-rewired.webp | portrait | The finished guitar, rewired, lying on a cutting mat
-- assets/yura/yura-neck.webp | portrait | Close-up looking down the HAKKOTAI's neck and fretboard
-- assets/yura/yura-cable.webp | square | A braided pink YURA guitar cable with a branded cable tie
-- assets/yura/yura-guitar.webp | landscape | The pink and yellow HAKKOTAI guitar resting on an amp
-- assets/yura/yura-glow.webp | wide | The HAKKOTAI guitar glowing under stage lights
-- assets/yura/yura-footer.webp | wide | The YURA site footer
-:::
-
-## outcome.md
-
-::: outcomes
-items:
-  - 1 | guitar, stripped, painted, glow-wrapped and rewired by hand
-  - 10 | storefront pages, from the product to the legal fine print
-  - 8 | build steps shown on the store, red stock guitar to glowing
-:::
-
-What came out of it is the most complete thing I have made end to end. It runs from a song, to a written concept, to a physical object, to an identity, to a store you can click all the way through to checkout.
 
 ## learnings.md
 
-Giving meaning to things is the hard part for me. Pinning an abstract idea down to three words and a motto took longer than any of the painting, and it is the part I am proudest of, because every later decision, the pink, the glow, the voice of the store, could be checked against it.
+The pages that took the longest were not the hero or the glow scene. They were the boring ones: the cart logic, the checkout validation and the legal pages had to work and read like a real store, not a mockup, or no buyer would trust the page past the homepage.
 
-Making something physical meant learning skills I had never used. Painting, polishing a finish and soldering the electronics back in were all new to me.
+Cart and account state live in localStorage and have to survive a reload without duplicating a line item or losing the selected currency. Getting that boring reliability right took more iterations than any single visual decision on the site.
 
-Finish takes more time than you plan for. Given another pass I would spend it on the small imperfections in the paint, and I would test the vinyl before cutting it, since weak adhesive and sheets too thick for the machine cost me the most rework.
+The physical build is the smaller half of the project. Painting, finishing and soldering the electronics back in were all new skills, learned mostly by redoing steps that went wrong the first time.
+
+Given another pass, the next test is a second product. Right now the storefront only has to sell a catalogue of one, and adding a second item would be the real test of whether the selling logic generalizes or was only ever built to fit this one guitar.
 
 ## project-info.md

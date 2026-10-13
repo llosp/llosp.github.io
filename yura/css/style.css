@@ -31,6 +31,12 @@
   box-sizing: border-box;
 }
 
+/* Components below set their own `display`, which otherwise beats the
+   UA stylesheet's [hidden] rule at equal specificity. */
+[hidden] {
+  display: none !important;
+}
+
 /* Images are decorative here — never let them be dragged out of the page. */
 img {
   -webkit-user-drag: none;
@@ -209,100 +215,28 @@ body::after {
   }
 }
 
-/* ---------- nav ---------- */
+/* ---------- pbar (shared with the home page's product bar) ----------
+   home.css defines .pbar/.pbar-icon/etc itself (loaded on every page now);
+   .pbar-links is the one piece it never finished, so its base layout lives
+   here. */
 
-.nav {
-  position: fixed;
-  top: clamp(16px, 3.45vw, 58px);
-  left: 0;
-  right: 0;
-  z-index: 3;
-  display: flex;
-  justify-content: center;
-  padding: 0 16px;
-}
-
-.nav-pill {
+.pbar-links {
   display: flex;
   align-items: center;
-  gap: clamp(20px, 2.3vw, 40px);
-  height: clamp(46px, 3.86vw, 66px);
-  padding: 0 clamp(18px, 2.03vw, 34px);
-  border: 2px solid rgba(255, 255, 255, .95);
-  border-radius: 999px;
-  background: rgba(8, 2, 6, .38);
-  -webkit-backdrop-filter: blur(16px) saturate(1.3);
-  backdrop-filter: blur(16px) saturate(1.3);
-  box-shadow: 0 10px 34px rgba(0, 0, 0, .38), inset 0 1px 0 rgba(255, 255, 255, .12);
+  gap: clamp(16px, 1.8vw, 28px);
+  margin-left: 4px;
 }
 
-.brand {
-  display: flex;
-  align-items: center;
-  gap: clamp(8px, .88vw, 15px);
+.pbar-links a {
+  color: rgba(255, 255, 255, .82);
   text-decoration: none;
-  color: inherit;
-}
-
-.brand-mark {
-  width: clamp(22px, 2.03vw, 34px);
-  height: auto;
-}
-
-.brand-name {
-  font-weight: 800;
-  font-size: clamp(15px, 1.35vw, 23px);
-  letter-spacing: .005em;
-}
-
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: clamp(18px, 2.03vw, 34px);
-  margin: 0;
-  padding: 0;
-  list-style: none;
-}
-
-.nav-links a {
-  display: inline-flex;
-  align-items: center;
-  padding: 12px 6px;
-  margin: -12px -6px;
-  color: var(--ink);
-  text-decoration: none;
-  font-size: clamp(13px, .95vw, 16px);
+  font-size: 14px;
+  font-weight: 500;
   transition: color .18s ease;
 }
 
-.nav-links a:hover,
-.nav-icon:hover {
-  color: var(--pink-hover);
-}
-
-.nav-actions {
-  display: flex;
-  align-items: center;
-  gap: clamp(14px, 1.5vw, 25px);
-}
-
-.nav-icon {
-  display: grid;
-  place-items: center;
-  padding: 11px;
-  margin: -11px;
-  color: var(--ink);
-  transition: color .18s ease;
-}
-
-.nav-icon svg {
-  width: clamp(17px, 1.28vw, 22px);
-  height: auto;
-  display: block;
-}
-
-.nav-icon-cart svg {
-  width: clamp(19px, 1.45vw, 25px);
+.pbar-links a:hover {
+  color: #fff;
 }
 
 /* ---------- narrow screens ---------- */
@@ -363,17 +297,6 @@ body::after {
 
   .hero-finance {
     margin-top: 6vw;
-  }
-
-  .nav-pill {
-    gap: 14px;
-    padding: 0 16px;
-  }
-}
-
-@media (max-width: 560px) {
-  .nav-links {
-    display: none;
   }
 }
 
@@ -1068,6 +991,24 @@ body::after {
   padding: clamp(120px, 16vw, 180px) 24px 120px;
 }
 
+/* About/Team/Contact borrow the home page's wider stage for their bento
+   grids and card rows; legal pages stay narrow for readable line length. */
+.page-main.page-wide {
+  max-width: 1180px;
+}
+
+/* .h-lead/.h-head on the home page are centered hero copy; here they open a
+   left-aligned page, so the lead needs its own margin instead of .h-head's. */
+.page-intro {
+  max-width: 820px;
+  margin-bottom: clamp(56px, 9vh, 96px);
+}
+
+.page-intro .h-lead {
+  margin: 20px 0 0;
+  text-align: left;
+}
+
 .page-eyebrow {
   margin: 0 0 10px;
   font-family: var(--font-mono);
@@ -1147,44 +1088,123 @@ body::after {
   text-decoration: underline;
 }
 
-/* team */
+/* team (uses home.css's --h-* tile vars, loaded on every page) */
 
 .team-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  max-width: var(--h-max, 1180px);
   margin-top: 8px;
 }
 
 .team-card {
-  padding: 24px;
-  border: 1px solid rgba(255, 255, 255, .1);
-  border-radius: 16px;
-  background: rgba(255, 255, 255, .03);
+  padding: 36px 32px;
+  border-radius: 28px;
+  background: var(--h-tile, #141415);
+  transition: transform .35s var(--h-ease, ease), background .35s ease;
+}
+
+.team-card:hover {
+  background: var(--h-tile-2, #1c1c1e);
+  transform: translateY(-4px);
+}
+
+.team-avatar {
+  display: inline-flex;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 22px;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, .14);
+  font-size: 17px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  background-image: linear-gradient(135deg, var(--h-pink-soft, #ff5aa6), var(--h-lime, #cbf23a));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
 }
 
 .team-card h3 {
   margin: 0 0 4px;
-  font-family: var(--font-display);
-  text-transform: uppercase;
-  letter-spacing: .02em;
-  font-size: 19px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  color: var(--h-text, #f5f5f7);
 }
 
 .team-role {
-  margin: 0 0 12px;
-  color: var(--pink-hover);
-  font-family: var(--font-mono);
-  text-transform: uppercase;
-  letter-spacing: .05em;
-  font-size: 11px;
+  margin: 0 0 14px;
+  color: var(--h-pink-soft, #ff5aa6);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: .01em;
 }
 
 .team-bio {
   margin: 0;
-  color: var(--muted);
-  font-size: 14px;
-  line-height: 1.65;
+  color: var(--h-muted, #86868b);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+/* contact */
+
+.contact-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  max-width: var(--h-max, 1180px);
+}
+
+@media (max-width: 834px) {
+  .contact-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+.contact-card {
+  padding: 36px 32px;
+  border-radius: 28px;
+  background: var(--h-tile, #141415);
+}
+
+.contact-icon {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  margin-bottom: 22px;
+  border-radius: 14px;
+  background: radial-gradient(70% 70% at 50% 40%, var(--h-tile-2, #1c1c1e), var(--h-tile, #141415));
+  color: var(--h-pink-soft, #ff5aa6);
+}
+
+.contact-icon svg {
+  width: 22px;
+  height: 22px;
+}
+
+.contact-card h3 {
+  margin: 0 0 10px;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -.02em;
+  color: var(--h-text, #f5f5f7);
+}
+
+.contact-card p {
+  margin: 0 0 16px;
+  color: var(--h-muted, #86868b);
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.contact-card p a {
+  color: var(--h-pink-soft, #ff5aa6);
 }
 
 /* sitemap */
@@ -1366,6 +1386,8 @@ body::after {
 }
 
 .checkout-empty {
+  max-width: 480px;
+  margin: 0 auto;
   text-align: center;
   padding: 60px 20px;
 }
@@ -1376,6 +1398,8 @@ body::after {
 }
 
 .order-confirmation {
+  max-width: 480px;
+  margin: 0 auto;
   text-align: center;
   padding: 40px 20px;
 }

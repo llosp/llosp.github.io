@@ -1090,6 +1090,10 @@ video {
   text-align: center;
 }
 
+.cs-cover_frame.frame--empty {
+  aspect-ratio: var(--hero-ratio);
+}
+
 .media {
   display: block;
   width: 100%;

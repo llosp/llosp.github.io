@@ -25,6 +25,7 @@
   <link rel="stylesheet"
     href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@400;500;600;800&family=M+PLUS+1p:wght@700&family=Martian+Mono:wght@400;500&display=swap">
   <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/home.css">
 </head>
 
 <body>
@@ -33,43 +34,46 @@
     <span></span><span></span><span></span><span></span>
   </div>
 
-  <header class="nav">
-    <nav class="nav-pill" aria-label="Main">
-      <a class="brand" href="index.html">
-        <img class="brand-mark" src="assets/img/logo.svg" alt="" width="30" height="27">
-        <span class="brand-name">YURA</span>
+  <header class="pbar" id="pbar">
+    <div class="pbar-inner">
+      <a class="pbar-brand" href="index.html" aria-label="YURA, back to home">
+        <img src="assets/img/logo.svg" alt="" width="22" height="20">
+        <span class="pbar-brand-name">YURA</span>
+        <span class="pbar-sep" aria-hidden="true"></span>
+        <span class="pbar-product">Privacy Policy</span>
       </a>
 
-      <ul class="nav-links">
+      <ul class="pbar-links">
         <li><a href="index.html#top">Shop</a></li>
-        <li><a href="team.html">Team</a></li>
         <li><a href="about.html">About</a></li>
+        <li><a href="team.html">Team</a></li>
+        <li><a href="contact.html">Contact</a></li>
       </ul>
 
-      <div class="nav-actions">
-        <a class="nav-icon" href="#" aria-label="Search" data-search-open>
+      <div class="pbar-actions">
+        <a class="pbar-icon" href="#" aria-label="Search" data-search-open>
           <svg viewBox="0 0 24 24" aria-hidden="true">
-            <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="2" />
-            <line x1="15.4" y1="15.4" x2="21" y2="21" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <circle cx="10.5" cy="10.5" r="6.5" fill="none" stroke="currentColor" stroke-width="1.8" />
+            <line x1="15.4" y1="15.4" x2="21" y2="21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" />
           </svg>
         </a>
-        <a class="nav-icon nav-icon-cart" href="#" aria-label="Cart" data-cart-open>
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.8"
+        <a class="pbar-icon pbar-bag" href="#" aria-label="Bag" data-cart-open>
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7"
             stroke-linecap="round" stroke-linejoin="round">
-            <path d="M1.6 2.2h2.9l2.6 11.2h10l2.6-7.6H6.2" />
-            <circle cx="9" cy="19.4" r="1.9" />
-            <circle cx="17.4" cy="19.4" r="1.9" />
+            <path d="M5 8h14l-1.2 12H6.2z" />
+            <path d="M9 8V6.5a3 3 0 0 1 6 0V8" />
           </svg>
           <span class="cart-badge" data-cart-badge hidden>0</span>
         </a>
-        <a class="nav-icon" href="#" aria-label="Account" data-account-open>
-          <svg viewBox="0 0 24 24" aria-hidden="true" fill="currentColor">
-            <circle cx="12" cy="7.3" r="4.3" />
-            <path d="M3.6 20.6c0-4.2 3.8-6.6 8.4-6.6s8.4 2.4 8.4 6.6z" />
+        <a class="pbar-icon" href="#" aria-label="Account" data-account-open>
+          <svg viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.7">
+            <circle cx="12" cy="8" r="3.8" />
+            <path d="M4.5 20.5c.6-3.9 3.6-6 7.5-6s6.9 2.1 7.5 6" stroke-linecap="round" />
           </svg>
         </a>
+        <a class="btn btn-sm" href="checkout.html" data-buy-now>Buy</a>
       </div>
-    </nav>
+    </div>
   </header>
 
   <main class="page-main">
@@ -276,6 +280,7 @@
   </div>
 
   <script src="js/store.js"></script>
+  <script src="js/home.js"></script>
 </body>
 
 </html>

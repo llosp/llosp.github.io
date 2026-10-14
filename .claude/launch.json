@@ -22,8 +22,9 @@
     {
       "name": "site",
       "runtimeExecutable": "npx",
-      "runtimeArgs": ["-y", "http-server", "-p", "8768", "-c-1"],
-      "port": 8768
+      "runtimeArgs": ["-y", "http-server", "-c-1"],
+      "port": 8768,
+      "autoPort": true
     },
     {
       "name": "portfoliov2",

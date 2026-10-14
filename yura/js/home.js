@@ -259,6 +259,141 @@
   // still goes dark on scroll; it simply does not fly anything in.
   if (glow && reduceMotion) glow.classList.add('is-plain');
 
+  // ---------- build deck ----------
+  // The build steps as a hand of cards dealt onto a table. The stage pins and
+  // scroll position `s` runs 0..n-1: card i flies in while s goes i-1 -> i, on
+  // an arc toward the viewer, turned to face the middle of the row. It glints
+  // as it lands, knocks the card underneath, and that card sinks back a level
+  // into the stack. Older cards keep stepping back so the row reads as depth,
+  // not as a strip. HOLD is a short rest on the finished row before unpinning
+  // (the matching 0.7 lives in home.css's .h-deck height).
+  const deck = document.querySelector('[data-deck]');
+  const deckSticky = deck && deck.querySelector('.h-deck-sticky');
+  const deckRow = deck && deck.querySelector('.h-deck-row');
+  const deckCards = deck ? Array.from(deck.querySelectorAll('.h-card')) : [];
+  const deckTicks = [];
+  const HOLD = 0.7;
+  let deckGeo = null;
+  let deckActive = -1;
+
+  const deckTones = deckCards.map((c) => (c.dataset.tone || '236, 30, 121').split(',').map(Number));
+
+  const measureDeck = () => {
+    if (!deck || reduceMotion) return;
+    const rowW = deckRow.offsetWidth;
+    const rowLeft = (window.innerWidth - rowW) / 2;
+    const slots = deckCards.map((c) => c.offsetLeft);
+    deckGeo = {
+      rowLeft,
+      cw: deckCards[0].offsetWidth,
+      off: slots.length > 1 ? slots[1] - slots[0] : 0,
+      // Far enough right that the card starts fully off screen, even turned.
+      travel: slots.map((x) => window.innerWidth - (rowLeft + x) + 60),
+    };
+  };
+
+  // Scroll so card i has just landed and nothing has started on top of it.
+  const scrollToStep = (i) => {
+    const top = deck.getBoundingClientRect().top + window.scrollY;
+    const run = deck.offsetHeight - deckSticky.offsetHeight;
+    const p = i / (deckCards.length - 1 + HOLD);
+    window.scrollTo({ top: Math.round(top + p * run + 1), behavior: 'smooth' });
+  };
+
+  const deckFrame = (vh) => {
+    if (!deckGeo) measureDeck();
+    const n = deckCards.length;
+    const r = deck.getBoundingClientRect();
+    const run = r.height - (deckSticky.offsetHeight || vh);
+    const raw = clamp(-r.top / run) * (n - 1 + HOLD);
+    const s = Math.min(raw, n - 1);
+    const fin = clamp((raw - (n - 1)) / HOLD);
+    // The first card is dealt while the stage scrolls up into place, so the
+    // table is never empty when it pins.
+    const approach = clamp((vh - r.top) / vh);
+    if (approach <= 0) return;
+
+    let active = 0;
+    deckCards.forEach((card, i) => {
+      const t = i === 0 ? smoothstep((approach - 0.3) / 0.6) : clamp(s - (i - 1));
+      const e = 1 - Math.pow(1 - t, 3);
+      const arc = Math.sin(Math.PI * t);
+      const c = Math.max(0, s - i);
+      const c1 = smoothstep(c);
+      const deep = clamp(c - 1, 0, 4);
+      // The knock: the arriving card's last fifth of travel shoves this one.
+      const knock = c < 1 ? Math.sin(Math.PI * clamp((c - 0.78) / 0.22)) : 0;
+      let b = 1 - 0.46 * c1 - 0.05 * deep;
+      b += (1 - b) * 0.5 * fin;
+      if (t > 0.5) active = i;
+
+      const st = card.style;
+      st.setProperty('--x', (deckGeo.travel[i] * (1 - e) - 12 * knock).toFixed(2));
+      st.setProperty('--y', (-26 * arc + 7 * knock).toFixed(2));
+      st.setProperty('--z', (120 * arc - 34 * c1 - 24 * deep).toFixed(2));
+      st.setProperty('--ry', (-38 * (1 - e) + 9 * c1).toFixed(2));
+      st.setProperty('--rz', (10 * (1 - e)).toFixed(2));
+      st.setProperty('--sc', (1 - 0.035 * c1 - 0.012 * deep).toFixed(4));
+      st.setProperty('--b', b.toFixed(3));
+      st.setProperty('--e', e.toFixed(4));
+      st.setProperty('--cap', smoothstep((t - 0.55) / 0.45).toFixed(3));
+      st.setProperty('--sh', clamp((t - 0.6) / 0.4).toFixed(4));
+      card.classList.toggle('is-covered', c > 0.5);
+      if (deckTicks[i]) deckTicks[i].style.setProperty('--f', t.toFixed(4));
+    });
+
+    if (active !== deckActive) {
+      deckActive = active;
+      deckTicks.forEach((btn, i) => {
+        btn.classList.toggle('is-on', i === active);
+        if (i === active) btn.setAttribute('aria-current', 'step');
+        else btn.removeAttribute('aria-current');
+      });
+    }
+
+    // The room's colour blends from one card's tone to the next as it flies.
+    const k = Math.floor(s);
+    const f = smoothstep(s - k);
+    const A = deckTones[k];
+    const B = deckTones[Math.min(k + 1, n - 1)];
+    const amb = A.map((v, j) => Math.round(v + (B[j] - v) * f)).join(', ');
+    const ax = deckGeo.rowLeft + s * deckGeo.off + deckGeo.cw / 2;
+    deck.style.setProperty('--amb', amb);
+    deck.style.setProperty('--ax', ((ax / window.innerWidth) * 100).toFixed(2) + '%');
+    deck.style.setProperty('--glow', (smoothstep((approach - 0.2) / 0.6) * (1 + 0.5 * fin)).toFixed(3));
+    deck.style.setProperty('--s', s.toFixed(4));
+  };
+
+  if (deck && !reduceMotion) {
+    const tickWrap = deck.querySelector('.h-deck-ticks');
+    deckCards.forEach((card, i) => {
+      const label = card.querySelector('p');
+      const btn = document.createElement('button');
+      btn.type = 'button';
+      btn.setAttribute('aria-label', 'Step ' + (i + 1) + ': ' + (label ? label.lastChild.textContent.trim() : ''));
+      btn.addEventListener('click', () => scrollToStep(i));
+      tickWrap.appendChild(btn);
+      deckTicks.push(btn);
+      // A covered card rises out of the stack on hover; clicking it rewinds
+      // the deal back to that step.
+      card.addEventListener('click', () => {
+        if (card.classList.contains('is-covered')) scrollToStep(i);
+      });
+    });
+
+    if (window.matchMedia('(pointer: fine)').matches) {
+      deckSticky.addEventListener('pointermove', (ev) => {
+        const box = deckSticky.getBoundingClientRect();
+        deckRow.style.setProperty('--tx', (((ev.clientX - box.left) / box.width) * 2 - 1).toFixed(3));
+        deckRow.style.setProperty('--ty', (((ev.clientY - box.top) / box.height) * 2 - 1).toFixed(3));
+      });
+      deckSticky.addEventListener('pointerleave', () => {
+        deckRow.style.setProperty('--tx', '0');
+        deckRow.style.setProperty('--ty', '0');
+      });
+    }
+  }
+
   // ---------- product bar ----------
   const bar = document.getElementById('pbar');
 
@@ -318,6 +453,8 @@
         plate.classList.remove('is-broken');
       }
     }
+
+    if (deck && !reduceMotion) deckFrame(vh);
 
     if (glow) {
       const r = glow.getBoundingClientRect();
@@ -431,6 +568,7 @@
   window.addEventListener('resize', () => {
     // The cut is measured in percentages of a box that just changed size.
     if (shards.length) buildShards();
+    measureDeck();
     requestTick();
   });
   onScroll();

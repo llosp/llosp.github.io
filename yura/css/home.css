@@ -1434,10 +1434,18 @@ html:not(.js) .h-glow-hint {
   font-weight: 700;
   font-size: clamp(96px, 12vw, 168px);
   line-height: 1.05;
-  background: linear-gradient(180deg, var(--h-pink-soft), var(--h-pink) 70%);
+  /* Three stacked bands (pink, blend, lime): hover slides the lime band up, like a glow-in-the-dark charge. */
+  background: linear-gradient(180deg, var(--h-pink-soft) 0%, var(--h-pink) 24%, var(--h-pink) 40%, var(--h-lime) 76%, #e9ff8a 100%);
+  background-size: 100% 300%;
+  background-position: 0 0;
   -webkit-background-clip: text;
   background-clip: text;
   color: transparent;
+  filter: drop-shadow(0 0 0 rgba(203, 242, 58, 0));
+  transition:
+    background-position .9s var(--h-ease),
+    filter .9s var(--h-ease),
+    transform .9s var(--h-ease);
 }
 
 .h-kanji-read {
@@ -1446,6 +1454,20 @@ html:not(.js) .h-glow-hint {
   letter-spacing: .14em;
   text-transform: uppercase;
   color: var(--h-dim);
+  transition: color .5s ease, letter-spacing .9s var(--h-ease);
+}
+
+@media (hover: hover) {
+  .h-kanji li:hover .h-kanji-char {
+    background-position: 0 100%;
+    filter: drop-shadow(0 0 28px rgba(203, 242, 58, .45));
+    transform: translateY(-6px) scale(1.04);
+  }
+
+  .h-kanji li:hover .h-kanji-read {
+    color: var(--h-lime);
+    letter-spacing: .24em;
+  }
 }
 
 .h-kanji strong {
@@ -1579,7 +1601,7 @@ html:not(.js) .h-glow-hint {
 /* The studio shot is a cut-out, so it sits on its own light tile. */
 .tile-player {
   grid-column: span 6;
-  min-height: 520px;
+  min-height: 560px;
   background: linear-gradient(90deg, #f5f5f7 0%, #eceef1 100%);
   color: var(--h-ink);
   display: flex;
@@ -1590,18 +1612,21 @@ html:not(.js) .h-glow-hint {
   display: none;
 }
 
+/* The cut-out is cropped at the knees, so it bleeds off the bottom edge instead of floating. */
 .tile-player .tile-bg {
   left: auto;
-  right: 4%;
+  right: 3%;
   width: auto;
-  height: 78%;
-  top: 50%;
-  transform: translateY(-50%);
+  height: 104%;
+  top: auto;
+  bottom: -4%;
+  transform-origin: 50% 100%;
   object-fit: contain;
+  object-position: right bottom;
 }
 
 .tile-player:hover .tile-bg {
-  transform: translateY(-50%) scale(1.04);
+  transform: scale(1.03);
 }
 
 .tile-player .tile-copy {
@@ -1656,7 +1681,10 @@ html:not(.js) .h-glow-hint {
 
 /* ---------- handmade ---------- */
 
-.h-steps {
+/* Build steps: a row of cards, each laid over the one before it. Without JS or
+   under reduced motion it is a plain grid of the same cards; the scroll-driven
+   deck below only switches on when both are available. */
+.h-deck-row {
   list-style: none;
   max-width: var(--h-max);
   margin: 0 auto;
@@ -1666,30 +1694,336 @@ html:not(.js) .h-glow-hint {
   gap: 36px 20px;
 }
 
-.h-steps li {
+.h-card {
+  position: relative;
   display: flex;
   flex-direction: column;
+  border-radius: 20px;
+  overflow: hidden;
+  background: var(--h-tile);
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, .08);
+}
+
+.h-card img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 4 / 5;
+  object-fit: cover;
+  background: var(--h-tile);
+}
+
+.h-card p {
+  margin: 0;
+  padding: 14px 16px 18px;
   font-size: 17px;
   font-weight: 600;
   letter-spacing: -.015em;
   line-height: 1.3;
 }
 
-.h-steps img {
-  width: 100%;
-  aspect-ratio: 4 / 5;
-  object-fit: cover;
-  border-radius: 20px;
-  margin-bottom: 16px;
-  background: var(--h-tile);
-}
-
-.h-steps span {
+.h-card span {
+  display: block;
   margin-bottom: 4px;
   font-size: 13px;
-  font-weight: 600;
   color: var(--h-pink-soft);
   font-variant-numeric: tabular-nums;
+}
+
+.h-deck-num,
+.h-deck-ticks {
+  display: none;
+}
+
+/* Registered so the hover peek and the pointer tilt can ease on their own
+   while the scroll scrub keeps writing the other inputs every frame. */
+@property --hov {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --tx {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@property --ty {
+  syntax: "<number>";
+  inherits: false;
+  initial-value: 0;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  /* The deck. Every card is dealt in from the right on an arc toward the
+     viewer, lands with a glint and knocks the card underneath, then sinks back
+     into the stack as the next one arrives. home.js scrubs the per-card inputs
+     (--x --y --z --ry --rz --sc --b --e --cap --sh) off scroll; this file only
+     turns them into a transform. */
+  .js .h-deck {
+    /* One screen of pin, one stretch per card after the first, and a short
+       hold on the finished row (HOLD in home.js -- keep the two in step). */
+    height: calc(100vh + (var(--n) - 1 + .7) * 62vh);
+    /* Full bleed out of the section's 22px gutter, so the room's light runs
+       to the window edge instead of stopping at a visible seam. */
+    margin-inline: -22px;
+    /* Bounded by height as well as width: the header shares the pinned
+       screen, and whatever it leaves (about 100vh - 530px of card) is what
+       the card gets, so title, deck and ticks always fit on one screen. */
+    --cw: max(170px, min(300px, max(25vw, 214px), (100vh - 530px) * .8));
+    --span: min(100vw - 44px, var(--h-max));
+    --off: min(var(--cw) * .66, (var(--span) - var(--cw)) / (var(--n) - 1));
+    --amb: 190, 44, 34;
+    --ax: 50%;
+    --glow: 0;
+  }
+
+  .js .h-deck-sticky {
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(18px, 3.4vh, 36px);
+    padding: calc(var(--h-bar) + 16px) 0 24px;
+    isolation: isolate;
+    perspective: 1600px;
+    perspective-origin: 50% 45%;
+  }
+
+  /* The room takes the colour of whatever is on top of the deck and follows it
+     along the row. Two pools: a wide wash and a tight hotspot under the card. */
+  .js .h-deck-sticky::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: -2;
+    background:
+      radial-gradient(28% 34% at var(--ax) 64%, rgba(var(--amb), calc(.5 * var(--glow))) 0%, rgba(var(--amb), 0) 100%),
+      radial-gradient(70% 60% at var(--ax) 68%, rgba(var(--amb), calc(.2 * var(--glow))) 0%, rgba(var(--amb), 0) 100%);
+    pointer-events: none;
+  }
+
+  /* A floor line for the cards to stand on, lit from where the top card is. */
+  .js .h-deck-head {
+    flex: none;
+    margin: 0 auto;
+    padding: 0 22px 28px;
+  }
+
+  .js .h-deck-head .eyebrow {
+    margin-bottom: 8px;
+  }
+
+  .js .h-deck-head .h-title {
+    font-size: clamp(32px, min(5vw, 6.2vh), 64px);
+  }
+
+  .js .h-deck-head .h-lead {
+    margin-top: clamp(8px, 1.4vh, 16px);
+    font-size: clamp(16px, min(1.6vw, 2.3vh), 21px);
+  }
+
+  .js .h-deck-stage {
+    position: relative;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .js .h-deck-stage::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: calc(100% + 6px);
+    height: 1px;
+    z-index: -1;
+    background: radial-gradient(40% 100% at var(--ax) 50%, rgba(var(--amb), calc(.7 * var(--glow))), rgba(var(--amb), 0));
+    pointer-events: none;
+  }
+
+  /* The step number, huge and barely there, rolling like an odometer. It rides
+     behind whichever card is on top and is bigger than it, so the digits frame
+     the card above and below rather than competing with the photo. */
+  .js .h-deck-num {
+    position: absolute;
+    top: 50%;
+    left: var(--ax);
+    z-index: -1;
+    display: flex;
+    font-size: min(80vh, 44vw);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -.06em;
+    font-variant-numeric: tabular-nums;
+    color: transparent;
+    -webkit-text-stroke: 1.5px rgba(var(--amb), .55);
+    transform: translate(-50%, -50%);
+    height: 1em;
+    overflow: hidden;
+    -webkit-mask-image: linear-gradient(transparent, #000 10%, #000 90%, transparent);
+    mask-image: linear-gradient(transparent, #000 10%, #000 90%, transparent);
+    opacity: calc(var(--glow) * .5);
+    pointer-events: none;
+    user-select: none;
+  }
+
+  .js .h-deck-roll {
+    display: flex;
+    flex-direction: column;
+    transform: translateY(calc(var(--s, 0) * -1em));
+    will-change: transform;
+  }
+
+  .js .h-deck-row {
+    --tx: 0;
+    --ty: 0;
+    display: block;
+    position: relative;
+    width: calc((var(--n) - 1) * var(--off) + var(--cw));
+    max-width: none;
+    height: calc(var(--cw) * 1.25 + 78px);
+    margin: 0;
+    transform-style: preserve-3d;
+    /* Receded cards sit behind the row's own plane in 3D, so the row would
+       swallow every hit meant for them. Only the cards take the pointer. */
+    pointer-events: none;
+    transform: rotateX(calc(var(--ty) * -3deg)) rotateY(calc(var(--tx) * 5deg));
+    transition: --tx .9s cubic-bezier(.2, .8, .2, 1), --ty .9s cubic-bezier(.2, .8, .2, 1);
+  }
+
+  .js .h-card {
+    --x: 0;
+    --y: 0;
+    --z: 0;
+    --ry: 0;
+    --rz: 0;
+    --sc: 1;
+    --b: 1;
+    --e: 1;
+    --cap: 1;
+    --sh: 0;
+    --hov: 0;
+    position: absolute;
+    top: 0;
+    left: calc(var(--i) * var(--off));
+    width: var(--cw);
+    pointer-events: auto;
+    opacity: min(1, calc(var(--e) * 4));
+    transform:
+      translate3d(
+        calc(var(--x) * 1px),
+        calc((var(--y) - var(--hov) * 30) * 1px),
+        calc((var(--z) * (1 - var(--hov)) + var(--hov) * 60) * 1px))
+      rotateY(calc(var(--ry) * (1 - var(--hov)) * 1deg))
+      rotateZ(calc(var(--rz) * 1deg))
+      scale(calc(var(--sc) + var(--hov) * (1 - var(--sc))));
+    transform-origin: 50% 100%;
+    filter: brightness(calc(var(--b) + var(--hov) * (1 - var(--b))));
+    will-change: transform, filter;
+    box-shadow:
+      inset 0 0 0 1px rgba(255, 255, 255, .1),
+      -26px 6px 50px -10px rgba(0, 0, 0, .75);
+    transition: --hov .5s cubic-bezier(.2, .8, .2, 1);
+  }
+
+  .js .h-card.is-covered {
+    cursor: pointer;
+  }
+
+  @media (hover: hover) and (pointer: fine) {
+    .js .h-card.is-covered:hover,
+    .js .h-card.is-covered:focus-visible {
+      --hov: 1;
+    }
+  }
+
+  /* The photo settles into its frame as the card lands. */
+  .js .h-card img {
+    transform: scale(calc(1 + (1 - var(--e)) * .22));
+    transform-origin: 50% 60%;
+  }
+
+  .js .h-card p {
+    opacity: var(--cap);
+    transform: translateY(calc((1 - var(--cap)) * 14px));
+  }
+
+  /* The glint: one pass of light across the face at the moment of landing. */
+  .js .h-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background: linear-gradient(105deg, rgba(255, 255, 255, 0) 38%, rgba(255, 255, 255, .34) 50%, rgba(255, 255, 255, 0) 62%);
+    transform: translateX(calc((var(--sh) * 2.4 - 1.2) * 100%));
+    opacity: calc(sin(var(--sh) * 3.1416));
+    mix-blend-mode: overlay;
+    pointer-events: none;
+  }
+
+  .js .h-deck-ticks {
+    display: flex;
+    gap: 6px;
+  }
+
+  .js .h-deck-ticks button {
+    --f: 0;
+    position: relative;
+    width: clamp(22px, 4vw, 34px);
+    height: 24px;
+    padding: 0;
+    border: 0;
+    background: none;
+    cursor: pointer;
+  }
+
+  .js .h-deck-ticks button::before,
+  .js .h-deck-ticks button::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 3px;
+    margin-top: -1.5px;
+    border-radius: 3px;
+    transition: height .3s, margin-top .3s;
+  }
+
+  .js .h-deck-ticks button::before {
+    background: rgba(255, 255, 255, .16);
+  }
+
+  .js .h-deck-ticks button::after {
+    background: var(--h-pink-soft);
+    transform-origin: 0 50%;
+    transform: scaleX(var(--f));
+  }
+
+  .js .h-deck-ticks button.is-on::before,
+  .js .h-deck-ticks button.is-on::after {
+    height: 5px;
+    margin-top: -2.5px;
+  }
+
+  .js .h-deck-ticks button.is-on::after {
+    box-shadow: 0 0 12px rgba(255, 90, 166, .7);
+  }
+
+  .js .h-deck-ticks button:hover::before {
+    background: rgba(255, 255, 255, .34);
+  }
+
+  .js .h-deck-ticks button:focus-visible {
+    outline: 2px solid var(--h-pink-soft);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
 }
 
 .h-footnote-inline {
@@ -2027,10 +2361,10 @@ html:not(.js) .h-glow-hint {
 
   .tile-player .tile-bg {
     top: auto;
-    bottom: 0;
+    bottom: -3%;
     right: 50%;
     transform: translateX(50%);
-    height: 62%;
+    height: 64%;
   }
 
   .tile-player:hover .tile-bg {
@@ -2058,7 +2392,7 @@ html:not(.js) .h-glow-hint {
     padding-top: 40px;
   }
 
-  .h-steps {
+  .h-deck-row {
     grid-template-columns: repeat(2, 1fr);
     gap: 28px 14px;
   }
@@ -2160,6 +2494,8 @@ html:not(.js) .h-glow-hint {
     transition: none;
   }
 
+  .h-kanji-char,
+  .h-kanji-read,
   .tile-cut,
   .tile-bg,
   .acc-media img,

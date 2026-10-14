@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>yura / lope.design</title>
+  <meta name="description" content="A single-product storefront page for a guitar I painted by hand, and the design decisions behind every section of it.">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body class="is--case-study">
+
+  <div class="page-transition" aria-hidden="true">
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+  </div>
+  <noscript><style>.page-transition { display: none; }</style></noscript>
+
+  <canvas class="ascii-background" aria-hidden="true"></canvas>
+
+  <div class="background-gridlines" aria-hidden="true">
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+  </div>
+
+  <div class="cursor-pill" aria-hidden="true"></div>
+
+  <div class="navbar">
+    <div class="header grid-12">
+      <a class="nav_button nav_button--home" href="/">
+        <div class="button-square not-blinking"></div>
+        <div class="text-color_inverse name-long">lope.design</div>
+        <div class="text-color_inverse name-short">lope</div>
+      </a>
+      <a class="nav_button" href="/#work">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./work</div>
+      </a>
+      <a class="nav_button" href="/about/">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./about</div>
+      </a>
+      <a class="nav_button" href="/resume.pdf">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">resume.pdf</div>
+        <!-- TODO(pedro): add resume.pdf to the repo root --><mark class="todo">[todo: add resume.pdf to the repo root]</mark>
+      </a>
+    </div>
+  </div>
+
+  <div id="app" data-route="work">
+    <article class="case-study" data-slug="yura">
+      <nav class="cs-rail" aria-label="case study sections">
+        <a class="cs-rail_back" href="/#work">← back</a>
+        <a href="#why-md">why</a>
+        <a href="#the-brand-md">the-brand</a>
+        <a href="#the-page">the-page</a>
+        <a href="#project-info-md">project-info</a>
+      </nav>
+      <div class="cs-main">
+        <header class="cs-head">
+          <nav class="cs-breadcrumb" aria-label="breadcrumb">
+            <a href="/#work">~/work</a>/<span>yura</span>
+          </nav>
+          <p class="cs-eyebrow">personal project · web design and branding</p>
+          <h1 class="cs-title">yura</h1>
+          <p class="cs-headline">A guitar that sells itself in person. A page that has to do it without the guitar in the room.</p>
+        </header>
+
+        <figure class="cs-cover">
+          <div class="cs-cover_frame" data-cover-slot="yura">
+          <video class="cs-cover_img" style="object-fit: cover"
+            muted loop playsinline preload="auto" aria-label="Looping motion piece: the YURA star and wordmark appear over a dim shot of the guitar, a light sweeps across, and the wordmark charges up in glow-in-the-dark green">
+            <source src="/assets/yura/yura-cover.webm" type="video/webm">
+          </video>
+        </div>
+          <figcaption class="caption-code">yura-cover.webm</figcaption>
+        </figure>
+
+        <div class="cs-rest">
+      <section class="cs-section" id="why-md">
+        <div class="cs-section_file">why.md</div>
+        <div class="cs-section_body">
+<p class="statement">In person, the guitar sells itself. On a screen, it has to be proved.</p>
+<div class="prose"><p>HAKKOTAI is a guitar I made. It started as an ordinary red superstrat for a design course in 2024, and I stripped it, sanded it, painted it pink, wrapped it in glow-in-the-dark vinyl and wired it back together by hand. Then the course ended and it went into a corner.</p>
+<p>I kept coming back to one question: how would I sell this thing on a storefront page, and make that page worth visiting? So I built a fictional brand around it, YURA, and a product page in the register of the big flagship launches, the kind where one object gets the whole screen.</p>
+<p>The brand is the costume. The page is the project. Hold the guitar and you get it immediately: the pink, the skull, the green that keeps shining after the lights go out. A browser gives you none of that. No weight, no light switch, no way to turn it over in your hands. Every section on this page exists to win back one of those things, and most of the work went into the main page, over many iterations, as an excuse to push how far motion and scroll can carry a product story.</p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="the-brand-md">
+        <div class="cs-section_file">the-brand.md</div>
+        <div class="cs-section_body">
+<div class="prose"><p>YURA is named after the band behind the song the guitar came from, HAKKOTAI (1998) by Yura Yura Teikoku. The product took the song's name, and the brand took the band's.</p>
+<p>The system is small on purpose. True black, so every section controls its own light. One hot pink for the body and the buttons, and one lime green that only ever means glow. Bebas Neue for the loud lines, Inter for everything that has to be read, M PLUS 1p for the kanji and Martian Mono for labels. The structure borrows from the flagship product page: a slim product bar, a hero, a bento of features, a spec table, accessories and a closing call to buy. That pattern already tells a visitor &quot;this is a real product with a real price&quot;, which is the one thing a fictional brand cannot say about itself.</p>
+<p>The rest of the store is there so the main page is never a dead end. The cart, checkout, accounts, search, region picker and legal pages all work, and the footnotes say plainly that nothing is ever charged or shipped.</p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="the-page">
+        <div class="cs-section_file">the-page/</div>
+        <div class="cs-section_body">
+<nav class="takeaway-index" aria-label="takeaways">
+  <p class="takeaway-index_label">what i decided, and why</p>
+  <ol class="takeaway-index_list">
+    <li><a href="#d-01-the-bar-carries-almost-nothing"><span class="takeaway-index_num">/01</span> the top bar carries almost nothing</a></li>
+    <li><a href="#d-02-the-hero-is-a-photo-shoot"><span class="takeaway-index_num">/02</span> the hero is staged like a photo shoot, not laid out like a page</a></li>
+    <li><a href="#d-03-a-sentence-you-cannot-skip"><span class="takeaway-index_num">/03</span> one sentence you cannot scroll past, then it breaks</a></li>
+    <li><a href="#d-04-the-page-turns-the-lights-off"><span class="takeaway-index_num">/04</span> the page turns the lights off for you</a></li>
+    <li><a href="#d-05-then-prove-it-is-real"><span class="takeaway-index_num">/05</span> then prove it is not a render</a></li>
+    <li><a href="#d-06-the-name-is-content"><span class="takeaway-index_num">/06</span> the name gets its own section</a></li>
+    <li><a href="#d-07-specs-as-reasons"><span class="takeaway-index_num">/07</span> the features are written as reasons, not specs</a></li>
+    <li><a href="#d-08-handmade-as-a-hand-of-cards"><span class="takeaway-index_num">/08</span> the build is dealt like a hand of cards</a></li>
+    <li><a href="#d-09-a-store-past-the-product"><span class="takeaway-index_num">/09</span> the end of the page sells the brand, not just the guitar</a></li>
+    <li><a href="#d-10-every-scene-has-a-still"><span class="takeaway-index_num">/10</span> every scene still works with the motion off</a></li>
+  </ol>
+</nav>
+<div class="prose"><p>The page reads top to bottom as one argument: here it is, here is what it means, now watch it glow, here is the proof, here is how it was made, here is the price.</p></div>
+<article class="decision" id="d-01-the-bar-carries-almost-nothing">
+  <header class="decision_head">
+    <span class="decision_file">01-the-bar-carries-almost-nothing.md</span>
+    <h3 class="decision_title">the top bar carries almost nothing</h3>
+    <p class="decision_subtitle">The guitar gets the first screen, not the navigation.</p>
+  </header>
+  <div class="decision_body prose"><p>The only bar on the page is a slim glass strip: the YURA star, the product name, search, bag, account and a pink Buy button. No section links. A single-product page does not have enough places to go to justify a menu above the fold, and every link up there is something competing with the guitar.</p>
+<p>The index still exists, it just waits. Once you reach the build steps, a pill rises from the bottom of the screen with the product name and an Explore button. Closed, it is one line. Open, it holds every section and a second Buy button, so the visitor who has scrolled that far always has a way back and a way out.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): add assets/yura/product-bar-and-floating-nav.webm --><mark class="todo">[todo: add assets/yura/product-bar-and-floating-nav.webm]</mark></div>
+  <figcaption class="caption-code">product-bar-and-floating-nav.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-02-the-hero-is-a-photo-shoot">
+  <header class="decision_head">
+    <span class="decision_file">02-the-hero-is-a-photo-shoot.md</span>
+    <h3 class="decision_title">the hero is staged like a photo shoot, not laid out like a page</h3>
+    <p class="decision_subtitle">Light, smoke and a guitar you can almost pick up.</p>
+  </header>
+  <div class="decision_body prose"><p>The guitar lies across the frame and bleeds off the left edge, and the wordmark sits low and right so the neck runs through the gap in the lock-up and the headstock clears the kanji. The whole scene is one fixed-ratio stage sized with container units, so the guitar and the type scale as one locked composition instead of drifting apart at each breakpoint.</p>
+<p>It is lit, not placed on black. A pink key light sits behind the body, real smoke footage drifts across the frame on a screen blend so only the smoke shows, and a lime paint splash sits behind the guitar to quietly preview the glow that comes later. Of the two title lines, only the kanji 発光体, &quot;a luminous body&quot;, gets a faint green glow.</p>
+<p>Move the pointer and the guitar tilts toward it. That runs on a real spring rather than a CSS transition, so a quick change of direction carries its momentum instead of snapping. It is the closest a screen gets to tilting the guitar in your hands. The price sits right under the call to action, &quot;From $300 or $33.99/mo.&quot;, because a product page that hides its price reads as a concept, not a store.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): add assets/yura/hero-pointer-tilt.webm --><mark class="todo">[todo: add assets/yura/hero-pointer-tilt.webm]</mark></div>
+  <figcaption class="caption-code">hero-pointer-tilt.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-03-a-sentence-you-cannot-skip">
+  <header class="decision_head">
+    <span class="decision_file">03-a-sentence-you-cannot-skip.md</span>
+    <h3 class="decision_title">one sentence you cannot scroll past, then it breaks</h3>
+    <p class="decision_subtitle">The manifesto lights letter by letter, then shatters into the next scene.</p>
+  </header>
+  <div class="decision_body prose"><p>Right after the hero comes the idea behind the guitar, in one paragraph: take away the blood, the sweat and the tears, and what remains is pure and luminous. The section is three screens tall and the plate holding it is pinned for all of them. The first stretch of scroll lights the letters in reading order, so the text cannot be scrolled past before it has been read.</p>
+<p>The last stretch breaks it. The plate cracks from an impact point into shards, and each shard carries its own slice of the sentence as it falls away. The throw accelerates instead of easing out, so the cracks stay hairline for a moment and you read the sentence breaking before it is gone. Behind it, the guitar's own light comes through the cracks first, then the white room of the next scene.</p>
+<p>An earlier version faded white up from the floor while the last words lit. It was cut after feedback. The section now stays black until the break, and the break is the transition.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): add assets/yura/statement-lights-then-shatters.webm --><mark class="todo">[todo: add assets/yura/statement-lights-then-shatters.webm]</mark></div>
+  <figcaption class="caption-code">statement-lights-then-shatters.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-04-the-page-turns-the-lights-off">
+  <header class="decision_head">
+    <span class="decision_file">04-the-page-turns-the-lights-off.md</span>
+    <h3 class="decision_title">the page turns the lights off for you</h3>
+    <p class="decision_subtitle">The one feature a photo cannot show, played out on scroll.</p>
+  </header>
+  <div class="decision_body prose"><p>The guitar's main trick is that the cream art glows green in the dark. A still photo of that only proves someone took a photo in the dark. So the glow scene does it in front of you: it opens in a lit white room on &quot;Loud in the light.&quot;, and as you scroll the lamps stutter, the room goes black and the headline changes to &quot;Luminous in the dark.&quot; while the vinyl charges up on the body.</p>
+<p>&quot;The lights go out&quot; is not one crossfade. A single black layer over white spends the middle of the section at flat grey with nothing happening. Instead the room darkens from the edges in, then the last light leaves the guitar, then the vinyl starts to glow, as separate overlapping beats. The lamps flicker twice before they give out, and the headline swap lands on the second flicker, so the sign changes on the same beat the power cuts.</p>
+<p>Most of the iteration here was about legibility. Any text that changes colour while its background changes colour will cross it somewhere and vanish for a few frames, so the room commits to black during the exact window where one headline has left and the other has not arrived. Each line only ever lives over one kind of room. The guitar dims with brightness instead of opacity, because opacity made it look like the photo turning translucent rather than a lamp going out.</p></div>
+  <div class="decision_media"><figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): add assets/yura/glow-scene-lights-out.webm --><mark class="todo">[todo: add assets/yura/glow-scene-lights-out.webm]</mark></div>
+  <figcaption class="caption-code">glow-scene-lights-out.webm</figcaption>
+</figure>
+<figure class="before-after before-after--stack media-block">
+  <div class="before-after_side">
+      <span class="before-after_label">lights on</span>
+      <div class="frame frame--empty"><!-- TODO(pedro): add assets/yura/glow-scene-lit.webp --><mark class="todo">[todo: add assets/yura/glow-scene-lit.webp]</mark></div>
+    </div>
+  <div class="before-after_side">
+      <span class="before-after_label">lights off</span>
+      <div class="frame frame--empty"><!-- TODO(pedro): add assets/yura/glow-scene-dark.webp --><mark class="todo">[todo: add assets/yura/glow-scene-dark.webp]</mark></div>
+    </div>
+</figure></div>
+  
+</article>
+<article class="decision" id="d-05-then-prove-it-is-real">
+  <header class="decision_head">
+    <span class="decision_file">05-then-prove-it-is-real.md</span>
+    <h3 class="decision_title">then prove it is not a render</h3>
+    <p class="decision_subtitle">A scripted effect invites one question, and the next section answers it.</p>
+  </header>
+  <div class="decision_body prose"><p>After a scene that good, the natural reaction is doubt. So the next thing on the page is three real photos of the guitar glowing in a dark room, with one line under them: &quot;Not a render. Photographed in a dark room.&quot;</p>
+<p>The photos come up the same way the vinyl does, dim first and then charged, and a bloom carries over from the glow scene so it feels like the same dark room you just left.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): add assets/yura/proof-photos-in-the-dark.webp --><mark class="todo">[todo: add assets/yura/proof-photos-in-the-dark.webp]</mark></div>
+  <figcaption class="caption-code">proof-photos-in-the-dark.webp</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-06-the-name-is-content">
+  <header class="decision_head">
+    <span class="decision_file">06-the-name-is-content.md</span>
+    <h3 class="decision_title">the name gets its own section</h3>
+    <p class="decision_subtitle">Most visitors cannot read it, so the page reads it for them.</p>
+  </header>
+  <div class="decision_body prose"><p>HAKKOTAI is a word most visitors will not know, and a name you cannot read is a name you will not remember. So the name becomes content: three kanji, each with its reading and meaning, emission, light, body, adding up to &quot;a luminous body&quot;.</p>
+<p>Hovering a character slides a lime band up through it, like a glow-in-the-dark charge, so even the typography section repeats the one thing the product does.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): add assets/yura/the-name-kanji-hover.webm --><mark class="todo">[todo: add assets/yura/the-name-kanji-hover.webm]</mark></div>
+  <figcaption class="caption-code">the-name-kanji-hover.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-07-specs-as-reasons">
+  <header class="decision_head">
+    <span class="decision_file">07-specs-as-reasons.md</span>
+    <h3 class="decision_title">the features are written as reasons, not specs</h3>
+    <p class="decision_subtitle">A bento grid where every tile says why, not just what.</p>
+  </header>
+  <div class="decision_body prose"><p>The design section is a bento of six tiles, mixing a studio cut-out, photos, big statements and spec numbers. Each tile turns a fact into a reason to care. Pink paint becomes &quot;Pink, not red. Change the colour of the blood and the tragedy turns into a party.&quot; Basswood becomes &quot;Comfortable for hours, not minutes.&quot; Two humbuckers become a one-line promise about tone.</p>
+<p>One tile has no spec at all: &quot;A guitar is just a guitar.&quot; It is there because the art is a cracked skull with goo bursting out, and the page would rather say it has no hidden meaning than leave a visitor to guess.</p>
+<p>The full spec table comes later and is deliberately plain. After a page of spectacle, a calm list of facts reads as honesty.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): add assets/yura/design-bento.webp --><mark class="todo">[todo: add assets/yura/design-bento.webp]</mark></div>
+  <figcaption class="caption-code">design-bento.webp</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-08-handmade-as-a-hand-of-cards">
+  <header class="decision_head">
+    <span class="decision_file">08-handmade-as-a-hand-of-cards.md</span>
+    <h3 class="decision_title">the build is dealt like a hand of cards</h3>
+    <p class="decision_subtitle">Seven steps, from a red guitar to a pink one, without a paragraph of explanation.</p>
+  </header>
+  <div class="decision_body prose"><p>&quot;Handmade&quot; is the claim that separates this guitar from anything in a catalogue, and it is also the easiest claim to make and not mean. So the build gets the longest scroll on the page. The seven steps are dealt in from the right one by one, on an arc toward the viewer, and each one knocks the card underneath back into the stack, so the row reads as a pile of work rather than a strip of thumbnails.</p>
+<p>The room takes the colour of whichever card is on top. It starts red with the stock guitar, warms through sanding, goes cold grey at the primer and ends hot pink, so the colour of the light tells the story of the paint job by itself. A huge step number rolls behind the cards like an odometer, and ticks under the deck jump straight to any step.</p>
+<p>Under it, a footnote admits that some stickers had weak glue and others tore in the cutter, and that the scars stayed in. A catalogue photo would hide that. A handmade object is better off saying it.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): add assets/yura/build-deck-dealing.webm --><mark class="todo">[todo: add assets/yura/build-deck-dealing.webm]</mark></div>
+  <figcaption class="caption-code">build-deck-dealing.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-09-a-store-past-the-product">
+  <header class="decision_head">
+    <span class="decision_file">09-a-store-past-the-product.md</span>
+    <h3 class="decision_title">the end of the page sells the brand, not just the guitar</h3>
+    <p class="decision_subtitle">Accessories, a closer and the honest small print.</p>
+  </header>
+  <div class="decision_body prose"><p>Before the last call to buy, the page shows a strap, a combo amp and a braided cable, all in YURA pink and all marked &quot;Coming soon&quot;. They are not for sale. They are there because one product on its own reads as a project, and a product with a rig around it reads as a brand.</p>
+<p>The closer repeats the kanji, the price and the Buy button over a photo of the guitar on its amp, so whoever reaches the bottom has everything they need without scrolling back up. Under it, three footnotes say where the name comes from, that it started as a design course project, and that YURA is a concept brand. The fiction is the point of the page, but the page never pretends it is not one.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): add assets/yura/accessories-and-closer.webp --><mark class="todo">[todo: add assets/yura/accessories-and-closer.webp]</mark></div>
+  <figcaption class="caption-code">accessories-and-closer.webp</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-10-every-scene-has-a-still">
+  <header class="decision_head">
+    <span class="decision_file">10-every-scene-has-a-still.md</span>
+    <h3 class="decision_title">every scene still works with the motion off</h3>
+    <p class="decision_subtitle">The animation is the delivery, not the content.</p>
+  </header>
+  <div class="decision_body prose"><p>Each scroll scene was built with a fallback that tells the same story standing still. With reduced motion turned on, nothing pins: the statement is simply readable, the build is a plain grid of the same cards, and the glow scene still goes dark on scroll without flying anything in. Without JavaScript, the glow scene settles straight into the state it is about, the dark room with the vinyl lit, instead of reserving three screens of scroll it can no longer use.</p>
+<p>It matters for the argument as much as for access. If the page only works when everything moves, the motion is carrying the sale. If it still works when nothing moves, the motion is just making a good case better.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--empty"><!-- TODO(pedro): add assets/yura/reduced-motion-page.webp --><mark class="todo">[todo: add assets/yura/reduced-motion-page.webp]</mark></div>
+  <figcaption class="caption-code">reduced-motion-page.webp</figcaption>
+</figure>
+  
+</article>
+        </div>
+      </section>
+      <section class="cs-section" id="project-info-md">
+        <div class="cs-section_file">project-info.md</div>
+        <div class="cs-section_body">
+<dl class="meta cs-meta">
+          <div class="meta_row">
+            <dt>role</dt>
+            <dd>branding, web design, motion, front-end development</dd>
+          </div>
+          <div class="meta_row">
+            <dt>timeline</dt>
+            <dd>2026</dd>
+          </div>
+          <div class="meta_row">
+            <dt>team</dt>
+            <dd>solo</dd>
+          </div>
+          <div class="meta_row">
+            <dt>built with</dt>
+            <dd>html, css, javascript, figma, claude code</dd>
+          </div>
+          <div class="meta_row">
+            <dt>status</dt>
+            <dd>concept</dd>
+          </div>
+          <div class="meta_row">
+            <dt>visit</dt>
+            <dd><a href="/yura">lope.design/yura</a></dd>
+          </div>
+          </dl>
+        </div>
+      </section>
+
+      <nav class="cs-nav">
+        <a class="cs-nav_link cs-nav_prev" href="/work/oracle/" data-slug="oracle">← prev project <span class="cs-nav_name">oracle</span><div class="cs-nav_frame" style="aspect-ratio: 1 / 1"><img class="cs-nav_media" data-slug="oracle" src="/assets/oracle/oracle-nav.webp" alt="" style="object-fit: cover" loading="lazy" decoding="async"></div></a>
+        <a class="cs-nav_link cs-nav_next" href="/work/count-me-dead/" data-slug="count-me-dead">next project → <span class="cs-nav_name">count me dead</span><div class="cs-nav_frame" style="aspect-ratio: 630 / 500"><img class="cs-nav_media" data-slug="count-me-dead" src="/assets/count-me-dead/cover.webp" alt=""
+              style="object-fit: cover" loading="lazy" decoding="async"></div></a>
+      </nav>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="footer">
+    <div class="footer_grid grid-12">
+      <div class="credits-container"><div class="text-color_inverse">work@lope.design</div></div>
+      <div class="copyright-container"><div class="text-color_inverse">2026</div></div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/site.js"></script>
+
+</body>
+
+</html>

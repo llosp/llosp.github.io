@@ -496,7 +496,11 @@ body.home::after {
     drop-shadow(0 .5cqw .8cqw rgba(0, 0, 0, .55))
     drop-shadow(0 2.4cqw 3cqw rgba(0, 0, 0, .5))
     drop-shadow(0 0 2.2cqw rgba(236, 30, 121, .2));
-  animation: h-guitar-in 1.8s var(--h-ease) .15s both;
+  /* The kick rides on `translate`, separate from transform, so it stacks on
+     the entrance and the pointer tilt without fighting either. */
+  animation:
+    h-guitar-in 1.8s var(--h-ease) .15s both,
+    h-guitar-kick .38s ease-out .97s;
   will-change: transform;
 }
 
@@ -654,12 +658,36 @@ body.home::after {
   margin-top: 2.4cqw;
   transform: translateY(-50%) rotate(-4deg);
   z-index: 0;
+  overflow: hidden;
   opacity: .9;
   mix-blend-mode: screen;
+  /* Soft leading edge for the wipe. It lives in this box's own space, so it
+     rides along with the transform and is rasterised once, never per frame. */
+  mask-image: linear-gradient(90deg, #000 84%, transparent 100%);
+  -webkit-mask-image: linear-gradient(90deg, #000 84%, transparent 100%);
+  /* The wipe is a window sliding right while .h-hero-splash-paint slides back
+     left by the same amount on the same curve, so the goo holds still and is
+     uncovered left to right. Both are transforms, so the compositor runs it
+     with no repaint; animating mask-position instead re-rasterised the SVG
+     mask at full size every frame and stuttered badly on big screens.
+     Jab then cross: guitar-in's expo-out has it visually settled by ~.95s,
+     so the splash fires right there. */
+  animation: h-splash-wipe .45s cubic-bezier(.3, .6, .15, 1) .95s both;
+}
+
+.h-hero-splash-paint {
+  position: absolute;
+  inset: 0;
   filter: blur(1px);
   background:
     radial-gradient(44% 56% at 38% 44%, #fff 0%, var(--h-glow) 26%, rgba(228, 255, 190, 0) 72%),
     linear-gradient(100deg, var(--h-glow) 4%, var(--h-lime) 34%, #6f8a1e 62%, rgba(111, 138, 30, 0) 86%);
+  /* Keep the paint a few px off the box edge. The box is rotated, and Chrome
+     samples the fill a hair past the mask's bounds there, which drew a 1px
+     lime line along the bottom edge. The SVG is empty at its edges anyway,
+     and masks stay on border-box, so nothing visible is lost. */
+  padding: 3px;
+  background-clip: content-box;
   mask-image: url(../assets/img/splash.svg), linear-gradient(90deg, transparent 0%, #000 28%, #000 100%);
   mask-repeat: no-repeat, no-repeat;
   mask-position: center, center;
@@ -670,7 +698,22 @@ body.home::after {
   -webkit-mask-position: center, center;
   -webkit-mask-size: contain, 100% 100%;
   -webkit-mask-composite: source-in;
-  animation: h-splash-bloom 1.5s var(--h-ease) .35s both;
+  /* `translate` and `scale` are separate properties, so the counter-slide and
+     the hit compose instead of overwriting each other's transform. */
+  animation:
+    h-splash-counter .45s cubic-bezier(.3, .6, .15, 1) .95s both,
+    h-splash-hit .5s ease-out .95s both;
+}
+
+/* The contact flash: a glow-coloured wash inside the goo's mask that fades
+   out. Opacity is compositor-only, unlike the brightness() filter it replaces. */
+.h-hero-splash-paint::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: var(--h-glow);
+  opacity: 0;
+  animation: h-splash-flash .5s ease-out .95s both;
 }
 
 /* Real smoke footage, full-bleed behind the guitar and copy (both sit in
@@ -726,10 +769,35 @@ body.home::after {
   }
 }
 
-@keyframes h-splash-bloom {
+@keyframes h-splash-wipe {
   from {
-    opacity: 0;
-    transform: translateY(-50%) rotate(-12deg) scale(.84);
+    transform: translateY(-50%) rotate(-4deg) translateX(-100%);
+  }
+}
+
+@keyframes h-splash-counter {
+  from {
+    translate: 100% 0;
+  }
+}
+
+/* A hair of overscale that settles as the paint lands. */
+@keyframes h-splash-hit {
+  from {
+    scale: 1.035;
+  }
+}
+
+@keyframes h-splash-flash {
+  from {
+    opacity: .6;
+  }
+}
+
+/* A small recoil away from the splash, back within a third of a second. */
+@keyframes h-guitar-kick {
+  30% {
+    translate: .5cqw 0;
   }
 }
 
@@ -2478,6 +2546,8 @@ html:not(.js) .h-glow-hint {
   .h-hero-guitar,
   .h-hero-halo,
   .h-hero-splash,
+  .h-hero-splash-paint,
+  .h-hero-splash-paint::after,
   .h-hero-copy::before,
   .h-hero-eyebrow,
   .h-hero-title-latin,

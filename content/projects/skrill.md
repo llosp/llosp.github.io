@@ -64,20 +64,20 @@ body:
 
   An extra tier pays no base points at all and scores only through the group, for things you do just because. Some seasons a bounty appears, a prompt for something to make, such as a sci-fi piece, a sticker for the group or a classic painting in your own style. The chance of one rises every season it does not show up, so they stay a surprise. If a friend takes it, you want to as well, because you do not want them to take all the points.
 media:
-  - full | assets/skrill/declare-goal-difficulty.webm | Screen recording: declaring a goal, choosing simple or complex, and the points shown on each | // [todo: write this caption]
-  - full | assets/skrill/declare-goal-modal.webp | The new goal modal, with difficulty set to extra, simple or complex, plus a title and an optional description | // the difficulty picker, up close | square
+  - full | assets/skrill/choose-difficulty-simple-2-complex-5.webm | Screen recording: declaring a goal, choosing simple or complex, and the points shown on each
+  - full | assets/skrill/new-goal-extra-simple-or-complex.webp | The new goal modal, with difficulty set to extra, simple or complex, plus a title and an optional description | // the difficulty picker, up close | square
 :::
 
 ::: decision 03-points-from-your-friends
 title: part of your score is given to you by the group
 subtitle: Every person gets a small pool of bonus points to hand out.
 body:
-  The base points are fixed, so the interesting part is the bonus. Each person receives a pool of half the number of players, rounded down, and must spend all of it on other people's work, anonymously. You can score yourself, but you are spending from the same pool.
+  The base points are fixed, so the interesting part is the bonus. Each person receives a pool equal to half the goals delivered that season, rounded down, and must spend all of it on the deliveries, anonymously. You can score yourself, but you are spending from the same pool.
 
-  This stops the leaderboard from being just a count of tasks. It rewards the work the group actually thought was good, and it keeps the reveal alive, because nobody knows who got what until the end.
+  The pool follows the deliveries, not the headcount, so a busy season has more bonus to give away than a thin one. This stops the leaderboard from being just a count of tasks. It rewards the work the group actually thought was good, and it keeps the reveal alive, because nobody knows who got what until the end.
 media:
-  - full | assets/skrill/bounty-goal.webp | A season's goals list showing a bounty card, "make art about fishing", with a deliver bounty button | // a bounty prompt waiting to be claimed | natural
-  - full | assets/skrill/peer-bonus-rating.webm | Screen recording: a bonus pool being split between four deliveries, with the pool counter running down to zero | // [todo: write this caption]
+  - full | assets/skrill/bounty-card-make-art-about-fishing.webp | A season's goals list showing a bounty card, "make art about fishing", with a deliver bounty button | // a bounty prompt waiting to be claimed | natural
+  - full | assets/skrill/spend-the-whole-bonus-pool-to-submit.webm | Screen recording: a bonus pool being split between four deliveries, with the pool counter running down to zero
 :::
 
 ::: decision 04-deliberately-unserious
@@ -88,7 +88,32 @@ body:
 
   You cannot upload a profile photo. You have to draw one, in a small black and white pixel canvas. It is a limited, slightly clumsy tool, and that is the point.
 media:
-  - full | assets/skrill/draw-your-avatar.webm | Motion recording: the app switching through its five accent colors, then the edit profile window flipping through pixel art avatars on the drawing canvas | // [todo: write this caption]
+  - full | assets/skrill/five-accent-colors-then-draw-your-avatar.webm | Motion recording: the app switching through its five accent colors, then the edit profile window flipping through pixel art avatars on the drawing canvas
+:::
+
+## what-changed.md
+
+The four decisions above carry most of the design. Three more rules were added to it in the first ten days of June 2026.
+
+::: decision 05-trying-counts-for-something
+title: a goal you tried and missed can still score
+subtitle: One point, and only if the group says so.
+body:
+  A goal can end as attempted, not just delivered or failed. During Skrill Time the group votes up or down on each attempt, and an attempt with more up votes than down gets 1 point. It is small next to the 2 or 5 a delivery pays, but it separates the week you tried and missed from the week you did nothing.
+:::
+
+::: decision 06-a-delivery-can-be-cancelled
+title: a delivery only counts if nobody calls it fake
+subtitle: It takes everyone else, not just one person.
+body:
+  Any player can report someone else's delivery while the bonuses are being handed out. If every other participant reports it, the delivery is cancelled and the goal is marked as failed. A single report changes nothing, so one person cannot take points off another.
+:::
+
+::: decision 07-bounties-pay-less-when-shared
+title: a bounty is worth more the fewer people take it
+subtitle: 7 points alone, 4 with two, 3 with three, 2 after that.
+body:
+  A bounty pays by how many players deliver it. Going in alone is rewarded, and a bounty everyone takes is worth a little each instead of a lot. It is the rule behind not wanting a friend to take all the points.
 :::
 
 ## outcome.md

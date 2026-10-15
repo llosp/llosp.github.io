@@ -574,7 +574,7 @@
   onScroll();
 
   // ---------- scroll-spy for the product bar links ----------
-  const links = Array.from(document.querySelectorAll('.pbar-links [data-spy]'));
+  const links = Array.from(document.querySelectorAll('.pbar-links [data-spy], .fnav [data-spy]'));
   if (links.length) {
     const setActive = (id) =>
       links.forEach((a) => a.classList.toggle('is-active', a.dataset.spy === id));
@@ -590,5 +590,35 @@
       const section = document.getElementById(a.dataset.spy);
       if (section) spyIO.observe(section);
     });
+  }
+
+  // ---------- floating index ----------
+  // The top bar carries no section links. From the build steps on, a pill
+  // rises from the bottom and holds the whole index behind one button.
+  const fnav = document.querySelector('[data-fnav]');
+  const buildSection = document.getElementById('build');
+  if (fnav && buildSection) {
+    const toggle = fnav.querySelector('[data-fnav-toggle]');
+    const setOpen = (open) => {
+      fnav.classList.toggle('is-open', open);
+      toggle.setAttribute('aria-expanded', String(open));
+    };
+    const updateFnav = () => {
+      const show = buildSection.getBoundingClientRect().top < window.innerHeight * 0.5;
+      fnav.classList.toggle('is-visible', show);
+      fnav.inert = !show;
+      if (!show) setOpen(false);
+    };
+    toggle.addEventListener('click', () => setOpen(!fnav.classList.contains('is-open')));
+    fnav.querySelectorAll('.fnav-panel a').forEach((a) => a.addEventListener('click', () => setOpen(false)));
+    document.addEventListener('click', (e) => {
+      if (!fnav.contains(e.target)) setOpen(false);
+    });
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') setOpen(false);
+    });
+    window.addEventListener('scroll', updateFnav, { passive: true });
+    window.addEventListener('resize', updateFnav);
+    updateFnav();
   }
 })();

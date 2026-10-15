@@ -67,7 +67,11 @@ function initAscii() {
   }
 
   function drawFrame(now) {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // the context is scaled by dpr, so clearRect takes css pixels. passing
+    // canvas.width (device pixels) cleared only width * dpr of the field, and
+    // below 100% zoom (dpr < 1) the right and bottom edges never cleared, so
+    // old ripples piled up there as dark smears.
+    ctx.clearRect(0, 0, width, height);
 
     if (now - lastSpawn > nextSpawnDelay) {
       spawnRipple(now);
@@ -317,8 +321,28 @@ function initReveal(scope) {
 // index, which waits to be hovered. on the case study the clip is the
 // subject of the page, so making the reader hover it to see it is backwards.
 function initVideos(scope) {
-  const videos = [...scope.querySelectorAll('.frame--video video, video.cs-cover_img')];
+  let videos = [...scope.querySelectorAll('.frame--video video, video.cs-cover_img')];
   if (!videos.length) return;
+
+  // with reduced motion on, a clip that has a calmer variant plays that one,
+  // and every other clip stays on its poster until the reader starts it
+  if (reduceMotion()) {
+    videos = videos.filter((video) => {
+      const calm = video.dataset.reducedSrc;
+      if (calm) {
+        video.querySelector('source').src = calm;
+        video.load();
+        return true;
+      }
+      if (video.matches('.frame--video video')) {
+        video.removeAttribute('loop');
+        video.controls = true;
+        return false;
+      }
+      return true;
+    });
+    if (!videos.length) return;
+  }
 
   if (!('IntersectionObserver' in window)) {
     videos.forEach((v) => v.play().catch(() => {}));

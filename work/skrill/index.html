@@ -49,11 +49,6 @@
         <div class="button-square blinking"></div>
         <div class="text-color_inverse">./about</div>
       </a>
-      <a class="nav_button" href="/resume.pdf">
-        <div class="button-square blinking"></div>
-        <div class="text-color_inverse">resume.pdf</div>
-        <!-- TODO(pedro): add resume.pdf to the repo root --><mark class="todo">[todo: add resume.pdf to the repo root]</mark>
-      </a>
     </div>
   </div>
 
@@ -64,6 +59,7 @@
         <a href="#overview-md">overview</a>
         <a href="#why-md">why</a>
         <a href="#how-it-works">how-it-works</a>
+        <a href="#what-changed-md">what-changed</a>
         <a href="#outcome-md">outcome</a>
         <a href="#project-info-md">project-info</a>
       </nav>
@@ -89,7 +85,7 @@
 
         <div class="cs-rest">
       <section class="cs-section" id="overview-md">
-        <div class="cs-section_file">overview.md</div>
+        <h2 class="cs-section_file">overview.md</h2>
         <div class="cs-section_body">
 <p class="statement">Nobody asks you to practice, so you don't.</p>
 <div class="prose"><p>Skrill is a weekly game for people who want to make things they are not paid to make. Each season you declare what you will do and how hard it is. You deliver proof. Everything stays blurred until a short call where the group reveals it together and hands each other points.</p>
@@ -97,7 +93,7 @@
         </div>
       </section>
       <section class="cs-section" id="why-md">
-        <div class="cs-section_file">why.md</div>
+        <h2 class="cs-section_file">why.md</h2>
         <div class="cs-section_body">
 <div class="prose"><p>I make games with an artist friend, and the work that keeps us sharp has no deadline: drawing for fun, a new track, a tool nobody asked for. It loses every time to the work that does have a client.</p>
 <p>We already met every week to show what we had made, but a goal that only lives in your head is easy to drop, especially with no date on it. I needed something with a short loop, other people in it, and a reason to show up on a specific day.</p>
@@ -105,7 +101,7 @@
         </div>
       </section>
       <section class="cs-section" id="how-it-works">
-        <div class="cs-section_file">how-it-works/</div>
+        <h2 class="cs-section_file">how-it-works/</h2>
         <div class="cs-section_body">
 <nav class="takeaway-index" aria-label="takeaways">
   <p class="takeaway-index_label">what i decided, and why</p>
@@ -152,16 +148,16 @@
   <div class="decision_media"><figure class="media-block media-block--full">
   <div class="frame frame--video">
       <video class="media wide" playsinline muted loop preload="metadata" aria-label="Screen recording: declaring a goal, choosing simple or complex, and the points shown on each">
-        <source src="/assets/skrill/declare-goal-difficulty.webm" type="video/webm">
+        <source src="/assets/skrill/choose-difficulty-simple-2-complex-5.webm" type="video/webm">
       </video>
     </div>
-  <figcaption class="caption-code">declare-goal-difficulty.webm</figcaption>
+  <figcaption class="caption-code">choose-difficulty-simple-2-complex-5.webm</figcaption>
 </figure>
 <figure class="media-block media-block--full">
   <div class="frame">
-      <img class="media square" src="/assets/skrill/declare-goal-modal.webp" alt="The new goal modal, with difficulty set to extra, simple or complex, plus a title and an optional description" loading="lazy" decoding="async">
+      <img class="media square" src="/assets/skrill/new-goal-extra-simple-or-complex.webp" alt="The new goal modal, with difficulty set to extra, simple or complex, plus a title and an optional description" loading="lazy" decoding="async">
     </div>
-  <figcaption class="caption-code">declare-goal-modal.webp</figcaption>
+  <figcaption class="caption-code">new-goal-extra-simple-or-complex.webp</figcaption>
 </figure></div>
   
 </article>
@@ -171,21 +167,21 @@
     <h3 class="decision_title">part of your score is given to you by the group</h3>
     <p class="decision_subtitle">Every person gets a small pool of bonus points to hand out.</p>
   </header>
-  <div class="decision_body prose"><p>The base points are fixed, so the interesting part is the bonus. Each person receives a pool of half the number of players, rounded down, and must spend all of it on other people's work, anonymously. You can score yourself, but you are spending from the same pool.</p>
-<p>This stops the leaderboard from being just a count of tasks. It rewards the work the group actually thought was good, and it keeps the reveal alive, because nobody knows who got what until the end.</p></div>
+  <div class="decision_body prose"><p>The base points are fixed, so the interesting part is the bonus. Each person receives a pool equal to half the goals delivered that season, rounded down, and must spend all of it on the deliveries, anonymously. You can score yourself, but you are spending from the same pool.</p>
+<p>The pool follows the deliveries, not the headcount, so a busy season has more bonus to give away than a thin one. This stops the leaderboard from being just a count of tasks. It rewards the work the group actually thought was good, and it keeps the reveal alive, because nobody knows who got what until the end.</p></div>
   <div class="decision_media"><figure class="media-block media-block--full">
   <div class="frame">
-      <img class="media natural" src="/assets/skrill/bounty-goal.webp" alt="A season's goals list showing a bounty card, &quot;make art about fishing&quot;, with a deliver bounty button" loading="lazy" decoding="async">
+      <img class="media natural" src="/assets/skrill/bounty-card-make-art-about-fishing.webp" alt="A season's goals list showing a bounty card, &quot;make art about fishing&quot;, with a deliver bounty button" loading="lazy" decoding="async">
     </div>
-  <figcaption class="caption-code">bounty-goal.webp</figcaption>
+  <figcaption class="caption-code">bounty-card-make-art-about-fishing.webp</figcaption>
 </figure>
 <figure class="media-block media-block--full">
   <div class="frame frame--video">
       <video class="media wide" playsinline muted loop preload="metadata" aria-label="Screen recording: a bonus pool being split between four deliveries, with the pool counter running down to zero">
-        <source src="/assets/skrill/peer-bonus-rating.webm" type="video/webm">
+        <source src="/assets/skrill/spend-the-whole-bonus-pool-to-submit.webm" type="video/webm">
       </video>
     </div>
-  <figcaption class="caption-code">peer-bonus-rating.webm</figcaption>
+  <figcaption class="caption-code">spend-the-whole-bonus-pool-to-submit.webm</figcaption>
 </figure></div>
   
 </article>
@@ -200,17 +196,61 @@
   <figure class="media-block media-block--full">
   <div class="frame frame--video">
       <video class="media wide" playsinline muted loop preload="metadata" aria-label="Motion recording: the app switching through its five accent colors, then the edit profile window flipping through pixel art avatars on the drawing canvas">
-        <source src="/assets/skrill/draw-your-avatar.webm" type="video/webm">
+        <source src="/assets/skrill/five-accent-colors-then-draw-your-avatar.webm" type="video/webm">
       </video>
     </div>
-  <figcaption class="caption-code">draw-your-avatar.webm</figcaption>
+  <figcaption class="caption-code">five-accent-colors-then-draw-your-avatar.webm</figcaption>
 </figure>
   
 </article>
         </div>
       </section>
+      <section class="cs-section" id="what-changed-md">
+        <h2 class="cs-section_file">what-changed.md</h2>
+        <div class="cs-section_body">
+<nav class="takeaway-index" aria-label="takeaways">
+  <p class="takeaway-index_label">what i decided, and why</p>
+  <ol class="takeaway-index_list">
+    <li><a href="#d-05-trying-counts-for-something"><span class="takeaway-index_num">/05</span> a goal you tried and missed can still score</a></li>
+    <li><a href="#d-06-a-delivery-can-be-cancelled"><span class="takeaway-index_num">/06</span> a delivery only counts if nobody calls it fake</a></li>
+    <li><a href="#d-07-bounties-pay-less-when-shared"><span class="takeaway-index_num">/07</span> a bounty is worth more the fewer people take it</a></li>
+  </ol>
+</nav>
+<div class="prose"><p>The four decisions above carry most of the design. Three more rules were added to it in the first ten days of June 2026.</p></div>
+<article class="decision" id="d-05-trying-counts-for-something">
+  <header class="decision_head">
+    <span class="decision_file">05-trying-counts-for-something.md</span>
+    <h3 class="decision_title">a goal you tried and missed can still score</h3>
+    <p class="decision_subtitle">One point, and only if the group says so.</p>
+  </header>
+  <div class="decision_body prose"><p>A goal can end as attempted, not just delivered or failed. During Skrill Time the group votes up or down on each attempt, and an attempt with more up votes than down gets 1 point. It is small next to the 2 or 5 a delivery pays, but it separates the week you tried and missed from the week you did nothing.</p></div>
+  
+  
+</article>
+<article class="decision" id="d-06-a-delivery-can-be-cancelled">
+  <header class="decision_head">
+    <span class="decision_file">06-a-delivery-can-be-cancelled.md</span>
+    <h3 class="decision_title">a delivery only counts if nobody calls it fake</h3>
+    <p class="decision_subtitle">It takes everyone else, not just one person.</p>
+  </header>
+  <div class="decision_body prose"><p>Any player can report someone else's delivery while the bonuses are being handed out. If every other participant reports it, the delivery is cancelled and the goal is marked as failed. A single report changes nothing, so one person cannot take points off another.</p></div>
+  
+  
+</article>
+<article class="decision" id="d-07-bounties-pay-less-when-shared">
+  <header class="decision_head">
+    <span class="decision_file">07-bounties-pay-less-when-shared.md</span>
+    <h3 class="decision_title">a bounty is worth more the fewer people take it</h3>
+    <p class="decision_subtitle">7 points alone, 4 with two, 3 with three, 2 after that.</p>
+  </header>
+  <div class="decision_body prose"><p>A bounty pays by how many players deliver it. Going in alone is rewarded, and a bounty everyone takes is worth a little each instead of a lot. It is the rule behind not wanting a friend to take all the points.</p></div>
+  
+  
+</article>
+        </div>
+      </section>
       <section class="cs-section" id="outcome-md">
-        <div class="cs-section_file">outcome.md</div>
+        <h2 class="cs-section_file">outcome.md</h2>
         <div class="cs-section_body">
 <ul class="outcomes">
 <li class="outcome">
@@ -235,7 +275,7 @@
         </div>
       </section>
       <section class="cs-section" id="project-info-md">
-        <div class="cs-section_file">project-info.md</div>
+        <h2 class="cs-section_file">project-info.md</h2>
         <div class="cs-section_body">
 <dl class="meta cs-meta">
           <div class="meta_row">

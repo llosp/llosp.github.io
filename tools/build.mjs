@@ -281,8 +281,15 @@ function mediaFrame({ src, alt = '', shape = 'wide', where, className = '' }) {
   const shapeClass = SHAPES.has(shape) ? shape : 'wide';
   const url = assetUrl(src);
   if (/\.(webm|mp4)$/.test(src)) {
+    // a clip may have a still (name-poster.webp) shown before it plays, and a
+    // calmer variant (name-reduced-motion.webm) for people who ask for less
+    // motion. both are found by name next to the clip, so nothing is listed twice.
+    const stem = src.replace(/\.(webm|mp4)$/, '');
+    const poster = assetExists(`${stem}-poster.webp`) ? ` poster="${assetUrl(`${stem}-poster.webp`)}"` : '';
+    const reducedSrc = `${stem}-reduced-motion.webm`;
+    const reduced = assetExists(reducedSrc) ? ` data-reduced-src="${assetUrl(reducedSrc)}"` : '';
     return `<div class="${classes} frame--video">
-      <video class="media ${shapeClass}" playsinline muted loop preload="metadata" aria-label="${escapeHtml(alt)}">
+      <video class="media ${shapeClass}" playsinline muted loop preload="metadata"${poster}${reduced} aria-label="${escapeHtml(alt)}">
         <source src="${url}" type="video/${src.endsWith('.webm') ? 'webm' : 'mp4'}">
       </video>
     </div>`;
@@ -339,8 +346,12 @@ function heroCover(data) {
   const alt = escapeHtml(data.cover_alt || '');
 
   if (isVideo(data.cover)) {
+    // the poster paints at once, so the largest thing on the page does not
+    // wait for the clip to start
+    const posterSrc = data.cover.replace(/\.(webm|mp4)$/, '-poster.webp');
+    const poster = assetExists(posterSrc) ? ` poster="${assetUrl(posterSrc)}"` : '';
     return `<video class="cs-cover_img" style="object-fit: ${fit}"
-            muted loop playsinline preload="auto" aria-label="${alt}">
+            muted loop playsinline preload="auto"${poster} aria-label="${alt}">
             <source src="${url}" type="video/${videoType(data.cover)}">
           </video>`;
   }
@@ -508,8 +519,10 @@ const blockRenderers = {
     return rows ? `<div class="toolbox-grid">\n${rows}\n</div>` : '';
   },
 
+  // `columns: 2` sets the items side by side instead of stacked
   media(block, ctx) {
-    return mediaItems(block.fields.items, `${ctx.slug}/media`);
+    const html = mediaItems(block.fields.items, `${ctx.slug}/media`);
+    return block.fields.columns === '2' ? `<div class="media-row">\n${html}\n</div>` : html;
   },
 
   // presentational depiction of an ai edit flow. no real calls.
@@ -645,13 +658,6 @@ const navItem = (href, label, extra = '') =>
       </a>`;
 
 function nav() {
-  const resume = existsSync(join(root, 'resume.pdf'))
-    ? navItem('/resume.pdf', 'resume.pdf')
-    : `<a class="nav_button" href="/resume.pdf">
-        <div class="button-square blinking"></div>
-        <div class="text-color_inverse">resume.pdf</div>
-        ${inline('[todo: add resume.pdf to the repo root]', 'nav')}
-      </a>`;
   return `<div class="navbar">
     <div class="header grid-12">
       <a class="nav_button nav_button--home" href="/">
@@ -661,7 +667,6 @@ function nav() {
       </a>
       ${navItem('/#work', './work')}
       ${navItem('/about/', './about')}
-      ${resume}
     </div>
   </div>`;
 }
@@ -862,7 +867,7 @@ ${sectionList[infoAt].rendered}`;
   const sections = sectionList
     .map(
       (s) => `      <section class="cs-section" id="${s.id}">
-        <div class="cs-section_file">${escapeHtml(s.name)}</div>
+        <h2 class="cs-section_file">${escapeHtml(s.name)}</h2>
         <div class="cs-section_body">
 ${s.rendered}
         </div>

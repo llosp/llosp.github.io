@@ -782,7 +782,9 @@ video {
 
 .cs-section_file {
   grid-column: 1 / span 2;
+  margin: 0;
   font-family: var(--font-mono);
+  font-weight: 400;
   font-size: 12px;
   color: var(--grey-meta);
 }
@@ -845,7 +847,8 @@ video {
 }
 
 .cs-section_body > .prose + .quote,
-.cs-section_body > .outcomes + .quote {
+.cs-section_body > .outcomes + .quote,
+.cs-section_body > .quote + .prose {
   margin-top: 40px;
 }
 
@@ -982,6 +985,18 @@ video {
 
 .media-block--side .caption-code {
   margin-top: 0;
+}
+
+/* two clips of the same weight, side by side */
+.media-row {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: var(--gap);
+  align-items: start;
+}
+
+@media screen and (max-width: 767px) {
+  .media-row { grid-template-columns: 1fr; }
 }
 
 /* every diagram and recording is a 16:9 frame at the full column width with a

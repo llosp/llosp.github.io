@@ -23,7 +23,7 @@ the kind of problems where the obvious solution isn't enough.
 
 ## availability.md
 
-open to product design roles. [todo: where you can work from, whether you need visa sponsorship, and whether you prefer remote, hybrid or relocation. studios screen on this before they read the work.]
+open to product design, web design and design engineering roles. based in rio de janeiro, open to remote, hybrid or relocation.
 
 ## toolbox/
 
@@ -31,7 +31,7 @@ open to product design roles. [todo: where you can work from, whether you need v
 items:
 - product & ux/ui | figma  figjam  framer  notion
 - branding & visual | illustrator  photoshop  after effects
-- dev & ai | web  ai  [todo: name the actual stack here. your own project pages already say html, css, javascript, supabase, godot, gdscript and claude code, and that reads stronger than "web ai"]
+- dev & ai | html  css  javascript  supabase  node  godot  gdscript  unity  c#  claude code
 :::
 
 ## contact.md

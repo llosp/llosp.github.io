@@ -124,7 +124,7 @@ Página central da temporada — quatro fases determinadas por `getPhase()`:
 - Quando **todos os participantes marcam pronto**: `skrill_time_revealed` vira `true`.
 
 **3. `rating`** — após revelação, enquanto há avaliações pendentes:
-- Pool de bônus por avaliador = `floor(N_participantes / 2)`, mínimo 1.
+- Pool de bônus por avaliador = `floor(N_metas_entregues / 2)`, mínimo 1 (`N` = metas `completed` de participantes na temporada, não o nº de jogadores).
 - Cada avaliador distribui seu pool entre as metas entregues (auto-avaliação permitida).
 - UI: contador `Pool: X/Total` + controles `[-] N [+]` por meta.
 - "Enviar avaliação" só habilita quando o pool está **totalmente distribuído**.
@@ -232,7 +232,7 @@ Painel protegido por `is_admin === true`. Tabs:
 | Meta `Complexa` completada | +5 pts |
 | Bônus de avaliação por pares | +N pts (variável) |
 
-**Pool de bônus por avaliador** = `floor(N_participantes / 2)`, mínimo 1.  
+**Pool de bônus por avaliador** = `floor(N_metas_entregues / 2)`, mínimo 1.  
 Pontos são **diferidos** — creditados apenas na finalização do Skrill Time, após todos avaliarem. A flag `goals.points_awarded` evita duplicação.
 
 ---

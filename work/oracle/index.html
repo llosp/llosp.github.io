@@ -49,11 +49,6 @@
         <div class="button-square blinking"></div>
         <div class="text-color_inverse">./about</div>
       </a>
-      <a class="nav_button" href="/resume.pdf">
-        <div class="button-square blinking"></div>
-        <div class="text-color_inverse">resume.pdf</div>
-        <!-- TODO(pedro): add resume.pdf to the repo root --><mark class="todo">[todo: add resume.pdf to the repo root]</mark>
-      </a>
     </div>
   </div>
 
@@ -62,8 +57,10 @@
       <nav class="cs-rail" aria-label="case study sections">
         <a class="cs-rail_back" href="/#work">← back</a>
         <a href="#overview-md">overview</a>
-        <a href="#research-md">research</a>
         <a href="#takeaways">takeaways</a>
+        <a href="#research-md">research</a>
+        <a href="#design-system-md">design-system</a>
+        <a href="#testing-md">testing</a>
         <a href="#project-info-md">project-info</a>
       </nav>
       <div class="cs-main">
@@ -79,7 +76,7 @@
         <figure class="cs-cover">
           <div class="cs-cover_frame" data-cover-slot="oracle">
           <video class="cs-cover_img" style="object-fit: cover"
-            muted loop playsinline preload="auto" aria-label="the Oracle wordmark and a phone showing the live console for a scene called Ice Cave, with the tagline &quot;One tap, whole room.&quot;">
+            muted loop playsinline preload="auto" poster="/assets/oracle/oracle-cover-poster.webp" aria-label="the Oracle wordmark and a phone showing the live console for a scene called Ice Cave, with the tagline &quot;One tap, whole room.&quot;">
             <source src="/assets/oracle/oracle-cover.webm" type="video/webm">
           </video>
         </div>
@@ -88,67 +85,15 @@
 
         <div class="cs-rest">
       <section class="cs-section" id="overview-md">
-        <div class="cs-section_file">overview.md</div>
+        <h2 class="cs-section_file">overview.md</h2>
         <div class="cs-section_body">
 <p class="statement">Game masters could have friends in a room, or atmosphere on a screen. Not both.</p>
 <div class="prose"><p>Players prefer to play in person, but the tools that add atmosphere are built for screens, and screens pull people out of the room.</p>
 <p>Oracle is a phone app that lets the game master control the room itself. One tap sets the lights, air conditioner, blinds, TV and sound, using smart devices people already own.</p></div>
         </div>
       </section>
-      <section class="cs-section" id="research-md">
-        <div class="cs-section_file">research.md</div>
-        <div class="cs-section_body">
-<div class="prose"><p>We started with one question: why does an in-person table feel less immersive than it could, and what could fix that without breaking what makes it social?</p>
-<p>To find out we went where RPG happens: at game stores, Niterói Expo Geek 2025 and CINE RPG, a school for game masters. We interviewed players and professionals aged 18 to 26 and 30 to 45, and checked what we heard against the Censo RPG Brasil 2023.</p></div>
-<ul class="outcomes">
-<li class="outcome">
-      <span class="outcome_value">980+</span>
-      <span class="outcome_label">responses in the Censo RPG Brasil 2023</span>
-    </li>
-<li class="outcome">
-      <span class="outcome_value">12M</span>
-      <span class="outcome_label">Brazilian homes with smart devices, per the IBGE</span>
-    </li>
-</ul>
-<div class="prose"><p><strong>What we found.</strong> Three things came out of the interviews.</p></div>
-<div class="beat">
-  <div class="beat_text"><div class="prose"><p><strong>01. Everyone wants the in-person table.</strong> Both age groups prefer it and treat online as a fallback. What they disagree on is atmosphere: younger players want light, sound and visuals, while older players are happy with narration and imagination. Any tool had to be optional, never the center of the table.</p></div></div>
-  <div class="beat_media"><figure class="media-block media-block--full">
-  <div class="frame frame--video">
-      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Animated chart: in person and online, one pair per age group, both preferring in person">
-        <source src="/assets/oracle/c1-interviews.webm" type="video/webm">
-      </video>
-    </div>
-  <figcaption class="caption-code">c1-interviews.webm</figcaption>
-</figure></div>
-</div>
-<div class="beat beat--flip">
-  <div class="beat_text"><div class="prose"><p><strong>02. The atmosphere exists, but not in the room.</strong> Online adds sound and image but invites distraction. In person is social and focused, but immersion rests on the GM's voice alone. Tools like Foundry and Roll20 put a screen in the middle of the table, and the hardware that avoids that is expensive. Players also called tabletop products good but too pricey, since most are imported. Nothing affordable does both.</p></div></div>
-  <div class="beat_media"><figure class="media-block media-block--full">
-  <div class="frame frame--video">
-      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Animated map of immersive tools against physical presence, with Oracle landing in the empty corner">
-        <source src="/assets/oracle/c2-gap.webm" type="video/webm">
-      </video>
-    </div>
-  <figcaption class="caption-code">c2-gap.webm</figcaption>
-</figure></div>
-</div>
-<div class="beat">
-  <div class="beat_text"><div class="prose"><p><strong>03. The disappointment comes late.</strong> A new player arrives expecting the intensity they saw online, and the table they get depends on one voice. Long, flat sessions wear on their motivation to keep playing. That gap is where Oracle sits.</p>
-<p>So the brief became: add atmosphere to the in-person table, cheaply, without a screen in the middle. Four decisions followed.</p></div></div>
-  <div class="beat_media"><figure class="media-block media-block--full">
-  <div class="frame frame--video">
-      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Animated user journey of a new player, from discovery to the frustration where Oracle steps in">
-        <source src="/assets/oracle/c3-journey.webm" type="video/webm">
-      </video>
-    </div>
-  <figcaption class="caption-code">c3-journey.webm</figcaption>
-</figure></div>
-</div>
-        </div>
-      </section>
       <section class="cs-section" id="takeaways">
-        <div class="cs-section_file">takeaways/</div>
+        <h2 class="cs-section_file">takeaways/</h2>
         <div class="cs-section_body">
 <nav class="takeaway-index" aria-label="takeaways">
   <p class="takeaway-index_label">what i decided, and why</p>
@@ -159,18 +104,18 @@
     <li><a href="#d-04-describe-a-scene"><span class="takeaway-index_num">/04</span> automate the setup, keep the judgement</a></li>
   </ol>
 </nav>
-<div class="prose"><p>Each decision answers one of those findings.</p></div>
+<div class="prose"><p>Each decision answers one of the three findings in research.md.</p></div>
 <article class="decision" id="d-01-use-what-is-already-in-the-room">
   <header class="decision_head">
     <span class="decision_file">01-use-what-is-already-in-the-room.md</span>
     <h3 class="decision_title">the room is already a stage</h3>
     <p class="decision_subtitle">Price was the barrier, so Oracle uses what people already own.</p>
   </header>
-  <div class="decision_body prose"><p>Players found tabletop products good but too expensive, so we made nothing to buy. Oracle pairs with the lights, air conditioner, blinds and TV already in the home, grouped by room.</p>
-<p>Safety and comfort limits live in the same setup, so the ceiling on flashing and temperature is set once, not mid-scene.</p></div>
+  <div class="decision_body prose"><p>Players found tabletop products good but too expensive, so I made nothing to buy. Oracle pairs with the lights, air conditioner, blinds and TV already in the home, grouped by room.</p>
+<p>Safety and comfort limits live in the same setup, so the ceiling on flashing and temperature is set once, in setup.</p></div>
   <figure class="media-block media-block--full">
   <div class="frame frame--video">
-      <video class="media tall" playsinline muted loop preload="metadata" aria-label="Motion recording: Oracle scanning the home and finding devices one by one, choosing which to add and which room they go in, then the setup code and integrations paths">
+      <video class="media tall" playsinline muted loop preload="metadata" poster="/assets/oracle/pairing-devices-poster.webp" aria-label="Motion recording: Oracle scanning the home and finding devices one by one, choosing which to add and which room they go in, then the setup code and integrations paths">
         <source src="/assets/oracle/pairing-devices.webm" type="video/webm">
       </video>
     </div>
@@ -188,7 +133,7 @@
 <p>Each device gets its own editor, and its tile shows what it will do without opening it. Sounds and images come from a built-in library or the GM's own files, in folders and favourites.</p></div>
   <figure class="media-block media-block--full">
   <div class="frame frame--video">
-      <video class="media tall" playsinline muted loop preload="metadata" aria-label="Screen recording: the Ice Cave scene built from empty on a phone, with the light, air conditioner, TV and sound tiles filling in one by one">
+      <video class="media tall" playsinline muted loop preload="metadata" poster="/assets/oracle/ice-cave-build-poster.webp" aria-label="Screen recording: the Ice Cave scene built from empty on a phone, with the light, air conditioner, TV and sound tiles filling in one by one">
         <source src="/assets/oracle/ice-cave-build.webm" type="video/webm">
       </video>
     </div>
@@ -206,7 +151,7 @@
 <p>Applying a scene shows progress device by device. If the fifth stalls, the GM sees which one and can retry it.</p></div>
   <figure class="media-block media-block--full">
   <div class="frame frame--video">
-      <video class="media tall" playsinline muted loop preload="metadata" aria-label="Screen recording: the live console applying a scene, five devices ticking green, the fourth failing and recovering on retry, then the wind pad and the sound mix">
+      <video class="media tall" playsinline muted loop preload="metadata" poster="/assets/oracle/live-console-poster.webp" data-reduced-src="/assets/oracle/live-console-reduced-motion.webm" aria-label="Screen recording: the live console applying a scene, five devices ticking green, the fourth failing and recovering on retry, then the wind pad and the sound mix">
         <source src="/assets/oracle/live-console.webm" type="video/webm">
       </video>
     </div>
@@ -220,11 +165,11 @@
     <h3 class="decision_title">automate the setup, keep the judgement</h3>
     <p class="decision_subtitle">AI drafts the scene from a sentence. The GM reviews it per device.</p>
   </header>
-  <div class="decision_body prose"><p>Typing a sentence is faster than building six devices by hand.</p>
-<p>The result arrives as a reviewable set of per-device changes, not something the app does to the room on its own. The GM can preview, apply or undo before the lights change on a table full of people.</p></div>
+  <div class="decision_body prose"><p>Typing a sentence should be faster than building six devices by hand.</p>
+<p>The result arrives as a reviewable set of per-device changes, and the app never changes the room on its own. The GM can preview, apply or undo before the lights change on a table full of people.</p></div>
   <figure class="media-block media-block--full">
   <div class="frame frame--video">
-      <video class="media tall" playsinline muted loop preload="metadata" aria-label="Screen recording: a sentence typed into Oracle, the drafted per-device diff, a preview in the room, then apply and undo">
+      <video class="media tall" playsinline muted loop preload="metadata" poster="/assets/oracle/describe-it-poster.webp" aria-label="Screen recording: a sentence typed into Oracle, the drafted per-device diff, a preview in the room, then apply and undo">
         <source src="/assets/oracle/describe-it.webm" type="video/webm">
       </video>
     </div>
@@ -234,8 +179,77 @@
 </article>
         </div>
       </section>
+      <section class="cs-section" id="research-md">
+        <h2 class="cs-section_file">research.md</h2>
+        <div class="cs-section_body">
+<div class="prose"><p>We started with one question: why does an in-person table feel less immersive than it could, and what could fix that without breaking what makes it social?</p>
+<p>We ran 27 interviews at game stores, Niterói Expo Geek 2025 and CINE RPG, a school for game masters, with players and professionals aged 18 to 26 and 30 to 45, nine of them in the older group. We checked what we heard against the Censo RPG Brasil 2023. Everyone was already at a game event or a game school, so these are committed players, not casual ones.</p></div>
+<ul class="outcomes">
+<li class="outcome">
+      <span class="outcome_value">980+</span>
+      <span class="outcome_label">responses in the Censo RPG Brasil 2023</span>
+    </li>
+<li class="outcome">
+      <span class="outcome_value">12M</span>
+      <span class="outcome_label">Brazilian homes with smart devices, per the IBGE. Context, not our audience</span>
+    </li>
+</ul>
+<div class="prose"><p>The interviews gave us three findings.</p></div>
+<div class="beat">
+  <div class="beat_text"><div class="prose"><p><strong>01. Everyone wants the in-person table.</strong> Both age groups prefer it and treat online as a fallback. Younger players want light, sound and visuals, older players are happy with narration. Any tool had to be optional, never the center of the table.</p>
+<p><strong>02. The atmosphere exists, but not in the room.</strong> Online adds sound and image but invites distraction. In person is social, but immersion rests on the GM's voice alone. Foundry and Roll20 put a screen in the middle of the table, and the hardware that avoids that is expensive and mostly imported. Nothing affordable does both.</p>
+<p><strong>03. The disappointment comes late.</strong> A new player arrives expecting the intensity they saw online and gets a table that depends on one voice. Long, flat sessions wear on their motivation to keep playing, and Oracle is aimed at that gap.</p>
+<p>The brief became: add atmosphere to the in-person table, cheaply, without a screen in the middle.</p></div></div>
+  <div class="beat_media"><figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" poster="/assets/oracle/c2-gap-poster.webp" aria-label="Animated map of immersive tools against physical presence, with Oracle landing in the empty corner">
+        <source src="/assets/oracle/c2-gap.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">c2-gap.webm</figcaption>
+</figure></div>
+</div>
+        </div>
+      </section>
+      <section class="cs-section" id="design-system-md">
+        <h2 class="cs-section_file">design-system.md</h2>
+        <div class="cs-section_body">
+<div class="prose"><p>Oracle runs on one small system. The design file has four variable collections: Primitives, Semantic with a dark and a light mode, Scale for space and radius, and Mood, one palette per scene. Type comes from three families: Fraunces for names and chapters, Inter for controls and body, Geist Mono for live numbers.</p>
+<p>Components carry their own states, so the failed device is drawn as carefully as the working one.</p></div>
+<figure class="media-block media-block--full">
+  <div class="frame">
+      <img class="media natural" src="/assets/oracle/oracle-ds-foundations.webp" alt="The Oracle design tokens: semantic colours for surface, text, action and status, six mood palettes, the type ramp in Fraunces, Inter and Geist Mono, and the space, radius and touch scales" loading="lazy" decoding="async">
+    </div>
+  <figcaption class="caption-code">oracle-ds-foundations.webp</figcaption>
+</figure>
+<figure class="media-block media-block--full">
+  <div class="frame">
+      <img class="media natural" src="/assets/oracle/oracle-ds-components.webp" alt="Four components shown in every state: SceneBanner idle and live, RoomMap off, applying and live, TabBar with three active tabs, and the LiveIsland" loading="lazy" decoding="async">
+    </div>
+  <figcaption class="caption-code">oracle-ds-components.webp</figcaption>
+</figure>
+<figure class="media-block media-block--full">
+  <div class="frame">
+      <img class="media natural" src="/assets/oracle/oracle-ds-annotated.webp" alt="The live console and the partial failure screen side by side, with ten numbered notes on hierarchy, type roles, the single lime action and how the error state is written" loading="lazy" decoding="async">
+    </div>
+  <figcaption class="caption-code">oracle-ds-annotated.webp</figcaption>
+</figure>
+        </div>
+      </section>
+      <section class="cs-section" id="testing-md">
+        <h2 class="cs-section_file">testing.md</h2>
+        <div class="cs-section_body">
+<div class="prose"><p>We tested twice. A game master used the prototype for a usability and navigation test. Then we ran a short play session where team members changed the room by hand, following the presets the game master had made, to stand in for what the app would do.</p></div>
+<figure class="quote">
+  
+  <blockquote class="quote_text">Once you've made one scene, you know how to make all the others. After I made my first one, I could make more without any trouble.</blockquote>
+  <figcaption class="quote_by"><span>Lucas Marcel Toledo</span> <span>game master and design student</span></figcaption>
+</figure>
+<div class="prose"><p>The limits: one game master, one short session, and people, not the app, controlled the devices. This shows how one person used it, not a usability study.</p></div>
+        </div>
+      </section>
       <section class="cs-section" id="project-info-md">
-        <div class="cs-section_file">project-info.md</div>
+        <h2 class="cs-section_file">project-info.md</h2>
         <div class="cs-section_body">
 <dl class="meta cs-meta">
           <div class="meta_row">
@@ -248,7 +262,7 @@
           </div>
           <div class="meta_row">
             <dt>team</dt>
-            <dd>group project</dd>
+            <dd>group project. research, the idea and documentation were shared. design and the prototype were mine.</dd>
           </div>
           <div class="meta_row">
             <dt>built with</dt>
@@ -260,6 +274,8 @@
           </div>
           
           </dl>
+<div class="prose"><p>I did the design and the prototype: 60 screens across 8 flows in Figma, the design system behind them, and the prototype we tested. Built with Figma and Claude Code.</p>
+<p>The field research, the idea and the documentation were shared across the team, and the findings in research.md are theirs as much as mine.</p></div>
         </div>
       </section>
 

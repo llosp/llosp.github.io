@@ -2,7 +2,8 @@
 // the length and curve are ours, and so the router never sees a hash change.
 
 const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-const ease = (t) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+// ease-out: moves the moment you click and settles softly, no slow ease-in
+const ease = (t) => (t >= 1 ? 1 : 1 - Math.pow(2, -10 * t));
 
 export function smoothScrollTo(to) {
   if (reduceMotion()) {
@@ -12,7 +13,7 @@ export function smoothScrollTo(to) {
 
   const from = window.scrollY;
   const distance = to - from;
-  const duration = Math.min(1100, 450 + Math.abs(distance) * 0.25);
+  const duration = Math.min(650, 300 + Math.abs(distance) * 0.12);
   const start = performance.now();
 
   const step = (now) => {

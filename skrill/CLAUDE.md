@@ -69,7 +69,7 @@ Storage bucket `deliveries` (público) — path: `{goal_id}/{timestamp}-{filenam
 - `statusBadge(status, points)` — badge colorido de status
 - `difficultyChip(difficulty)` — chip `Simples` (azul) · `Complexa` (roxo) · `Extra` (neutro)
 - `basePoints(difficulty)` — `simple`→2, `complex`→5, `extra`→0
-- `bonusPoolFor(n)` — `Math.max(1, Math.floor(n/2))` — pool de bônus por avaliador
+- `bonusPoolFor(n)` — `Math.max(1, Math.floor(n/2))` — pool de bônus por avaliador, com `n` = metas entregues na temporada (não o nº de jogadores)
 - `fireConfetti(opts?)` — confetti em canvas (sem libs). Sem args: rajada central + canhões laterais (reveal). `{x, y, count}`: rajada a partir de um ponto
 - `iconHTML(type)` — SVG img tag para ícones de nav (`G`, `T`, `P`, `A`, `+`, `S`, `R`)
 - `renderSidebar(profile, activePage)` — sidebar com ícones SVG

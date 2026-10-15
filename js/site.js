@@ -147,10 +147,25 @@ function initAscii() {
   // setTimeout rather than a pure rAF chain: rAF gets fully suspended in
   // backgrounded tabs in some browsers, which would freeze the ripples
   // entirely instead of just slowing them down.
-  (function loop() {
+  // the field is fixed to the viewport, so it is only ever off screen when
+  // the tab is hidden. stop drawing then, and pick up again on return.
+  let timer = 0;
+  function loop() {
     drawFrame(performance.now());
-    window.setTimeout(loop, 50);
-  })();
+    timer = window.setTimeout(loop, 50);
+  }
+  function start() {
+    if (!timer && !document.hidden) loop();
+  }
+  function stop() {
+    window.clearTimeout(timer);
+    timer = 0;
+  }
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) stop();
+    else start();
+  });
+  start();
 
   return {
     // the field re-forms around the page we are landing on, so the ripples

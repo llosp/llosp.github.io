@@ -688,6 +688,8 @@ function shell({ title, description, route, body, cls = '' }) {
 
 <body${cls ? ` class="${cls}"` : ''}>
 
+  <a class="skip-link" href="#app">skip to content</a>
+
   <div class="page-transition${route === 'home' ? ' is--cover' : ''}" aria-hidden="true">
     <div class="transition_column"><div class="transition_column-background"></div></div>
     <div class="transition_column"><div class="transition_column-background"></div></div>
@@ -716,7 +718,7 @@ ${body}
 
   <div class="footer">
     <div class="footer_grid grid-12">
-      <div class="credits-container"><div class="text-color_inverse">work@lope.design</div></div>
+      <div class="credits-container"><a class="text-color_inverse" href="mailto:work@lope.design">work@lope.design</a></div>
       <div class="copyright-container"><div class="text-color_inverse">2026</div></div>
     </div>
   </div>
@@ -755,11 +757,16 @@ function renderIndex(projects) {
     .join('\n        ');
 
   return `    <div class="hero">
-      <h1 class="title-h1">product designer who builds. ai + web interfaces.</h1>
+      <h1 class="title-h1">digital designer who builds. web, product and ai interfaces.</h1>
       <div class="hero-now">
         <div class="hero-now_cmd">$ cat now.md</div>
-        <div class="hero-now_out">designing digital products at ecoa × petrobras · open to product design roles</div>
+        <div class="hero-now_out">designing digital products at ecoa × petrobras · open to design roles</div>
       </div>
+      <a class="hero-cta" href="mailto:work@lope.design">
+        <span class="hero-cta_square" aria-hidden="true"></span>
+        <span>say hello</span>
+        <span class="hero-cta_mail">work@lope.design</span>
+      </a>
       <div class="scroll-down-tag">↓ scroll<span class="cursor">_</span></div>
     </div>
 
@@ -788,7 +795,7 @@ function renderAbout() {
   return shell({
     title: 'about / lope.design',
     description:
-      'Pedro Lopes, a product designer and developer in Rio de Janeiro working on ai and web interfaces.',
+      'Pedro Lopes, a digital designer and developer in Rio de Janeiro working on web, product and ai interfaces.',
     route: 'about',
     body: `    <section class="about" id="about">
       <div class="about-tag">~/about</div>
@@ -926,8 +933,7 @@ ${rail}
           </nav>
           <p class="cs-eyebrow">${inline(eyebrow, slug)}</p>
           <h1 class="cs-title">${inline(data.title, slug)}</h1>
-          ${data.headline ? `<p class="cs-headline">${inline(data.headline, slug)}</p>` : ''}
-        </header>
+          ${data.headline ? `<p class="cs-headline">${inline(data.headline, slug)}</p>` : ''}        </header>
 
         <figure class="cs-cover">
           ${cover}
@@ -968,9 +974,9 @@ const projects = readdirSync(projectsDir)
 writeFileSync(
   join(root, 'index.html'),
   shell({
-    title: 'lope / product designer who builds',
+    title: 'lope / digital designer who builds',
     description:
-      'Lope (Pedro Lopes) is a product designer and developer in Rio de Janeiro working on ai and web interfaces.',
+      'Lope (Pedro Lopes) is a digital designer and developer in Rio de Janeiro working on web, product and ai interfaces.',
     route: 'home',
     body: renderIndex(projects),
   })

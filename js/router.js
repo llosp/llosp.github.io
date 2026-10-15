@@ -266,6 +266,18 @@ export function initRouter({ onSwap, onTransition, layout }) {
     const link = event.target.closest('a');
     if (!isInternal(link)) return;
 
+    // the skip link: glide past the nav to the work index or the page title,
+    // and put keyboard focus there so the next Tab lands on the content
+    if (link.classList.contains('skip-link')) {
+      event.preventDefault();
+      const target = document.querySelector('#work') || document.querySelector('#app h1');
+      if (!target) return;
+      target.setAttribute('tabindex', '-1');
+      target.focus({ preventScroll: true });
+      smoothScrollTo(target.id === 'work' ? workTop() : 0);
+      return;
+    }
+
     // same page: `/#work` from the homepage glides to the work index
     // instead of re-rendering the page
     if (link.pathname === window.location.pathname) {

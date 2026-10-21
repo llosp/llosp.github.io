@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ecoa × petrobras / lope.design</title>
+  <meta name="description" content="Design lead on two AI-driven internal tools built at Ecoa Institute for Petrobras, each with its own team, its own research and its own case to pitch.">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+
+<body class="is--case-study">
+
+  <a class="skip-link" href="#app">skip to content</a>
+
+  <div class="page-transition" aria-hidden="true">
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+  </div>
+  <noscript><style>.page-transition { display: none; }</style></noscript>
+
+  <canvas class="ascii-background" aria-hidden="true"></canvas>
+
+  <div class="background-gridlines" aria-hidden="true">
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+  </div>
+
+  <div class="cursor-pill" aria-hidden="true"></div>
+
+  <div class="navbar">
+    <div class="header grid-12">
+      <a class="nav_button nav_button--home" href="/">
+        <div class="button-square not-blinking"></div>
+        <div class="text-color_inverse name-long">lope.design</div>
+        <div class="text-color_inverse name-short">lope</div>
+      </a>
+      <a class="nav_button" href="/#work">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./work</div>
+      </a>
+      <a class="nav_button" href="/about/">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./about</div>
+      </a>
+      <div class="nav_button nav_button--lang">
+        <div class="text-color_inverse">en / pt</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="app" data-route="work">
+    <article class="case-study" data-slug="ecoa">
+      <nav class="cs-rail" aria-label="case study sections">
+        <a class="cs-rail_back" href="/#work">← back</a>
+        <a href="#readme-md">README</a>
+        <a href="#compliance-assistant">compliance-assistant</a>
+        <a href="#knowledge-platform">knowledge-platform</a>
+        <a href="#outcome-md">outcome</a>
+        <a href="#learnings-md">learnings</a>
+        <a href="#project-info-md">project-info</a>
+      </nav>
+      <div class="cs-main">
+        <header class="cs-head">
+          <nav class="cs-breadcrumb" aria-label="breadcrumb">
+            <a href="/#work">~/work</a>/<span>ecoa</span>
+          </nav>
+          <p class="cs-eyebrow">product design, ux research · 2026</p>
+          <h1 class="cs-title">ecoa × petrobras</h1>
+                  </header>
+
+        <figure class="cs-cover">
+          <div class="cs-cover_frame" data-cover-slot="ecoa">
+          <video class="cs-cover_img" style="object-fit: cover"
+            muted loop playsinline preload="auto" poster="/assets/ecoa/ecoa-cover-poster.webp" aria-label="Looping motion piece: on white, the Ecoa mark appears and its wordmark slides out beside it, the Petrobras logo and wordmark take their place, then both brands reduce to just their marks and a teal and green cross is drawn between them">
+            <source src="/assets/ecoa/ecoa-cover.webm" type="video/webm">
+          </video>
+        </div>
+          <figcaption class="caption-code">ecoa-cover.webm</figcaption>
+        </figure>
+
+        <div class="cs-rest">
+      <section class="cs-section" id="readme-md">
+        <h2 class="cs-section_file">README.md</h2>
+        <div class="cs-section_body">
+<div class="prose"><p>I'm design lead on two AI-driven internal tools built at Ecoa Institute for Petrobras, one after the other: a compliance assistant, then a knowledge platform. Each one had its own team, its own research and its own pitch, not a shared track split in two.</p>
+<p>I worked across both from research through delivery: user interviews, the product and journey design, the interface, and the pitch that got each one approved. I also contributed some front-end implementation.</p>
+<p>An NDA covers the internal detail of both products, including the interface itself. What follows is what each one does, why it exists, and what happened when it got pitched.</p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="compliance-assistant">
+        <h2 class="cs-section_file">compliance-assistant/</h2>
+        <div class="cs-section_body">
+<dl class="meta">
+<div class="meta_row">
+      <dt>timeline</dt>
+      <dd>26 mar – 2 jul 2026</dd>
+    </div>
+<div class="meta_row">
+      <dt>pitch outcome</dt>
+      <dd>accepted, pre-approved for build-out</dd>
+    </div>
+</dl>
+<div class="prose"><p>No interface shown here. The NDA covers the actual screens; the diagram and toolbox below are what can be shared about the reasoning behind them.</p></div>
+<figure class="media-block media-block--diagram">
+  <div class="frame frame--diagram">
+      <img class="media wide" src="/assets/ecoa/compliance-assistant-flow.svg" alt="Diagram: a partner's repeated question moves through retrieval limited to a knowledge base reviewed by subject-matter experts, to an answer with its exact source passage attached, which is then checked against the manual itself" loading="lazy" decoding="async">
+    </div>
+  <figcaption class="caption-code">compliance-assistant-flow.svg</figcaption>
+</figure>
+<div class="toolbox-grid">
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">the ask</span>
+        <span class="toolbox-cat_items">partners, repeating the same question about a public anp accounting manual</span>
+      </div>
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">the fix</span>
+        <span class="toolbox-cat_items">every answer cites its source passage, so it can be checked, not just trusted</span>
+      </div>
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">the guardrail</span>
+        <span class="toolbox-cat_items">answers only come from a knowledge base reviewed by subject-matter experts</span>
+      </div>
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">the proof</span>
+        <span class="toolbox-cat_items">every answer traceable to the manual itself</span>
+      </div>
+</div>
+        </div>
+      </section>
+      <section class="cs-section" id="knowledge-platform">
+        <h2 class="cs-section_file">knowledge-platform/</h2>
+        <div class="cs-section_body">
+<dl class="meta">
+<div class="meta_row">
+      <dt>timeline</dt>
+      <dd>6 jul – 20 oct 2026</dd>
+    </div>
+<div class="meta_row">
+      <dt>pitch outcome</dt>
+      <dd>accepted, pre-approved for build-out</dd>
+    </div>
+</dl>
+<div class="prose"><p>Same limit here: no interface shown, the NDA covers the screens. The diagram and toolbox below are what can be shared about the reasoning.</p></div>
+<figure class="media-block media-block--diagram">
+  <div class="frame frame--diagram">
+      <img class="media wide" src="/assets/ecoa/knowledge-platform-flow.svg" alt="Diagram: a legacy system is retired, its data is aligned to FAIR principles before any interface is built on top of it, and one question can then pull from every system, from every year that ever touched the record" loading="lazy" decoding="async">
+    </div>
+  <figcaption class="caption-code">knowledge-platform-flow.svg</figcaption>
+</figure>
+<div class="toolbox-grid">
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">the ask</span>
+        <span class="toolbox-cat_items">knowledge stranded every time a legacy system gets retired</span>
+      </div>
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">the fix</span>
+        <span class="toolbox-cat_items">align the data to FAIR principles before building any interface on top of it</span>
+      </div>
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">the payoff</span>
+        <span class="toolbox-cat_items">one question now pulls from every system, from every year, that ever touched it</span>
+      </div>
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">the standard</span>
+        <span class="toolbox-cat_items">fair-aligned: findable, accessible, interoperable, reusable</span>
+      </div>
+</div>
+        </div>
+      </section>
+      <section class="cs-section" id="outcome-md">
+        <h2 class="cs-section_file">outcome.md</h2>
+        <div class="cs-section_body">
+<div class="prose"><p>Petrobras had no obligation to take either product past a pitch. Each one got its own, built and tested like anything else shipped here: the compliance assistant's case first, the knowledge platform's a few months later.</p>
+<p>Both were accepted. For two products with different teams, different research and different timelines, that's a meaningful signal that both problems were real.</p>
+<p><!-- TODO(pedro): adoption numbers, rollout timeline, or a cleared stakeholder line, once available --><mark class="todo">[todo: adoption numbers, rollout timeline, or a cleared stakeholder line, once available]</mark></p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="learnings-md">
+        <h2 class="cs-section_file">learnings.md</h2>
+        <div class="cs-section_body">
+<div class="prose"><p>Treating these as two separate tracks instead of one shared narrative made the actual difference between them clearer. They shared a company, not a problem.</p>
+<p>Working on the knowledge platform pulled me into decisions about how data gets matched across systems that had never agreed on what counted as the same record. That's further into the stack than interface design usually reaches, and it's where a surprising amount of the real design work ended up living.</p>
+<p>Designing an AI tool for a regulated environment turned out to be mostly about earning trust in a specific, checkable answer.</p></div>
+<div class="toolbox-grid">
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">lope (me)</span>
+        <span class="toolbox-cat_items">user research, product and journey design, interface design, pitch design and delivery, plus some front-end implementation</span>
+      </div>
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">engineer</span>
+        <span class="toolbox-cat_items">backend and retrieval implementation</span>
+      </div>
+<div class="toolbox-cat">
+        <span class="toolbox-cat_label">product-ops lead</span>
+        <span class="toolbox-cat_items">scheduled meetings, handled reports and forms and the rest of the administrative load, kept deadlines organized and planned</span>
+      </div>
+</div>
+        </div>
+      </section>
+      <section class="cs-section" id="project-info-md">
+        <h2 class="cs-section_file">project-info.md</h2>
+        <div class="cs-section_body">
+<dl class="meta cs-meta">
+          <div class="meta_row">
+            <dt>role</dt>
+            <dd>ux research, product and journey design, interface design, pitch design and delivery, some front-end implementation</dd>
+          </div>
+          <div class="meta_row">
+            <dt>timeline</dt>
+            <dd>2026</dd>
+          </div>
+          <div class="meta_row">
+            <dt>team</dt>
+            <dd>two separate cross-functional trios, one per product: an engineer, a product-ops lead, and me as design lead</dd>
+          </div>
+          <div class="meta_row">
+            <dt>built with</dt>
+            <dd>figma, user research, llm-based retrieval, html, css, javascript</dd>
+          </div>
+          <div class="meta_row">
+            <dt>status</dt>
+            <dd>ongoing</dd>
+          </div>
+          
+          </dl>
+        </div>
+      </section>
+
+      <nav class="cs-nav">
+        <a class="cs-nav_link cs-nav_prev" href="/work/yura/" data-slug="yura">← prev project <span class="cs-nav_name">hakkotai</span><div class="cs-nav_frame" style="aspect-ratio: 1388 / 992"><video class="cs-nav_media" data-slug="yura" style="object-fit: cover"
+              muted loop playsinline preload="metadata">
+              <source src="/assets/yura/yura-cover.webm" type="video/webm">
+            </video></div></a>
+        <span class="cs-nav_link is--disabled">next project →</span>
+      </nav>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="footer">
+    <div class="footer_grid grid-12">
+      <div class="credits-container"><a class="text-color_inverse" href="mailto:work@lope.design">work@lope.design</a></div>
+      <div class="copyright-container"><div class="text-color_inverse">2026</div></div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/site.js"></script>
+
+</body>
+
+</html>

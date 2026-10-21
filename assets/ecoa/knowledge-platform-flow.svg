@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 460" width="820" height="460" role="img" aria-labelledby="t">
+  <title id="t">a legacy system is retired, its data is aligned to FAIR principles before any interface is built on top of it, and one question can then pull from every system, from every year that ever touched the record</title>
+  <rect width="820" height="460" fill="#ffffff"/>
+  <g font-family="'Courier New', monospace">
+    <rect x="40" y="160" width="160" height="140" fill="#ffffff" stroke="#000000" stroke-width="1"/>
+    <text x="54" y="184" font-size="11" fill="#595959">01</text>
+    <text font-size="12" fill="#000000" text-anchor="middle">
+      <tspan x="120" y="215">a legacy</tspan>
+      <tspan x="120" y="233">system gets</tspan>
+      <tspan x="120" y="251">retired</tspan>
+    </text>
+
+    <text x="216" y="238" font-size="22" fill="#000000" text-anchor="middle">&#8594;</text>
+
+    <rect x="233" y="160" width="160" height="140" fill="#ffffff" stroke="#000000" stroke-width="1"/>
+    <text x="247" y="184" font-size="11" fill="#595959">02</text>
+    <text font-size="12" fill="#000000" text-anchor="middle">
+      <tspan x="313" y="215">its data is aligned</tspan>
+      <tspan x="313" y="233">to fair principles</tspan>
+      <tspan x="313" y="251">before any ui</tspan>
+    </text>
+
+    <text x="409" y="238" font-size="22" fill="#000000" text-anchor="middle">&#8594;</text>
+
+    <rect x="426" y="160" width="160" height="140" fill="#ffffff" stroke="#000000" stroke-width="1"/>
+    <text x="440" y="184" font-size="11" fill="#595959">03</text>
+    <text font-size="12" fill="#000000" text-anchor="middle">
+      <tspan x="506" y="215">one question now</tspan>
+      <tspan x="506" y="233">pulls from every</tspan>
+      <tspan x="506" y="251">system, every year</tspan>
+    </text>
+
+    <text x="602" y="238" font-size="22" fill="#000000" text-anchor="middle">&#8594;</text>
+
+    <rect x="619" y="160" width="160" height="140" fill="#ffffff" stroke="#000000" stroke-width="1"/>
+    <text x="633" y="184" font-size="11" fill="#595959">04</text>
+    <text font-size="12" fill="#000000" text-anchor="middle">
+      <tspan x="699" y="215">nothing stays</tspan>
+      <tspan x="699" y="233">stranded next</tspan>
+      <tspan x="699" y="251">time</tspan>
+    </text>
+  </g>
+</svg>

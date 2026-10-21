@@ -667,6 +667,9 @@ function nav() {
       </a>
       ${navItem('/#work', './work')}
       ${navItem('/about/', './about')}
+      <div class="nav_button nav_button--lang">
+        <div class="text-color_inverse">en / pt</div>
+      </div>
     </div>
   </div>`;
 }

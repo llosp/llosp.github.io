@@ -43,6 +43,12 @@ items:
 - the proof | every answer traceable to the manual itself
 :::
 
+::: quote
+text: The best demo presentation of the day. A simple solution that could bring a lot of value.
+name: Julio Leite
+role: general manager, strategic rd&i management at petrobras
+:::
+
 ## knowledge-platform/
 
 ::: meta
@@ -67,9 +73,7 @@ items:
 
 Petrobras had no obligation to take either product past a pitch. Each one was pitched on its own case, built and tested like anything else shipped here: the compliance assistant first, the knowledge platform a few months later.
 
-Both were accepted and pre-approved for build-out.
-
-[todo: adoption numbers, rollout timeline, or a cleared stakeholder line, once available]
+Both were accepted and pre-approved for build-out. Neither is in use yet, so there are no adoption numbers to report.
 
 ## learnings.md
 

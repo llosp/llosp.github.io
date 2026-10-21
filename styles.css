@@ -964,6 +964,7 @@ video {
 
 .cs-section_body > .prose + .quote,
 .cs-section_body > .outcomes + .quote,
+.cs-section_body > .toolbox-grid + .quote,
 .cs-section_body > .quote + .prose {
   margin-top: 40px;
 }

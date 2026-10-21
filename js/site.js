@@ -125,7 +125,7 @@ function initAscii() {
           dy = (oy / len) * push;
         }
 
-        ctx.globalAlpha = 0.15 + best * 0.4;
+        ctx.globalAlpha = 0.0703125 + best * 0.1875;
         ctx.fillText(chars[index], gx * cell + dx, gy * cell + dy);
       }
     }

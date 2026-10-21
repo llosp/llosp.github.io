@@ -43,6 +43,12 @@ items:
 - a prova | toda resposta rastreável até o próprio manual
 :::
 
+::: quote
+text: A melhor apresentação de demo do dia. Uma solução simples que pode gerar muito valor.
+name: Julio Leite
+role: gerente geral, gerência de rd&i estratégico na petrobras
+:::
+
 ## knowledge-platform/
 
 ::: meta
@@ -67,9 +73,7 @@ items:
 
 A Petrobras não tinha obrigação nenhuma de levar qualquer um dos produtos além do pitch. Cada um foi apresentado com seu próprio case, construído e testado como qualquer outra coisa entregue aqui: primeiro o assistente de compliance, a plataforma de conhecimento alguns meses depois.
 
-Os dois foram aceitos e pré-aprovados para a construção completa.
-
-[todo: números de adoção, cronograma de lançamento, ou uma frase de um stakeholder liberada, quando disponível]
+Os dois foram aceitos e pré-aprovados para a construção completa. Nenhum dos dois está em uso ainda, então não há números de adoção para mostrar.
 
 ## learnings.md
 

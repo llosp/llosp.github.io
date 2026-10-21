@@ -2,7 +2,7 @@
 // index hover preview, the cursor pill, and the wiring that re-runs all of
 // it after the router swaps a page in.
 
-import { initRouter } from './router.js';
+import { initRouter, stripLocale } from './router.js';
 import { smoothScrollTo } from './scroll.js';
 
 const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -511,6 +511,39 @@ function initCursorPill() {
   });
 }
 
+/* ── navbar locale ────────────────────────────────────────────────────── */
+
+// the navbar lives outside #app, so the router never touches it. left alone,
+// a swap from / into /pt/ would carry on linking home/work/about back to the
+// english paths, and the lang switch would still point at the alternate for
+// whichever page loaded first rather than the page actually on screen. every
+// nav link's locale-agnostic tail is stable (/, /#work, /about/), so each one
+// is rebuilt against the current path's locale rather than its own markup.
+function updateNavLocale() {
+  const nav = document.querySelector('.navbar');
+  if (!nav) return;
+
+  const path = window.location.pathname;
+  const bare = stripLocale(path) || '/';
+  const locale = path === bare ? 'en' : 'pt';
+  const withLocale = (tail) => (locale === 'pt' ? `/pt${tail === '/' ? '/' : tail}` : tail);
+
+  nav.querySelectorAll('a:not(.lang-link)').forEach((a) => {
+    const href = a.getAttribute('href');
+    const hashAt = href.indexOf('#');
+    const hash = hashAt === -1 ? '' : href.slice(hashAt);
+    const tail = stripLocale(hashAt === -1 ? href : href.slice(0, hashAt)) || '/';
+    a.setAttribute('href', withLocale(tail) + hash);
+  });
+
+  nav.querySelectorAll('.lang-link').forEach((a) => {
+    const lang = a.dataset.lang;
+    a.setAttribute('href', lang === 'pt' ? `/pt${bare === '/' ? '/' : bare}` : bare);
+    if (lang === locale) a.setAttribute('aria-current', 'true');
+    else a.removeAttribute('aria-current');
+  });
+}
+
 /* ── per page wiring ──────────────────────────────────────────────────── */
 
 function initPage() {
@@ -523,6 +556,7 @@ function initPage() {
   initCovers(app);
   initGallery(app);
   layoutMasonryGrids();
+  updateNavLocale();
 }
 
 const ascii = initAscii();

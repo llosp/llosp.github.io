@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>oracle / lope.design</title>
+  <meta name="description" content="Oracle é um app de celular que deixa o mestre de um RPG de mesa mudar a sala com um toque, construído a partir de pesquisa de campo.">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" hreflang="en" href="https://lope.design/work/oracle/">
+  <link rel="alternate" hreflang="pt-BR" href="https://lope.design/pt/work/oracle/">
+</head>
+
+<body class="is--case-study">
+
+  <a class="skip-link" href="#app">ir direto para o conteúdo</a>
+
+  <div class="page-transition" aria-hidden="true">
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+  </div>
+  <noscript><style>.page-transition { display: none; }</style></noscript>
+
+  <canvas class="ascii-background" aria-hidden="true"></canvas>
+
+  <div class="background-gridlines" aria-hidden="true">
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+  </div>
+
+  <div class="cursor-pill" aria-hidden="true"></div>
+
+  <div class="navbar">
+    <div class="header grid-12">
+      <a class="nav_button nav_button--home" href="/pt/">
+        <div class="button-square not-blinking"></div>
+        <div class="text-color_inverse name-long">lope.design</div>
+        <div class="text-color_inverse name-short">lope</div>
+      </a>
+      <a class="nav_button" href="/pt/#work">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./work</div>
+      </a>
+      <a class="nav_button" href="/pt/about/">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./about</div>
+      </a>
+      <div class="nav_button nav_button--lang" data-lang-switch><a class="text-color_inverse lang-link" href="/work/oracle/" data-lang="en">en</a><span class="text-color_inverse lang-sep"> / </span><a class="text-color_inverse lang-link" href="/pt/work/oracle/" data-lang="pt" aria-current="true">pt</a></div>
+    </div>
+  </div>
+
+  <div id="app" data-route="work">
+    <article class="case-study" data-slug="oracle">
+      <nav class="cs-rail" aria-label="case study sections">
+        <a class="cs-rail_back" href="/pt/#work">← voltar</a>
+        <a href="#overview-md">overview</a>
+        <a href="#takeaways">takeaways</a>
+        <a href="#research-md">research</a>
+        <a href="#design-system-md">design-system</a>
+        <a href="#testing-md">testing</a>
+        <a href="#project-info-md">project-info</a>
+      </nav>
+      <div class="cs-main">
+        <header class="cs-head">
+          <nav class="cs-breadcrumb" aria-label="breadcrumb">
+            <a href="/pt/#work">~/work</a>/<span>oracle</span>
+          </nav>
+          <p class="cs-eyebrow">pesquisa de ux e design de produto · 2025 a 2026</p>
+          <h1 class="cs-title">oracle</h1>
+                  </header>
+
+        <figure class="cs-cover">
+          <div class="cs-cover_frame" data-cover-slot="oracle">
+          <video class="cs-cover_img" style="object-fit: cover"
+            muted loop playsinline preload="auto" poster="/assets/oracle/oracle-cover-poster.webp" aria-label="o logotipo do Oracle e um celular mostrando o console ao vivo de uma cena chamada Ice Cave, com o slogan &quot;Um toque, a sala toda.&quot;">
+            <source src="/assets/oracle/oracle-cover.webm" type="video/webm">
+          </video>
+        </div>
+          <figcaption class="caption-code">oracle-cover.webm</figcaption>
+        </figure>
+
+        <div class="cs-rest">
+      <section class="cs-section" id="overview-md">
+        <h2 class="cs-section_file">overview.md</h2>
+        <div class="cs-section_body">
+<p class="statement">Mestres de jogo podiam ter amigos na sala, ou atmosfera na tela. Não os dois.</p>
+<div class="prose"><p>Jogadores preferem jogar presencialmente, mas as ferramentas que adicionam atmosfera são feitas para telas, e telas tiram as pessoas da sala.</p>
+<p>Oracle é um app de celular que deixa o mestre controlar a própria sala. Um toque ajusta as luzes, o ar-condicionado, as persianas, a TV e o som, usando dispositivos inteligentes que as pessoas já têm.</p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="takeaways">
+        <h2 class="cs-section_file">takeaways/</h2>
+        <div class="cs-section_body">
+<nav class="takeaway-index" aria-label="takeaways">
+  <p class="takeaway-index_label">o que eu decidi, e por quê</p>
+  <ol class="takeaway-index_list">
+    <li><a href="#d-01-use-what-is-already-in-the-room"><span class="takeaway-index_num">/01</span> a sala já é um palco</a></li>
+    <li><a href="#d-02-device-by-device"><span class="takeaway-index_num">/02</span> uma cena é um conjunto de dispositivos, não uma configuração só</a></li>
+    <li><a href="#d-03-run-the-table"><span class="takeaway-index_num">/03</span> o mestre conduz a mesa no meio de uma frase</a></li>
+    <li><a href="#d-04-describe-a-scene"><span class="takeaway-index_num">/04</span> automatize a configuração, mantenha o julgamento</a></li>
+  </ol>
+</nav>
+<div class="prose"><p>Cada decisão responde a um dos três achados em research.md.</p></div>
+<article class="decision" id="d-01-use-what-is-already-in-the-room">
+  <header class="decision_head">
+    <span class="decision_file">01-use-what-is-already-in-the-room.md</span>
+    <h3 class="decision_title">a sala já é um palco</h3>
+    <p class="decision_subtitle">O preço era a barreira, então o Oracle usa o que as pessoas já têm.</p>
+  </header>
+  <div class="decision_body prose"><p>Os jogadores achavam os produtos de mesa boas ideias, mas caros demais, então eu não criei nada para comprar. O Oracle se pareia com as luzes, o ar-condicionado, as persianas e a TV que já existem na casa, agrupados por ambiente.</p>
+<p>O limite de intensidade de luz e temperatura é definido uma vez, durante essa mesma configuração, para que ninguém precise pensar nisso no meio da sessão.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media tall" playsinline muted loop preload="metadata" poster="/assets/oracle/pairing-devices-poster.webp" aria-label="Gravação de movimento: o Oracle escaneando a casa e encontrando dispositivos um por um, escolhendo quais adicionar e em qual ambiente ficam, depois o código de configuração e os caminhos de integração">
+        <source src="/assets/oracle/pairing-devices.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">pairing-devices.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-02-device-by-device">
+  <header class="decision_head">
+    <span class="decision_file">02-device-by-device.md</span>
+    <h3 class="decision_title">uma cena é um conjunto de dispositivos, não uma configuração só</h3>
+    <p class="decision_subtitle">Cada dispositivo tem seu próprio editor e mostra seu próprio estado.</p>
+  </header>
+  <div class="decision_body prose"><p>Uma cena tem cinco ou seis dispositivos, e eles não recebem a mesma entrada. Uma luz precisa de uma cor e um efeito, um ar-condicionado de uma temperatura, uma TV de uma mídia.</p>
+<p>Cada dispositivo tem seu próprio editor, e seu card mostra o que vai fazer sem precisar abri-lo. Sons e imagens vêm de uma biblioteca integrada ou dos próprios arquivos do mestre, em pastas e favoritos.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media tall" playsinline muted loop preload="metadata" poster="/assets/oracle/ice-cave-build-poster.webp" aria-label="Gravação de tela: a cena Ice Cave sendo construída do zero em um celular, com os cards de luz, ar-condicionado, TV e som se preenchendo um por um">
+        <source src="/assets/oracle/ice-cave-build.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">ice-cave-build.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-03-run-the-table">
+  <header class="decision_head">
+    <span class="decision_file">03-run-the-table.md</span>
+    <h3 class="decision_title">o mestre conduz a mesa no meio de uma frase</h3>
+    <p class="decision_subtitle">Conduzir uma sessão não é o mesmo trabalho que construir uma.</p>
+  </header>
+  <div class="decision_body prose"><p>O console ao vivo coloca os pads de efeito e o mixer de som em primeiro plano, porque é isso que um mestre busca no meio de uma frase.</p>
+<p>Aplicar uma cena mostra o progresso dispositivo por dispositivo. Se o quinto trava, o mestre vê qual é e pode tentar de novo.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media tall" playsinline muted loop preload="metadata" poster="/assets/oracle/live-console-poster.webp" data-reduced-src="/assets/oracle/live-console-reduced-motion.webm" aria-label="Gravação de tela: o console ao vivo aplicando uma cena, cinco dispositivos marcando verde, o quarto falhando e se recuperando na nova tentativa, depois o pad de vento e o mixer de som">
+        <source src="/assets/oracle/live-console.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">live-console.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-04-describe-a-scene">
+  <header class="decision_head">
+    <span class="decision_file">04-describe-a-scene.md</span>
+    <h3 class="decision_title">automatize a configuração, mantenha o julgamento</h3>
+    <p class="decision_subtitle">A ia rascunha a cena a partir de uma frase. O mestre revisa dispositivo por dispositivo.</p>
+  </header>
+  <div class="decision_body prose"><p>Digitar uma frase deveria ser mais rápido do que construir seis dispositivos à mão.</p>
+<p>O resultado chega como um conjunto revisável de mudanças por dispositivo, e o app nunca muda a sala por conta própria. O mestre pode pré-visualizar, aplicar ou desfazer antes que as luzes mudem numa mesa cheia de gente.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media tall" playsinline muted loop preload="metadata" poster="/assets/oracle/describe-it-poster.webp" aria-label="Gravação de tela: uma frase digitada no Oracle, o diff rascunhado por dispositivo, uma pré-visualização na sala, depois aplicar e desfazer">
+        <source src="/assets/oracle/describe-it.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">describe-it.webm</figcaption>
+</figure>
+  
+</article>
+        </div>
+      </section>
+      <section class="cs-section" id="research-md">
+        <h2 class="cs-section_file">research.md</h2>
+        <div class="cs-section_body">
+<div class="prose"><p>Começamos com uma pergunta: por que uma mesa presencial parece menos imersiva do que poderia ser, e o que poderia resolver isso sem quebrar o que a torna social?</p>
+<p>Fizemos 27 entrevistas em lojas de jogos, na Niterói Expo Geek 2025 e na CINE RPG, uma escola para mestres, com jogadores e profissionais de 18 a 26 e de 30 a 45 anos, nove deles no grupo mais velho. Comparamos o que ouvimos com o Censo RPG Brasil 2023. Todo mundo já estava em um evento de jogos ou em uma escola de jogos, então são jogadores engajados, não casuais.</p></div>
+<ul class="outcomes">
+<li class="outcome">
+      <span class="outcome_value">980+</span>
+      <span class="outcome_label">respostas no Censo RPG Brasil 2023</span>
+    </li>
+<li class="outcome">
+      <span class="outcome_value">12M</span>
+      <span class="outcome_label">casas brasileiras com dispositivos inteligentes, segundo o IBGE. Contexto para o tamanho do mercado, mais amplo que o nosso público</span>
+    </li>
+</ul>
+<div class="prose"><p>As entrevistas nos deram três achados.</p></div>
+<div class="beat">
+  <div class="beat_text"><div class="prose"><p><strong>01. Todo mundo quer a mesa presencial.</strong> Os dois grupos de idade preferem o presencial e tratam o online como alternativa. Jogadores mais jovens querem luz, som e imagens, os mais velhos ficam satisfeitos com a narração. Qualquer ferramenta tinha que ser opcional, nunca o centro da mesa.</p>
+<p><strong>02. A atmosfera existe, mas não na sala.</strong> O online adiciona som e imagem, mas convida à distração. O presencial é social, mas a imersão depende só da voz do mestre. Foundry e Roll20 colocam uma tela no meio da mesa, e o hardware que evita isso é caro e, em geral, importado. Nada acessível faz as duas coisas.</p>
+<p><strong>03. A decepção chega tarde.</strong> Um jogador novo chega esperando a intensidade que viu online e encontra uma mesa que depende de uma única voz. Sessões longas e monótonas desgastam a motivação de continuar jogando, e o Oracle visa esse ponto.</p>
+<p>O briefing virou: adicionar atmosfera à mesa presencial, de forma barata, sem uma tela no meio.</p></div></div>
+  <div class="beat_media"><figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" poster="/assets/oracle/c2-gap-poster.webp" aria-label="Mapa animado de ferramentas de imersão contra presença física, com o Oracle caindo no canto vazio">
+        <source src="/assets/oracle/c2-gap.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">c2-gap.webm</figcaption>
+</figure></div>
+</div>
+        </div>
+      </section>
+      <section class="cs-section" id="design-system-md">
+        <h2 class="cs-section_file">design-system.md</h2>
+        <div class="cs-section_body">
+<div class="prose"><p>Oracle roda sobre um sistema pequeno. O arquivo de design tem quatro coleções de variáveis: Primitives, Semantic com um modo claro e um escuro, Scale para espaçamento e raio, e Mood, uma paleta por cena. A tipografia vem de três famílias: Fraunces para nomes e capítulos, Inter para controles e corpo de texto, Geist Mono para números ao vivo.</p>
+<p>Os componentes carregam seus próprios estados, então o dispositivo com falha é desenhado com tanto cuidado quanto o que está funcionando.</p></div>
+<figure class="media-block media-block--full">
+  <div class="frame">
+      <img class="media natural" src="/assets/oracle/oracle-ds-foundations.webp" alt="Os tokens de design do Oracle: cores semânticas para superfície, texto, ação e status, seis paletas de mood, a escala tipográfica em Fraunces, Inter e Geist Mono, e as escalas de espaçamento, raio e toque" loading="lazy" decoding="async">
+    </div>
+  <figcaption class="caption-code">oracle-ds-foundations.webp</figcaption>
+</figure>
+<figure class="media-block media-block--full">
+  <div class="frame">
+      <img class="media natural" src="/assets/oracle/oracle-ds-components.webp" alt="Quatro componentes mostrados em cada estado: SceneBanner parado e ao vivo, RoomMap desligado, aplicando e ao vivo, TabBar com três abas ativas, e a LiveIsland" loading="lazy" decoding="async">
+    </div>
+  <figcaption class="caption-code">oracle-ds-components.webp</figcaption>
+</figure>
+<figure class="media-block media-block--full">
+  <div class="frame">
+      <img class="media natural" src="/assets/oracle/oracle-ds-annotated.webp" alt="O console ao vivo e a tela de falha parcial lado a lado, com dez notas numeradas sobre hierarquia, papéis de tipografia, a única ação em verde-limão e como o estado de erro foi escrito" loading="lazy" decoding="async">
+    </div>
+  <figcaption class="caption-code">oracle-ds-annotated.webp</figcaption>
+</figure>
+        </div>
+      </section>
+      <section class="cs-section" id="testing-md">
+        <h2 class="cs-section_file">testing.md</h2>
+        <div class="cs-section_body">
+<div class="prose"><p>Testamos duas vezes. Um mestre usou o protótipo em um teste de usabilidade e navegação. Depois fizemos uma sessão de jogo curta em que a equipe mudava a sala manualmente, seguindo os presets que o mestre tinha criado, para simular o que o app faria.</p></div>
+<figure class="quote">
+  
+  <blockquote class="quote_text">Depois que você cria uma cena, você sabe criar todas as outras. Depois que eu criei a primeira, eu conseguia criar mais sem problema nenhum.</blockquote>
+  <figcaption class="quote_by"><span>Lucas Marcel Toledo</span> <span>mestre de RPG e estudante de design</span></figcaption>
+</figure>
+<div class="prose"><p>Os limites: um mestre, uma sessão curta, e mudamos os dispositivos manualmente em vez de pelo app. Isso nos conta como uma pessoa usou, e é pequeno demais para contar como um estudo de usabilidade.</p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="project-info-md">
+        <h2 class="cs-section_file">project-info.md</h2>
+        <div class="cs-section_body">
+<dl class="meta cs-meta">
+          <div class="meta_row">
+            <dt>função</dt>
+            <dd>pesquisa de ux, ux/ui, design de produto, design system</dd>
+          </div>
+          <div class="meta_row">
+            <dt>cronograma</dt>
+            <dd>2025 a 2026</dd>
+          </div>
+          <div class="meta_row">
+            <dt>equipe</dt>
+            <dd>projeto em grupo. a pesquisa, a ideia e a documentação foram compartilhadas. o design e o protótipo foram meus.</dd>
+          </div>
+          <div class="meta_row">
+            <dt>construído com</dt>
+            <dd>figma, claude code</dd>
+          </div>
+          <div class="meta_row">
+            <dt>status</dt>
+            <dd>protótipo</dd>
+          </div>
+          
+          </dl>
+<div class="prose"><p>Eu fiz o design e o protótipo: 60 telas em 8 fluxos no Figma, o design system por trás deles, e o protótipo que testamos. Construído com Figma e Claude Code.</p>
+<p>A pesquisa de campo, a ideia e a documentação foram compartilhadas pela equipe, e os achados em research.md são tanto deles quanto meus.</p></div>
+        </div>
+      </section>
+
+      <nav class="cs-nav">
+        <a class="cs-nav_link cs-nav_prev" href="/pt/work/skrill/" data-slug="skrill">← projeto anterior <span class="cs-nav_name">skrill</span><div class="cs-nav_frame" style="aspect-ratio: 5 / 3"><img class="cs-nav_media" data-slug="skrill" src="/assets/skrill/skrill-nav.webp" alt="" style="object-fit: cover" loading="lazy" decoding="async"></div></a>
+        <a class="cs-nav_link cs-nav_next" href="/pt/work/yura/" data-slug="yura">próximo projeto → <span class="cs-nav_name">hakkotai</span><div class="cs-nav_frame" style="aspect-ratio: 1388 / 992"><video class="cs-nav_media" data-slug="yura" style="object-fit: cover"
+              muted loop playsinline preload="metadata">
+              <source src="/assets/yura/yura-cover.webm" type="video/webm">
+            </video></div></a>
+      </nav>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="footer">
+    <div class="footer_grid grid-12">
+      <div class="credits-container"><a class="text-color_inverse" href="mailto:work@lope.design">work@lope.design</a></div>
+      <div class="copyright-container"><div class="text-color_inverse">2026</div></div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/site.js"></script>
+
+</body>
+
+</html>

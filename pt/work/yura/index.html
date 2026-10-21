@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>hakkotai / lope.design</title>
+  <meta name="description" content="Uma página de loja para um único produto, uma guitarra que eu pintei à mão, e as decisões de design por trás de cada seção dela.">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" hreflang="en" href="https://lope.design/work/yura/">
+  <link rel="alternate" hreflang="pt-BR" href="https://lope.design/pt/work/yura/">
+</head>
+
+<body class="is--case-study">
+
+  <a class="skip-link" href="#app">ir direto para o conteúdo</a>
+
+  <div class="page-transition" aria-hidden="true">
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+  </div>
+  <noscript><style>.page-transition { display: none; }</style></noscript>
+
+  <canvas class="ascii-background" aria-hidden="true"></canvas>
+
+  <div class="background-gridlines" aria-hidden="true">
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+  </div>
+
+  <div class="cursor-pill" aria-hidden="true"></div>
+
+  <div class="navbar">
+    <div class="header grid-12">
+      <a class="nav_button nav_button--home" href="/pt/">
+        <div class="button-square not-blinking"></div>
+        <div class="text-color_inverse name-long">lope.design</div>
+        <div class="text-color_inverse name-short">lope</div>
+      </a>
+      <a class="nav_button" href="/pt/#work">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./work</div>
+      </a>
+      <a class="nav_button" href="/pt/about/">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./about</div>
+      </a>
+      <div class="nav_button nav_button--lang" data-lang-switch><a class="text-color_inverse lang-link" href="/work/yura/" data-lang="en">en</a><span class="text-color_inverse lang-sep"> / </span><a class="text-color_inverse lang-link" href="/pt/work/yura/" data-lang="pt" aria-current="true">pt</a></div>
+    </div>
+  </div>
+
+  <div id="app" data-route="work">
+    <article class="case-study" data-slug="yura">
+      <nav class="cs-rail" aria-label="case study sections">
+        <a class="cs-rail_back" href="/pt/#work">← voltar</a>
+        <a href="#readme-md">README</a>
+        <a href="#why-md">why</a>
+        <a href="#the-brand-md">the-brand</a>
+        <a href="#the-page">the-page</a>
+        <a href="#project-info-md">project-info</a>
+      </nav>
+      <div class="cs-main">
+        <header class="cs-head">
+          <nav class="cs-breadcrumb" aria-label="breadcrumb">
+            <a href="/pt/#work">~/work</a>/<span>yura</span>
+          </nav>
+          <p class="cs-eyebrow">projeto pessoal · web design e branding</p>
+          <h1 class="cs-title">hakkotai</h1>
+          <p class="cs-headline">Uma página de produto para uma guitarra que eu pintei à mão, desenhada para mostrar como ela brilha no escuro.</p>        </header>
+
+        <figure class="cs-cover">
+          <div class="cs-cover_frame" data-cover-slot="yura">
+          <video class="cs-cover_img" style="object-fit: cover"
+            muted loop playsinline preload="auto" aria-label="Peça de movimento em loop: a estrela da YURA gira e bate ao lado do logotipo YURA sobre uma foto escura da guitarra, as letras trocam para HAKKOTAI, depois as luzes se apagam e o logo pisca de volta em verde fosforescente">
+            <source src="/assets/yura/yura-cover.webm" type="video/webm">
+          </video>
+        </div>
+          <figcaption class="caption-code">yura-cover.webm</figcaption>
+        </figure>
+
+        <div class="cs-rest">
+      <section class="cs-section" id="readme-md">
+        <h2 class="cs-section_file">README.md</h2>
+        <div class="cs-section_body">
+<div class="prose"><p>HAKKOTAI é uma guitarra que eu fiz à mão: tinta rosa, uma caveira rachada, vinil fosforescente. YURA é a marca fictícia e a página de produto que eu construí para vendê-la para alguém que não pode pegar nela.</p>
+<p>Eu fiz a marca, o design da página e a direção de motion, trabalhando sozinho. O Claude Code escreveu a primeira versão do código. Eu dirigi cada cena, ajustei à mão os tempos de animação, o espaçamento e o texto, e fiz os cortes.</p>
+<p>É um conceito no ar em lope.design/yura, sem vendas e sem teste com usuários, então não dá para mostrar conversão. A loja em volta da página (carrinho, busca, um painel de conta, checkout) é um mock de front-end: o carrinho mora no localStorage, não existe backend nem pagamento de verdade, mas é possível clicar por todo o fluxo.</p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="why-md">
+        <h2 class="cs-section_file">why.md</h2>
+        <div class="cs-section_body">
+<p class="statement">O brilho é a única coisa que uma foto não consegue mostrar, então a página apaga as luzes.</p>
+<div class="prose"><p>HAKKOTAI é uma guitarra que eu fiz. Começou como uma superstrat vermelha comum, para um curso de design em 2024. Eu a desmontei, lixei, pintei de rosa, envolvi em vinil fosforescente e montei de novo à mão.</p>
+<p>Eu ficava me perguntando como venderia ela numa página de loja, e como fazer essa página valer a visita. Então construí uma marca fictícia em volta dela, a YURA, e uma página de produto no estilo dos grandes lançamentos de flagship, em que um único objeto ocupa a tela toda.</p>
+<p>A marca é um figurino para a página. Segurando a guitarra, você entende na hora: o rosa, a caveira, o verde que continua brilhando depois que as luzes se apagam. Um navegador não dá nada disso, sem peso, sem interruptor de luz e sem jeito de girar ela nas mãos.</p>
+<p>Eu desenhei para um estranho que nunca pegou na guitarra e tem poucos segundos para decidir se ela é real. A página precisa fazer esse estranho acreditar que a guitarra é real o suficiente para clicar em Comprar. Eu nunca entrevistei esse estranho; ele é a minha suposição. Cada cena responde a uma dúvida que eu imaginei que ele teria: o que é isso, por que isso importa, é um render, é artesanal de verdade.</p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="the-brand-md">
+        <h2 class="cs-section_file">the-brand.md</h2>
+        <div class="cs-section_body">
+<div class="prose"><p>YURA tem o nome da banda por trás da música que deu origem à guitarra, HAKKOTAI (1998), da Yura Yura Teikoku.</p>
+<p>O sistema é pequeno de propósito. Preto puro, para que cada seção controle sua própria luz. Um rosa vibrante para o corpo e os botões, e um verde-limão que só significa uma coisa: brilho. Quatro fontes, cada uma com um só trabalho: Bebas Neue para as linhas de impacto, Inter para tudo que precisa ser lido, M PLUS 1p para o kanji e Martian Mono para os rótulos. A estrutura toma de empréstimo a página de produto flagship, que já diz &quot;isto é um produto real, com um preço real&quot;.</p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="the-page">
+        <h2 class="cs-section_file">the-page/</h2>
+        <div class="cs-section_body">
+<nav class="takeaway-index" aria-label="takeaways">
+  <p class="takeaway-index_label">o que eu decidi, e por quê</p>
+  <ol class="takeaway-index_list">
+    <li><a href="#d-01-the-hero-is-a-photo-shoot"><span class="takeaway-index_num">/01</span> o hero é montado como um ensaio fotográfico, não diagramado como uma página</a></li>
+    <li><a href="#d-02-a-sentence-you-cannot-skip"><span class="takeaway-index_num">/02</span> uma frase que você não consegue pular rolando, e então ela se quebra</a></li>
+    <li><a href="#d-03-the-page-turns-the-lights-off"><span class="takeaway-index_num">/03</span> a página apaga as luzes para você</a></li>
+    <li><a href="#d-04-then-prove-it-is-real"><span class="takeaway-index_num">/04</span> depois prove que não é um render</a></li>
+    <li><a href="#d-05-the-copy-does-the-work"><span class="takeaway-index_num">/05</span> o nome e as features são escritos como motivos</a></li>
+    <li><a href="#d-06-handmade-as-a-hand-of-cards"><span class="takeaway-index_num">/06</span> a montagem é distribuída como uma mão de cartas</a></li>
+    <li><a href="#d-07-a-frame-around-the-product"><span class="takeaway-index_num">/07</span> uma barra discreta no topo, uma marca no final</a></li>
+    <li><a href="#d-08-every-scene-has-a-still"><span class="takeaway-index_num">/08</span> toda cena ainda funciona com o movimento desligado</a></li>
+  </ol>
+</nav>
+<article class="decision" id="d-01-the-hero-is-a-photo-shoot">
+  <header class="decision_head">
+    <span class="decision_file">01-the-hero-is-a-photo-shoot.md</span>
+    <h3 class="decision_title">o hero é montado como um ensaio fotográfico, não diagramado como uma página</h3>
+    <p class="decision_subtitle">Luz, fumaça e uma guitarra que você quase consegue pegar.</p>
+  </header>
+  <div class="decision_body prose"><p>A guitarra se estende pelo quadro e sangra para fora da borda esquerda, e o logotipo fica embaixo à direita, de modo que o braço passa pelo vão entre as letras. A cena é um palco de proporção fixa, então a guitarra e o tipo escalam juntos.</p>
+<p>A cena é iluminada em vez de jogada sobre um preto chapado: uma luz rosa atrás do corpo, uma filmagem real de fumaça passando, e um borrão de tinta verde-limão atrás da guitarra que dá uma pista do brilho que vem a seguir. Só o kanji 発光体, &quot;um corpo luminoso&quot;, recebe um brilho verde sutil.</p>
+<p>Mova o cursor e a guitarra se inclina na direção dele com uma física de mola, de forma que uma mudança rápida de direção mantém o impulso em vez de travar de repente. A inclinação só funciona com um cursor de precisão e sem movimento reduzido; no toque, a guitarra fica parada. O preço fica bem abaixo da chamada para ação, &quot;A partir de $300 ou $33,99/mês.&quot;, porque uma página de produto que esconde o preço não parece uma loja real.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Gravação de tela: o hero carregando, depois a guitarra se inclinando em 3D enquanto o cursor se move sobre ela, com fumaça passando ao fundo">
+        <source src="/assets/yura/hero-pointer-tilt.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">hero-pointer-tilt.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-02-a-sentence-you-cannot-skip">
+  <header class="decision_head">
+    <span class="decision_file">02-a-sentence-you-cannot-skip.md</span>
+    <h3 class="decision_title">uma frase que você não consegue pular rolando, e então ela se quebra</h3>
+    <p class="decision_subtitle">O manifesto se ilumina letra por letra, depois se espatifa na próxima cena.</p>
+  </header>
+  <div class="decision_body prose"><p>Logo depois do hero vem a ideia por trás da guitarra: tire o sangue, o suor e as lágrimas, e o que resta é puro e luminoso. A seção tem três telas de altura e o painel preto que a sustenta fica fixo durante todas elas. O primeiro trecho de rolagem ilumina as letras na ordem de leitura, então ninguém consegue passar pelo texto sem ler. Isso tira o controle da rolagem do usuário por três telas, um custo real que eu escolhi pagar porque essa é a única frase que a página não pode deixar passar batido.</p>
+<p>O último trecho a quebra. O painel se estilhaça a partir de um ponto de impacto, e cada fragmento carrega seu próprio pedaço da frase ao cair.</p>
+<p>Uma versão anterior clareava o fundo em branco a partir do chão enquanto as últimas palavras se iluminavam. Eu cortei porque competia com a quebra. A seção agora fica preta o tempo todo, e são os fragmentos que levam você para a próxima cena.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Gravação de tela: o parágrafo do manifesto se iluminando letra por letra na rolagem, depois o painel se estilhaçando em fragmentos que caem sobre uma sala branca">
+        <source src="/assets/yura/statement-lights-then-shatters.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">statement-lights-then-shatters.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-03-the-page-turns-the-lights-off">
+  <header class="decision_head">
+    <span class="decision_file">03-the-page-turns-the-lights-off.md</span>
+    <h3 class="decision_title">a página apaga as luzes para você</h3>
+    <p class="decision_subtitle">O único recurso que uma foto não consegue mostrar, encenado na rolagem.</p>
+  </header>
+  <div class="decision_body prose"><p>O grande truque da guitarra é que a arte em creme brilha verde no escuro. Uma foto estática disso só prova que alguém tirou uma foto no escuro. Então a cena do brilho faz isso na sua frente: ela abre numa sala branca e iluminada, com &quot;Alto, na luz.&quot;, e, enquanto você rola, as lâmpadas falham, a sala fica preta e o título muda para &quot;Luminoso, no escuro.&quot; enquanto o vinil carrega no corpo da guitarra.</p>
+<p>As luzes se apagando são três momentos que se sobrepõem: a sala escurece das bordas para o centro, a última luz deixa a guitarra, depois o vinil começa a brilhar. Um único crossfade deixaria o meio da seção parado num cinza chapado. As lâmpadas piscam duas vezes, e a troca do título acontece na segunda piscada, no mesmo momento em que a energia cai.</p>
+<p>A maior parte da iteração foi sobre legibilidade. Um texto que muda de cor enquanto o fundo também muda de cor desaparece por alguns quadros no momento em que os dois se cruzam, então a sala fica totalmente preta exatamente na janela em que um título já saiu e o outro ainda não chegou. A guitarra escurece por brilho, não por opacidade, porque opacidade fazia parecer uma foto ficando translúcida em vez de uma lâmpada se apagando.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Gravação de tela de uma rolagem lenta pela cena: a sala branca e iluminada sob &quot;Alto, na luz.&quot;, as lâmpadas piscando duas vezes, a sala ficando preta e a arte da guitarra brilhando verde enquanto o título muda para &quot;Luminoso, no escuro.&quot;">
+        <source src="/assets/yura/glow-scene-lights-out.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">glow-scene-lights-out.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-04-then-prove-it-is-real">
+  <header class="decision_head">
+    <span class="decision_file">04-then-prove-it-is-real.md</span>
+    <h3 class="decision_title">depois prove que não é um render</h3>
+    <p class="decision_subtitle">Um efeito roteirizado convida a uma pergunta, e a próxima seção responde.</p>
+  </header>
+  <div class="decision_body prose"><p>Um brilho tão roteirizado convida à dúvida. Então a próxima coisa na página são três fotos reais da guitarra brilhando num quarto escuro, com uma linha embaixo: &quot;Não é render. Fotografado num quarto escuro.&quot;</p>
+<p>As fotos aparecem do mesmo jeito que o vinil, escuras primeiro e depois carregadas, e um bloom continua vindo da cena do brilho, para parecer o mesmo quarto escuro que você acabou de deixar.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Gravação de tela: as três fotos da guitarra aparecendo escuras e depois carregadas, sob a linha &quot;Não é render. Fotografado num quarto escuro.&quot;">
+        <source src="/assets/yura/proof-photos-in-the-dark.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">proof-photos-in-the-dark.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-05-the-copy-does-the-work">
+  <header class="decision_head">
+    <span class="decision_file">05-the-copy-does-the-work.md</span>
+    <h3 class="decision_title">o nome e as features são escritos como motivos</h3>
+    <p class="decision_subtitle">A maioria dos visitantes não consegue ler o nome, e uma ficha técnica não dá motivo nenhum para se importar.</p>
+  </header>
+  <div class="decision_body prose"><p>HAKKOTAI é uma palavra que a maioria dos visitantes não vai conhecer, e ninguém lembra de um nome que não consegue ler. Então o nome se torna conteúdo: três kanji, cada um com sua leitura e seu significado, emissão, luz, corpo, somando &quot;um corpo luminoso&quot;. Passar o mouse sobre um caractere faz uma faixa verde-limão deslizar por ele, como uma carga fosforescente.</p>
+<p>A seção de design é uma grade de seis blocos, e cada um transforma um fato em um motivo para se importar. A tinta rosa se torna &quot;Rosa, não vermelho. Mude a cor do sangue e a tragédia se torna uma festa.&quot; Um bloco não tem especificação nenhuma: &quot;Uma guitarra é só uma guitarra.&quot;</p>
+<p>A tabela completa de especificações vem depois e é deliberadamente simples. Depois de uma página de espetáculo, uma lista calma de fatos parece honesta.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Gravação de tela: os três kanji com uma faixa verde-limão deslizando por cada um ao passar o mouse, depois uma rolagem pelos seis blocos">
+        <source src="/assets/yura/name-and-bento.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">name-and-bento.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-06-handmade-as-a-hand-of-cards">
+  <header class="decision_head">
+    <span class="decision_file">06-handmade-as-a-hand-of-cards.md</span>
+    <h3 class="decision_title">a montagem é distribuída como uma mão de cartas</h3>
+    <p class="decision_subtitle">Sete etapas, de uma guitarra vermelha a uma rosa, sem um parágrafo de explicação.</p>
+  </header>
+  <div class="decision_body prose"><p>&quot;Feito à mão&quot; é o que diferencia essa guitarra de qualquer coisa de catálogo, e qualquer um pode alegar isso. Então a montagem recebe a rolagem mais longa da página. As sete etapas são distribuídas pela direita, uma por uma, em um arco em direção a quem vê, e cada uma empurra a carta de baixo de volta para a pilha, então a fileira se lê como uma pilha de trabalho, e não como uma faixa de miniaturas.</p>
+<p>A sala assume a cor de qual carta estiver no topo. Começa vermelha, com a guitarra de fábrica, esquenta durante a lixa, fica cinza fria no primer e termina num rosa vibrante, de modo que a cor da luz conta a história da pintura sem nenhuma legenda.</p>
+<p>Abaixo, uma nota de rodapé admite que alguns adesivos tinham cola fraca e outros rasgaram na faca, e que as cicatrizes ficaram. Uma foto de catálogo esconderia isso, e eu deixei ficar.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Gravação de tela: as sete fotos da montagem sendo distribuídas uma a uma na rolagem, a luz da sala mudando de vermelho para cinza e depois rosa conforme cada uma chega">
+        <source src="/assets/yura/build-deck-dealing.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">build-deck-dealing.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-07-a-frame-around-the-product">
+  <header class="decision_head">
+    <span class="decision_file">07-a-frame-around-the-product.md</span>
+    <h3 class="decision_title">uma barra discreta no topo, uma marca no final</h3>
+    <p class="decision_subtitle">A guitarra fica com a primeira tela, e o final da página vende mais do que um objeto.</p>
+  </header>
+  <div class="decision_body prose"><p>A única barra na página é uma faixa fina de vidro com um botão rosa de Comprar e sem links de seção, porque qualquer link ali em cima competiria com a guitarra. O custo é a descoberta, e eu não adicionei um link de atalho. Para compensar, ao chegar nas etapas de montagem, um pill sobe do fundo da tela com um botão Explorar que abre todas as seções, e um segundo botão de Comprar.</p>
+<p>No outro extremo, uma correia, um amplificador combo e um cabo trançado, todos no rosa YURA e marcados como &quot;Em breve&quot;, transformam um produto em uma marca. O fechamento repete o kanji, o preço e o botão de Comprar, e três notas de rodapé contam de onde vem o nome, que começou como um projeto de curso de design, e que YURA é uma marca conceito.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Gravação de tela: a barra de vidro do produto no topo ficando vazia durante o hero, o pill flutuante subindo nas etapas de montagem e se abrindo no índice de seções com &quot;Feito à mão&quot; em destaque, depois uma rolagem até os acessórios &quot;em breve&quot; e a chamada final para comprar">
+        <source src="/assets/yura/bar-and-closer.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">bar-and-closer.webm</figcaption>
+</figure>
+  
+</article>
+<article class="decision" id="d-08-every-scene-has-a-still">
+  <header class="decision_head">
+    <span class="decision_file">08-every-scene-has-a-still.md</span>
+    <h3 class="decision_title">toda cena ainda funciona com o movimento desligado</h3>
+    <p class="decision_subtitle">A animação entrega a história, e a história sobrevive sem ela.</p>
+  </header>
+  <div class="decision_body prose"><p>Cada cena de rolagem tem um estado alternativo que conta a mesma história parada. Com o movimento reduzido ativado, o manifesto deixa de ficar fixo e fica simplesmente legível, e a montagem é uma grade simples das mesmas cartas. A cena do brilho ainda fica fixa e escurece na rolagem, mas nada voa para dentro do quadro. Sem JavaScript, a cena do brilho já começa direto no estado que ela descreve, o quarto escuro com o vinil aceso, em vez de reservar três telas de rolagem que ela não pode mais usar.</p>
+<p>Isso também é um teste para o design. Se a página só funciona quando tudo se move, é o movimento que está vendendo, não o produto. A preferência de movimento é lida uma vez, ao carregar a página, então mudá-la no meio da visita exige recarregar.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Gravação de tela: uma rolagem pela página com o movimento reduzido ativado, o manifesto como texto simples e legível, a cena do brilho escurecendo sem nada voando para dentro do quadro, e as etapas de montagem como uma grade estática">
+        <source src="/assets/yura/reduced-motion-scroll.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">reduced-motion-scroll.webm</figcaption>
+</figure>
+  
+</article>
+        </div>
+      </section>
+      <section class="cs-section" id="project-info-md">
+        <h2 class="cs-section_file">project-info.md</h2>
+        <div class="cs-section_body">
+<dl class="meta cs-meta">
+          <div class="meta_row">
+            <dt>função</dt>
+            <dd>branding, web design, direção de motion</dd>
+          </div>
+          <div class="meta_row">
+            <dt>cronograma</dt>
+            <dd>2026</dd>
+          </div>
+          <div class="meta_row">
+            <dt>equipe</dt>
+            <dd>sozinho</dd>
+          </div>
+          <div class="meta_row">
+            <dt>construído com</dt>
+            <dd>html, css, javascript, figma, claude code</dd>
+          </div>
+          <div class="meta_row">
+            <dt>status</dt>
+            <dd>conceito</dd>
+          </div>
+          <div class="meta_row">
+            <dt>visitar</dt>
+            <dd><a href="/yura">lope.design/yura</a></dd>
+          </div>
+          </dl>
+        </div>
+      </section>
+
+      <nav class="cs-nav">
+        <a class="cs-nav_link cs-nav_prev" href="/pt/work/oracle/" data-slug="oracle">← projeto anterior <span class="cs-nav_name">oracle</span><div class="cs-nav_frame" style="aspect-ratio: 1 / 1"><img class="cs-nav_media" data-slug="oracle" src="/assets/oracle/oracle-nav.webp" alt="" style="object-fit: cover" loading="lazy" decoding="async"></div></a>
+        <a class="cs-nav_link cs-nav_next" href="/pt/work/ecoa/" data-slug="ecoa">próximo projeto → <span class="cs-nav_name">ecoa × petrobras</span><div class="cs-nav_frame" style="aspect-ratio: 1600 / 684"><img class="cs-nav_media" data-slug="ecoa" src="/assets/ecoa/ecoa-nav.webp" alt="" style="object-fit: cover" loading="lazy" decoding="async"></div></a>
+      </nav>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="footer">
+    <div class="footer_grid grid-12">
+      <div class="credits-container"><a class="text-color_inverse" href="mailto:work@lope.design">work@lope.design</a></div>
+      <div class="copyright-container"><div class="text-color_inverse">2026</div></div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/site.js"></script>
+
+</body>
+
+</html>

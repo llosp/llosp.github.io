@@ -18,10 +18,18 @@ const reduceMotion = () => window.matchMedia('(prefers-reduced-motion: reduce)')
 const rect = (el) => el.getBoundingClientRect();
 const hasBox = (r) => r && r.width > 1 && r.height > 1;
 
+// the whole site exists twice, once at / and once at /pt/, with identical
+// shape underneath. stripping the /pt prefix turns every locale-aware check
+// below back into the same plain-english check the router always had.
+export function stripLocale(path) {
+  return path === '/pt' || path === '/pt/' ? '/' : path.startsWith('/pt/') ? path.slice(3) : path;
+}
+const isHome = (path) => stripLocale(path) === '/';
+
 function isInternal(link) {
   if (!link || link.target || link.hasAttribute('download')) return false;
   if (link.origin !== window.location.origin) return false;
-  const path = link.pathname;
+  const path = stripLocale(link.pathname);
   return path === '/' || path === '/about/' || path.startsWith('/work/');
 }
 
@@ -139,13 +147,13 @@ export function initRouter({ onSwap, onTransition, layout }) {
 
     // measured against what is rendered rather than the url, because a
     // deferred traversal runs with the url already pointing at the target
-    if (rendered === '/') homeScroll = window.scrollY;
+    if (isHome(rendered)) homeScroll = window.scrollY;
 
     const app = document.querySelector('#app');
     const instant = reduceMotion();
     const toPath = new URL(url, window.location.origin).pathname;
-    const toWork = toPath.startsWith('/work/');
-    const fromWork = rendered.startsWith('/work/');
+    const toWork = stripLocale(toPath).startsWith('/work/');
+    const fromWork = stripLocale(rendered).startsWith('/work/');
 
     const curtain = document.querySelector('.page-transition');
 
@@ -161,7 +169,7 @@ export function initRouter({ onSwap, onTransition, layout }) {
     if (!instant && toWork) {
       source = sourceCard(link, slug);
       if (source) mode = 'forward';
-    } else if (!instant && fromWork && toPath === '/' && curtain) {
+    } else if (!instant && fromWork && isHome(toPath) && curtain) {
       mode = 'curtain';
     }
 
@@ -292,9 +300,9 @@ export function initRouter({ onSwap, onTransition, layout }) {
     event.preventDefault();
 
     const slug = link.dataset.slug || currentSlug();
-    const scrollTo = link.pathname === '/' ? homeScroll : 0;
+    const scrollTo = isHome(link.pathname) ? homeScroll : 0;
 
-    const anchor = link.pathname === '/' && link.hash === '#work' ? 'work' : null;
+    const anchor = isHome(link.pathname) && link.hash === '#work' ? 'work' : null;
     swap(link.pathname + link.search, { slug, scrollTo, link, anchor });
   });
 

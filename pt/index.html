@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>lope / designer digital que também programa</title>
+  <meta name="description" content="Lope (Pedro Lopes) é designer e desenvolvedor no Rio de Janeiro, trabalhando com web, produto e interfaces de ia.">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" hreflang="en" href="https://lope.design/">
+  <link rel="alternate" hreflang="pt-BR" href="https://lope.design/pt/">
+</head>
+
+<body>
+
+  <a class="skip-link" href="#app">ir direto para o conteúdo</a>
+
+  <div class="page-transition is--cover" aria-hidden="true">
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+  </div>
+  <noscript><style>.page-transition { display: none; }</style></noscript>
+
+  <canvas class="ascii-background" aria-hidden="true"></canvas>
+
+  <div class="background-gridlines" aria-hidden="true">
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+  </div>
+
+  <div class="cursor-pill" aria-hidden="true"></div>
+
+  <div class="navbar">
+    <div class="header grid-12">
+      <a class="nav_button nav_button--home" href="/pt/">
+        <div class="button-square not-blinking"></div>
+        <div class="text-color_inverse name-long">lope.design</div>
+        <div class="text-color_inverse name-short">lope</div>
+      </a>
+      <a class="nav_button" href="/pt/#work">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./work</div>
+      </a>
+      <a class="nav_button" href="/pt/about/">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./about</div>
+      </a>
+      <div class="nav_button nav_button--lang" data-lang-switch><a class="text-color_inverse lang-link" href="/" data-lang="en">en</a><span class="text-color_inverse lang-sep"> / </span><a class="text-color_inverse lang-link" href="/pt/" data-lang="pt" aria-current="true">pt</a></div>
+    </div>
+  </div>
+
+  <div id="app" data-route="home">
+    <div class="hero">
+      <h1 class="title-h1">designer digital que também programa. web, produto e interfaces de ia.</h1>
+      <div class="hero-now">
+        <div class="hero-now_cmd">$ cat now.md</div>
+        <div class="hero-now_out">desenhando produtos digitais na ecoa × petrobras · aberto a vagas de design</div>
+      </div>
+      <a class="hero-cta" href="mailto:work@lope.design">
+        <span class="hero-cta_square" aria-hidden="true"></span>
+        <span>diga olá</span>
+        <span class="hero-cta_mail">work@lope.design</span>
+      </a>
+      <div class="scroll-down-tag">↓ role<span class="cursor">_</span></div>
+    </div>
+
+    <main class="work" id="work">
+      <div class="work-tag">~/trabalhos selecionados</div>
+      <div class="covers layout-grid_list">
+        <a class="layout-grid_item covers_item" href="/pt/work/skrill/" data-slug="skrill" data-index="0" data-span="2">
+          <div class="covers_frame" style="aspect-ratio: 5 / 3">
+            <video class="covers_media" data-slug="skrill" style="object-fit: cover"
+              muted loop playsinline preload="metadata">
+              <source src="/assets/skrill/skrill-cover.webm" type="video/webm">
+            </video>
+          </div>
+          <div class="covers_label">
+            <span class="covers_name">skrill</span>
+            <span class="covers_meta">design de produto, web app, full stack · em andamento</span>
+          </div>
+          <div class="covers_outcome">13 temporadas em quatro meses, com o grupo para quem foi criado.</div>
+        </a>
+        <a class="layout-grid_item covers_item" href="/pt/work/oracle/" data-slug="oracle" data-index="1">
+          <div class="covers_frame" style="aspect-ratio: 1 / 1">
+            <video class="covers_media" data-slug="oracle" style="object-fit: cover"
+              muted loop playsinline preload="metadata">
+              <source src="/assets/oracle/oracle-cover.webm" type="video/webm">
+            </video>
+          </div>
+          <div class="covers_label">
+            <span class="covers_name">oracle</span>
+            <span class="covers_meta">design de produto, pesquisa de ux · protótipo</span>
+          </div>
+          <div class="covers_outcome">Pesquisa de campo até um protótipo testado com um mestre de RPG e uma sessão de jogo curta.</div>
+        </a>
+        <a class="layout-grid_item covers_item" href="/pt/work/yura/" data-slug="yura" data-index="2">
+          <div class="covers_frame" style="aspect-ratio: 1388 / 992">
+            <video class="covers_media" data-slug="yura" style="object-fit: cover"
+              muted loop playsinline preload="metadata">
+              <source src="/assets/yura/yura-cover.webm" type="video/webm">
+            </video>
+          </div>
+          <div class="covers_label">
+            <span class="covers_name">hakkotai</span>
+            <span class="covers_meta">web design, branding · conceito</span>
+          </div>
+          <div class="covers_outcome">Uma página de produto único, com uma loja de front-end clicável por trás, para uma guitarra que eu construí à mão.</div>
+        </a>
+        <a class="layout-grid_item covers_item" href="/pt/work/ecoa/" data-slug="ecoa" data-index="3">
+          <div class="covers_frame" style="aspect-ratio: 1600 / 684">
+            <video class="covers_media" data-slug="ecoa" style="object-fit: cover"
+              muted loop playsinline preload="metadata">
+              <source src="/assets/ecoa/ecoa-cover.webm" type="video/webm">
+            </video>
+          </div>
+          <div class="covers_label">
+            <span class="covers_name">ecoa × petrobras</span>
+            <span class="covers_meta">design de produto, pesquisa de ux · em andamento</span>
+          </div>
+          <div class="covers_outcome">Duas ferramentas internas guiadas por ia, construídas uma depois da outra para a Petrobras, ambas aceitas e pré-aprovadas para a construção completa.</div>
+        </a>
+      </div>
+    </main>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer_grid grid-12">
+      <div class="credits-container"><a class="text-color_inverse" href="mailto:work@lope.design">work@lope.design</a></div>
+      <div class="copyright-container"><div class="text-color_inverse">2026</div></div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/site.js"></script>
+
+</body>
+
+</html>

@@ -290,6 +290,23 @@ video {
   50%, 100% { opacity: 0; }
 }
 
+/* the current locale is a link too (so the router's internal-link check
+   still matches it, which keeps a same-page click a harmless no-op), but it
+   reads as inert: dimmed and unclickable, since you're already there */
+.lang-link[aria-current] {
+  pointer-events: none;
+  opacity: 0.45;
+}
+
+.lang-link:focus-visible {
+  outline: 1px solid var(--white);
+  outline-offset: 4px;
+}
+
+.lang-sep {
+  opacity: 0.45;
+}
+
 /* ─── cursor pill ───────────────────────────────────────────────────── */
 
 .cursor-pill {

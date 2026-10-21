@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>skrill / lope.design</title>
+  <meta name="description" content="Um jogo semanal que faz um pequeno grupo de amigos criativos fazer coisas que ninguém está pedindo que eles façam.">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" hreflang="en" href="https://lope.design/work/skrill/">
+  <link rel="alternate" hreflang="pt-BR" href="https://lope.design/pt/work/skrill/">
+</head>
+
+<body class="is--case-study">
+
+  <a class="skip-link" href="#app">ir direto para o conteúdo</a>
+
+  <div class="page-transition" aria-hidden="true">
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+  </div>
+  <noscript><style>.page-transition { display: none; }</style></noscript>
+
+  <canvas class="ascii-background" aria-hidden="true"></canvas>
+
+  <div class="background-gridlines" aria-hidden="true">
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+  </div>
+
+  <div class="cursor-pill" aria-hidden="true"></div>
+
+  <div class="navbar">
+    <div class="header grid-12">
+      <a class="nav_button nav_button--home" href="/pt/">
+        <div class="button-square not-blinking"></div>
+        <div class="text-color_inverse name-long">lope.design</div>
+        <div class="text-color_inverse name-short">lope</div>
+      </a>
+      <a class="nav_button" href="/pt/#work">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./work</div>
+      </a>
+      <a class="nav_button" href="/pt/about/">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./about</div>
+      </a>
+      <div class="nav_button nav_button--lang" data-lang-switch><a class="text-color_inverse lang-link" href="/work/skrill/" data-lang="en">en</a><span class="text-color_inverse lang-sep"> / </span><a class="text-color_inverse lang-link" href="/pt/work/skrill/" data-lang="pt" aria-current="true">pt</a></div>
+    </div>
+  </div>
+
+  <div id="app" data-route="work">
+    <article class="case-study" data-slug="skrill">
+      <nav class="cs-rail" aria-label="case study sections">
+        <a class="cs-rail_back" href="/pt/#work">← voltar</a>
+        <a href="#overview-md">overview</a>
+        <a href="#why-md">why</a>
+        <a href="#how-it-works">how-it-works</a>
+        <a href="#what-changed-md">what-changed</a>
+        <a href="#outcome-md">outcome</a>
+        <a href="#project-info-md">project-info</a>
+      </nav>
+      <div class="cs-main">
+        <header class="cs-head">
+          <nav class="cs-breadcrumb" aria-label="breadcrumb">
+            <a href="/pt/#work">~/work</a>/<span>skrill</span>
+          </nav>
+          <p class="cs-eyebrow">projeto pessoal · design de produto e desenvolvimento</p>
+          <h1 class="cs-title">skrill</h1>
+          <p class="cs-headline">Um jogo semanal que faz um grupo de amigos realmente fazer o trabalho criativo que ninguém está pedindo.</p>        </header>
+
+        <figure class="cs-cover">
+          <div class="cs-cover_frame" data-cover-slot="skrill">
+          <video class="cs-cover_img" style="object-fit: cover"
+            muted loop playsinline preload="auto" aria-label="Peça de movimento em loop: a janela da tela de título do Skrill se fecha, o app mostra uma meta declarada e uma revelação do Skrill Time, e então dissolve de volta ao início">
+            <source src="/assets/skrill/skrill-cover.webm" type="video/webm">
+          </video>
+        </div>
+          <figcaption class="caption-code">skrill-cover.webm</figcaption>
+        </figure>
+
+        <div class="cs-rest">
+      <section class="cs-section" id="overview-md">
+        <h2 class="cs-section_file">overview.md</h2>
+        <div class="cs-section_body">
+<p class="statement">Ninguém pede para você praticar, então você não pratica.</p>
+<div class="prose"><p>Skrill é um jogo semanal para quem quer fazer coisas pelas quais não é pago. Em cada temporada você declara o que vai fazer e o quão difícil é. Você entrega uma prova. Tudo fica borrado até uma ligação curta em que o grupo revela junto e distribui pontos entre si.</p>
+<p>Eu desenhei as regras, a economia de pontos, a interface e o mascote, e construí toda a stack sozinho. Está rodando desde junho de 2026 com as cinco pessoas para quem foi criado.</p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="why-md">
+        <h2 class="cs-section_file">why.md</h2>
+        <div class="cs-section_body">
+<div class="prose"><p>Eu faço jogos com um amigo artista, e o trabalho que nos mantém afiados não tem prazo: desenhar por diversão, uma faixa nova, uma ferramenta que ninguém pediu. Ele perde sempre para o trabalho que tem um cliente.</p>
+<p>Já nos encontrávamos toda semana para mostrar o que tínhamos feito, mas uma meta que só existe na sua cabeça é fácil de abandonar, principalmente sem uma data marcada. Eu precisava de algo com um ciclo curto, outras pessoas envolvidas e um motivo para aparecer em um dia específico.</p>
+<p>Quadros no Notion e listas no ClickUp parecem trabalho, o oposto do que eu queria. Então o briefing virou um sistema com prazo, uma pitada de rivalidade e um motivo para aparecer, construído para parecer um jogo.</p></div>
+        </div>
+      </section>
+      <section class="cs-section" id="how-it-works">
+        <h2 class="cs-section_file">how-it-works/</h2>
+        <div class="cs-section_body">
+<nav class="takeaway-index" aria-label="takeaways">
+  <p class="takeaway-index_label">o que eu decidi, e por quê</p>
+  <ol class="takeaway-index_list">
+    <li><a href="#d-01-declare-in-public-deliver-in-secret"><span class="takeaway-index_num">/01</span> todo mundo vê que você entregou, ninguém vê o quê</a></li>
+    <li><a href="#d-02-difficulty-is-the-price"><span class="takeaway-index_num">/02</span> você define a dificuldade antes de saber como a semana vai ser</a></li>
+    <li><a href="#d-03-points-from-your-friends"><span class="takeaway-index_num">/03</span> parte da sua pontuação é dada a você pelo grupo</a></li>
+    <li><a href="#d-04-deliberately-unserious"><span class="takeaway-index_num">/04</span> parece bobo de propósito</a></li>
+  </ol>
+</nav>
+<div class="prose"><p>Quatro decisões carregam a maior parte do design.</p></div>
+<article class="decision" id="d-01-declare-in-public-deliver-in-secret">
+  <header class="decision_head">
+    <span class="decision_file">01-declare-in-public-deliver-in-secret.md</span>
+    <h3 class="decision_title">todo mundo vê que você entregou, ninguém vê o quê</h3>
+    <p class="decision_subtitle">A revelação é o motivo de a reunião existir.</p>
+  </header>
+  <div class="decision_body prose"><p>Você declara uma meta com o quê e até quando, que é o empurrão mais barato que existe. Quando você entrega, a prova aparece no feed de todo mundo, mas borrada até a ligação semanal. Você vê que seus amigos estão trabalhando. Você não vê o que eles fizeram.</p>
+<p>Isso dá ao grupo pressão sem spoilers, e dá à ligação semanal algo para abrir. A ligação, chamada de Skrill Time, dura no máximo 15 minutos: todo mundo marca como pronto, o borrão cai, vocês reagem e os pontos são distribuídos.</p></div>
+  <figure class="before-after before-after--stack media-block">
+  <div class="before-after_side">
+      <span class="before-after_label">antes da revelação</span>
+      <div class="frame">
+      <img class="media natural" src="/assets/skrill/feed-blurred.webp" alt="O feed de entregas com todas as imagens borradas" loading="lazy" decoding="async">
+    </div>
+    </div>
+  <div class="before-after_side">
+      <span class="before-after_label">depois da revelação</span>
+      <div class="frame">
+      <img class="media natural" src="/assets/skrill/feed-revealed.webp" alt="o mesmo feed depois da revelação" loading="lazy" decoding="async">
+    </div>
+    </div>
+</figure>
+  
+</article>
+<article class="decision" id="d-02-difficulty-is-the-price">
+  <header class="decision_head">
+    <span class="decision_file">02-difficulty-is-the-price.md</span>
+    <h3 class="decision_title">você define a dificuldade antes de saber como a semana vai ser</h3>
+    <p class="decision_subtitle">Metas simples pagam 2 pontos, complexas pagam 5.</p>
+  </header>
+  <div class="decision_body prose"><p>Escolher a dificuldade faz parte de declarar a meta, na mesma tela. Isso é de propósito. Se você pudesse escolher depois, todo mundo chamaria tudo de difícil. Definir isso antes faz você precificar a própria ambição, e faz uma meta complexa que falhou custar alguma coisa.</p>
+<p>Um nível extra não paga pontos de base nenhum e só pontua através do grupo, para coisas que você faz só porque quer. Em algumas temporadas aparece uma bounty, um prompt para algo a fazer, como uma peça de ficção científica, um sticker para o grupo ou uma pintura clássica no seu próprio estilo. A chance de aparecer uma sobe a cada temporada em que ela não aparece, então ela continua sendo uma surpresa. Se um amigo pega a bounty, você quer pegar também, porque não quer que ele fique com todos os pontos.</p></div>
+  <div class="decision_media"><figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Gravação de tela: declarando uma meta, escolhendo simples ou complexa, e os pontos mostrados em cada uma">
+        <source src="/assets/skrill/choose-difficulty-simple-2-complex-5.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">choose-difficulty-simple-2-complex-5.webm</figcaption>
+</figure>
+<figure class="media-block media-block--full">
+  <div class="frame">
+      <img class="media square" src="/assets/skrill/new-goal-extra-simple-or-complex.webp" alt="O modal de nova meta, com a dificuldade definida como extra, simples ou complexa, mais um título e uma descrição opcional" loading="lazy" decoding="async">
+    </div>
+  <figcaption class="caption-code">new-goal-extra-simple-or-complex.webp</figcaption>
+</figure></div>
+  
+</article>
+<article class="decision" id="d-03-points-from-your-friends">
+  <header class="decision_head">
+    <span class="decision_file">03-points-from-your-friends.md</span>
+    <h3 class="decision_title">parte da sua pontuação é dada a você pelo grupo</h3>
+    <p class="decision_subtitle">Cada pessoa recebe um pequeno pool de pontos bônus para distribuir.</p>
+  </header>
+  <div class="decision_body prose"><p>Os pontos base são fixos, então a parte interessante é o bônus. Cada pessoa recebe um pool igual à metade das metas entregues naquela temporada, arredondado para baixo, e precisa gastar tudo nas entregas, de forma anônima. Você pode pontuar a si mesmo, mas está gastando do mesmo pool.</p>
+<p>O pool segue as entregas, não o número de pessoas, então uma temporada cheia tem mais bônus para distribuir do que uma mais fraca. Isso impede que o placar seja só uma contagem de tarefas. Ele recompensa o trabalho que o grupo realmente achou bom, e mantém a revelação viva, porque ninguém sabe quem ganhou o quê até o final.</p></div>
+  <div class="decision_media"><figure class="media-block media-block--full">
+  <div class="frame">
+      <img class="media natural" src="/assets/skrill/bounty-card-make-art-about-fishing.webp" alt="A lista de metas de uma temporada mostrando um card de bounty, &quot;fazer arte sobre pesca&quot;, com um botão de entregar bounty" loading="lazy" decoding="async">
+    </div>
+  <figcaption class="caption-code">bounty-card-make-art-about-fishing.webp</figcaption>
+</figure>
+<figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Gravação de tela: um pool de bônus sendo dividido entre quatro entregas, com o contador do pool caindo até zero">
+        <source src="/assets/skrill/spend-the-whole-bonus-pool-to-submit.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">spend-the-whole-bonus-pool-to-submit.webm</figcaption>
+</figure></div>
+  
+</article>
+<article class="decision" id="d-04-deliberately-unserious">
+  <header class="decision_head">
+    <span class="decision_file">04-deliberately-unserious.md</span>
+    <h3 class="decision_title">parece bobo de propósito</h3>
+    <p class="decision_subtitle">As fontes em pixel e o mascote estão cumprindo uma função.</p>
+  </header>
+  <div class="decision_body prose"><p>As fontes em pixel, as janelas de Windows 95 e o mascote são o que impede isso de parecer trabalho. O mascote caminha na parte de baixo de cada página e pode ser jogado por aí com um clique.</p>
+<p>Você não pode subir uma foto de perfil. Você precisa desenhar uma, numa pequena tela de pixels em preto e branco. A ferramenta é limitada e um pouco tosca, então todo avatar do grupo parece feito à mão.</p></div>
+  <figure class="media-block media-block--full">
+  <div class="frame frame--video">
+      <video class="media wide" playsinline muted loop preload="metadata" aria-label="Gravação de movimento: o app passando pelas cinco cores de destaque, depois a janela de editar perfil passando por avatares em pixel art na tela de desenho">
+        <source src="/assets/skrill/five-accent-colors-then-draw-your-avatar.webm" type="video/webm">
+      </video>
+    </div>
+  <figcaption class="caption-code">five-accent-colors-then-draw-your-avatar.webm</figcaption>
+</figure>
+  
+</article>
+        </div>
+      </section>
+      <section class="cs-section" id="what-changed-md">
+        <h2 class="cs-section_file">what-changed.md</h2>
+        <div class="cs-section_body">
+<nav class="takeaway-index" aria-label="takeaways">
+  <p class="takeaway-index_label">o que eu decidi, e por quê</p>
+  <ol class="takeaway-index_list">
+    <li><a href="#d-05-trying-counts-for-something"><span class="takeaway-index_num">/05</span> uma meta que você tentou e não bateu ainda pode pontuar</a></li>
+    <li><a href="#d-06-a-delivery-can-be-cancelled"><span class="takeaway-index_num">/06</span> uma entrega só conta se ninguém a chamar de falsa</a></li>
+    <li><a href="#d-07-bounties-pay-less-when-shared"><span class="takeaway-index_num">/07</span> uma bounty vale mais quanto menos gente a pegar</a></li>
+  </ol>
+</nav>
+<div class="prose"><p>Mais três regras foram adicionadas nos primeiros dez dias de junho de 2026.</p></div>
+<article class="decision" id="d-05-trying-counts-for-something">
+  <header class="decision_head">
+    <span class="decision_file">05-trying-counts-for-something.md</span>
+    <h3 class="decision_title">uma meta que você tentou e não bateu ainda pode pontuar</h3>
+    <p class="decision_subtitle">Um ponto, e só se o grupo disser que sim.</p>
+  </header>
+  <div class="decision_body prose"><p>Uma meta pode terminar como tentada, não só como entregue ou falhada. Durante o Skrill Time o grupo vota a favor ou contra cada tentativa, e uma tentativa com mais votos a favor do que contra ganha 1 ponto. É pouco perto dos 2 ou 5 que uma entrega paga, mas separa a semana em que você tentou e não bateu da semana em que você não fez nada.</p></div>
+  
+  
+</article>
+<article class="decision" id="d-06-a-delivery-can-be-cancelled">
+  <header class="decision_head">
+    <span class="decision_file">06-a-delivery-can-be-cancelled.md</span>
+    <h3 class="decision_title">uma entrega só conta se ninguém a chamar de falsa</h3>
+    <p class="decision_subtitle">É preciso todo o resto do grupo, não só uma pessoa.</p>
+  </header>
+  <div class="decision_body prose"><p>Qualquer jogador pode denunciar a entrega de outra pessoa enquanto os bônus estão sendo distribuídos. Se todos os outros participantes denunciarem, a entrega é cancelada e a meta é marcada como falhada. Uma única denúncia não muda nada, então uma pessoa não consegue tirar pontos de outra.</p></div>
+  
+  
+</article>
+<article class="decision" id="d-07-bounties-pay-less-when-shared">
+  <header class="decision_head">
+    <span class="decision_file">07-bounties-pay-less-when-shared.md</span>
+    <h3 class="decision_title">uma bounty vale mais quanto menos gente a pegar</h3>
+    <p class="decision_subtitle">7 pontos sozinho, 4 com duas pessoas, 3 com três, 2 depois disso.</p>
+  </header>
+  <div class="decision_body prose"><p>Uma bounty paga de acordo com quantos jogadores a entregam. Ir sozinho é recompensado, e uma bounty que todo mundo pega vale pouco para cada um, em vez de muito. É a regra por trás de não querer que um amigo fique com todos os pontos.</p></div>
+  
+  
+</article>
+        </div>
+      </section>
+      <section class="cs-section" id="outcome-md">
+        <h2 class="cs-section_file">outcome.md</h2>
+        <div class="cs-section_body">
+<ul class="outcomes">
+<li class="outcome">
+      <span class="outcome_value">13</span>
+      <span class="outcome_label">temporadas reveladas desde junho de 2026, com as mesmas cinco pessoas</span>
+    </li>
+<li class="outcome">
+      <span class="outcome_value">119</span>
+      <span class="outcome_label">metas declaradas ao longo delas</span>
+    </li>
+<li class="outcome">
+      <span class="outcome_value">85%</span>
+      <span class="outcome_label">entregues, 101 de 119</span>
+    </li>
+</ul>
+<div class="prose"><p>O sistema tem se sustentado para as pessoas para quem foi criado. A ligação semanal era só uma conversa sem nada para contar. Agora é uma revelação do que cada pessoa fez, com pontos em cima. Eu faço mais coisas do que fazia antes de ele existir.</p></div>
+<figure class="quote">
+  
+  <blockquote class="quote_text">Eu sinto aquele medo de segunda-feira, tipo, deus, eu não bati minha meta, então eu simplesmente vou fazer.</blockquote>
+  <figcaption class="quote_by"><span>um amigo do grupo</span> <span></span></figcaption>
+</figure>
+        </div>
+      </section>
+      <section class="cs-section" id="project-info-md">
+        <h2 class="cs-section_file">project-info.md</h2>
+        <div class="cs-section_body">
+<dl class="meta cs-meta">
+          <div class="meta_row">
+            <dt>função</dt>
+            <dd>design de produto, ui, desenvolvimento full stack</dd>
+          </div>
+          <div class="meta_row">
+            <dt>cronograma</dt>
+            <dd>junho de 2026 até agora</dd>
+          </div>
+          <div class="meta_row">
+            <dt>equipe</dt>
+            <dd>sozinho</dd>
+          </div>
+          <div class="meta_row">
+            <dt>construído com</dt>
+            <dd>html, css, javascript, supabase, figma, claude code</dd>
+          </div>
+          <div class="meta_row">
+            <dt>status</dt>
+            <dd>em andamento</dd>
+          </div>
+          <div class="meta_row">
+            <dt>jogar</dt>
+            <dd><a href="/skrill/demo">lope.design/skrill</a></dd>
+          </div>
+          </dl>
+        </div>
+      </section>
+
+      <nav class="cs-nav">
+        <span class="cs-nav_link is--disabled">← projeto anterior</span>
+        <a class="cs-nav_link cs-nav_next" href="/pt/work/oracle/" data-slug="oracle">próximo projeto → <span class="cs-nav_name">oracle</span><div class="cs-nav_frame" style="aspect-ratio: 1 / 1"><img class="cs-nav_media" data-slug="oracle" src="/assets/oracle/oracle-nav.webp" alt="" style="object-fit: cover" loading="lazy" decoding="async"></div></a>
+      </nav>
+        </div>
+      </div>
+    </article>
+  </div>
+
+  <div class="footer">
+    <div class="footer_grid grid-12">
+      <div class="credits-container"><a class="text-color_inverse" href="mailto:work@lope.design">work@lope.design</a></div>
+      <div class="copyright-container"><div class="text-color_inverse">2026</div></div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/site.js"></script>
+
+</body>
+
+</html>

@@ -11,6 +11,85 @@ const root = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 const todos = [];
 const warnings = [];
 
+/* ── locales ──────────────────────────────────────────────────────────── */
+
+// the "file system" (section filenames, ./work, ./about, ~/work, ~/about,
+// $ cat now.md) stays english in both locales, the same way code identifiers
+// stay english in a translated app. only real prose and plain-word labels
+// are translated here.
+const LOCALES = ['en', 'pt'];
+const SITE_ORIGIN = 'https://lope.design';
+
+const STRINGS = {
+  en: {
+    htmlLang: 'en',
+    skipLink: 'skip to content',
+    navWork: './work',
+    navAbout: './about',
+    heroTitle: 'digital designer who builds. web, product and ai interfaces.',
+    heroNowCmd: '$ cat now.md',
+    heroNowOut: 'designing digital products at ecoa × petrobras · open to design roles',
+    sayHello: 'say hello',
+    scrollTag: '↓ scroll',
+    workTag: '~/selected work',
+    aboutTag: '~/about',
+    breadcrumbWork: '~/work',
+    railBack: '← back',
+    prevProject: '← prev project',
+    nextProject: 'next project →',
+    whatIDecided: 'what i decided, and why',
+    before: 'before',
+    after: 'after',
+    metaLabels: { role: 'role', timeline: 'timeline', team: 'team', built_with: 'built with', status: 'status', live: 'live' },
+    homeTitle: 'lope / digital designer who builds',
+    homeDescription:
+      'Lope (Pedro Lopes) is a digital designer and developer in Rio de Janeiro working on web, product and ai interfaces.',
+    aboutTitle: 'about / lope.design',
+    aboutDescription:
+      'Pedro Lopes, a digital designer and developer in Rio de Janeiro working on web, product and ai interfaces.',
+  },
+  pt: {
+    htmlLang: 'pt-BR',
+    skipLink: 'ir direto para o conteúdo',
+    navWork: './work',
+    navAbout: './about',
+    heroTitle: 'designer digital que também programa. web, produto e interfaces de ia.',
+    heroNowCmd: '$ cat now.md',
+    heroNowOut: 'desenhando produtos digitais na ecoa × petrobras · aberto a vagas de design',
+    sayHello: 'diga olá',
+    scrollTag: '↓ role',
+    workTag: '~/trabalhos selecionados',
+    aboutTag: '~/about',
+    breadcrumbWork: '~/work',
+    railBack: '← voltar',
+    prevProject: '← projeto anterior',
+    nextProject: 'próximo projeto →',
+    whatIDecided: 'o que eu decidi, e por quê',
+    before: 'antes',
+    after: 'depois',
+    metaLabels: { role: 'função', timeline: 'cronograma', team: 'equipe', built_with: 'construído com', status: 'status', live: 'live' },
+    homeTitle: 'lope / designer digital que também programa',
+    homeDescription:
+      'Lope (Pedro Lopes) é designer e desenvolvedor no Rio de Janeiro, trabalhando com web, produto e interfaces de ia.',
+    aboutTitle: 'sobre / lope.design',
+    aboutDescription:
+      'Pedro Lopes, designer e desenvolvedor no Rio de Janeiro, trabalhando com web, produto e interfaces de ia.',
+  },
+};
+
+// / <-> /pt/, /about/ <-> /pt/about/, /work/x/ <-> /pt/work/x/. slugs and
+// section names are identical in both locales, so the whole site is just
+// the english path with an optional /pt prefix.
+const withLocalePrefix = (locale, path) => (locale === 'pt' ? `/pt${path === '/' ? '/' : path}` : path);
+const langLinksFor = (path) => ({ en: path, pt: withLocalePrefix('pt', path) });
+
+// the build renders one locale's whole page tree at a time, synchronously,
+// so a module-level "which locale is rendering right now" is simpler than
+// threading a locale argument through every block renderer and media
+// helper several calls deep. same pattern as the `todos`/`warnings` arrays
+// above.
+let CURRENT = STRINGS.en;
+
 /* ── text helpers ─────────────────────────────────────────────────────── */
 
 // a windows checkout turns the content files into crlf, and the parsers
@@ -378,7 +457,7 @@ function mediaItem(line, where) {
   if (type === 'compare') {
     const [a = '', b = ''] = two(src);
     const [altA = '', altB = ''] = two(alt);
-    const [labelA = 'before', labelB = 'after'] = two(cap);
+    const [labelA = CURRENT.before, labelB = CURRENT.after] = two(cap);
     const side = (label, file, text) => `<div class="before-after_side">
       <span class="before-after_label">${escapeHtml(label)}</span>
       ${mediaFrame({ src: file, alt: text || `${label} image`, shape: 'natural', where })}
@@ -463,8 +542,8 @@ const blockRenderers = {
       ${caption(src ? basename(src) : '', where)}
     </div>`;
     return `<figure class="before-after">
-  ${side('before', f.before, f.before_alt, f.before_caption)}
-  ${side('after', f.after, f.after_alt, f.after_caption)}
+  ${side(CURRENT.before, f.before, f.before_alt, f.before_caption)}
+  ${side(CURRENT.after, f.after, f.after_alt, f.after_caption)}
 </figure>`;
   },
 
@@ -657,26 +736,44 @@ const navItem = (href, label, extra = '') =>
         <div class="text-color_inverse">${label}</div>
       </a>`;
 
-function nav() {
+// the current language renders as inert text (you cannot click where you
+// already are); the other one is a real link to its counterpart page,
+// recomputed by site.js after every client-side route swap since the
+// navbar lives outside #app and the router never touches it.
+function langSwitch(locale, langLinks) {
+  const links = LOCALES.map((l) => {
+    const current = l === locale;
+    return `<a class="text-color_inverse lang-link" href="${langLinks[l]}" data-lang="${l}"${
+      current ? ' aria-current="true"' : ''
+    }>${l}</a>`;
+  }).join('<span class="text-color_inverse lang-sep"> / </span>');
+  return `<div class="nav_button nav_button--lang" data-lang-switch>${links}</div>`;
+}
+
+function nav(locale, langLinks) {
+  const s = STRINGS[locale];
+  const prefix = locale === 'pt' ? '/pt' : '';
   return `<div class="navbar">
     <div class="header grid-12">
-      <a class="nav_button nav_button--home" href="/">
+      <a class="nav_button nav_button--home" href="${prefix}/">
         <div class="button-square not-blinking"></div>
         <div class="text-color_inverse name-long">lope.design</div>
         <div class="text-color_inverse name-short">lope</div>
       </a>
-      ${navItem('/#work', './work')}
-      ${navItem('/about/', './about')}
-      <div class="nav_button nav_button--lang">
-        <div class="text-color_inverse">en / pt</div>
-      </div>
+      ${navItem(`${prefix}/#work`, s.navWork)}
+      ${navItem(`${prefix}/about/`, s.navAbout)}
+      ${langSwitch(locale, langLinks)}
     </div>
   </div>`;
 }
 
-function shell({ title, description, route, body, cls = '' }) {
+function shell({ title, description, route, body, cls = '', locale = 'en', langLinks }) {
+  const s = STRINGS[locale];
+  const alternates = LOCALES.map(
+    (l) => `  <link rel="alternate" hreflang="${l === 'pt' ? 'pt-BR' : 'en'}" href="${SITE_ORIGIN}${langLinks[l]}">`
+  ).join('\n');
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="${s.htmlLang}">
 
 <head>
   <meta charset="UTF-8">
@@ -687,11 +784,12 @@ function shell({ title, description, route, body, cls = '' }) {
   <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="stylesheet" href="/styles.css">
+${alternates}
 </head>
 
 <body${cls ? ` class="${cls}"` : ''}>
 
-  <a class="skip-link" href="#app">skip to content</a>
+  <a class="skip-link" href="#app">${s.skipLink}</a>
 
   <div class="page-transition${route === 'home' ? ' is--cover' : ''}" aria-hidden="true">
     <div class="transition_column"><div class="transition_column-background"></div></div>
@@ -713,7 +811,7 @@ function shell({ title, description, route, body, cls = '' }) {
 
   <div class="cursor-pill" aria-hidden="true"></div>
 
-  ${nav()}
+  ${nav(locale, langLinks)}
 
   <div id="app" data-route="${route}">
 ${body}
@@ -736,7 +834,10 @@ ${body}
 
 /* ── pages ────────────────────────────────────────────────────────────── */
 
-function renderIndex(projects) {
+function renderIndex(projects, locale) {
+  CURRENT = STRINGS[locale];
+  const s = STRINGS[locale];
+  const prefix = locale === 'pt' ? '/pt' : '';
   // one grid on the four-column spine the gridlines draw, every project a
   // tile. each tile keeps the shape of its own cover, which is what staggers
   // the columns, and each one is the element the router morphs into the case
@@ -746,7 +847,7 @@ function renderIndex(projects) {
       const { slug, data } = p;
       const meta = [data.type, data.status].filter(Boolean).join(' · ');
 
-      return `<a class="layout-grid_item covers_item" href="/work/${slug}/" data-slug="${slug}" data-index="${i}"${data.span ? ` data-span="${data.span}"` : ""}>
+      return `<a class="layout-grid_item covers_item" href="${prefix}/work/${slug}/" data-slug="${slug}" data-index="${i}"${data.span ? ` data-span="${data.span}"` : ""}>
           <div class="covers_frame" style="aspect-ratio: ${coverRatio(data)}">
             ${coverMedia(p, i)}
           </div>
@@ -760,21 +861,21 @@ function renderIndex(projects) {
     .join('\n        ');
 
   return `    <div class="hero">
-      <h1 class="title-h1">digital designer who builds. web, product and ai interfaces.</h1>
+      <h1 class="title-h1">${s.heroTitle}</h1>
       <div class="hero-now">
-        <div class="hero-now_cmd">$ cat now.md</div>
-        <div class="hero-now_out">designing digital products at ecoa × petrobras · open to design roles</div>
+        <div class="hero-now_cmd">${s.heroNowCmd}</div>
+        <div class="hero-now_out">${s.heroNowOut}</div>
       </div>
       <a class="hero-cta" href="mailto:work@lope.design">
         <span class="hero-cta_square" aria-hidden="true"></span>
-        <span>say hello</span>
+        <span>${s.sayHello}</span>
         <span class="hero-cta_mail">work@lope.design</span>
       </a>
-      <div class="scroll-down-tag">↓ scroll<span class="cursor">_</span></div>
+      <div class="scroll-down-tag">${s.scrollTag}<span class="cursor">_</span></div>
     </div>
 
     <main class="work" id="work">
-      <div class="work-tag">~/selected work</div>
+      <div class="work-tag">${s.workTag}</div>
       <div class="covers layout-grid_list">
         ${covers}
       </div>
@@ -782,9 +883,12 @@ function renderIndex(projects) {
 `;
 }
 
-function renderAbout() {
-  const src = readSource(join(root, 'content/about.md'));
-  const { body } = parseFrontmatter(src, 'content/about.md');
+function renderAbout(locale) {
+  CURRENT = STRINGS[locale];
+  const s = STRINGS[locale];
+  const file = locale === 'pt' ? 'content/pt/about.md' : 'content/about.md';
+  const src = readSource(join(root, file));
+  const { body } = parseFrontmatter(src, file);
   const blocks = splitSections(body)
     .map((section) => {
       const rendered = renderBlocks(section.text, { slug: 'about' });
@@ -796,12 +900,13 @@ function renderAbout() {
     .join('\n');
 
   return shell({
-    title: 'about / lope.design',
-    description:
-      'Pedro Lopes, a digital designer and developer in Rio de Janeiro working on web, product and ai interfaces.',
+    title: s.aboutTitle,
+    description: s.aboutDescription,
     route: 'about',
+    locale,
+    langLinks: langLinksFor('/about/'),
     body: `    <section class="about" id="about">
-      <div class="about-tag">~/about</div>
+      <div class="about-tag">${s.aboutTag}</div>
 ${blocks}
     </section>`,
   });
@@ -817,21 +922,24 @@ function takeawayIndex(items, slug) {
     })
     .join('\n    ');
   return `<nav class="takeaway-index" aria-label="takeaways">
-  <p class="takeaway-index_label">what i decided, and why</p>
+  <p class="takeaway-index_label">${CURRENT.whatIDecided}</p>
   <ol class="takeaway-index_list">
     ${rows}
   </ol>
 </nav>`;
 }
 
-function renderCaseStudy(project, prev, next) {
+function renderCaseStudy(project, prev, next, locale) {
+  CURRENT = STRINGS[locale];
   const { slug, data } = project;
+  const s = STRINGS[locale];
+  const prefix = locale === 'pt' ? '/pt' : '';
   const metaRows = [
-    ['role', data.role],
-    ['timeline', data.timeline],
-    ['team', data.team],
-    ['built with', data.built_with],
-    ['status', data.status],
+    [s.metaLabels.role, data.role],
+    [s.metaLabels.timeline, data.timeline],
+    [s.metaLabels.team, data.team],
+    [s.metaLabels.built_with, data.built_with],
+    [s.metaLabels.status, data.status],
   ]
     .filter(([, v]) => v)
     .map(
@@ -844,7 +952,7 @@ function renderCaseStudy(project, prev, next) {
 
   const live = data.live
     ? `<div class="meta_row">
-            <dt>${escapeHtml(data.live_label || 'live')}</dt>
+            <dt>${escapeHtml(data.live_label || s.metaLabels.live)}</dt>
             <dd>${inline(`[${data.live_text || data.live}](${data.live})`, slug)}</dd>
           </div>`
     : '';
@@ -886,9 +994,9 @@ ${s.rendered}
     .join('\n');
 
   const rail = `      <nav class="cs-rail" aria-label="case study sections">
-        <a class="cs-rail_back" href="/#work">← back</a>
+        <a class="cs-rail_back" href="${prefix}/#work">${s.railBack}</a>
         ${sectionList
-          .map((s) => `<a href="#${s.id}">${escapeHtml(s.name.replace(/\.md$|\/$/g, ''))}</a>`)
+          .map((sec) => `<a href="#${sec.id}">${escapeHtml(sec.name.replace(/\.md$|\/$/g, ''))}</a>`)
           .join('\n        ')}
       </nav>`;
 
@@ -906,7 +1014,7 @@ ${s.rendered}
   // the neighbour's cover rides along in the link, so previous and next use
   // the same cover-to-cover transition as the index
   const navLink = (target, dir) => {
-    const label = dir === 'prev' ? '← prev project' : 'next project →';
+    const label = dir === 'prev' ? s.prevProject : s.nextProject;
     if (!target) return `<span class="cs-nav_link is--disabled">${label}</span>`;
     const hasCover = target.data.cover && assetExists(target.data.cover);
     // these thumbnails never play, and most covers are clips that start on an
@@ -917,7 +1025,7 @@ ${s.rendered}
     const thumb = still || hasCover
       ? `<div class="cs-nav_frame" style="aspect-ratio: ${coverRatio(target.data)}">${still || coverMedia(target, 1, 'cs-nav_media')}</div>`
       : '';
-    return `<a class="cs-nav_link cs-nav_${dir}" href="/work/${target.slug}/" data-slug="${target.slug}">${label} <span class="cs-nav_name">${escapeHtml(target.data.title)}</span>${thumb}</a>`;
+    return `<a class="cs-nav_link cs-nav_${dir}" href="${prefix}/work/${target.slug}/" data-slug="${target.slug}">${label} <span class="cs-nav_name">${escapeHtml(target.data.title)}</span>${thumb}</a>`;
   };
 
   const footNav = `      <nav class="cs-nav">
@@ -932,7 +1040,7 @@ ${rail}
       <div class="cs-main">
         <header class="cs-head">
           <nav class="cs-breadcrumb" aria-label="breadcrumb">
-            <a href="/#work">~/work</a>/<span>${escapeHtml(slug)}</span>
+            <a href="${prefix}/#work">${s.breadcrumbWork}</a>/<span>${escapeHtml(slug)}</span>
           </nav>
           <p class="cs-eyebrow">${inline(eyebrow, slug)}</p>
           <h1 class="cs-title">${inline(data.title, slug)}</h1>
@@ -956,46 +1064,61 @@ ${footNav}
     description: data.summary || `${data.title}, a ${data.type} project by Lope (Pedro Lopes).`,
     route: 'work',
     cls: 'is--case-study',
+    locale,
+    langLinks: langLinksFor(`/work/${slug}/`),
     body,
   });
 }
 
 /* ── run ──────────────────────────────────────────────────────────────── */
 
-const projectsDir = join(root, 'content/projects');
-const projects = readdirSync(projectsDir)
-  .filter((f) => f.endsWith('.md'))
-  .map((f) => {
-    const where = `content/projects/${f}`;
-    const { data, body } = parseFrontmatter(readSource(join(projectsDir, f)), where);
-    if (!data.slug) throw new Error(`${where}: missing slug`);
-    if (!data.order) throw new Error(`${where}: missing order`);
-    return { slug: data.slug, order: Number(data.order), data, body, where };
-  })
-  .sort((a, b) => a.order - b.order);
+// the pt tree mirrors content/projects/ at content/pt/projects/, same slugs
+// and order, just translated prose, so one loader serves both locales.
+function loadProjects(dir) {
+  return readdirSync(dir)
+    .filter((f) => f.endsWith('.md'))
+    .map((f) => {
+      const where = `${dir.slice(root.length + 1)}/${f}`;
+      const { data, body } = parseFrontmatter(readSource(join(dir, f)), where);
+      if (!data.slug) throw new Error(`${where}: missing slug`);
+      if (!data.order) throw new Error(`${where}: missing order`);
+      return { slug: data.slug, order: Number(data.order), data, body, where };
+    })
+    .sort((a, b) => a.order - b.order);
+}
 
-writeFileSync(
-  join(root, 'index.html'),
-  shell({
-    title: 'lope / digital designer who builds',
-    description:
-      'Lope (Pedro Lopes) is a digital designer and developer in Rio de Janeiro working on web, product and ai interfaces.',
-    route: 'home',
-    body: renderIndex(projects),
-  })
-);
-
-mkdirSync(join(root, 'about'), { recursive: true });
-writeFileSync(join(root, 'about', 'index.html'), renderAbout());
-
-projects.forEach((project, i) => {
-  const dir = join(root, 'work', project.slug);
-  mkdirSync(dir, { recursive: true });
+function buildLocale(locale, outDir, projects) {
+  mkdirSync(outDir, { recursive: true });
   writeFileSync(
-    join(dir, 'index.html'),
-    renderCaseStudy(project, projects[i - 1], projects[i + 1])
+    join(outDir, 'index.html'),
+    shell({
+      title: STRINGS[locale].homeTitle,
+      description: STRINGS[locale].homeDescription,
+      route: 'home',
+      locale,
+      langLinks: langLinksFor('/'),
+      body: renderIndex(projects, locale),
+    })
   );
-});
+
+  mkdirSync(join(outDir, 'about'), { recursive: true });
+  writeFileSync(join(outDir, 'about', 'index.html'), renderAbout(locale));
+
+  projects.forEach((project, i) => {
+    const dir = join(outDir, 'work', project.slug);
+    mkdirSync(dir, { recursive: true });
+    writeFileSync(
+      join(dir, 'index.html'),
+      renderCaseStudy(project, projects[i - 1], projects[i + 1], locale)
+    );
+  });
+}
+
+const projects = loadProjects(join(root, 'content/projects'));
+const projectsPt = loadProjects(join(root, 'content/pt/projects'));
+
+buildLocale('en', root, projects);
+buildLocale('pt', join(root, 'pt'), projectsPt);
 
 /* ── report ───────────────────────────────────────────────────────────── */
 

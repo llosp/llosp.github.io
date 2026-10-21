@@ -37,7 +37,7 @@ subtitle: Price was the barrier, so Oracle uses what people already own.
 body:
   Players found tabletop products good but too expensive, so I made nothing to buy. Oracle pairs with the lights, air conditioner, blinds and TV already in the home, grouped by room.
 
-  Safety and comfort limits live in the same setup, so the ceiling on flashing and temperature is set once, in setup.
+  The ceiling on flashing and temperature is set once, during that same setup, so nobody has to think about it mid-session.
 media:
   - full | assets/oracle/pairing-devices.webm | Motion recording: Oracle scanning the home and finding devices one by one, choosing which to add and which room they go in, then the setup code and integrations paths | // nothing to buy, just pair what is already there | tall
 :::
@@ -84,7 +84,7 @@ We ran 27 interviews at game stores, Niterói Expo Geek 2025 and CINE RPG, a sch
 ::: outcomes
 items:
   - 980+ | responses in the Censo RPG Brasil 2023
-  - 12M | Brazilian homes with smart devices, per the IBGE. Context, not our audience
+  - 12M | Brazilian homes with smart devices, per the IBGE. Context for the market size, and wider than our audience
 :::
 
 The interviews gave us three findings.
@@ -125,7 +125,7 @@ name: Lucas Marcel Toledo
 role: game master and design student
 :::
 
-The limits: one game master, one short session, and people, not the app, controlled the devices. This shows how one person used it, not a usability study.
+The limits: one game master, one short session, and we changed the devices by hand instead of through the app. That tells us how one person used it, and it is too small to count as a usability study.
 
 ## project-info.md
 

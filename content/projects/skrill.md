@@ -39,7 +39,7 @@ I make games with an artist friend, and the work that keeps us sharp has no dead
 
 We already met every week to show what we had made, but a goal that only lives in your head is easy to drop, especially with no date on it. I needed something with a short loop, other people in it, and a reason to show up on a specific day.
 
-Notion boards and ClickUp lists feel like work, the opposite of what I wanted. So the brief became a system with a deadline, a bit of rivalry and a reason to show up, built to feel like play, not a spreadsheet.
+Notion boards and ClickUp lists feel like work, the opposite of what I wanted. So the brief became a system with a deadline, a bit of rivalry and a reason to show up, built to feel like a game.
 
 ## how-it-works/
 
@@ -49,9 +49,9 @@ Four decisions carry most of the design.
 title: everyone sees you delivered, nobody sees what
 subtitle: The reveal is the reason the meeting exists.
 body:
-  You declare a goal with what and by when, which is the cheapest nudge there is. When you deliver, the proof appears in everyone's feed, but blurred until the weekly call. You can see that your friends are working. You cannot see what they made.
+  You declare a goal with what and by when, which is about the cheapest nudge available. When you deliver, the proof appears in everyone's feed, but blurred until the weekly call. You can see that your friends are working. You cannot see what they made.
 
-  That gives the group pressure without spoilers, and it turns a status check into a ritual. The call, called Skrill Time, is 15 minutes at most: everyone marks ready, the blur drops, you react and the points are handed out.
+  That gives the group pressure without spoilers, and it gives the weekly call something to open. The call, called Skrill Time, is 15 minutes at most: everyone marks ready, the blur drops, you react and the points are handed out.
 media:
   - compare | assets/skrill/feed-blurred.webp ; assets/skrill/feed-revealed.webp | The delivery feed with every image blurred ; the same feed after the reveal | before the reveal ; after the reveal
 :::
@@ -82,18 +82,18 @@ media:
 
 ::: decision 04-deliberately-unserious
 title: it looks silly on purpose
-subtitle: The friendliness is the product.
+subtitle: The pixel fonts and the mascot are doing a job.
 body:
-  The pixel fonts, the Windows 95 windows and the mascot are not decoration. They are what keeps this from feeling like work. The mascot walks along the bottom of every page and can be thrown around with a click.
+  The pixel fonts, the Windows 95 windows and the mascot are what keep this from feeling like work. The mascot walks along the bottom of every page and can be thrown around with a click.
 
-  You cannot upload a profile photo. You have to draw one, in a small black and white pixel canvas. It is a limited, slightly clumsy tool, and that is the point.
+  You cannot upload a profile photo. You have to draw one, in a small black and white pixel canvas. The tool is limited and a bit clumsy, so every avatar in the group looks handmade.
 media:
   - full | assets/skrill/five-accent-colors-then-draw-your-avatar.webm | Motion recording: the app switching through its five accent colors, then the edit profile window flipping through pixel art avatars on the drawing canvas
 :::
 
 ## what-changed.md
 
-The four decisions above carry most of the design. Three more rules were added to it in the first ten days of June 2026.
+Three more rules were added in the first ten days of June 2026.
 
 ::: decision 05-trying-counts-for-something
 title: a goal you tried and missed can still score

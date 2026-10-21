@@ -55,9 +55,9 @@ subtitle: Light, smoke and a guitar you can almost pick up.
 body:
   The guitar lies across the frame and bleeds off the left edge, and the wordmark sits low and right so the neck runs through the gap in the type. The scene is one fixed-ratio stage, so the guitar and the type scale together.
 
-  It is lit, not placed on black: a pink light behind the body, real smoke footage drifting across, and a lime paint splash behind the guitar that quietly previews the glow to come. Only the kanji 発光体, "a luminous body", gets a faint green glow.
+  The scene is lit rather than dropped onto flat black: a pink light behind the body, real smoke footage drifting across, and a lime paint splash behind the guitar that hints at the glow to come. Only the kanji 発光体, "a luminous body", gets a faint green glow.
 
-  Move the pointer and the guitar tilts toward it on a spring, so a quick change of direction keeps its momentum instead of snapping. The tilt only runs with a fine pointer and without reduced motion; on touch the guitar stays still. The price sits right under the call to action, "From $300 or $33.99/mo.", because a product page that hides its price reads as a concept, not a store.
+  Move the pointer and the guitar tilts toward it on a spring, so a quick change of direction keeps its momentum instead of snapping. The tilt only runs with a fine pointer and without reduced motion; on touch the guitar stays still. The price sits right under the call to action, "From $300 or $33.99/mo.", because a product page that hides its price does not look like a real store.
 media:
   - full | assets/yura/hero-pointer-tilt.webm | Screen recording: the hero loading in, then the guitar tilting in 3D as the pointer moves across it, with smoke drifting behind
 :::
@@ -70,7 +70,7 @@ body:
 
   The last stretch breaks it. The panel cracks from an impact point into shards, each carrying its own slice of the sentence as it falls away.
 
-  An earlier version faded white up from the floor while the last words lit. I cut it because it competed with the break. The section now stays black until the break, and the break is the transition.
+  An earlier version faded white up from the floor while the last words lit. I cut it because it competed with the break. The section now stays black the whole way, and the shards are what carry you into the next scene.
 media:
   - full | assets/yura/statement-lights-then-shatters.webm | Screen recording: the manifesto paragraph lighting letter by letter on scroll, then the panel cracking into shards that fall away onto a white room
 :::
@@ -81,7 +81,7 @@ subtitle: The one feature a photo cannot show, played out on scroll.
 body:
   The guitar's main trick is that the cream art glows green in the dark. A still photo of that only proves someone took a photo in the dark. So the glow scene does it in front of you: it opens in a lit white room on "Loud in the light.", and as you scroll the lamps stutter, the room goes black and the headline changes to "Luminous in the dark." while the vinyl charges up on the body.
 
-  "The lights go out" is not one crossfade, which would leave the middle of the section at flat grey. The room darkens from the edges in, then the last light leaves the guitar, then the vinyl starts to glow, as separate overlapping beats. The lamps flicker twice, and the headline swap lands on the second flicker, on the same beat the power cuts.
+  The lights going out is three overlapping beats: the room darkens from the edges in, the last light leaves the guitar, then the vinyl starts to glow. One crossfade would have left the middle of the section sitting at flat grey. The lamps flicker twice, and the headline swap lands on the second flicker, on the same beat the power cuts.
 
   Most of the iteration was about legibility. Text that changes colour while its background changes colour will vanish for a few frames where the two cross, so the room goes fully black in the exact window where one headline has left and the other has not arrived. The guitar dims with brightness instead of opacity, because opacity made it look like a photo turning translucent rather than a lamp going out.
 media:
@@ -92,7 +92,7 @@ media:
 title: then prove it is not a render
 subtitle: A scripted effect invites one question, and the next section answers it.
 body:
-  After a scene that good, the natural reaction is doubt. So the next thing on the page is three real photos of the guitar glowing in a dark room, with one line under them: "Not a render. Photographed in a dark room."
+  A glow that scripted invites doubt. So the next thing on the page is three real photos of the guitar glowing in a dark room, with one line under them: "Not a render. Photographed in a dark room."
 
   The photos come up the same way the vinyl does, dim first and then charged, and a bloom carries over from the glow scene so it feels like the same dark room you just left.
 media:
@@ -103,7 +103,7 @@ media:
 title: the name and the features are written as reasons
 subtitle: Most visitors cannot read the name, and a spec sheet gives them no reason to care.
 body:
-  HAKKOTAI is a word most visitors will not know, and a name you cannot read is a name you will not remember. So the name becomes content: three kanji, each with its reading and meaning, emission, light, body, adding up to "a luminous body". Hovering a character slides a lime band up through it, like a glow-in-the-dark charge.
+  HAKKOTAI is a word most visitors will not know, and nobody remembers a name they cannot read. So the name becomes content: three kanji, each with its reading and meaning, emission, light, body, adding up to "a luminous body". Hovering a character slides a lime band up through it, like a glow-in-the-dark charge.
 
   The design section is a grid of six tiles, and each turns a fact into a reason to care. Pink paint becomes "Pink, not red. Change the colour of the blood and the tragedy turns into a party." One tile has no spec at all: "A guitar is just a guitar."
 
@@ -116,7 +116,7 @@ media:
 title: the build is dealt like a hand of cards
 subtitle: Seven steps, from a red guitar to a pink one, without a paragraph of explanation.
 body:
-  "Handmade" is what sets this guitar apart from anything in a catalogue, and anyone can claim it. So the build gets the longest scroll on the page. The seven steps are dealt in from the right one by one, on an arc toward the viewer, and each one knocks the card underneath back into the stack, so the row reads as a pile of work, not a strip of thumbnails.
+  "Handmade" is what sets this guitar apart from anything in a catalogue, and anyone can claim it. So the build gets the longest scroll on the page. The seven steps are dealt in from the right one by one, on an arc toward the viewer, and each one knocks the card underneath back into the stack, so the row reads as a pile of work rather than a strip of thumbnails.
 
   The room takes the colour of whichever card is on top. It starts red with the stock guitar, warms through sanding, goes cold grey at the primer and ends hot pink, so the colour of the light tells the story of the paint job without any caption.
 

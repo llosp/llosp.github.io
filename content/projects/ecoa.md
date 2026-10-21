@@ -17,20 +17,18 @@ cover_alt: Looping motion piece: on white, the Ecoa mark appears and its wordmar
 
 ## README.md
 
-I'm design lead on two AI-driven internal tools built at Ecoa Institute for Petrobras, one after the other: a compliance assistant, then a knowledge platform. Each one had its own team, its own research and its own pitch, not a shared track split in two.
+I'm design lead on two AI-driven internal tools built at Ecoa Institute for Petrobras, one after the other: a compliance assistant, then a knowledge platform. Each one had its own team, its own research and its own pitch.
 
 I worked across both from research through delivery: user interviews, the product and journey design, the interface, and the pitch that got each one approved. I also contributed some front-end implementation.
 
-An NDA covers the internal detail of both products, including the interface itself. What follows is what each one does, why it exists, and what happened when it got pitched.
+An NDA covers the internal detail of both products, including the screens. The two sections below show the flow and the reasoning instead of the interface.
 
 ## compliance-assistant/
 
 ::: meta
-timeline: 26 mar – 2 jul 2026
+timeline: 26 mar to 2 jul 2026
 pitch_outcome: accepted, pre-approved for build-out
 :::
-
-No interface shown here. The NDA covers the actual screens; the diagram and toolbox below are what can be shared about the reasoning behind them.
 
 ::: media
 items:
@@ -40,7 +38,7 @@ items:
 ::: toolbox
 items:
 - the ask | partners, repeating the same question about a public anp accounting manual
-- the fix | every answer cites its source passage, so it can be checked, not just trusted
+- the fix | every answer cites its source passage, so a partner can check it against the manual
 - the guardrail | answers only come from a knowledge base reviewed by subject-matter experts
 - the proof | every answer traceable to the manual itself
 :::
@@ -48,11 +46,9 @@ items:
 ## knowledge-platform/
 
 ::: meta
-timeline: 6 jul – 20 oct 2026
+timeline: 6 jul to 20 oct 2026
 pitch_outcome: accepted, pre-approved for build-out
 :::
-
-Same limit here: no interface shown, the NDA covers the screens. The diagram and toolbox below are what can be shared about the reasoning.
 
 ::: media
 items:
@@ -69,19 +65,19 @@ items:
 
 ## outcome.md
 
-Petrobras had no obligation to take either product past a pitch. Each one got its own, built and tested like anything else shipped here: the compliance assistant's case first, the knowledge platform's a few months later.
+Petrobras had no obligation to take either product past a pitch. Each one was pitched on its own case, built and tested like anything else shipped here: the compliance assistant first, the knowledge platform a few months later.
 
-Both were accepted. For two products with different teams, different research and different timelines, that's a meaningful signal that both problems were real.
+Both were accepted and pre-approved for build-out.
 
 [todo: adoption numbers, rollout timeline, or a cleared stakeholder line, once available]
 
 ## learnings.md
 
-Treating these as two separate tracks instead of one shared narrative made the actual difference between them clearer. They shared a company, not a problem.
+I kept these as two separate projects instead of one engagement split in two, which made the difference between them clearer. They shared a company; the problems they solved had nothing in common.
 
-Working on the knowledge platform pulled me into decisions about how data gets matched across systems that had never agreed on what counted as the same record. That's further into the stack than interface design usually reaches, and it's where a surprising amount of the real design work ended up living.
+Working on the knowledge platform pulled me into decisions about how data gets matched across systems that had never agreed on what counted as the same record. That's further into the stack than interface design usually reaches, and a lot of the design work ended up there.
 
-Designing an AI tool for a regulated environment turned out to be mostly about earning trust in a specific, checkable answer.
+In a regulated environment, most of the design effort went into making every answer checkable against its source.
 
 ::: credits
 items:

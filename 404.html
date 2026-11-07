@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>404 / lope.design</title>
-  <meta name="description" content="page not found. nothing lives at this address.">
+  <meta name="description" content="This page does not exist.">
   <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
   <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
   <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
@@ -58,33 +58,24 @@
   </div>
 
   <div id="app" data-route="notfound">
-    <div class="hero hero--404">
-      <h1 class="title-h1" data-nf="nfHeading">page not found. nothing lives at this address.</h1>
-      <div class="hero-now">
-        <div class="hero-now_cmd">$ cd <span class="nf-path">~/</span></div>
-        <div class="hero-now_out" data-nf="nfNoSuchFile">no such file or directory</div>
+    <div class="nf">
+      <h1 class="nf-sr">404</h1>
+      <div class="nf-stage" data-pill="[ cd ~/ ]">
+        <canvas class="nf-canvas" aria-hidden="true"></canvas>
       </div>
-      <div class="hero-now hero-now--stack">
-        <div class="hero-now_cmd">$ ls ~/</div>
-        <div class="hero-now_out nf-ls">
-          <a class="nf-ls_item" href="/work/skrill/" data-path="/work/skrill/">./work/skrill</a>
-          <a class="nf-ls_item" href="/work/oracle/" data-path="/work/oracle/">./work/oracle</a>
-          <a class="nf-ls_item" href="/work/yura/" data-path="/work/yura/">./work/yura</a>
-          <a class="nf-ls_item" href="/work/ecoa/" data-path="/work/ecoa/">./work/ecoa</a>
-          <a class="nf-ls_item" href="/about/" data-path="/about/">./about</a>
+      <noscript><div class="nf-fallback" aria-hidden="true">404</div></noscript>
+      <div class="nf-term" data-pages="/work/skrill/ /work/oracle/ /work/yura/ /work/ecoa/ /about/">
+        <div class="nf-line"><span class="nf-cmd">$ cd</span> <span class="nf-path">~/</span></div>
+        <div class="nf-line nf-dim" data-nf="nfNoSuchFile">no such file or directory</div>
+        <div class="nf-line nf-guess" hidden><span class="nf-dim" data-nf="nfDidYouMean">did you mean</span> <a class="nf-guess_link" href="/"></a></div>
+        <div class="nf-line nf-status" data-nf-status>this page doesn't exist.</div>
+        <div class="nf-keys">
+          <a class="nf-btn" href="/" data-nf-home><span class="nf-btn_square" aria-hidden="true"></span><span class="nf-key">[enter]</span> <span data-nf="nfGoHome">go home</span></a>
+          <button class="nf-btn nf-btn--ghost" type="button" data-nf-stay><span class="nf-key">[esc]</span> <span data-nf="nfStay">stay</span></button>
         </div>
       </div>
-      <div class="hero-now hero-now--stack nf-guess" hidden>
-        <div class="hero-now_cmd" data-nf="nfDidYouMean">did you mean</div>
-        <a class="hero-now_out nf-guess_link" href="/"></a>
-      </div>
-      <a class="hero-cta" href="/" data-nf-home>
-        <span class="hero-cta_square" aria-hidden="true"></span>
-        <span data-nf="nfBackHome">back home</span>
-        <span class="hero-cta_mail">lope.design</span>
-      </a>
-      <div class="scroll-down-tag"><span data-nf="nfExit">exit 404</span><span class="cursor">_</span></div>
-      <script type="application/json" id="nf-strings">{"en":{"title":"404 / lope.design","nfHeading":"page not found. nothing lives at this address.","nfNoSuchFile":"no such file or directory","nfDidYouMean":"did you mean","nfBackHome":"back home","nfExit":"exit 404"},"pt":{"title":"404 / lope.design","nfHeading":"página não encontrada. não tem nada neste endereço.","nfNoSuchFile":"arquivo ou diretório não encontrado","nfDidYouMean":"você quis dizer","nfBackHome":"voltar pro início","nfExit":"exit 404"}}</script>
+      <div class="nf-tag">err 404<span class="cursor">_</span></div>
+      <script type="application/json" id="nf-strings">{"en":{"title":"404 / lope.design","nfNoSuchFile":"no such file or directory","nfDidYouMean":"did you mean","nfCounting":"this page doesn't exist. going back home in {n}s","nfStayed":"staying. go home whenever you want.","nfStatic":"this page doesn't exist.","nfGoHome":"go home","nfStay":"stay"},"pt":{"title":"404 / lope.design","nfNoSuchFile":"arquivo ou diretório não encontrado","nfDidYouMean":"você quis dizer","nfCounting":"esta página não existe. voltando pro início em {n}s","nfStayed":"ficando. volte pro início quando quiser.","nfStatic":"esta página não existe.","nfGoHome":"voltar pro início","nfStay":"ficar"}}</script>
     </div>
 
   </div>

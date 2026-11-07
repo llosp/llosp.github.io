@@ -48,11 +48,14 @@ const STRINGS = {
     aboutDescription:
       'Pedro Lopes, a digital designer and developer in Rio de Janeiro working on web, product and ai interfaces.',
     nfTitle: '404 / lope.design',
-    nfHeading: 'page not found. nothing lives at this address.',
+    nfDescription: 'This page does not exist.',
     nfNoSuchFile: 'no such file or directory',
     nfDidYouMean: 'did you mean',
-    nfBackHome: 'back home',
-    nfExit: 'exit 404',
+    nfCounting: "this page doesn't exist. going back home in {n}s",
+    nfStayed: 'staying. go home whenever you want.',
+    nfStatic: "this page doesn't exist.",
+    nfGoHome: 'go home',
+    nfStay: 'stay',
   },
   pt: {
     htmlLang: 'pt-BR',
@@ -81,11 +84,14 @@ const STRINGS = {
     aboutDescription:
       'Pedro Lopes, designer e desenvolvedor no Rio de Janeiro, trabalhando com web, produto e interfaces de ia.',
     nfTitle: '404 / lope.design',
-    nfHeading: 'página não encontrada. não tem nada neste endereço.',
+    nfDescription: 'Esta página não existe.',
     nfNoSuchFile: 'arquivo ou diretório não encontrado',
     nfDidYouMean: 'você quis dizer',
-    nfBackHome: 'voltar pro início',
-    nfExit: 'exit 404',
+    nfCounting: 'esta página não existe. voltando pro início em {n}s',
+    nfStayed: 'ficando. volte pro início quando quiser.',
+    nfStatic: 'esta página não existe.',
+    nfGoHome: 'voltar pro início',
+    nfStay: 'ficar',
   },
 };
 
@@ -1085,52 +1091,44 @@ ${footNav}
 /* ── run ──────────────────────────────────────────────────────────────── */
 
 // github pages serves /404.html for any path that does not exist, in either
-// locale, so there is only one file. it ships in english and site.js swaps
-// in the pt strings (and the /pt/ links) when the missing path is under /pt/.
-// the ls line lists every page that does exist, and site.js marks the one
-// closest to what was typed.
-const NF_KEYS = ['nfHeading', 'nfNoSuchFile', 'nfDidYouMean', 'nfBackHome', 'nfExit'];
+// locale, so there is only one file. it ships in english and js/notfound.js
+// swaps in the pt strings (and the /pt/ links) when the missing path is under
+// /pt/. the "404" itself is drawn by that script on the canvas; the page
+// markup is only the shell around it.
+const NF_KEYS = ['nfNoSuchFile', 'nfDidYouMean', 'nfCounting', 'nfStayed', 'nfStatic', 'nfGoHome', 'nfStay'];
 
 function render404(projects) {
   CURRENT = STRINGS.en;
   const s = STRINGS.en;
-  const pages = [...projects.map((p) => `/work/${p.slug}/`), '/about/'];
-  const ls = pages
-    .map((path) => `<a class="nf-ls_item" href="${path}" data-path="${path}">.${path.replace(/\/$/, '')}</a>`)
-    .join('\n          ');
+  const pages = [...projects.map((p) => `/work/${p.slug}/`), '/about/'].join(' ');
   const strings = Object.fromEntries(
     LOCALES.map((l) => [l, { title: STRINGS[l].nfTitle, ...Object.fromEntries(NF_KEYS.map((k) => [k, STRINGS[l][k]])) }])
   );
 
   return shell({
     title: s.nfTitle,
-    description: s.nfHeading,
+    description: s.nfDescription,
     route: 'notfound',
     cls: 'is--404',
     locale: 'en',
     langLinks: { en: '/', pt: '/pt/' },
-    body: `    <div class="hero hero--404">
-      <h1 class="title-h1" data-nf="nfHeading">${s.nfHeading}</h1>
-      <div class="hero-now">
-        <div class="hero-now_cmd">$ cd <span class="nf-path">~/</span></div>
-        <div class="hero-now_out" data-nf="nfNoSuchFile">${s.nfNoSuchFile}</div>
+    body: `    <div class="nf">
+      <h1 class="nf-sr">404</h1>
+      <div class="nf-stage" data-pill="[ cd ~/ ]">
+        <canvas class="nf-canvas" aria-hidden="true"></canvas>
       </div>
-      <div class="hero-now hero-now--stack">
-        <div class="hero-now_cmd">$ ls ~/</div>
-        <div class="hero-now_out nf-ls">
-          ${ls}
+      <noscript><div class="nf-fallback" aria-hidden="true">404</div></noscript>
+      <div class="nf-term" data-pages="${pages}">
+        <div class="nf-line"><span class="nf-cmd">$ cd</span> <span class="nf-path">~/</span></div>
+        <div class="nf-line nf-dim" data-nf="nfNoSuchFile">${s.nfNoSuchFile}</div>
+        <div class="nf-line nf-guess" hidden><span class="nf-dim" data-nf="nfDidYouMean">${s.nfDidYouMean}</span> <a class="nf-guess_link" href="/"></a></div>
+        <div class="nf-line nf-status" data-nf-status>${s.nfStatic}</div>
+        <div class="nf-keys">
+          <a class="nf-btn" href="/" data-nf-home><span class="nf-btn_square" aria-hidden="true"></span><span class="nf-key">[enter]</span> <span data-nf="nfGoHome">${s.nfGoHome}</span></a>
+          <button class="nf-btn nf-btn--ghost" type="button" data-nf-stay><span class="nf-key">[esc]</span> <span data-nf="nfStay">${s.nfStay}</span></button>
         </div>
       </div>
-      <div class="hero-now hero-now--stack nf-guess" hidden>
-        <div class="hero-now_cmd" data-nf="nfDidYouMean">${s.nfDidYouMean}</div>
-        <a class="hero-now_out nf-guess_link" href="/"></a>
-      </div>
-      <a class="hero-cta" href="/" data-nf-home>
-        <span class="hero-cta_square" aria-hidden="true"></span>
-        <span data-nf="nfBackHome">${s.nfBackHome}</span>
-        <span class="hero-cta_mail">lope.design</span>
-      </a>
-      <div class="scroll-down-tag"><span data-nf="nfExit">${s.nfExit}</span><span class="cursor">_</span></div>
+      <div class="nf-tag">err 404<span class="cursor">_</span></div>
       <script type="application/json" id="nf-strings">${JSON.stringify(strings)}</script>
     </div>
 `,

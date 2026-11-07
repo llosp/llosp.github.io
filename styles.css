@@ -469,56 +469,164 @@ video {
 
 /* ─── 404 ───────────────────────────────────────────────────────────── */
 
-/* the same first screen as the homepage. the digits are drawn by the ascii
-   field behind it, so the page itself is only the heading and the shell */
-.hero-now--stack {
-  margin-top: 2px;
+/* the 404 is its own screen: no nav beyond the mark, no footer, and its own
+   canvas in place of the ripple field. js/notfound.js draws the digits. */
+.is--404 .ascii-background,
+.is--404 .footer,
+.is--404 .navbar .nav_button:not(.nav_button--home) {
+  display: none;
+}
+
+.nf {
+  position: relative;
+  height: 100vh;
+  height: 100svh;
+  overflow: hidden;
+}
+
+.nf-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.nf-stage {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+}
+
+.nf-canvas {
+  display: block;
+  width: 100%;
+  height: 100%;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .nf-stage { cursor: none; }
+}
+
+@media (prefers-reduced-motion: reduce), (hover: none), (pointer: coarse) {
+  .nf-stage { cursor: pointer; }
+}
+
+.nf-fallback {
+  position: absolute;
+  inset: 20vh 0 auto;
+  font-family: var(--font-display);
+  font-size: 40vw;
+  font-weight: 700;
+  line-height: 1;
+  text-align: center;
+}
+
+.nf-term,
+.nf-tag {
+  position: absolute;
+  z-index: 1;
+  font-family: var(--font-mono);
+  font-size: 12px;
+  line-height: 20px;
+  text-transform: lowercase;
+}
+
+.nf-term {
+  left: var(--gutter);
+  bottom: var(--gutter);
+  max-width: calc(100% - 2 * var(--gutter));
+}
+
+.nf-tag {
+  right: var(--gutter);
+  bottom: var(--gutter);
+}
+
+.nf-dim,
+.nf-cmd {
+  color: var(--grey-meta);
 }
 
 .nf-path {
   color: var(--black);
-}
-
-.nf-ls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0 12px;
-}
-
-.nf-ls_item,
-.nf-guess_link {
-  color: var(--grey-meta);
-}
-
-.nf-ls_item:hover,
-.nf-ls_item:focus-visible,
-.nf-guess_link:hover,
-.nf-guess_link:focus-visible {
-  color: var(--black);
-  text-decoration: underline;
-}
-
-.nf-ls_item.is--guess,
-.nf-guess_link {
-  color: var(--black);
-}
-
-.nf-guess_link::before {
-  content: "";
-  display: inline-block;
-  width: 8px;
-  height: 8px;
-  margin-right: 8px;
-  background: var(--black);
-  animation: blink 1s steps(1, end) infinite;
+  word-break: break-all;
 }
 
 .nf-guess[hidden] {
   display: none;
 }
 
+.nf-guess_link {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.nf-status {
+  margin-top: 8px;
+}
+
+.nf-keys {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 12px;
+}
+
+.nf-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 6px 10px;
+  border: 1px solid var(--black);
+  background: var(--black);
+  color: var(--white);
+  font: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+}
+
+.nf-btn_square {
+  width: 8px;
+  height: 8px;
+  background: var(--white);
+  animation: blink 1s steps(1, end) infinite;
+}
+
+.nf-btn--ghost {
+  background: var(--white);
+  color: var(--black);
+}
+
+.nf-btn[hidden] {
+  display: none;
+}
+
+.nf-btn:hover .nf-key,
+.nf-btn:focus-visible .nf-key {
+  text-decoration: underline;
+}
+
+.nf-btn:focus-visible {
+  outline: 1px solid var(--black);
+  outline-offset: 3px;
+}
+
+.nf-key {
+  opacity: 0.6;
+}
+
+@media (hover: none), (pointer: coarse) {
+  .nf-key { display: none; }
+}
+
 @media (prefers-reduced-motion: reduce) {
-  .nf-guess_link::before { animation: none; }
+  .nf-btn_square { animation: none; }
+}
+
+@media screen and (max-width: 479px) {
+  .nf-tag { top: 64px; bottom: auto; }
 }
 
 /* ─── work index ────────────────────────────────────────────────────── */

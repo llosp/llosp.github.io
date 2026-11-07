@@ -20,7 +20,10 @@ function initAscii() {
 
   const ctx = canvas.getContext('2d');
   const chars = ['.', ':', '+', 'o', 'O', '#'];
-  const cell = 20;
+  // a phone is only about nineteen cells wide, too coarse to spell anything,
+  // so while a shape is up on a narrow screen the grid gets finer
+  let cell = 20;
+  let glyphPx = 15;
   const ringWidth = 28;
   const maxRipples = 14;
   const scatterMs = 400;
@@ -35,8 +38,16 @@ function initAscii() {
   let nextSpawnDelay = 350;
   let scatterT0 = 0;
 
+  // an optional shape the field draws on top of the ripples, one 0..1 value
+  // per cell. the 404 page sets it to the digits, so the error is spelled
+  // out by the same glyphs the rest of the site uses as texture.
+  let maskText = '';
+  let mask = null;
+  let pointer = null;
+  const wipeRadius = 90;
+
   function applyContextSettings() {
-    ctx.font = 'bold 15px "Mono", "Courier New", monospace';
+    ctx.font = `bold ${glyphPx}px "Mono", "Courier New", monospace`;
     ctx.textBaseline = 'top';
     ctx.fillStyle = 'rgb(0, 0, 0)';
   }
@@ -49,10 +60,69 @@ function initAscii() {
     canvas.height = Math.round(height * dpr);
     canvas.style.width = `${width}px`;
     canvas.style.height = `${height}px`;
+    const fine = maskText && width < 480;
+    cell = fine ? 12 : 20;
+    glyphPx = fine ? 10 : 15;
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
     applyContextSettings();
     cols = Math.ceil(width / cell);
     rows = Math.ceil(height / cell);
+    buildMask();
+  }
+
+  // the text is drawn into a small offscreen canvas at four samples per
+  // cell, then averaged, so the edges of each digit come out as partial
+  // values and pick the lighter glyphs instead of a hard stair step
+  function buildMask() {
+    // a tab opened in the background can report a zero sized window until
+    // it is shown, and the resize that follows builds the mask then
+    if (!maskText || !cols || !rows) {
+      mask = null;
+      return;
+    }
+    const sub = 4;
+    const off = document.createElement('canvas');
+    off.width = cols * sub;
+    off.height = rows * sub;
+    const o = off.getContext('2d');
+    // the digits sit in the space above the hero copy: below the navbar and
+    // clear of the heading, which takes the bottom of the first screen
+    const view = window.innerHeight;
+    const top = (width < 480 ? 0.14 : 0.1) * view;
+    const bottom = (width < 480 ? 0.6 : 0.52) * view;
+    const scale = sub / cell;
+    const boxW = (width - 4 * cell) * scale;
+    const boxH = (bottom - top) * scale;
+    // measured by the ink, not the advance width, so the side bearings of
+    // the outer digits do not push them off a narrow screen
+    const inkW = (t) => (t.actualBoundingBoxLeft + t.actualBoundingBoxRight) || t.width;
+    o.font = `700 100px "Grotesk", Arial, sans-serif`;
+    const m = o.measureText(maskText);
+    const capH = (m.actualBoundingBoxAscent || 72) + (m.actualBoundingBoxDescent || 0);
+    const size = Math.min((boxW / inkW(m)) * 100, (boxH / capH) * 100);
+    o.font = `700 ${size}px "Grotesk", Arial, sans-serif`;
+    o.textAlign = 'left';
+    o.textBaseline = 'alphabetic';
+    const fit = o.measureText(maskText);
+    const asc = fit.actualBoundingBoxAscent || size * 0.72;
+    const desc = fit.actualBoundingBoxDescent || 0;
+    const x = (width * scale - inkW(fit)) / 2 + (fit.actualBoundingBoxLeft || 0);
+    const y = top * scale + (boxH + asc - desc) / 2;
+    o.fillStyle = '#000';
+    o.fillText(maskText, x, y);
+
+    const data = o.getImageData(0, 0, off.width, off.height).data;
+    mask = new Float32Array(cols * rows);
+    for (let gy = 0; gy < rows; gy++) {
+      for (let gx = 0; gx < cols; gx++) {
+        let sum = 0;
+        for (let sy = 0; sy < sub; sy++) {
+          const row = (gy * sub + sy) * off.width;
+          for (let sx = 0; sx < sub; sx++) sum += data[(row + gx * sub + sx) * 4 + 3];
+        }
+        mask[gy * cols + gx] = sum / (sub * sub * 255);
+      }
+    }
   }
 
   function spawnRipple(now) {
@@ -112,6 +182,18 @@ function initAscii() {
           }
         }
 
+        // the shape shimmers along a slow diagonal wave, ripples crossing it
+        // light it up further, and the pointer wipes a soft hole through it
+        let shape = mask ? mask[gy * cols + gx] : 0;
+        if (shape && pointer) {
+          const d = Math.hypot(px - pointer.x, py - pointer.y);
+          if (d < wipeRadius) shape *= Math.pow(d / wipeRadius, 2);
+        }
+        if (shape > 0.05) {
+          const wave = 0.5 + 0.5 * Math.sin(now / 650 + gx * 0.32 - gy * 0.24);
+          best = Math.min(1, best + shape * (0.45 + 0.45 * wave));
+        }
+
         if (best < 0.15) continue;
         const index = Math.min(chars.length - 1, Math.floor(((best - 0.15) / 0.85) * chars.length));
 
@@ -125,7 +207,7 @@ function initAscii() {
           dy = (oy / len) * push;
         }
 
-        ctx.globalAlpha = 0.0703125 + best * 0.1875;
+        ctx.globalAlpha = 0.0703125 + best * 0.1875 + shape * 0.22;
         ctx.fillText(chars[index], gx * cell + dx, gy * cell + dy);
       }
     }
@@ -134,6 +216,24 @@ function initAscii() {
 
   resize();
   window.addEventListener('resize', resize);
+  // the shape is measured in the display face, which may land after the
+  // first build, so it is measured again once the font is in
+  if (document.fonts && document.fonts.load) {
+    document.fonts.load('700 100px "Grotesk"').then(() => {
+      if (!maskText) return;
+      buildMask();
+      if (reduceMotion()) drawFrame(performance.now());
+    }, () => {});
+  }
+
+  // the shape is set per page, so a swap away from the 404 clears it. under
+  // reduced motion there is no loop to pick the change up, so it redraws once.
+  function setMask(text) {
+    if (text === maskText) return;
+    maskText = text || '';
+    resize();
+    if (reduceMotion()) drawFrame(performance.now());
+  }
 
   if (reduceMotion()) {
     const now = performance.now();
@@ -141,8 +241,20 @@ function initAscii() {
     spawnRipple(now - 900);
     spawnRipple(now - 200);
     drawFrame(now);
-    return { scatter() {} };
+    return { scatter() {}, setMask };
   }
+
+  // only tracked while a shape is on screen, since nothing else reads it
+  window.addEventListener(
+    'pointermove',
+    (event) => {
+      if (!mask || event.pointerType === 'touch') return;
+      const box = canvas.getBoundingClientRect();
+      pointer = { x: event.clientX - box.left, y: event.clientY - box.top };
+    },
+    { passive: true }
+  );
+  document.addEventListener('pointerleave', () => { pointer = null; });
 
   // setTimeout rather than a pure rAF chain: rAF gets fully suspended in
   // backgrounded tabs in some browsers, which would freeze the ripples
@@ -168,6 +280,7 @@ function initAscii() {
   start();
 
   return {
+    setMask,
     // the field re-forms around the page we are landing on, so the ripples
     // in flight are dropped and a fresh set is seeded
     scatter() {
@@ -524,8 +637,11 @@ function updateNavLocale() {
   if (!nav) return;
 
   const path = window.location.pathname;
-  const bare = stripLocale(path) || '/';
-  const locale = path === bare ? 'en' : 'pt';
+  // a missing page has no counterpart in the other locale, so the switch
+  // points at the two homepages instead
+  const missing = document.querySelector('#app')?.dataset.route === 'notfound';
+  const bare = missing ? '/' : stripLocale(path) || '/';
+  const locale = path === '/pt' || path.startsWith('/pt/') ? 'pt' : 'en';
   const withLocale = (tail) => (locale === 'pt' ? `/pt${tail === '/' ? '/' : tail}` : tail);
 
   nav.querySelectorAll('a:not(.lang-link)').forEach((a) => {
@@ -544,6 +660,85 @@ function updateNavLocale() {
   });
 }
 
+/* ── 404 ──────────────────────────────────────────────────────────────── */
+
+// classic edit distance, small enough for a handful of short paths
+function editDistance(a, b) {
+  const prev = Array.from({ length: b.length + 1 }, (_, i) => i);
+  for (let i = 1; i <= a.length; i++) {
+    let diag = prev[0];
+    prev[0] = i;
+    for (let j = 1; j <= b.length; j++) {
+      const up = prev[j];
+      prev[j] = Math.min(prev[j] + 1, prev[j - 1] + 1, diag + (a[i - 1] === b[j - 1] ? 0 : 1));
+      diag = up;
+    }
+  }
+  return prev[b.length];
+}
+
+// the page that exists closest to the one asked for. compared both as a
+// whole path and by its last segment, so /skril, /work/skril/ and
+// /projects/skrill all land on /work/skrill/.
+function closestPage(asked, pages) {
+  const norm = (p) => p.toLowerCase().replace(/\/+$/, '');
+  const target = norm(asked);
+  const tail = target.split('/').pop() || '';
+  let best = null;
+  pages.forEach((page) => {
+    const p = norm(page);
+    const name = p.split('/').pop();
+    // a typed name with something stuck on either end (skrill-app) still counts
+    const contains = tail.length >= 3 && (tail.includes(name) || name.includes(tail));
+    const score = contains ? 0 : Math.min(editDistance(target, p), editDistance(tail, name));
+    const limit = Math.max(2, Math.floor(name.length * 0.4));
+    if (score <= limit && (!best || score < best.score)) best = { page, score };
+  });
+  return best && best.page;
+}
+
+function init404(app) {
+  const missing = app.dataset.route === 'notfound';
+  ascii.setMask(missing ? '404' : '');
+  if (!missing) return;
+
+  const path = window.location.pathname;
+  const isPt = path === '/pt' || path.startsWith('/pt/');
+  const prefix = isPt ? '/pt' : '';
+  const bare = stripLocale(path);
+
+  let strings = null;
+  try {
+    strings = JSON.parse(app.querySelector('#nf-strings').textContent)[isPt ? 'pt' : 'en'];
+  } catch (_) {}
+  if (strings) {
+    app.querySelectorAll('[data-nf]').forEach((el) => {
+      if (strings[el.dataset.nf]) el.textContent = strings[el.dataset.nf];
+    });
+    document.title = strings.title;
+    document.documentElement.lang = isPt ? 'pt-BR' : 'en';
+  }
+
+  let shown = decodeURIComponent(path);
+  if (shown.length > 48) shown = `${shown.slice(0, 45)}...`;
+  const pathEl = app.querySelector('.nf-path');
+  if (pathEl) pathEl.textContent = `~${shown}`;
+
+  app.querySelectorAll('[data-nf-home]').forEach((a) => a.setAttribute('href', `${prefix}/`));
+  const items = [...app.querySelectorAll('.nf-ls_item')];
+  items.forEach((a) => a.setAttribute('href', prefix + a.dataset.path));
+
+  const guess = closestPage(bare, items.map((a) => a.dataset.path));
+  const guessRow = app.querySelector('.nf-guess');
+  if (guess && guessRow) {
+    const link = guessRow.querySelector('.nf-guess_link');
+    link.href = prefix + guess;
+    link.textContent = `.${guess.replace(/\/$/, '')}`;
+    guessRow.hidden = false;
+    items.forEach((a) => a.classList.toggle('is--guess', a.dataset.path === guess));
+  }
+}
+
 /* ── per page wiring ──────────────────────────────────────────────────── */
 
 function initPage() {
@@ -557,6 +752,7 @@ function initPage() {
   initGallery(app);
   layoutMasonryGrids();
   updateNavLocale();
+  init404(app);
 }
 
 const ascii = initAscii();

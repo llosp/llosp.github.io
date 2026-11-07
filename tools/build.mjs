@@ -47,6 +47,12 @@ const STRINGS = {
     aboutTitle: 'about / lope.design',
     aboutDescription:
       'Pedro Lopes, a digital designer and developer in Rio de Janeiro working on web, product and ai interfaces.',
+    nfTitle: '404 / lope.design',
+    nfHeading: 'page not found. nothing lives at this address.',
+    nfNoSuchFile: 'no such file or directory',
+    nfDidYouMean: 'did you mean',
+    nfBackHome: 'back home',
+    nfExit: 'exit 404',
   },
   pt: {
     htmlLang: 'pt-BR',
@@ -74,6 +80,12 @@ const STRINGS = {
     aboutTitle: 'sobre / lope.design',
     aboutDescription:
       'Pedro Lopes, designer e desenvolvedor no Rio de Janeiro, trabalhando com web, produto e interfaces de ia.',
+    nfTitle: '404 / lope.design',
+    nfHeading: 'página não encontrada. não tem nada neste endereço.',
+    nfNoSuchFile: 'arquivo ou diretório não encontrado',
+    nfDidYouMean: 'você quis dizer',
+    nfBackHome: 'voltar pro início',
+    nfExit: 'exit 404',
   },
 };
 
@@ -1072,6 +1084,59 @@ ${footNav}
 
 /* ── run ──────────────────────────────────────────────────────────────── */
 
+// github pages serves /404.html for any path that does not exist, in either
+// locale, so there is only one file. it ships in english and site.js swaps
+// in the pt strings (and the /pt/ links) when the missing path is under /pt/.
+// the ls line lists every page that does exist, and site.js marks the one
+// closest to what was typed.
+const NF_KEYS = ['nfHeading', 'nfNoSuchFile', 'nfDidYouMean', 'nfBackHome', 'nfExit'];
+
+function render404(projects) {
+  CURRENT = STRINGS.en;
+  const s = STRINGS.en;
+  const pages = [...projects.map((p) => `/work/${p.slug}/`), '/about/'];
+  const ls = pages
+    .map((path) => `<a class="nf-ls_item" href="${path}" data-path="${path}">.${path.replace(/\/$/, '')}</a>`)
+    .join('\n          ');
+  const strings = Object.fromEntries(
+    LOCALES.map((l) => [l, { title: STRINGS[l].nfTitle, ...Object.fromEntries(NF_KEYS.map((k) => [k, STRINGS[l][k]])) }])
+  );
+
+  return shell({
+    title: s.nfTitle,
+    description: s.nfHeading,
+    route: 'notfound',
+    cls: 'is--404',
+    locale: 'en',
+    langLinks: { en: '/', pt: '/pt/' },
+    body: `    <div class="hero hero--404">
+      <h1 class="title-h1" data-nf="nfHeading">${s.nfHeading}</h1>
+      <div class="hero-now">
+        <div class="hero-now_cmd">$ cd <span class="nf-path">~/</span></div>
+        <div class="hero-now_out" data-nf="nfNoSuchFile">${s.nfNoSuchFile}</div>
+      </div>
+      <div class="hero-now hero-now--stack">
+        <div class="hero-now_cmd">$ ls ~/</div>
+        <div class="hero-now_out nf-ls">
+          ${ls}
+        </div>
+      </div>
+      <div class="hero-now hero-now--stack nf-guess" hidden>
+        <div class="hero-now_cmd" data-nf="nfDidYouMean">${s.nfDidYouMean}</div>
+        <a class="hero-now_out nf-guess_link" href="/"></a>
+      </div>
+      <a class="hero-cta" href="/" data-nf-home>
+        <span class="hero-cta_square" aria-hidden="true"></span>
+        <span data-nf="nfBackHome">${s.nfBackHome}</span>
+        <span class="hero-cta_mail">lope.design</span>
+      </a>
+      <div class="scroll-down-tag"><span data-nf="nfExit">${s.nfExit}</span><span class="cursor">_</span></div>
+      <script type="application/json" id="nf-strings">${JSON.stringify(strings)}</script>
+    </div>
+`,
+  });
+}
+
 // the pt tree mirrors content/projects/ at content/pt/projects/, same slugs
 // and order, just translated prose, so one loader serves both locales.
 function loadProjects(dir) {
@@ -1119,10 +1184,11 @@ const projectsPt = loadProjects(join(root, 'content/pt/projects'));
 
 buildLocale('en', root, projects);
 buildLocale('pt', join(root, 'pt'), projectsPt);
+writeFileSync(join(root, '404.html'), render404(projects));
 
 /* ── report ───────────────────────────────────────────────────────────── */
 
-console.log(`built index.html + /about/ + ${projects.length} case studies`);
+console.log(`built index.html + /about/ + /404.html + ${projects.length} case studies`);
 console.log(projects.map((p) => `  /work/${p.slug}/`).join('\n'));
 
 if (warnings.length) {

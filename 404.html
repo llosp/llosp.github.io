@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 / lope.design</title>
+  <meta name="description" content="page not found. nothing lives at this address.">
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="preload" href="/assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="/assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="/styles.css">
+  <link rel="alternate" hreflang="en" href="https://lope.design/">
+  <link rel="alternate" hreflang="pt-BR" href="https://lope.design/pt/">
+</head>
+
+<body class="is--404">
+
+  <a class="skip-link" href="#app">skip to content</a>
+
+  <div class="page-transition" aria-hidden="true">
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+    <div class="transition_column"><div class="transition_column-background"></div></div>
+  </div>
+  <noscript><style>.page-transition { display: none; }</style></noscript>
+
+  <canvas class="ascii-background" aria-hidden="true"></canvas>
+
+  <div class="background-gridlines" aria-hidden="true">
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+    <div class="grid-line"></div>
+  </div>
+
+  <div class="cursor-pill" aria-hidden="true"></div>
+
+  <div class="navbar">
+    <div class="header grid-12">
+      <a class="nav_button nav_button--home" href="/">
+        <div class="button-square not-blinking"></div>
+        <div class="text-color_inverse name-long">lope.design</div>
+        <div class="text-color_inverse name-short">lope</div>
+      </a>
+      <a class="nav_button" href="/#work">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./work</div>
+      </a>
+      <a class="nav_button" href="/about/">
+        <div class="button-square blinking"></div>
+        <div class="text-color_inverse">./about</div>
+      </a>
+      <div class="nav_button nav_button--lang" data-lang-switch><a class="text-color_inverse lang-link" href="/" data-lang="en" aria-current="true">en</a><span class="text-color_inverse lang-sep"> / </span><a class="text-color_inverse lang-link" href="/pt/" data-lang="pt">pt</a></div>
+    </div>
+  </div>
+
+  <div id="app" data-route="notfound">
+    <div class="hero hero--404">
+      <h1 class="title-h1" data-nf="nfHeading">page not found. nothing lives at this address.</h1>
+      <div class="hero-now">
+        <div class="hero-now_cmd">$ cd <span class="nf-path">~/</span></div>
+        <div class="hero-now_out" data-nf="nfNoSuchFile">no such file or directory</div>
+      </div>
+      <div class="hero-now hero-now--stack">
+        <div class="hero-now_cmd">$ ls ~/</div>
+        <div class="hero-now_out nf-ls">
+          <a class="nf-ls_item" href="/work/skrill/" data-path="/work/skrill/">./work/skrill</a>
+          <a class="nf-ls_item" href="/work/oracle/" data-path="/work/oracle/">./work/oracle</a>
+          <a class="nf-ls_item" href="/work/yura/" data-path="/work/yura/">./work/yura</a>
+          <a class="nf-ls_item" href="/work/ecoa/" data-path="/work/ecoa/">./work/ecoa</a>
+          <a class="nf-ls_item" href="/about/" data-path="/about/">./about</a>
+        </div>
+      </div>
+      <div class="hero-now hero-now--stack nf-guess" hidden>
+        <div class="hero-now_cmd" data-nf="nfDidYouMean">did you mean</div>
+        <a class="hero-now_out nf-guess_link" href="/"></a>
+      </div>
+      <a class="hero-cta" href="/" data-nf-home>
+        <span class="hero-cta_square" aria-hidden="true"></span>
+        <span data-nf="nfBackHome">back home</span>
+        <span class="hero-cta_mail">lope.design</span>
+      </a>
+      <div class="scroll-down-tag"><span data-nf="nfExit">exit 404</span><span class="cursor">_</span></div>
+      <script type="application/json" id="nf-strings">{"en":{"title":"404 / lope.design","nfHeading":"page not found. nothing lives at this address.","nfNoSuchFile":"no such file or directory","nfDidYouMean":"did you mean","nfBackHome":"back home","nfExit":"exit 404"},"pt":{"title":"404 / lope.design","nfHeading":"página não encontrada. não tem nada neste endereço.","nfNoSuchFile":"arquivo ou diretório não encontrado","nfDidYouMean":"você quis dizer","nfBackHome":"voltar pro início","nfExit":"exit 404"}}</script>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <div class="footer_grid grid-12">
+      <div class="credits-container"><a class="text-color_inverse" href="mailto:work@lope.design">work@lope.design</a></div>
+      <div class="copyright-container"><div class="text-color_inverse">2026</div></div>
+    </div>
+  </div>
+
+  <script type="module" src="/js/site.js"></script>
+
+</body>
+
+</html>

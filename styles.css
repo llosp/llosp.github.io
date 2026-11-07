@@ -467,6 +467,60 @@ video {
   animation: blink 1s steps(1, end) infinite;
 }
 
+/* ─── 404 ───────────────────────────────────────────────────────────── */
+
+/* the same first screen as the homepage. the digits are drawn by the ascii
+   field behind it, so the page itself is only the heading and the shell */
+.hero-now--stack {
+  margin-top: 2px;
+}
+
+.nf-path {
+  color: var(--black);
+}
+
+.nf-ls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0 12px;
+}
+
+.nf-ls_item,
+.nf-guess_link {
+  color: var(--grey-meta);
+}
+
+.nf-ls_item:hover,
+.nf-ls_item:focus-visible,
+.nf-guess_link:hover,
+.nf-guess_link:focus-visible {
+  color: var(--black);
+  text-decoration: underline;
+}
+
+.nf-ls_item.is--guess,
+.nf-guess_link {
+  color: var(--black);
+}
+
+.nf-guess_link::before {
+  content: "";
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  margin-right: 8px;
+  background: var(--black);
+  animation: blink 1s steps(1, end) infinite;
+}
+
+.nf-guess[hidden] {
+  display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .nf-guess_link::before { animation: none; }
+}
+
 /* ─── work index ────────────────────────────────────────────────────── */
 
 .work-tag,
